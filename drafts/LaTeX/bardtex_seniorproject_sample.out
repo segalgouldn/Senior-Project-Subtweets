@@ -1,0 +1,16 @@
+\BOOKMARK [0][-]{chapter*.1}{Abstract}{}% 1
+\BOOKMARK [0][-]{chapter*.3}{Dedication}{}% 2
+\BOOKMARK [0][-]{chapter*.4}{Acknowledgments}{}% 3
+\BOOKMARK [0][-]{chapter.1}{Introduction}{}% 4
+\BOOKMARK [1][-]{section.1.1}{Background}{chapter.1}% 5
+\BOOKMARK [1][-]{section.1.2}{Sentiment Analysis \046 Opinion Mining}{chapter.1}% 6
+\BOOKMARK [1][-]{section.1.3}{SemEval}{chapter.1}% 7
+\BOOKMARK [1][-]{section.1.4}{Naive Bayes}{chapter.1}% 8
+\BOOKMARK [1][-]{section.1.5}{TF-IDF}{chapter.1}% 9
+\BOOKMARK [1][-]{section.1.6}{Precision and Recall}{chapter.1}% 10
+\BOOKMARK [0][-]{chapter.2}{Methods}{}% 11
+\BOOKMARK [1][-]{section.2.1}{Scikit Learn}{chapter.2}% 12
+\BOOKMARK [1][-]{section.2.2}{Distribution \046 Datasets}{chapter.2}% 13
+\BOOKMARK [1][-]{section.2.3}{Confusion Matrices}{chapter.2}% 14
+\BOOKMARK [1][-]{section.2.4}{Training, Testing, and Splitting}{chapter.2}% 15
+\BOOKMARK [0][-]{chapter*.5}{Bibliography}{}% 16

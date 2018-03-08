@@ -1,0 +1,5120 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%
+%%  This is BARDTEX.STY
+%%  
+%%  This style is meant for homework, senior projects, M.A.T. mathematics research projects, Junior Seminar projects, prospectus talks, presentations and posters at Bard.
+%%
+%%  This style file combines good amounts of \textsf{svsing2e.sty}
+%%  (Springer-Verlag) and \textsf{Ragsmac.sty} (from Bob McGrail),
+%%  and has theorem formatting by Ethan Bloch, with help from Amy
+%%  Hendrickson.  Aaron Schumacher made the style file work for
+%%  M.A.T. mathematics research projects.
+%%  
+%% Read the manual bardtex_manual.pdf 
+%% for more details regarding the Bard TeX Style.
+%%
+%% The manual and a template for this style file
+%% can be found at http://math.bard.edu/bloch/tex/
+%%
+%% For additional help, or for suggestions or corrections
+%% contact Ethan Bloch at bloch@bard.edu
+%%
+%% Not for commercial use.
+%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+\catcode`\^^Z 10
+\typeout{Bard\TeX\ Style file "bardtex" v. 1.1 released June 2016}
+%
+
+\usepackage{ifthen}
+
+
+\def\@makechapterhead#1{
+             % Heading for \chapter command
+% We want the chapter number to be 20 pts from top text.  The simplest
+% was is to set \topskip, making sure there's nothing between the number
+% and the top of page, so \baselineskip doesn't come in.
+\vbox to 238pt{{ \topskip=20pt \parindent 0pt \raggedright
+    \xxONxx\rm
+    \ifnum \c@secnumdepth >\m@ne     % IF secnumdepth > -1 THEN
+        {\chnum \@chapapp{} \thechapter} % Print 'Chapter' and number.
+    \fi
+    \par
+    \vskip 10pt             % Space between number and title.
+    #1\par                      % Title.
+    \nobreak                    % TeX penalty to prevent page break.
+~    \vfil
+}  }  }
+%
+\def\@makeschapterhead#1{             % Heading for \chapter* command
+\vbox to 238pt{{ \topskip=46pt \parindent 0pt \raggedright
+    \xxONxx\rm
+    #1\par                      % Title.
+    \nobreak                    % TeX penalty to prevent page break.
+     \vfil
+}  } }
+
+
+\newcommand{\mathcl}{\mathcal}
+
+
+\newcommand{\mathcaleucal}[1]
+{
+  \ifthenelse{\equal{#1}{yes}}{}{\renewcommand{\mathcl}{\CMcal}}
+}
+
+\newcommand{\mathcalwhich}[1]
+{
+  \ifthenelse{\equal{#1}{zapf}}{
+\DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it}
+\renewcommand{\mathcl}{\mathpzc}}{
+\ifthenelse{\equal{#1}{eucal}}{}{\renewcommand{\mathcl}{\CMcal}}
+}
+}
+
+\newcommand{\mcala}{\mathcl{A}}
+\newcommand{\mcalb}{\mathcl{B}}
+\newcommand{\mcalc}{\mathcl{C}}
+\newcommand{\mcald}{\mathcl{D}}
+\newcommand{\mcale}{\mathcl{E}}
+\newcommand{\mcalf}{\mathcl{F}}
+\newcommand{\mcalg}{\mathcl{G}}
+\newcommand{\mcalh}{\mathcl{H}}
+\newcommand{\mcali}{\mathcl{I}}
+\newcommand{\mcalj}{\mathcl{J}}
+\newcommand{\mcalk}{\mathcl{K}}
+\newcommand{\mcall}{\mathcl{L}}
+\newcommand{\mcalm}{\mathcl{M}}
+\newcommand{\mcaln}{\mathcl{N}}
+\newcommand{\mcalo}{\mathcl{O}}
+\newcommand{\mcalp}{\mathcl{P}}
+\newcommand{\mcalq}{\mathcl{Q}}
+\newcommand{\mcalr}{\mathcl{R}}
+\newcommand{\mcals}{\mathcl{S}}
+\newcommand{\mcalt}{\mathcl{T}}
+\newcommand{\mcalu}{\mathcl{U}}
+\newcommand{\mcalv}{\mathcl{V}}
+\newcommand{\mcalw}{\mathcl{W}}
+\newcommand{\mcalx}{\mathcl{X}}
+\newcommand{\mcaly}{\mathcl{Y}}
+\newcommand{\mcalz}{\mathcl{Z}}
+
+\newcommand{\mcalla}{\mathcl{a}}
+\newcommand{\mcallb}{\mathcl{b}}
+\newcommand{\mcallc}{\mathcl{c}}
+\newcommand{\mcalld}{\mathcl{d}}
+\newcommand{\mcalle}{\mathcl{e}}
+\newcommand{\mcallf}{\mathcl{f}}
+\newcommand{\mcallg}{\mathcl{g}}
+\newcommand{\mcallh}{\mathcl{h}}
+\newcommand{\mcalli}{\mathcl{i}}
+\newcommand{\mcallj}{\mathcl{j}}
+\newcommand{\mcallk}{\mathcl{k}}
+\newcommand{\mcalll}{\mathcl{l}}
+\newcommand{\mcallm}{\mathcl{m}}
+\newcommand{\mcalln}{\mathcl{n}}
+\newcommand{\mcallo}{\mathcl{o}}
+\newcommand{\mcallp}{\mathcl{p}}
+\newcommand{\mcallq}{\mathcl{q}}
+\newcommand{\mcallr}{\mathcl{r}}
+\newcommand{\mcalls}{\mathcl{s}}
+\newcommand{\mcallt}{\mathcl{t}}
+\newcommand{\mcallu}{\mathcl{u}}
+\newcommand{\mcallv}{\mathcl{v}}
+\newcommand{\mcallw}{\mathcl{w}}
+\newcommand{\mcallx}{\mathcl{x}}
+\newcommand{\mcally}{\mathcl{y}}
+\newcommand{\mcallz}{\mathcl{z}}
+
+
+\newcommand{\relsetsymb}{\bar}
+\newcommand{\rela}{\mathrel{A}}
+\newcommand{\relseta}{\relsetsymb {A}}
+\newcommand{\relb}{\mathrel{B}}
+\newcommand{\relsetb}{\relsetsymb {B}}
+\newcommand{\relc}{\mathrel{C}}
+\newcommand{\relsetc}{\relsetsymb {C}}
+\newcommand{\reld}{\mathrel{D}}
+\newcommand{\relsetd}{\relsetsymb {D}}
+\newcommand{\rele}{\mathrel{E}}
+\newcommand{\relsete}{\relsetsymb {E}}
+\newcommand{\relf}{\mathrel{F}}
+\newcommand{\relsetf}{\relsetsymb {F}}
+\newcommand{\relg}{\mathrel{G}}
+\newcommand{\relsetg}{\relsetsymb {G}}
+\newcommand{\relh}{\mathrel{H}}
+\newcommand{\relseth}{\relsetsymb {H}}
+\newcommand{\reli}{\mathrel{I}}
+\newcommand{\relseti}{\relsetsymb {I}}
+\newcommand{\relj}{\mathrel{J}}
+\newcommand{\relsetj}{\relsetsymb {J}}
+\newcommand{\relk}{\mathrel{K}}
+\newcommand{\relsetk}{\relsetsymb {K}}
+\newcommand{\rell}{\mathrel{L}}
+\newcommand{\relsetl}{\relsetsymb {L}}
+\newcommand{\relm}{\mathrel{M}}
+\newcommand{\relsetm}{\relsetsymb {M}}
+\newcommand{\reln}{\mathrel{N}}
+\newcommand{\relsetn}{\relsetsymb {N}}
+\newcommand{\relo}{\mathrel{O}}
+\newcommand{\relseto}{\relsetsymb {O}}
+\newcommand{\relp}{\mathrel{P}}
+\newcommand{\relsetp}{\relsetsymb {P}}
+\newcommand{\relq}{\mathrel{Q}}
+\newcommand{\relsetq}{\relsetsymb {Q}}
+\newcommand{\relr}{\mathrel{R}}
+\newcommand{\relsetr}{\relsetsymb {R}}
+\newcommand{\rels}{\mathrel{S}}
+\newcommand{\relsets}{\relsetsymb {S}}
+\newcommand{\relt}{\mathrel{T}}
+\newcommand{\relsett}{\relsetsymb {T}}
+\newcommand{\relu}{\mathrel{U}}
+\newcommand{\relsetu}{\relsetsymb {U}}
+\newcommand{\relv}{\mathrel{V}}
+\newcommand{\relsetv}{\relsetsymb {V}}
+\newcommand{\relw}{\mathrel{W}}
+\newcommand{\relsetw}{\relsetsymb {W}}
+\newcommand{\relx}{\mathrel{X}}
+\newcommand{\relsetx}{\relsetsymb {X}}
+\newcommand{\rely}{\mathrel{Y}}
+\newcommand{\relsety}{\relsetsymb {Y}}
+\newcommand{\relz}{\mathrel{Z}}
+\newcommand{\relsetz}{\relsetsymb {Z}}
+
+
+\newcommand{\styletest}{placeholder}
+
+\usepackage{ifthen}
+
+%%%Possible styles options: homework, seniorproject, matproject, juniorseminar, poster, prospectus, presentation
+
+\newcommand{\styleoption}[1]
+{%Whole
+\ifthenelse{\equal{#1}{homework}}
+%%homework
+{%A
+\renewcommand{\styletest}{homework}
+
+%%Requires geometry.sty package
+
+\usepackage[top=1truein, bottom=1truein, outer=1truein, inner=1truein]{geometry}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}%[section]
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem*{theoremn}{Theorem}
+\newtheorem*{conjecturen}{Conjecture}
+\newtheorem*{claimn}{Claim}
+\newtheorem*{corollaryn}{Corollary}
+\newtheorem*{lemman}{Lemma}
+\newtheorem*{propositionn}{Proposition}
+
+
+\theoremstyle{definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{algorit}[theorem]{Algorithm}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{exercisep}{}%[section]
+\newtheorem{problemm}[theorem]{Problem}
+\newtheorem{exercisee}[theorem]{Exercise}%[section]
+\newtheorem*{definitionn}{Definition}
+\newtheorem*{examplen}{Example}
+\newtheorem*{remarkn}{Remark}
+\newtheorem*{algoritn}{Algorithm}
+\newtheorem*{exercisen}{}
+\newtheorem*{problemmn}{Problem}
+\newtheorem*{exerciseen}{Exercise}
+
+\newcommand{\startmain}{
+\doublespace
+}
+
+
+\newenvironment{bibliog}
+              {
+\begin{bibdiv}
+\begin{biblist}[\normalsize]
+              }
+              {
+\end{biblist}
+\end{bibdiv}
+               }
+
+}%A
+{%B
+\ifthenelse{\equal{#1}{seniorproject}}
+%%seniorproject
+{%C
+\renewcommand{\styletest}{seniorproject}
+
+%%Requires geometry.sty package
+
+\usepackage[top=1truein, bottom=1truein, outer=1truein, inner=1.2truein]{geometry}
+
+\def\markbothsame#1{\markboth{#1}{#1}}
+
+\frenchspacing
+\def\@chapapp{}
+%8/10
+\def\viiiONx{\@setfontsize\@footnotesize\@viiipt{10pt}}
+%10/12
+\def\xONxii{\@setfontsize\normalsize\@xpt{12pt}}
+%12/14
+\def\xiiONxiv{\@setfontsize\large\@xiipt{14pt}}
+%14/16
+\def\xivONxvi{\@setfontsize\Large\@xivpt{16pt}}
+%14/14
+\def\xivONxiv{\@setfontsize\Large\@xivpt{14pt}}
+%20/20
+\def\xxONxx{\@setfontsize\huge\@xxpt{20pt}}
+%
+\renewcommand\footnotesize{%
+   \viiiONx
+   \abovedisplayskip 6\p@ \@plus2\p@ \@minus4\p@
+   \abovedisplayshortskip \z@ \@plus\p@
+   \belowdisplayshortskip 3\p@ \@plus\p@ \@minus2\p@
+   \def\@listi{\leftmargin\leftmargini
+               \topsep 3\p@ \@plus\p@ \@minus\p@
+               \parsep 2\p@ \@plus\p@ \@minus\p@
+               \itemsep \parsep}%
+   \belowdisplayskip \abovedisplayskip
+}
+\font\chnum = cmr10 scaled \magstep5
+\def\chapter{\cleardoublepage      % Starts new recto.
+   \thispagestyle{empty}     % Page style of chapter page is 'empty'
+   \global\@topnum\z@        % Prevents figures from going at top of page.
+   \@afterindentfalse        % Suppresses indent in first paragraph.  Change
+   \secdef\@chapter\@schapter}   % to \@afterindenttrue to have indent.
+%
+% Chapter number: 24 CM, arabic numeral, fl.l, top text
+% Chapter title: 20/20 CM x 27pc, c/lc, fl.l, sink 60 pt from top
+%       type to base of CT, to's fl.l, do not hyphenate
+%
+
+% Restart the footnote counter each chapter.
+%
+%\newcounter{footnote}[chapter]
+%
+% FN    1pc space above footnotes to text.
+%       5 pc 1/2 pt rule fl.l. above footnotes
+%       leave 6pt # after rule followed by ftn
+%
+\skip\footins=18.5pt    % space above line and below line, 1pc+6pt+.5pt
+\footskip=16pt
+\footnotesep=7pt        % pretty arbitrary
+\def\footnoterule{\kern-6.5pt\hrule width 5pc height .5pt\vskip 6pt}
+%
+% Footnote at end of chapter position below last text line (not at bottom
+% of page).
+%
+\def\clearpage{\par\vfill\penalty -\@M \write\m@ne{}\vbox{}\penalty -\@Mi}
+\def\newpage{\par\vfill\penalty -\@M}
+\def\@makecol{\ifvoid\footins \setbox\@outputbox\box\@cclv
+   \else\setbox\@outputbox
+     \vbox{\unvbox\@cclv\vskip\skip\footins\footnoterule\unvbox\footins}\fi
+     \xdef\@freelist{\@freelist\@midlist}\gdef\@midlist{}\@combinefloats
+     \setbox\@outputbox\vbox to\@colht{\boxmaxdepth\maxdepth
+        \@texttop
+        \unvbox\@outputbox
+        \@textbottom}\global\maxdepth\@maxdepth}
+\flushbottom
+
+%
+% Abstract: 9/11 TRx25pi, sink 2.5pi b/b from CA
+%
+\def\abstract{\vskip 21pt % from CA
+\rightskip=1pc\leftskip=1pc\parindent=\z@
+\small\rm
+{ABSTRACT }}
+\def\endabstract{\par}  % If we don't do this, the paragraph won't be
+                        % set until after rightskip and leftskip have been
+                        % returned to their old values.
+%
+
+%%Problems here:
+%%\def\tableofcontents{\@restonecolfalse\if@twocolumn\@restonecoltrue\onecolumn
+%%  \fi\chapter*{Contents}\markbothsame{Contents}%
+%%  \@starttoc{toc}\if@restonecol\twocolumn\fi}
+  
+%
+% Don't indent the paragraph following each header.  Vertical distances
+% showld have \baselineskip taken out, and the height of the next
+% line, which should be text (10/12 TR).
+%
+\setcounter{secnumdepth}{2}     % number section and subsections
+\setcounter{tocdepth}{2}        % and put them in the table of contents
+% No 1 Head, 14/16 TR, 36pt b/b above, 24 tp b/b below
+\def\section{\@startsection
+    {section}{1}{\z@}{-24pt plus -6pt minus -3pt}{12pt}%
+        {\xivONxvi\rm\raggedright}}
+% No 2 Head, 12/14 TR, c/sc, 30pt above, 18 pt below
+\def\subsection{\@startsection
+    {subsection}{2}{\z@}{-18pt plus-4.8pt minus-2.4pt}{6pt}%
+        {\xiiONxiv\it\raggedright}}
+% No 3 Head, 10/12 TR, 24pt above, 18pt below
+\def\subsubsection{\@startsection
+    {subsubsection}{3}{\z@}{-12pt plus-4.2pt minus-2.1pt}{6pt}%
+        {\xONxii\rm\raggedright}}
+% No 4 Head, 10/12 TR italic, 20pt above, 18pt below
+\def\paragraph{\@startsection
+     {paragraph}{4}{\z@}{-8pt plus-3.8pt minus-1.7pt}{6pt}%
+        {\xONxii\it\raggedright}}
+% No 5 Head, 10/12 TR italic, period,  en space to run in text, 18pt above
+
+\def\subparagraph#1{\@startsection
+     {subparagraph}{5}{\z@}{-6pt plus-1.8pt
+minus-.9pt}{-.5em}{\xONxii\it}{#1.}}
+% Ack: Acknowledgements same as No 5 head, 36pt above
+\def\acknowledgments{\@startsection
+     {subparagraph}{6}{\z@}{-24pt plus-3.6pt minus-1.8pt}{-.5em}%
+        {\xONxii\it}*{Acknowledgments:\/}}
+
+% R-1: ``References'', same as No.2 head
+% unless it's single-author.
+\def\mainbibliography#1{{\bibliography{#1}}}
+\def\thebibliography#1{%
+  \chapter*{References}\markbothsame{References}%
+  \addcontentsline{toc}{chapter}{\protect\numberline{}References}%
+%endif
+  \list
+  {[\arabic{enumiv}]}{\settowidth\labelwidth{[#1]}\leftmargin\labelwidth
+    \advance\leftmargin\labelsep
+%Per zwart, enumi replaced by enumiv in this macro
+    \usecounter{enumiv}}
+    \def\newblock{\hskip .11em plus .33em minus -.07em}
+    \sloppy
+    \sfcode`\.=1000\relax}
+% Put index in the toc
+\def\theindex{\@restonecoltrue\if@twocolumn\@restonecolfalse\fi
+\columnseprule \z@
+\columnsep 35pt\twocolumn[\@makeschapterhead{Index}]
+    \addcontentsline{toc}{chapter}{\protect\numberline{}Index}%
+    \@mkboth{Index}{Index}\thispagestyle{empty}\parindent\z@
+    \parskip\z@ plus .3pt\relax\let\item\@idxitem}
+\def\theauthorindex{\@restonecoltrue\if@twocolumn\@restonecolfalse\fi
+\columnseprule \z@
+\columnsep 35pt\twocolumn[\@makeschapterhead{Author Index}]
+    \addcontentsline{toc}{chapter}{\protect\numberline{}Author Index}%
+    \@mkboth{Author Index}{Author Index}\thispagestyle{empty}\parindent\z@
+    \parskip\z@ plus .3pt\relax\let\item\@idxitem}
+\def\thesubjectindex{\@restonecoltrue\if@twocolumn\@restonecolfalse\fi
+\columnseprule \z@
+\columnsep 35pt\twocolumn[\@makeschapterhead{Subject Index}]
+    \addcontentsline{toc}{chapter}{\protect\numberline{}Subject Index}%
+    \@mkboth{Subject Index}{Subject Index}\thispagestyle{empty}\parindent\z@
+    \parskip\z@ plus .3pt\relax\let\item\@idxitem}
+\def\thesymbolindex{\@restonecoltrue\if@twocolumn\@restonecolfalse\fi
+\columnseprule \z@
+\columnsep 35pt\twocolumn[\@makeschapterhead{Symbol Index}]
+    \addcontentsline{toc}{chapter}{\protect\numberline{}Symbol Index}%
+    \@mkboth{Symbol Index}{Symbol Index}\thispagestyle{empty}\parindent\z@
+    \parskip\z@ plus .3pt\relax\let\item\@idxitem}
+%
+% lists: 10/12 TRx27pc, 1/2line# above/below
+%
+\topsep 6pt plus1.8pt minus.9pt    % Extra vertical space, in addition to
+                                   % \parskip, added above and below list and
+                                   % paragraphing environments.
+\itemsep 6pt plus1.8pt minus.9pt   % Extra vertical space, in addition to
+                                   % \parskip, added between list items.
+%
+% Eq: Center on text width; equation numbers set flush right, align with
+% last line of equation, 6pt # above/below.
+%
+\abovedisplayskip=6pt plus 1.8pt minus.9pt
+\belowdisplayskip=\abovedisplayskip
+\abovedisplayshortskip=\z@ plus 1.2pt
+\belowdisplayshortskip=3pt plus 1.5pt minus .75pt
+%
+
+\tolerance=1600
+
+\newdimen\w@dth
+
+%%Problems here:
+%%\def\setw@dth#1#2{\setbox\z@\hbox{\scriptsize $#1$}\w@dth=\wd\z@
+%%\setbox\@ne\hbox{\scriptsize $#2$}\ifnum\w@dth<\wd\@ne \w@dth=\wd\@ne \fi
+%%\advance\w@dth by 1.2em}
+
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem*{theoremn}{Theorem}
+\newtheorem*{conjecturen}{Conjecture}
+\newtheorem*{claimn}{Claim}
+\newtheorem*{corollaryn}{Corollary}
+\newtheorem*{lemman}{Lemma}
+\newtheorem*{propositionn}{Proposition}
+
+\theoremstyle{definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{algorit}[theorem]{Algorithm}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{exercise}{}[section]
+\newtheorem{problemm}{}
+\newtheorem{exercisee}{Exercise}[section]
+\newtheorem*{definitionn}{Definition}
+\newtheorem*{examplen}{Example}
+\newtheorem*{remarkn}{Remark}
+\newtheorem*{algoritn}{Algorithm}
+\newtheorem*{exercisen}{}
+\newtheorem*{problemmn}{}
+\newtheorem*{exerciseen}{Exercise}
+
+\newcommand{\abstr}{\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+\markboth{}{}}
+
+\newcommand{\acknowl}{\chapter*{Acknowledgments}
+\addcontentsline{toc}{chapter}{Acknowledgments}
+\markboth{}{}}
+
+\newcommand{\dedic}{\chapter*{Dedication}
+\addcontentsline{toc}{chapter}{Dedication}
+\markboth{}{}}
+
+\newcommand{\intro}{\chapter{Introduction}
+\markboth{INTRODUCTION}{INTRODUCTION}}
+
+\newcommand{\startmain}{
+\doublespace
+\cleardoublepage
+\pagenumbering{arabic}
+}
+
+\newenvironment{bibliog}
+              {
+\begin{bibdiv}
+\begin{biblist}[\normalsize]
+\addcontentsline{toc}{chapter}{Bibliography}
+\markboth{Bibliography}{Bibliography}
+              }
+              {
+\end{biblist}
+\end{bibdiv}
+               }
+
+}%C
+{%D
+\ifthenelse{\equal{#1}{matproject}}
+%%matproject
+{%E
+\renewcommand{\styletest}{matproject}
+
+%%Requires geometry.sty package
+
+\usepackage[top=1truein, bottom=1truein, outer=1truein, inner=1.2truein]{geometry}
+
+
+\def\markbothsame#1{\markboth{#1}{#1}}
+
+\frenchspacing
+\def\@chapapp{}
+%8/10
+\def\viiiONx{\@setfontsize\@footnotesize\@viiipt{10pt}}
+%10/12
+\def\xONxii{\@setfontsize\normalsize\@xpt{12pt}}
+%12/14
+\def\xiiONxiv{\@setfontsize\large\@xiipt{14pt}}
+%14/16
+\def\xivONxvi{\@setfontsize\Large\@xivpt{16pt}}
+%14/14
+\def\xivONxiv{\@setfontsize\Large\@xivpt{14pt}}
+%20/20
+\def\xxONxx{\@setfontsize\huge\@xxpt{20pt}}
+%
+\renewcommand\footnotesize{%
+   \viiiONx
+   \abovedisplayskip 6\p@ \@plus2\p@ \@minus4\p@
+   \abovedisplayshortskip \z@ \@plus\p@
+   \belowdisplayshortskip 3\p@ \@plus\p@ \@minus2\p@
+   \def\@listi{\leftmargin\leftmargini
+               \topsep 3\p@ \@plus\p@ \@minus\p@
+               \parsep 2\p@ \@plus\p@ \@minus\p@
+               \itemsep \parsep}%
+   \belowdisplayskip \abovedisplayskip
+}
+\font\chnum = cmr10 scaled \magstep5
+\def\chapter{\cleardoublepage      % Starts new recto.
+   \thispagestyle{empty}     % Page style of chapter page is 'empty'
+   \global\@topnum\z@        % Prevents figures from going at top of page.
+   \@afterindentfalse        % Suppresses indent in first paragraph.  Change
+   \secdef\@chapter\@schapter}   % to \@afterindenttrue to have indent.
+%
+% Chapter number: 24 CM, arabic numeral, fl.l, top text
+% Chapter title: 20/20 CM x 27pc, c/lc, fl.l, sink 60 pt from top
+%       type to base of CT, to's fl.l, do not hyphenate
+%
+
+% Restart the footnote counter each chapter.
+%
+%\newcounter{footnote}[chapter]
+%
+% FN    1pc space above footnotes to text.
+%       5 pc 1/2 pt rule fl.l. above footnotes
+%       leave 6pt # after rule followed by ftn
+%
+\skip\footins=18.5pt    % space above line and below line, 1pc+6pt+.5pt
+\footskip=16pt
+\footnotesep=7pt        % pretty arbitrary
+\def\footnoterule{\kern-6.5pt\hrule width 5pc height .5pt\vskip 6pt}
+%
+% Footnote at end of chapter position below last text line (not at bottom
+% of page).
+%
+\def\clearpage{\par\vfill\penalty -\@M \write\m@ne{}\vbox{}\penalty -\@Mi}
+\def\newpage{\par\vfill\penalty -\@M}
+\def\@makecol{\ifvoid\footins \setbox\@outputbox\box\@cclv
+   \else\setbox\@outputbox
+     \vbox{\unvbox\@cclv\vskip\skip\footins\footnoterule\unvbox\footins}\fi
+     \xdef\@freelist{\@freelist\@midlist}\gdef\@midlist{}\@combinefloats
+     \setbox\@outputbox\vbox to\@colht{\boxmaxdepth\maxdepth
+        \@texttop
+        \unvbox\@outputbox
+        \@textbottom}\global\maxdepth\@maxdepth}
+\flushbottom
+
+%
+% Abstract: 9/11 TRx25pi, sink 2.5pi b/b from CA
+%
+\def\abstract{\vskip 21pt % from CA
+\rightskip=1pc\leftskip=1pc\parindent=\z@
+\small\rm
+{ABSTRACT }}
+\def\endabstract{\par}  % If we don't do this, the paragraph won't be
+                        % set until after rightskip and leftskip have been
+                        % returned to their old values.
+%
+
+%%Problems here:
+%%\def\tableofcontents{\@restonecolfalse\if@twocolumn\@restonecoltrue\onecolumn
+%%  \fi\chapter*{Contents}\markbothsame{Contents}%
+%%  \@starttoc{toc}\if@restonecol\twocolumn\fi}
+  
+%
+% Don't indent the paragraph following each header.  Vertical distances
+% showld have \baselineskip taken out, and the height of the next
+% line, which should be text (10/12 TR).
+%
+\setcounter{secnumdepth}{2}     % number section and subsections
+\setcounter{tocdepth}{2}        % and put them in the table of contents
+% No 1 Head, 14/16 TR, 36pt b/b above, 24 tp b/b below
+\def\section{\@startsection
+    {section}{1}{\z@}{-24pt plus -6pt minus -3pt}{12pt}%
+        {\xivONxvi\rm\raggedright}}
+% No 2 Head, 12/14 TR, c/sc, 30pt above, 18 pt below
+\def\subsection{\@startsection
+    {subsection}{2}{\z@}{-18pt plus-4.8pt minus-2.4pt}{6pt}%
+        {\xiiONxiv\it\raggedright}}
+% No 3 Head, 10/12 TR, 24pt above, 18pt below
+\def\subsubsection{\@startsection
+    {subsubsection}{3}{\z@}{-12pt plus-4.2pt minus-2.1pt}{6pt}%
+        {\xONxii\rm\raggedright}}
+% No 4 Head, 10/12 TR italic, 20pt above, 18pt below
+\def\paragraph{\@startsection
+     {paragraph}{4}{\z@}{-8pt plus-3.8pt minus-1.7pt}{6pt}%
+        {\xONxii\it\raggedright}}
+% No 5 Head, 10/12 TR italic, period,  en space to run in text, 18pt above
+
+\def\subparagraph#1{\@startsection
+     {subparagraph}{5}{\z@}{-6pt plus-1.8pt
+minus-.9pt}{-.5em}{\xONxii\it}{#1.}}
+% Ack: Acknowledgements same as No 5 head, 36pt above
+\def\acknowledgments{\@startsection
+     {subparagraph}{6}{\z@}{-24pt plus-3.6pt minus-1.8pt}{-.5em}%
+        {\xONxii\it}*{Acknowledgments:\/}}
+
+% R-1: ``References'', same as No.2 head
+% unless it's single-author.
+\def\mainbibliography#1{{\bibliography{#1}}}
+\def\thebibliography#1{%
+  \chapter*{References}\markbothsame{References}%
+  \addcontentsline{toc}{chapter}{\protect\numberline{}References}%
+%endif
+  \list
+  {[\arabic{enumiv}]}{\settowidth\labelwidth{[#1]}\leftmargin\labelwidth
+    \advance\leftmargin\labelsep
+%Per zwart, enumi replaced by enumiv in this macro
+    \usecounter{enumiv}}
+    \def\newblock{\hskip .11em plus .33em minus -.07em}
+    \sloppy
+    \sfcode`\.=1000\relax}
+% Put index in the toc
+\def\theindex{\@restonecoltrue\if@twocolumn\@restonecolfalse\fi
+\columnseprule \z@
+\columnsep 35pt\twocolumn[\@makeschapterhead{Index}]
+    \addcontentsline{toc}{chapter}{\protect\numberline{}Index}%
+    \@mkboth{Index}{Index}\thispagestyle{empty}\parindent\z@
+    \parskip\z@ plus .3pt\relax\let\item\@idxitem}
+\def\theauthorindex{\@restonecoltrue\if@twocolumn\@restonecolfalse\fi
+\columnseprule \z@
+\columnsep 35pt\twocolumn[\@makeschapterhead{Author Index}]
+    \addcontentsline{toc}{chapter}{\protect\numberline{}Author Index}%
+    \@mkboth{Author Index}{Author Index}\thispagestyle{empty}\parindent\z@
+    \parskip\z@ plus .3pt\relax\let\item\@idxitem}
+\def\thesubjectindex{\@restonecoltrue\if@twocolumn\@restonecolfalse\fi
+\columnseprule \z@
+\columnsep 35pt\twocolumn[\@makeschapterhead{Subject Index}]
+    \addcontentsline{toc}{chapter}{\protect\numberline{}Subject Index}%
+    \@mkboth{Subject Index}{Subject Index}\thispagestyle{empty}\parindent\z@
+    \parskip\z@ plus .3pt\relax\let\item\@idxitem}
+\def\thesymbolindex{\@restonecoltrue\if@twocolumn\@restonecolfalse\fi
+\columnseprule \z@
+\columnsep 35pt\twocolumn[\@makeschapterhead{Symbol Index}]
+    \addcontentsline{toc}{chapter}{\protect\numberline{}Symbol Index}%
+    \@mkboth{Symbol Index}{Symbol Index}\thispagestyle{empty}\parindent\z@
+    \parskip\z@ plus .3pt\relax\let\item\@idxitem}
+%
+% lists: 10/12 TRx27pc, 1/2line# above/below
+%
+\topsep 6pt plus1.8pt minus.9pt    % Extra vertical space, in addition to
+                                   % \parskip, added above and below list and
+                                   % paragraphing environments.
+\itemsep 6pt plus1.8pt minus.9pt   % Extra vertical space, in addition to
+                                   % \parskip, added between list items.
+%
+% Eq: Center on text width; equation numbers set flush right, align with
+% last line of equation, 6pt # above/below.
+%
+\abovedisplayskip=6pt plus 1.8pt minus.9pt
+\belowdisplayskip=\abovedisplayskip
+\abovedisplayshortskip=\z@ plus 1.2pt
+\belowdisplayshortskip=3pt plus 1.5pt minus .75pt
+%
+
+\tolerance=1600
+
+\newdimen\w@dth
+
+%%Problems here:
+%%\def\setw@dth#1#2{\setbox\z@\hbox{\scriptsize $#1$}\w@dth=\wd\z@
+%%\setbox\@ne\hbox{\scriptsize $#2$}\ifnum\w@dth<\wd\@ne \w@dth=\wd\@ne \fi
+%%\advance\w@dth by 1.2em}
+
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem*{theoremn}{Theorem}
+\newtheorem*{conjecturen}{Conjecture}
+\newtheorem*{claimn}{Claim}
+\newtheorem*{corollaryn}{Corollary}
+\newtheorem*{lemman}{Lemma}
+\newtheorem*{propositionn}{Proposition}
+
+\theoremstyle{definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{algorit}[theorem]{Algorithm}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{exercise}{}[section]
+\newtheorem{problemm}{}
+\newtheorem{exercisee}{Exercise}[section]
+\newtheorem*{definitionn}{Definition}
+\newtheorem*{examplen}{Example}
+\newtheorem*{remarkn}{Remark}
+\newtheorem*{algoritn}{Algorithm}
+\newtheorem*{exercisen}{}
+\newtheorem*{problemmn}{}
+\newtheorem*{exerciseen}{Exercise}
+
+\newcommand{\abstr}{\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
+\markboth{}{}}
+
+\newcommand{\acknowl}{\chapter*{Acknowledgments}
+\addcontentsline{toc}{chapter}{Acknowledgments}
+\markboth{}{}}
+
+\newcommand{\intro}{\chapter{Introduction}
+\markboth{INTRODUCTION}{INTRODUCTION}}
+
+\newcommand{\dedic}{\chapter*{Dedication}
+\addcontentsline{toc}{chapter}{Dedication}
+\markboth{}{}}
+
+\newcommand{\startmain}{
+\doublespace
+\cleardoublepage
+\pagenumbering{arabic}
+}
+
+\newenvironment{bibliog}
+              {
+\begin{bibdiv}
+\begin{biblist}[\normalsize]
+\addcontentsline{toc}{chapter}{Bibliography}
+\markboth{Bibliography}{Bibliography}
+              }
+              {
+\end{biblist}
+\end{bibdiv}
+               }
+
+}%E
+{%F
+\ifthenelse{\equal{#1}{juniorseminar}}
+%%juniorseminar
+{%G
+\renewcommand{\styletest}{juniorseminar}
+
+%%Requires geometry.sty package
+
+\usepackage[top=1truein, bottom=1truein, outer=1truein, inner=1.2truein]{geometry}
+
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem*{theoremn}{Theorem}
+\newtheorem*{conjecturen}{Conjecture}
+\newtheorem*{claimn}{Claim}
+\newtheorem*{corollaryn}{Corollary}
+\newtheorem*{lemman}{Lemma}
+\newtheorem*{propositionn}{Proposition}
+
+\theoremstyle{definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{algorit}[theorem]{Algorithm}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{exercise}{}[section]
+\newtheorem{problemm}{}
+\newtheorem{exercisee}{Exercise}[section]
+\newtheorem*{definitionn}{Definition}
+\newtheorem*{examplen}{Example}
+\newtheorem*{remarkn}{Remark}
+\newtheorem*{algoritn}{Algorithm}
+\newtheorem*{exercisen}{}
+\newtheorem*{problemmn}{}
+\newtheorem*{exerciseen}{Exercise}
+
+\newcommand{\abstr}{\section*{Abstract}
+\addcontentsline{toc}{section}{Abstract}
+\markboth{}{}}
+
+\newcommand{\acknowl}{\section*{Acknowledgments}
+\addcontentsline{toc}{section}{Acknowledgments}
+\markboth{}{}}
+
+\newcommand{\dedic}{\section*{Dedication}
+\addcontentsline{toc}{section}{Dedication}
+\markboth{}{}}
+
+\newcommand{\startmain}{
+\doublespace
+\cleardoublepage
+\pagenumbering{arabic}
+}
+
+\newenvironment{bibliog}
+              {
+\newpage
+\begin{bibdiv}[Bibliography]
+\begin{biblist}[\normalsize]
+\addcontentsline{toc}{section}{Bibliography}
+\markboth{Bibliography}{Bibliography}
+              }
+              {
+\end{biblist}
+\end{bibdiv}
+               }
+
+}%G
+{%H
+\ifthenelse{\equal{#1}{poster}}
+%%poster
+{%I
+\renewcommand{\styletest}{poster}
+
+%%Requires geometry.sty package
+\usepackage{geometry}
+
+\geometry{paperheight=42 truein, paperwidth=42 truein, tmargin=2 truein, bmargin=2 truein, lmargin=2 truein, rmargin=2 truein}
+
+
+%%Font size
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}%[section]
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem*{theoremn}{Theorem}
+\newtheorem*{conjecturen}{Conjecture}
+\newtheorem*{claimn}{Claim}
+\newtheorem*{corollaryn}{Corollary}
+\newtheorem*{lemman}{Lemma}
+\newtheorem*{propositionn}{Proposition}
+
+\theoremstyle{definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{algorit}[theorem]{Algorithm}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{exercise}{}[section]
+\newtheorem{problemm}{}
+\newtheorem{exercisee}{Exercise}[section]
+\newtheorem*{definitionn}{Definition}
+\newtheorem*{examplen}{Example}
+\newtheorem*{remarkn}{Remark}
+\newtheorem*{algoritn}{Algorithm}
+\newtheorem*{exercisen}{}
+\newtheorem*{problemmn}{}
+\newtheorem*{exerciseen}{Exercise}
+
+%colors
+
+\definecolor{GreenYellow}{cmyk}{0.15,0,0.69,0}
+\definecolor{RoyalPurple}{cmyk}{0.75,0.90,0,0}
+\definecolor{Yellow}{cmyk}{0,0,1,0}
+\definecolor{BlueViolet}{cmyk}{0.86,0.91,0,0.04}
+\definecolor{Goldenrod}{cmyk}{0,0.10,0.84,0}
+\definecolor{Periwinkle}{cmyk}{0.57,0.55,0,0}
+\definecolor{Dandelion}{cmyk}{0,0.29,0.84,0}
+\definecolor{CadetBlue}{cmyk}{0.62,0.57,0.23,0}
+\definecolor{Apricot}{cmyk}{0,0.32,0.52,0}
+\definecolor{CornflowerBlue}{cmyk}{0.65,0.13,0,0}
+\definecolor{Peach}{cmyk}{0,0.50,0.70,0}
+\definecolor{MidnightBlue}{cmyk}{0.98,0.13,0,0.43}
+\definecolor{Melon}{cmyk}{0,0.46,0.5,0}
+\definecolor{NavyBlue}{cmyk}{0.94,0.54,0,0}
+\definecolor{YellowOrange}{cmyk}{0,0.42,1,0}
+\definecolor{RoyalBlue}{cmyk}{1,0.50,0,0}
+\definecolor{Orange}{cmyk}{0,0.61,0.87,0}
+\definecolor{Blue}{cmyk}{1,1,0,0}
+\definecolor{BurntOrange}{cmyk}{0,0.51,1,0}
+\definecolor{Cerulean}{cmyk}{0.94,0.11,0,0}
+\definecolor{Bittersweet}{cmyk}{0,0.75,1,0.24}
+\definecolor{Cyan}{cmyk}{1,0,0,0}
+\definecolor{RedOrange}{cmyk}{0,0.77,0.87,0}
+\definecolor{ProcessBlue}{cmyk}{0.96,0,0,0}
+\definecolor{Mahogany}{cmyk}{0,0.85,0.87,0.35}
+\definecolor{SkyBlue}{cmyk}{0.62,0,0.12,0}
+\definecolor{Maroon}{cmyk}{0,0.87,0.68,0.32}
+\definecolor{Turquoise}{cmyk}{0.85,0,0.20,0}
+\definecolor{BrickRed}{cmyk}{0,0.89,0.94,0.28}
+\definecolor{TealBlue}{cmyk}{0.86,0,0.34,0.02}
+\definecolor{Red}{cmyk}{0,1,1,0}
+\definecolor{Aquamarine}{cmyk}{0.82,0,0.30,0}
+\definecolor{OrangeRed}{cmyk}{0,1,0.50,0}
+\definecolor{BlueGreen}{cmyk}{0.85,0,0.33,0}
+\definecolor{RubineRed}{cmyk}{0,1,0.13,0}
+\definecolor{Emerald}{cmyk}{1,0,0.50,0}
+\definecolor{WildStrawberry}{cmyk}{0,0.96,0.39,0}
+\definecolor{JungleGreen}{cmyk}{0.99,0,0.52,0}
+\definecolor{Salmon}{cmyk}{0,0.53,0.38,0}
+\definecolor{SeaGreen}{cmyk}{0.69,0,0.50,0}
+\definecolor{CarnationPink}{cmyk}{0,0.63,0,0}
+\definecolor{Green}{cmyk}{1,0,1,0}
+\definecolor{Magenta}{cmyk}{0,1,0,0}
+\definecolor{ForestGreen}{cmyk}{0.91,0,0.88,0.12}
+\definecolor{VioletRed}{cmyk}{0,0.81,0,0}
+\definecolor{PineGreen}{cmyk}{0.92,0,0.59,0.25}
+\definecolor{Rhodamine}{cmyk}{0,0.82,0,0}
+\definecolor{LimeGreen}{cmyk}{0.50,0,1,0}
+\definecolor{Mulberry}{cmyk}{0.34,0.90,0,0.02}
+\definecolor{YellowGreen}{cmyk}{0.44,0,0.74,0}
+\definecolor{RedViolet}{cmyk}{0.07,0.90,0,0.34}
+\definecolor{SpringGreen}{cmyk}{0.26,0,0.76,0}
+\definecolor{Fuchsia}{cmyk}{0.47,0.91,0,0.08}
+\definecolor{OliveGreen}{cmyk}{0.64,0,0.95,0.40}
+\definecolor{Lavender}{cmyk}{0,0.48,0,0}
+\definecolor{RawSienna}{cmyk}{0,0.72,1,0.45}
+\definecolor{Thistle}{cmyk}{0.12,0.59,0,0}
+\definecolor{Sepia}{cmyk}{0,0.83,1,0.70}
+\definecolor{Orchid}{cmyk}{0.32,0.64,0,0}
+\definecolor{Brown}{cmyk}{0,0.81,1,0.60}
+\definecolor{DarkOrchid}{cmyk}{0.40,0.80,0.20,0}
+\definecolor{Tan}{cmyk}{0.14,0.42,0.56,0}
+\definecolor{Purple}{cmyk}{0.45,0.86,0,0}
+\definecolor{Gray}{cmyk}{0,0,0,0.50}
+\definecolor{Plum}{cmyk}{0.50,1,0,0}
+\definecolor{Black}{cmyk}{0,0,0,1}
+\definecolor{Violet}{cmyk}{0.79,0.88,0,0}
+\definecolor{White}{cmyk}{0,0,0,0}
+
+
+\newenvironment{bibliog}
+              {
+              \begin{center}
+                  \begin{Sbox}
+                    \begin{minipage}{0.28\textwidth}
+                      \begin{center}
+                        \fontsize{\boxheadingfontsize}{1.2\boxheadingfontsize} \selectfont  \textcolor{\boxxtitlecolor}{References}
+                      \end{center}\parindent=20pt
+\begin{biblist}[\bibliographyfontsize]
+              }
+              {
+             \end{biblist}
+              \end{minipage}
+                  \end{Sbox}
+                  \setlength{\fboxrule}{5pt}
+                  \setlength{\fboxsep}{24pt}
+                  \fcolorbox{\boxxcolor}{White}{\TheSbox}
+                \end{center}\bigskip\bigskip\bigskip
+               }
+
+\newenvironment{bibliogtwo}
+              {
+              \begin{center}
+                  \begin{Sbox}
+                    \begin{minipage}{0.28\textwidth}
+                      \parindent=-20pt
+                      \setlength{\fboxsep}{20pt}
+                       \fcolorbox{\boxxtitlecolor}{\boxxtitlecolor}
+                       {
+                       \begin{minipage}{\textwidth}
+                        \fontsize{\boxheadingfontsize}{1.2\boxheadingfontsize} \selectfont
+                        \begin{center}
+                          \textcolor{White}{References}
+                      \end{center}
+                      \end{minipage}
+                      }\par
+                      \parindent=20pt
+                      $\ $\par 
+                      \bigskip                            
+\begin{biblist}[\bibliographyfontsize]
+              }
+              {
+             \end{biblist}
+              \end{minipage}
+                  \end{Sbox}
+                  \setlength{\fboxrule}{0pt}
+                  \setlength{\fboxsep}{0pt}
+                  \fcolorbox{\boxxcolor}{White}{\TheSbox}
+                \end{center}\bigskip\bigskip\bigskip
+               }
+
+
+
+
+}%I
+{%J
+\ifthenelse{\equal{#1}{prospectus}}
+%%prospectus
+{%K
+\renewcommand{\styletest}{prospectus}
+
+%%Requires geometry.sty package
+
+\usepackage[landscape, top=0.4truein, bottom=0.5truein, left=1.0truein, right=0.9truein]{geometry}
+
+\setlength{\headheight}{1.5truein}
+\setlength{\headsep}{0.1truein}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}%[section]
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem*{theoremn}{Theorem}
+\newtheorem*{conjecturen}{Conjecture}
+\newtheorem*{claimn}{Claim}
+\newtheorem*{corollaryn}{Corollary}
+\newtheorem*{lemman}{Lemma}
+\newtheorem*{propositionn}{Proposition}
+
+
+\theoremstyle{definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{algorit}[theorem]{Algorithm}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{exercisep}{}%[section]
+\newtheorem{problemm}[theorem]{Problem}
+\newtheorem{exercisee}[theorem]{Exercise}%[section]
+\newtheorem*{definitionn}{Definition}
+\newtheorem*{examplen}{Example}
+\newtheorem*{remarkn}{Remark}
+\newtheorem*{algoritn}{Algorithm}
+\newtheorem*{exercisen}{}
+\newtheorem*{problemmn}{Problem}
+\newtheorem*{exerciseen}{Exercise}
+
+\newcommand{\startmain}{
+\newgeometry{top=1.5truein, bottom=0.5truein, right=0.85truein, left=0.81truein}
+\pagestyle{empty}
+}
+
+
+%colors
+
+\definecolor{GreenYellow}{cmyk}{0.15,0,0.69,0}
+\definecolor{RoyalPurple}{cmyk}{0.75,0.90,0,0}
+\definecolor{Yellow}{cmyk}{0,0,1,0}
+\definecolor{BlueViolet}{cmyk}{0.86,0.91,0,0.04}
+\definecolor{Goldenrod}{cmyk}{0,0.10,0.84,0}
+\definecolor{Periwinkle}{cmyk}{0.57,0.55,0,0}
+\definecolor{Dandelion}{cmyk}{0,0.29,0.84,0}
+\definecolor{CadetBlue}{cmyk}{0.62,0.57,0.23,0}
+\definecolor{Apricot}{cmyk}{0,0.32,0.52,0}
+\definecolor{CornflowerBlue}{cmyk}{0.65,0.13,0,0}
+\definecolor{Peach}{cmyk}{0,0.50,0.70,0}
+\definecolor{MidnightBlue}{cmyk}{0.98,0.13,0,0.43}
+\definecolor{Melon}{cmyk}{0,0.46,0.5,0}
+\definecolor{NavyBlue}{cmyk}{0.94,0.54,0,0}
+\definecolor{YellowOrange}{cmyk}{0,0.42,1,0}
+\definecolor{RoyalBlue}{cmyk}{1,0.50,0,0}
+\definecolor{Orange}{cmyk}{0,0.61,0.87,0}
+\definecolor{Blue}{cmyk}{1,1,0,0}
+\definecolor{BurntOrange}{cmyk}{0,0.51,1,0}
+\definecolor{Cerulean}{cmyk}{0.94,0.11,0,0}
+\definecolor{Bittersweet}{cmyk}{0,0.75,1,0.24}
+\definecolor{Cyan}{cmyk}{1,0,0,0}
+\definecolor{RedOrange}{cmyk}{0,0.77,0.87,0}
+\definecolor{ProcessBlue}{cmyk}{0.96,0,0,0}
+\definecolor{Mahogany}{cmyk}{0,0.85,0.87,0.35}
+\definecolor{SkyBlue}{cmyk}{0.62,0,0.12,0}
+\definecolor{Maroon}{cmyk}{0,0.87,0.68,0.32}
+\definecolor{Turquoise}{cmyk}{0.85,0,0.20,0}
+\definecolor{BrickRed}{cmyk}{0,0.89,0.94,0.28}
+\definecolor{TealBlue}{cmyk}{0.86,0,0.34,0.02}
+\definecolor{Red}{cmyk}{0,1,1,0}
+\definecolor{Aquamarine}{cmyk}{0.82,0,0.30,0}
+\definecolor{OrangeRed}{cmyk}{0,1,0.50,0}
+\definecolor{BlueGreen}{cmyk}{0.85,0,0.33,0}
+\definecolor{RubineRed}{cmyk}{0,1,0.13,0}
+\definecolor{Emerald}{cmyk}{1,0,0.50,0}
+\definecolor{WildStrawberry}{cmyk}{0,0.96,0.39,0}
+\definecolor{JungleGreen}{cmyk}{0.99,0,0.52,0}
+\definecolor{Salmon}{cmyk}{0,0.53,0.38,0}
+\definecolor{SeaGreen}{cmyk}{0.69,0,0.50,0}
+\definecolor{CarnationPink}{cmyk}{0,0.63,0,0}
+\definecolor{Green}{cmyk}{1,0,1,0}
+\definecolor{Magenta}{cmyk}{0,1,0,0}
+\definecolor{ForestGreen}{cmyk}{0.91,0,0.88,0.12}
+\definecolor{VioletRed}{cmyk}{0,0.81,0,0}
+\definecolor{PineGreen}{cmyk}{0.92,0,0.59,0.25}
+\definecolor{Rhodamine}{cmyk}{0,0.82,0,0}
+\definecolor{LimeGreen}{cmyk}{0.50,0,1,0}
+\definecolor{Mulberry}{cmyk}{0.34,0.90,0,0.02}
+\definecolor{YellowGreen}{cmyk}{0.44,0,0.74,0}
+\definecolor{RedViolet}{cmyk}{0.07,0.90,0,0.34}
+\definecolor{SpringGreen}{cmyk}{0.26,0,0.76,0}
+\definecolor{Fuchsia}{cmyk}{0.47,0.91,0,0.08}
+\definecolor{OliveGreen}{cmyk}{0.64,0,0.95,0.40}
+\definecolor{Lavender}{cmyk}{0,0.48,0,0}
+\definecolor{RawSienna}{cmyk}{0,0.72,1,0.45}
+\definecolor{Thistle}{cmyk}{0.12,0.59,0,0}
+\definecolor{Sepia}{cmyk}{0,0.83,1,0.70}
+\definecolor{Orchid}{cmyk}{0.32,0.64,0,0}
+\definecolor{Brown}{cmyk}{0,0.81,1,0.60}
+\definecolor{DarkOrchid}{cmyk}{0.40,0.80,0.20,0}
+\definecolor{Tan}{cmyk}{0.14,0.42,0.56,0}
+\definecolor{Purple}{cmyk}{0.45,0.86,0,0}
+\definecolor{Gray}{cmyk}{0,0,0,0.50}
+\definecolor{Plum}{cmyk}{0.50,1,0,0}
+\definecolor{Black}{cmyk}{0,0,0,1}
+\definecolor{Violet}{cmyk}{0.79,0.88,0,0}
+\definecolor{White}{cmyk}{0,0,0,0}
+
+
+\newenvironment{bibliog}
+              {
+\prospectusbibliog
+\begin{biblist}[\prospbibliographyfontsize]
+}
+{
+\end{biblist}
+}
+
+
+
+\newenvironment{tesst}
+              {
+              \begin{center}
+                  \begin{Sbox}
+                    \begin{minipage}{0.28\textwidth}
+                      \begin{center}
+                        \fontsize{\boxheadingfontsize}{1.2\boxheadingfontsize} \selectfont  \textcolor{\boxxtitlecolor}{References}
+                      \end{center}\parindent=20pt
+              }
+              {
+              \end{minipage}
+                  \end{Sbox}
+                  \setlength{\fboxrule}{5pt}
+                  \setlength{\fboxsep}{24pt}
+                  \fcolorbox{\boxxcolor}{White}{\TheSbox}
+                \end{center}\bigskip\bigskip\bigskip
+               }
+
+
+
+}%K
+{%L
+\ifthenelse{\equal{#1}{presentation}}
+%%prospectus
+{%M
+\renewcommand{\styletest}{presentation}
+
+%%Requires geometry.sty package
+
+\usepackage[landscape, top=0.4truein, bottom=0.5truein, left=1.0truein, right=0.9truein]{geometry}
+
+\setlength{\headheight}{1.5truein}
+\setlength{\headsep}{0.1truein}
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}%[section]
+\newtheorem{conjecture}[theorem]{Conjecture}
+\newtheorem{claim}[theorem]{Claim}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem*{theoremn}{Theorem}
+\newtheorem*{conjecturen}{Conjecture}
+\newtheorem*{claimn}{Claim}
+\newtheorem*{corollaryn}{Corollary}
+\newtheorem*{lemman}{Lemma}
+\newtheorem*{propositionn}{Proposition}
+
+
+\theoremstyle{definition}
+\newtheorem{example}[theorem]{Example}
+\newtheorem{remark}[theorem]{Remark}
+\newtheorem{algorit}[theorem]{Algorithm}
+\newtheorem{definition}[theorem]{Definition}
+\newtheorem{exercisep}{}%[section]
+\newtheorem{problemm}[theorem]{Problem}
+\newtheorem{exercisee}[theorem]{Exercise}%[section]
+\newtheorem*{definitionn}{Definition}
+\newtheorem*{examplen}{Example}
+\newtheorem*{remarkn}{Remark}
+\newtheorem*{algoritn}{Algorithm}
+\newtheorem*{exercisen}{}
+\newtheorem*{problemmn}{Problem}
+\newtheorem*{exerciseen}{Exercise}
+
+\newcommand{\startmain}{
+\newgeometry{top=1.5truein, bottom=0.5truein, right=0.85truein, left=0.81truein}
+\pagestyle{empty}
+}
+
+
+%colors
+
+\definecolor{GreenYellow}{cmyk}{0.15,0,0.69,0}
+\definecolor{RoyalPurple}{cmyk}{0.75,0.90,0,0}
+\definecolor{Yellow}{cmyk}{0,0,1,0}
+\definecolor{BlueViolet}{cmyk}{0.86,0.91,0,0.04}
+\definecolor{Goldenrod}{cmyk}{0,0.10,0.84,0}
+\definecolor{Periwinkle}{cmyk}{0.57,0.55,0,0}
+\definecolor{Dandelion}{cmyk}{0,0.29,0.84,0}
+\definecolor{CadetBlue}{cmyk}{0.62,0.57,0.23,0}
+\definecolor{Apricot}{cmyk}{0,0.32,0.52,0}
+\definecolor{CornflowerBlue}{cmyk}{0.65,0.13,0,0}
+\definecolor{Peach}{cmyk}{0,0.50,0.70,0}
+\definecolor{MidnightBlue}{cmyk}{0.98,0.13,0,0.43}
+\definecolor{Melon}{cmyk}{0,0.46,0.5,0}
+\definecolor{NavyBlue}{cmyk}{0.94,0.54,0,0}
+\definecolor{YellowOrange}{cmyk}{0,0.42,1,0}
+\definecolor{RoyalBlue}{cmyk}{1,0.50,0,0}
+\definecolor{Orange}{cmyk}{0,0.61,0.87,0}
+\definecolor{Blue}{cmyk}{1,1,0,0}
+\definecolor{BurntOrange}{cmyk}{0,0.51,1,0}
+\definecolor{Cerulean}{cmyk}{0.94,0.11,0,0}
+\definecolor{Bittersweet}{cmyk}{0,0.75,1,0.24}
+\definecolor{Cyan}{cmyk}{1,0,0,0}
+\definecolor{RedOrange}{cmyk}{0,0.77,0.87,0}
+\definecolor{ProcessBlue}{cmyk}{0.96,0,0,0}
+\definecolor{Mahogany}{cmyk}{0,0.85,0.87,0.35}
+\definecolor{SkyBlue}{cmyk}{0.62,0,0.12,0}
+\definecolor{Maroon}{cmyk}{0,0.87,0.68,0.32}
+\definecolor{Turquoise}{cmyk}{0.85,0,0.20,0}
+\definecolor{BrickRed}{cmyk}{0,0.89,0.94,0.28}
+\definecolor{TealBlue}{cmyk}{0.86,0,0.34,0.02}
+\definecolor{Red}{cmyk}{0,1,1,0}
+\definecolor{Aquamarine}{cmyk}{0.82,0,0.30,0}
+\definecolor{OrangeRed}{cmyk}{0,1,0.50,0}
+\definecolor{BlueGreen}{cmyk}{0.85,0,0.33,0}
+\definecolor{RubineRed}{cmyk}{0,1,0.13,0}
+\definecolor{Emerald}{cmyk}{1,0,0.50,0}
+\definecolor{WildStrawberry}{cmyk}{0,0.96,0.39,0}
+\definecolor{JungleGreen}{cmyk}{0.99,0,0.52,0}
+\definecolor{Salmon}{cmyk}{0,0.53,0.38,0}
+\definecolor{SeaGreen}{cmyk}{0.69,0,0.50,0}
+\definecolor{CarnationPink}{cmyk}{0,0.63,0,0}
+\definecolor{Green}{cmyk}{1,0,1,0}
+\definecolor{Magenta}{cmyk}{0,1,0,0}
+\definecolor{ForestGreen}{cmyk}{0.91,0,0.88,0.12}
+\definecolor{VioletRed}{cmyk}{0,0.81,0,0}
+\definecolor{PineGreen}{cmyk}{0.92,0,0.59,0.25}
+\definecolor{Rhodamine}{cmyk}{0,0.82,0,0}
+\definecolor{LimeGreen}{cmyk}{0.50,0,1,0}
+\definecolor{Mulberry}{cmyk}{0.34,0.90,0,0.02}
+\definecolor{YellowGreen}{cmyk}{0.44,0,0.74,0}
+\definecolor{RedViolet}{cmyk}{0.07,0.90,0,0.34}
+\definecolor{SpringGreen}{cmyk}{0.26,0,0.76,0}
+\definecolor{Fuchsia}{cmyk}{0.47,0.91,0,0.08}
+\definecolor{OliveGreen}{cmyk}{0.64,0,0.95,0.40}
+\definecolor{Lavender}{cmyk}{0,0.48,0,0}
+\definecolor{RawSienna}{cmyk}{0,0.72,1,0.45}
+\definecolor{Thistle}{cmyk}{0.12,0.59,0,0}
+\definecolor{Sepia}{cmyk}{0,0.83,1,0.70}
+\definecolor{Orchid}{cmyk}{0.32,0.64,0,0}
+\definecolor{Brown}{cmyk}{0,0.81,1,0.60}
+\definecolor{DarkOrchid}{cmyk}{0.40,0.80,0.20,0}
+\definecolor{Tan}{cmyk}{0.14,0.42,0.56,0}
+\definecolor{Purple}{cmyk}{0.45,0.86,0,0}
+\definecolor{Gray}{cmyk}{0,0,0,0.50}
+\definecolor{Plum}{cmyk}{0.50,1,0,0}
+\definecolor{Black}{cmyk}{0,0,0,1}
+\definecolor{Violet}{cmyk}{0.79,0.88,0,0}
+\definecolor{White}{cmyk}{0,0,0,0}
+
+
+\newenvironment{bibliog}
+              {
+\presentationbibliog
+\begin{biblist}[\prospbibliographyfontsize]
+}
+{
+\end{biblist}
+}
+
+
+\newenvironment{tesst}
+              {
+              \begin{center}
+                  \begin{Sbox}
+                    \begin{minipage}{0.28\textwidth}
+                      \begin{center}
+                        \fontsize{\boxheadingfontsize}{1.2\boxheadingfontsize} \selectfont  \textcolor{\boxxtitlecolor}{References}
+                      \end{center}\parindent=20pt
+              }
+              {
+              \end{minipage}
+                  \end{Sbox}
+                  \setlength{\fboxrule}{5pt}
+                  \setlength{\fboxsep}{24pt}
+                  \fcolorbox{\boxxcolor}{White}{\TheSbox}
+                \end{center}\bigskip\bigskip\bigskip
+               }
+
+}%M
+{%N
+%%%%%None of the above
+}%N
+}%L
+}%J
+}%H
+}%F
+}%D
+}%B
+}%Whole
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\parindent=1em
+\parskip\z@
+\clubpenalty\@M
+\widowpenalty\@M
+%
+
+%%% Running head: 9 pt TR, c/lc, 2em# inside of fl. outside folio, base %%aligns
+%%% with folio; recto: CN, period, word # to CT; verso: contributor's %%name(s).
+%%% In single-author, verso: SN, period, word # to ST.
+%%%
+%%% If you want the running heads on the opposite pages, just put \flipheads
+%%% after the documentstyle.  LaTeX isn't bright enough to allow one option
+%%% file to define ds@flipheads.
+%%%
+
+\def\markbothsame#1{\markboth{#1}{#1}}
+
+%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\spce}{\smallskip}
+\newcommand{\sspce}{\bigskip}
+
+
+\newcommand{\x}{\times}
+\renewcommand{\o}{\circ}
+\newcommand{\alt}{\mathrel{|}}
+
+
+%%Sets of Numbers
+\newcommand{\rrr}[1]{{\mathbb{R}}^{#1}}
+\newcommand{\rr}{\mathbb{R}}
+\newcommand{\rrrn}{{\mathbb{R}}^n}
+\newcommand{\sn}{S^n}
+\newcommand{\rrrm}{{\mathbb{R}}^m}
+\newcommand{\sm}{S^m}
+\newcommand{\so}{S^1}
+\newcommand{\sw}{S^2}
+\newcommand{\st}{S^3}
+\newcommand{\rp}{\oluinter 0}
+\newcommand{\rnn}{\cluinter 0}
+\newcommand{\rnz}{\rr - \{0\}}
+\newcommand{\rnc}[1]{\rr - \{#1\}}
+\newcommand{\rneg}{\oruinter 0}
+\newcommand{\cc}{\mathbb{C}}
+\newcommand{\zz}{\mathbb{Z}}
+\newcommand{\zp}{{\zz}^+}
+\newcommand{\qqq}{\mathbb{Q}}
+\newcommand{\nn}{\mathbb{N}}
+\newcommand{\ee}{\mathbb{E}}
+\newcommand{\oo}{\mathbb{O}}
+\newcommand{\exrr}{\mathbb{R}^*}
+\newcommand{\znn}{\nn \cup \{0\}}
+\newcommand{\znz}{\zz - \{0\}}
+
+%%Sets
+\newcommand{\powerset}[1]{{\mcalp}({#1})}
+\newcommand{\symmdif}{\mathrel{\bigtriangleup}}
+
+
+%%Functions
+\newcommand{\func}[3]{{#1} \colon {#2} \to {#3}}
+\newcommand{\idmap}[1]{1_{#1}}
+\newcommand{\rc}{\mathop{\circ}}
+\DeclareMathOperator{\im}{im}
+
+
+
+%%Topology
+\DeclareMathOperator{\Int}{Int}
+\DeclareMathOperator{\Bd}{Bd}
+\newcommand{\clos}[1]{\overline{#1}}
+
+\newcommand{\balled}[3]{B_{#1}({#2}, {#3})}
+\newcommand{\balle}[2]{B({#1}, {#2})}
+\newcommand{\rcl}[1]{[{#1}]}
+\newcommand{\htp}{\simeq}
+\newcommand{\htpp}{\simeq_p}
+\newcommand{\cmp}[2]{C({#1}, {#2})}
+\newcommand{\psp}[3]{P({#1}; {#2}, {#3})}
+\newcommand{\lsp}[2]{P({#1}; {#2})}
+\newcommand{\fgrp}[2]{\pi_1({#1}, {#2})}
+
+%%Real Analysis
+\newcommand{\labs}{\left|}
+\newcommand{\rabs}{\right|}
+\newcommand{\limd}[2]{{\displaystyle \lim_{#1 \to #2}}\,}
+\newcommand{\ddx}[2]{\displaystyle \frac {d{#1}}{d{#2}}}
+\newcommand{\rsumm}[3]{S({#1}, {#2}, {#3})}
+\newcommand{\rssumm}[4]{S({#1}, {#2}, {#3}, {#4})}
+\newcommand{\asumm}[2]{C({#1}, {#2})}
+\newcommand{\arclen}[3]{L_{#2}^{#3}({#1})}
+\newcommand{\arcset}[1]{\mcala_{#1}}
+\newcommand{\usum}[2]{U({#1}, {#2})}
+\newcommand{\lsum}[2]{L({#1}, {#2})}
+\newcommand{\maxi}[2]{M_{#2}({#1})}
+\newcommand{\mini}[2]{m_{#2}({#1})}
+\newcommand{\maxip}[3]{M^{#3}_{#2}({#1})}
+\newcommand{\minip}[3]{m^{#3}_{#2}({#1})}
+\newcommand{\interyi}[2]{\cbinter {{#1}_{{#2}-1}}{{#1}_{#2}}}
+\newcommand{\interyoi}[2]{\obinter {{#1}_{{#2}-1}}{{#1}_{#2}}}
+\newcommand{\zinf}{(0, \infty)}
+
+\newcommand{\intd}[4]{\int_{#1}^{#2} #3(#4)\,d#4}
+\newcommand{\intr}[4]{\int_{#1}^{#2} #3(#4)\,d#4}
+\newcommand{\intdn}[4]{\int_{#1}^{#2} #3\,d#4}
+\newcommand{\intrn}[4]{\int_{#1}^{#2} #3\,d#4}
+\newcommand{\intod}[4]{\overline {\int_{#1}^{#2}} #3(#4)\,d#4}
+\newcommand{\intor}[4]{\overline {\int_{#1}^{#2}} #3(#4)\,d#4}
+\newcommand{\intodn}[4]{\overline {\int_{#1}^{#2}} #3\,d#4}
+\newcommand{\intorn}[4]{\overline {\int_{#1}^{#2}} #3\,d#4}
+\newcommand{\intud}[4]{\underline {\int_{#1}^{#2}} #3(#4)\,d#4}
+\newcommand{\intur}[4]{\underline {\int_{#1}^{#2}} #3(#4)\,d#4}
+\newcommand{\intudn}[4]{\underline {\int_{#1}^{#2}} #3\,d#4}
+\newcommand{\inturn}[4]{\underline {\int_{#1}^{#2}} #3\,d#4}
+\newcommand{\intid}[2]{\int #1(#2)\,d#2}
+\newcommand{\intir}[2]{\int #1(#2)\,d#2}
+\newcommand{\intidn}[2]{\int #1\,d#2}
+\newcommand{\intirn}[2]{\int #1\,d#2}
+\newcommand{\intsd}[5]{\int_{#1}^{#2} #3(#4)\,d#5} %\intsd abfxg
+\newcommand{\intsr}[5]{\int_{#1}^{#2} #3(#4)\,d#5}
+\newcommand{\intsdn}[4]{\int_{#1}^{#2} #3\,d#4}
+\newcommand{\intsrn}[4]{\int_{#1}^{#2} #3\,d#4}
+\newcommand{\intssd}[5]{\int_{#1}^{#2} #3(#4)\,d#5(#4)} %\intssd abfxg
+\newcommand{\intssr}[5]{\int_{#1}^{#2} #3(#4)\,d#5(#4)}
+\newcommand{\intssdn}[4]{\int_{#1}^{#2} #3\,d#4}
+\newcommand{\intssrn}[4]{\int_{#1}^{#2} #3\,d#4}
+
+\newcommand{\seqa}[1]{\left\{{#1}_n\right\}_{n=1}^\infty}
+\newcommand{\seqao}[1]{\left\{{#1}_n\right\}_{n=0}^\infty}
+\newcommand{\seqap}[1]{\left\{{#1}_n\right\}}
+\newcommand{\seqai}[2]{\left\{{#1}_n\right\}_{n={#2}}^\infty}
+\newcommand{\seqna}[1]{\left\{{#1}\right\}_{n=1}^\infty}
+\newcommand{\seqnav}[3]{#2\{{#1}#3\}_{n=1}^\infty}
+\newcommand{\seqnap}[1]{\left\{{#1}\right\}}
+\newcommand{\seqnai}[2]{\left\{{#1}\right\}_{n={#2}}^\infty}
+\newcommand{\seqnaik}[3]{\left\{{#1}\right\}_{{#3}={#2}}^\infty}
+\newcommand{\seqaind}[2]{\left\{{#1}\right\}_{#2}}
+\newcommand{\subseqa}[1]{\left\{{#1}_{n_k}\right\}_{k=1}^\infty}
+\newcommand{\subseqak}[2]{\left\{{#1}_{n_{#2}}\right\}_{{#2}=1}^\infty}
+
+\newcommand{\sera}[1]{\sum_{n=1}^\infty {#1}_n}
+\newcommand{\serao}[1]{\sum_{n=0}^\infty {#1}_n}
+\newcommand{\serai}[2]{\sum_{n={#2}}^\infty {#1}_n}
+\newcommand{\serna}[1]{\sum_{n=1}^\infty {#1}}
+\newcommand{\sernak}[1]{\sum_{k=1}^\infty {#1}}
+\newcommand{\sernao}[1]{\sum_{n=0}^\infty {#1}}
+\newcommand{\sernaok}[1]{\sum_{k=0}^\infty {#1}}
+\newcommand{\sernai}[2]{\sum_{n={#2}}^\infty {#1}}
+\newcommand{\sernaik}[3]{\sum_{{#3}={#2}}^\infty {#1}}
+\newcommand{\powser}[3]{\sum_{n=0}^\infty {#1}_n({#2} - {#3})^n}
+\newcommand{\macser}[2]{\sum_{n=0}^\infty {#1}_n{#2}^n}
+\newcommand{\taylp}[3]{T_{#3}^{{#1}, {#2}}} %%\taylp fan
+\newcommand{\taylorp}[3]{\sum_{n=0}^{#3} \frac {{#1}^{(n)}({#2})}{n!} (x - {#2})^n} %%\taylorp fan
+\newcommand{\tayls}[2]{T^{{#1}, {#2}}} %%\tayls fa
+\newcommand{\taylors}[2]{\sernao {\frac {{#1}^{(n)}({#2})}{n!} (x - {#2})^n}} %%\taylors fa
+\newcommand{\taylrem}[3]{R_{#3}^{{#1}, {#2}}} %%\taylrem fan
+
+\newcommand{\maclorp}[2]{\sum_{n=0}^{#2} \frac {{#1}^{(n)}(0)}{n!} x^n} %%\maclorp fn
+\newcommand{\maclors}[1]{\sernao {\frac {{#1}^{(n)}(0)}{n!} x^n}} %%\maclors f
+
+\DeclareMathOperator{\arcsec}{arcsec}
+\DeclareMathOperator{\arccsc}{arccsc}
+\DeclareMathOperator{\arccot}{arccot}
+
+\DeclareMathOperator{\lub}{lub}
+\DeclareMathOperator{\glb}{glb}
+\DeclareMathOperator{\sign}{sign}
+\DeclareMathOperator{\area}{area}
+\DeclareMathOperator{\volume}{volume}
+\DeclareMathOperator{\divv}{div}
+\DeclareMathOperator{\curl}{curl}
+
+
+%%Groups and Rings
+\newcommand{\grp}[1]{\mathcal{#1}}
+\newcommand{\eqmod}[3]{{#1} \equiv {#2} \pmod {#3}}
+\newcommand{\neqmod}[3]{{#1} \not\equiv {#2} \pmod {#3}}
+\newcommand{\relclass}[1]{\lbrack {#1} \rbrack}
+\newcommand{\zs}[1]{{\zz}_{{#1}}}
+\newcommand{\zss}[1]{{\zz}_{{#1}}^*}
+\newcommand{\congr}{\approx}
+\newcommand{\isomg}{\cong}
+\newcommand{\subgrp}{\le}
+\newcommand{\notsubgrp}{\nless}
+\newcommand{\nsubgrp}{\vartriangleleft}
+\newcommand{\notnsubgrp}{\not\vartriangleleft}
+\newcommand{\dilspcew}{Dil(2)}
+\newcommand{\permgrp}[1]{S_{#1}}
+\newcommand{\altgrp}[1]{A_{#1}}
+\newcommand{\digrp}[1]{D_{#1}}
+\newcommand{\cygrp}[1]{C_{#1}}
+\newcommand{\indexgh}[2]{({#1}: {#2})}
+
+\newcommand{\grpgen}[1]{\langle {#1}\rangle}
+\newcommand{\eltord}[1]{|{#1}|}
+\newcommand{\grpord}[1]{|{#1}|}
+\newcommand{\setord}[1]{|{#1}|}
+
+\newcommand{\polrngrx}[2]{{#1}[{#2}]}
+\newcommand{\polrngrxn}[3]{{#1}_{#3}[{#2}]}
+
+
+%%Vector Spaces
+\newcommand{\colvectwo}[2]{\begin{pmatrix} {#1}\\{#2}\end{pmatrix}} 
+\newcommand{\colvecthree}[3]{\begin{pmatrix} {#1}\\{#2}\\{#3}\end{pmatrix}} 
+\newcommand{\colvecfour}[4]{\begin{pmatrix} {#1}\\{#2}\\{#3}\\{#4}\end{pmatrix}} 
+\newcommand{\scolvectwo}[2]{\left(\begin{smallmatrix} {#1}\\{#2}\end{smallmatrix}\right)} 
+\newcommand{\scolvecthree}[3]{\left(\begin{smallmatrix} {#1}\\{#2}\\{#3}\end{smallmatrix}\right)} 
+\newcommand{\scolvecfour}[4]{\left(\begin{smallmatrix} {#1}\\{#2}\\{#3}\\{#4}\end{smallmatrix}\right)} 
+
+\newcommand{\colvecqtwo}[2]{\begin{bmatrix} {#1}\\{#2}\end{bmatrix}} 
+\newcommand{\colvecqthree}[3]{\begin{bmatrix} {#1}\\{#2}\\{#3}\end{bmatrix}} 
+\newcommand{\colvecqfour}[4]{\begin{bmatrix} {#1}\\{#2}\\{#3}\\{#4}\end{bmatrix}} 
+\newcommand{\scolvecqtwo}[2]{\left[\begin{smallmatrix} {#1}\\{#2}\end{smallmatrix}\right]} 
+\newcommand{\scolvecqthree}[3]{\left[\begin{smallmatrix} {#1}\\{#2}\\{#3}\end{smallmatrix}\right]} 
+\newcommand{\scolvecqfour}[4]{\left[\begin{smallmatrix} {#1}\\{#2}\\{#3}\\{#4}\end{smallmatrix}\right} 
+
+\newcommand{\scolvecxn}[2]{\scolvecthree {{#1}_1}{\vdots}{{#1}_{#2}}} 
+\newcommand{\colvecxn}[2]{\colvecthree {{#1}_1}{\vdots}{{#1}_{#2}}} 
+\newcommand{\scolvecqxn}[2]{\scolvecqthree {{#1}_1}{\vdots}{{#1}_{#2}}} 
+\newcommand{\colvecqxn}[2]{\colvecqthree {{#1}_1}{\vdots}{{#1}_{#2}}} 
+
+\newcommand{\scolvecd}[2]{\scolvecthree {#1}{\vdots}{#2}} 
+\newcommand{\colvecd}[2]{\colvecthree {#1}{\vdots}{#2}} 
+\newcommand{\scolvecqd}[2]{\scolvecqthree {#1}{\vdots}{#2}} 
+\newcommand{\colvecqd}[2]{\colvecqthree {#1}{\vdots}{#2}} 
+
+\newcommand{\scolvecxd}[3]{\scolvecthree {{#1}_{#2}}{\vdots}{{#1}_{#3}}} 
+\newcommand{\colvecxd}[3]{\colvecthree {{#1}_{#2}}{\vdots}{{#1}_{#3}}} 
+\newcommand{\scolvecqxd}[3]{\scolvecqthree {{#1}_{#2}}{\vdots}{{#1}_{#3}}} 
+\newcommand{\colvecqxd}[3]{\colvecqthree {{#1}_{#2}}{\vdots}{{#1}_{#3}}} 
+\newcommand{\mtwo}[4]{\begin{pmatrix} {#1}&{#2}\\{#3}&{#4} \end{pmatrix}}
+\newcommand{\mqtwo}[4]{\begin{bmatrix} {#1}&{#2}\\{#3}&{#4}\end{bmatrix}}
+\newcommand{\mthree}[9]{\begin{pmatrix} {#1}&{#2}&{#3}\\{#4}&{#5}&{#6}\\{#7}&{#8}&{#9} \end{pmatrix}}
+\newcommand{\mqthree}[9]{\begin{bmatrix} {#1}&{#2}&{#3}\\{#4}&{#5}&{#6}\\{#7}&{#8}&{#9} \end{bmatrix}}
+
+\newcommand{\smtwo}[4]{\left(\begin{smallmatrix} {#1}&{#2}\\{#3}&{#4}\end{smallmatrix}\right)}
+\newcommand{\smqtwo}[4]{\left[\begin{smallmatrix} {#1}&{#2}\\{#3}&{#4}\end{smallmatrix}\right]}
+\newcommand{\smthree}[9]{\left(\begin{smallmatrix} {#1}&{#2}&{#3}\\{#4}&{#5}&{#6}\\{#7}&{#8}&{#9} \end{smallmatrix}\right)}
+\newcommand{\smqthree}[9]{\left[\begin{smallmatrix} {#1}&{#2}&{#3}\\{#4}&{#5}&{#6}\\{#7}&{#8}&{#9} \end{smallmatrix}\right]}
+
+\newcommand{\smdtwo}[4]{\left|\begin{smallmatrix} {#1}&{#2}\\{#3}&{#4}\end{smallmatrix}\right|}
+\newcommand{\smdthree}[9]{\left|\begin{smallmatrix} {#1}&{#2}&{#3}\\{#4}&{#5}&{#6}\\{#7}&{#8}&{#9} \end{smallmatrix}\right|}
+
+\newcommand{\smtwothree}[6]{\left(\begin{smallmatrix} {#1}&{#2}&{#3}\\{#4}&{#5}&{#6} \end{smallmatrix}\right)}
+\newcommand{\smthreetwo}[6]{\left(\begin{smallmatrix} {#1}&{#2}\\{#3}&{#4}\\{#5}&{#6} \end{smallmatrix}\right)}
+\newcommand{\smqtwothree}[6]{\left[\begin{smallmatrix} {#1}&{#2}&{#3}\\{#4}&{#5}&{#6} \end{smallmatrix}\right]}
+\newcommand{\smqthreetwo}[6]{\left[\begin{smallmatrix} {#1}&{#2}\\{#3}&{#4}\\{#5}&{#6} \end{smallmatrix}\right]}
+
+\newcommand{\ip}[2]{\langle {#1}, {#2}\rangle}
+\newcommand{\dotp}[2]{{#1} \cdot {#2}}
+\newcommand{\norm}[1]{\|{#1}\|}
+\newcommand{\nrm}[1]{|{#1}|}
+\newcommand{\idmatn}[1]{I_{#1}}
+
+\DeclareMathOperator{\spn}{span}
+\DeclareMathOperator{\nll}{nullity}
+\DeclareMathOperator{\rk}{rank}
+\DeclareMathOperator{\crk}{column rank}
+\DeclareMathOperator{\rrk}{row rank}
+\DeclareMathOperator{\tr}{tr}
+\DeclareMathOperator{\cof}{cof}
+\DeclareMathOperator{\adj}{adj}
+\DeclareMathOperator{\lk}{lk}
+
+\newcommand{\zsc}{\mathsf{0}}
+\newcommand{\zv}{\mathit{0}}
+\newcommand{\zm}{\mathbf{0}}
+\newcommand{\zvec}{\mathbf{0}}
+\newcommand{\onepol}{\mathbf{1}}
+
+\newcommand{\funcspce}[2]{{\mathcal{F}}({#1}, {#2})}
+\newcommand{\funspce}{\mathcal{F}}
+\newcommand{\contspce}{\mathcal{C}}
+\newcommand{\diffspce}{\mathcal{D}}
+
+\newcommand{\polyaxn}[3]{{#1}_{#3}{#2}^{#3} + \cdots + {#1}_1{#2} + {#1}_0}
+\newcommand{\lincombaxn}[3]{{#1}_1{#2}_1 + \cdots + {#1}_{#3}{#2}_{#3}}
+
+\newcommand{\matspce}[3]{\mathsf{M}_{{#1} \times {#2}}({#3})}
+\newcommand{\polyspce}[1]{\mathsf{P}({#1})}
+\newcommand{\polyspcen}[2]{\mathsf{P}_{#1}({#2})}
+\newcommand{\polspce}{\mathcal{P}}
+\newcommand{\polspcen}[1]{\mathcal{P}_{#1}}
+
+\newcommand{\linspce}[2]{\mathcal{L}({#1}, {#2})}
+\newcommand{\linspceo}[1]{\mathcal{L}({#1})}
+\newcommand{\mmmap}[1]{\mathsf{L}_{#1}}
+\newcommand{\coordv}[2]{[{#1}]_{#2}}
+\newcommand{\matrep}[3]{[{#1}]_{#2}^{#3}}
+\newcommand{\matrepo}[2]{[{#1}]_{#2}}
+\newcommand{\espce}[1]{\mathsf{E}_{#1}}
+\newcommand{\restr}[2]{{#1} |_{{#2}}}
+\newcommand{\emone}[2]{\mathcal{E}_1({#1}, {#2})}
+\newcommand{\emtwo}[2]{\mathcal{E}_2({#1}; {#2})}
+\newcommand{\emthree}[3]{\mathcal{E}_3({#1}, {#2}; {#3})}
+\newcommand{\revmov}[1]{{#1}^R}
+\newcommand{\obvmov}[1]{{#1}^O}
+\newcommand{\assmov}[1]{{#1}^A}
+
+\newcommand{\vecn}{(v_1, \ldots, v_n)}
+\newcommand{\vecnv}[1]{(v_1, \ldots, v_{#1})}
+
+\newcommand\bs{\char '134 }
+
+%% Here's an example of an operation table:
+%% $$
+%% \optwo
+%% \ast & e & a\\
+%% \hline
+%% e & e & a\\
+%% a & a & e
+%% \eopthree.
+%% $$
+
+\newcommand{\optwo}{\begin{array}{c|c c}}
+\newcommand{\eoptwo}{\end{array}}
+\newcommand{\opthree}{\begin{array}{c|c c c}}
+\newcommand{\eopthree}{\end{array}}
+\newcommand{\opfour}{\begin{array}{c|c c c c}}
+\newcommand{\eopfour}{\end{array}}
+\newcommand{\opfive}{\begin{array}{c|c c c c c}}
+\newcommand{\eopfive}{\end{array}}
+\newcommand{\opsix}{\begin{array}{c|c c c c c c}}
+\newcommand{\eopsix}{\end{array}}
+\newcommand{\opseven}{\begin{array}{c|c c c c c c c}}
+\newcommand{\eopseven}{\end{array}}
+\newcommand{\opeight}{\begin{array}{c|c c c c c c c c}}
+\newcommand{\eopeight}{\end{array}}
+\newcommand{\opnine}{\begin{array}{c|c c c c c c c c c}}
+\newcommand{\eopnine}{\end{array}}
+\newcommand{\opten}{\begin{array}{c|c c c c c c c c c c}}
+\newcommand{\eopten}{\end{array}}
+\newcommand{\opeleven}{\begin{array}{c|c c c c c c c c c c c}}
+\newcommand{\eopeleven}{\end{array}}
+\newcommand{\optwelve}{\begin{array}{c|c c c c c c c c c c c c}}
+\newcommand{\eoptwelve}{\end{array}}
+
+
+
+%%Theorems, Proofs and the Like
+\providecommand{\qensymbol}{$///$}%
+\newcommand{\demo}{\begin{proof}[{\bf Proof}]}
+\newcommand{\edemo}{\end{proof}}
+
+\newcommand{\demonb}{\begin{proof}[{\bf Proof}]}
+\newcommand{\edemonb}{\renewcommand{\qedsymbol}{}\end{proof}\vspace{-1.5\baselineskip}}
+
+
+\newcommand{\argu}{\begin{proof}[{\bf Argument}]}
+\newcommand{\eargu}{\end{proof}}
+\newcommand{\demoname}[1]{\begin{proof}[{\bf #1}]}
+\newcommand{\edemoname}{\end{proof}}
+\newcommand{\demoex}{\begin{proof}[{\bf Proof}]}
+\newcommand{\edemoex}{\renewcommand{\qedsymbol}{\qensymbol}
+\end{proof}}
+\newcommand{\demonamed}[1]{\begin{proof}[{\bf #1}]}
+\newcommand{\edemonamed}{\end{proof}}
+\newcommand{\demonamednb}[1]{\begin{proof}[{\bf #1}]}
+\newcommand{\edemonamednb}{\renewcommand{\qedsymbol}{}\end{proof}\vspace{-1.5\baselineskip}}
+\newcommand{\nondemo}[1]{\begin{proof}[{\bf #1}]}
+\newcommand{\enondemo}{\renewcommand{\qedsymbol}{\qensymbol}
+\end{proof}}
+
+\newcommand{\solu}{\begin{proof}[{\bf Solution}]}
+\newcommand{\esolu}{\end{proof}}
+
+
+\newcommand{\demopart}[1]{\bigskip\par \noindent\textbf{Part~\ref{#1}}.}
+
+
+\newcommand{\eq}{\begin{equation}}
+\newcommand{\eeq}{\end{equation}}
+
+\newcommand{\equa}[1]{\begin{equation}\label{#1}}
+\newcommand{\eequa}{\end{equation}}
+
+\newcommand{\Ffact}{Fact}
+\newcommand{\ffact}{fact}
+
+
+
+\theoremstyle{plain}
+
+\newtheorem*{lemmao}{\lemhd}
+\newcommand{\lemhd}{FRED}
+\newcommand{\lemo}[1]{\renewcommand{\lemhd}{Lemma #1}\begin{lemmao}}
+\newcommand{\elemo}{\end{lemmao}}
+
+\newtheorem*{corollaryo}{\thmhd}
+\newcommand{\corohd}{FRED}
+\newcommand{\coroo}[1]{\renewcommand{\corohd}{Corollary #1}\begin{corollaryo}}
+\newcommand{\ecoroo}{\end{corollaryo}}
+
+\newtheorem*{claimo}{\thmhd}
+\newcommand{\clmhd}{FRED}
+\newcommand{\clmo}[1]{\renewcommand{\clmhd}{Claim #1}\begin{claimo}}
+\newcommand{\eclmo}{\end{claimo}}
+
+\newtheorem*{theoremo}{\thmhd}
+\newcommand{\thmhd}{FRED}
+\newcommand{\thmo}[1]{\renewcommand{\thmhd}{Theorem #1}\begin{theoremo}}
+\newcommand{\ethmo}{\end{theoremo}}
+
+\newtheorem*{propositiono}{\prophd}
+\newcommand{\prophd}{FRED}
+\newcommand{\propo}[1]{\renewcommand{\prophd}{Proposition #1}\begin{propositiono}}
+\newcommand{\epropo}{\end{propositiono}}
+
+\newtheorem*{conjectureo}{\conjhd}
+\newcommand{\conjhd}{FRED}
+\newcommand{\conjo}[1]{\renewcommand{\conjhd}{Conjecture #1}\begin{conjectureo}}
+\newcommand{\econjo}{\end{conjectureo}}
+
+\newtheorem*{exercisenumo}{\exnumhd}
+\newcommand{\exnumhd}{FRED}
+\newcommand{\exernumo}[1]{\renewcommand{\exnumhd}{#1}
+\begin{exercisenumo}}
+\newcommand{\eexernumo}{\end{exercisenumo}}
+
+
+\theoremstyle{definition}
+
+\newtheorem*{exerciseo}{\exhdd}
+\newcommand{\exhdd}{FRED}
+\newcommand{\exero}[1]{\renewcommand{\exhdd}{Exercise #1}\begin{exerciseo}}
+\newcommand{\eexero}{\qex\end{exerciseo}}
+
+\newtheorem*{problemo}{\probhd}
+\newcommand{\probhd}{FRED}
+\newcommand{\probo}[1]{\renewcommand{\probhd}{Problem #1}\begin{problemo}}
+\newcommand{\eprobo}{\qex\end{problemo}}
+
+\newtheorem*{definitiono}{\defnhd}
+\newcommand{\defnhd}{FRED}
+\newcommand{\defno}[1]{\renewcommand{\defnhd}{Definition #1}\begin{definitiono}}
+\newcommand{\edefno}{\qef\end{definitiono}}
+
+\newtheorem*{exampleo}{\explhd}
+\newcommand{\explhd}{FRED}
+\newcommand{\explo}[1]{\renewcommand{\explhd}{Example #1}\begin{exampleo}}
+\newcommand{\eexplo}{\qex\end{exampleo}}
+
+\newtheorem*{remarko}{\remkhd}
+\newcommand{\remkhd}{FRED}
+\newcommand{\remko}[1]{\renewcommand{\remkhd}{Remark #1}\begin{remarko}}
+\newcommand{\eremko}{\qex\end{remarko}}
+
+\newtheorem*{algorito}{\alghd}
+\newcommand{\alghd}{FRED}
+\newcommand{\algrthmo}[1]{\renewcommand{\alghd}{Algorithm #1}\begin{algorito}}
+\newcommand{\ealgrthmo}{\qex\end{algorito}}
+
+
+\newcommand{\exer}{\begin{exercisee}}
+\newcommand{\eexer}{\end{exercisee}}
+\newcommand{\thm}{\begin{theorem}}
+\newcommand{\ethm}{\end{theorem}}
+\newcommand{\thmnamed}[1]{\begin{theorem}[#1]}
+\newcommand{\ethmnamed}{\end{theorem}}
+\newcommand{\conj}{\begin{conjecture}}
+\newcommand{\econj}{\end{conjecture}}
+\newcommand{\clm}{\begin{claim}}
+\newcommand{\eclm}{\end{claim}}
+\newcommand{\expl}{\begin{example}}
+\newcommand{\eexpl}{\qex\end{example}}
+\newcommand{\explnb}{\begin{example}}
+\newcommand{\eexplnb}{\end{example}}
+\newcommand{\remk}{\begin{remark}}
+\newcommand{\eremk}{\qex\end{remark}}
+\newcommand{\remknb}{\begin{remark}}
+\newcommand{\eremknb}{\end{remark}}
+\newcommand{\algrthm}{\begin{algorit}}
+\newcommand{\ealgrthm}{\qex\end{algorit}}
+\newcommand{\algrthmnb}{\begin{algorit}}
+\newcommand{\ealgrthmnb}{\end{algorit}}
+\newcommand{\defn}{\begin{definition}}
+\newcommand{\edefn}{\qef\end{definition}}
+\newcommand{\defnnb}{\begin{definition}}
+\newcommand{\edefnnb}{\end{definition}}
+\newcommand{\thmn}{\begin{theoremn}}
+\newcommand{\ethmn}{\end{theoremn}}
+\newcommand{\conjn}{\begin{conjecturen}}
+\newcommand{\econjn}{\end{conjecturen}}
+\newcommand{\clmn}{\begin{claimn}}
+\newcommand{\eclmn}{\end{claimn}}
+\newcommand{\expln}{\begin{examplen}}
+\newcommand{\eexpln}{\qex\end{examplen}}
+\newcommand{\explnnb}{\begin{examplen}}
+\newcommand{\eexplnnb}{\end{examplen}}
+\newcommand{\remkn}{\begin{remarkn}}
+\newcommand{\eremkn}{\qex\end{remarkn}}
+\newcommand{\remknnb}{\begin{remarkn}}
+\newcommand{\eremknnb}{\end{remarkn}}
+\newcommand{\algrthmn}{\begin{algoritn}}
+\newcommand{\ealgrthmn}{\qex\end{algoritn}}
+\newcommand{\algrthmnnb}{\begin{algoritn}}
+\newcommand{\ealgrthmnnb}{\end{algoritn}}
+
+\newcommand{\defnn}{\begin{definitionn}}
+\newcommand{\edefnn}{\qef\end{definitionn}}
+\newcommand{\defnnnb}{\begin{definitionn}}
+\newcommand{\edefnnnb}{\end{definitionn}}
+\newcommand{\exern}{\begin{exerciseen}}
+\newcommand{\eexern}{\qex\end{exerciseen}}
+\newcommand{\exernnb}{\begin{exerciseen}}
+\newcommand{\eexernnb}{\end{exerciseen}}
+\newcommand{\probn}{\begin{problemmn}}
+\newcommand{\eprobn}{\qex\end{problemmn}}
+\newcommand{\probnnb}{\begin{problemmn}}
+\newcommand{\eprobnnb}{\end{problemmn}}
+
+
+\newcommand{\exr}{\begin{exercise}}
+\newcommand{\eexr}{\end{exercise}}
+
+\newcommand{\exrs}[1]{\begin{exercise}
+{\bf [#1]}\ \ }
+\newcommand{\eexrs}{\end{exercise}}
+
+\newcommand{\exre}{\begin{exercisee} \rm}
+\newcommand{\eexre}{\end{exercisee}}
+
+\newcommand{\hexr}[1]{\begin{proof}[{\bf \ref{#1}}]}
+\newcommand{\ehexr}{\renewcommand{\qed}{}
+\end{proof}}
+
+\newcommand{\helpsec}[2]{\par\par\par\spce\spce\spce
+{\qquad\quad \bf Section 
+\ref{#1} \quad #2}\par\par}
+
+
+\newcommand{\prob}{\begin{problemm}. \rm}
+\newcommand{\eprob}{\end{problemm}}
+
+
+
+\newcommand{\defnnum}[1]{\noindent {\bf Definition #1}\par}
+\newcommand{\exernum}[1]{\noindent {\bf Exercise #1}\par}
+\newcommand{\probnum}[1]{\noindent {\bf Problem #1}\par}
+\newcommand{\thmnum}[1]{\noindent {\bf Theorem #1}\par}
+\newcommand{\lemnum}[1]{\noindent {\bf Lemma #1}\par}
+\newcommand{\coronum}[1]{\noindent {\bf Corollary #1}\par}
+\newcommand{\propnum}[1]{\noindent {\bf Proposition #1}\par}
+\newcommand{\conjnum}[1]{\noindent {\bf Conjecture #1}\par}
+\newcommand{\clmnum}[1]{\noindent {\bf Claim #1}\par}
+\newcommand{\explnum}[1]{\noindent {\bf Example #1}\par}
+\newcommand{\remknum}[1]{\noindent {\bf Remark #1}\par}
+\newcommand{\algrthmnum}[1]{\noindent {\bf Algorithm #1}\par}
+
+
+\newcommand{\coro}{\begin{corollary}}
+\newcommand{\ecoro}{\end{corollary}}
+\newcommand{\lem}{\begin{lemma}}
+\newcommand{\elem}{\end{lemma}}
+\newcommand{\prop}{\begin{proposition}}
+\newcommand{\eprop}{\end{proposition}}
+\newcommand{\coron}{\begin{corollaryn}}
+\newcommand{\ecoron}{\end{corollaryn}}
+\newcommand{\lemn}{\begin{lemman}}
+\newcommand{\elemn}{\end{lemman}}
+\newcommand{\propn}{\begin{propositionn}}
+\newcommand{\epropn}{\end{propositionn}}
+
+\newtheorem{ffigure}{\hskip 1.8truein Insert Figure}[section]
+\newcommand{\figg}{\begin{ffigure} \rm}
+\newcommand{\efigg}{\end{ffigure}}
+
+\providecommand{\qexsymbol}{$\lozenge$}%
+\newcommand{\mathqex}{\quad\hbox{\qexsymbol}}
+\DeclareRobustCommand{\qex}{%
+  \ifmmode \mathqex
+  \else
+    \leavevmode\unskip\penalty9999 \hbox{}\nobreak\hfill
+    \quad\hbox{\qexsymbol}%
+  \fi
+}
+\providecommand{\qefsymbol}{$\triangle$}%
+\newcommand{\mathqef}{\quad\hbox{\qefsymbol}}
+\DeclareRobustCommand{\qef}{%
+  \ifmmode \mathqef
+  \else
+    \leavevmode\unskip\penalty9999 \hbox{}\nobreak\hfill
+    \quad\hbox{\qefsymbol}%
+  \fi
+}
+
+\newenvironment{enumeratepm}
+              {\begin{list}{\textbf {\arabic{enumi}.}}
+                  {\usecounter{enumi}
+                   \setlength{\leftmargin}{20pt}
+                   \setlength{\itemindent}{20pt}
+                  }}
+              {\end{list}}
+
+
+\newenvironment{enumerateb}
+              {\begin{list}{\textbf {\arabic{enumi}.}}
+                  {\usecounter{enumi}
+                   \setlength{\leftmargin}{0pt}
+                   \setlength{\itemindent}{0pt}
+                  }}
+              {\end{list}}
+
+
+\newcommand{\enum}{\begin{enumerate}}
+\newcommand{\eenum}{\end{enumerate}}
+\newcommand{\renum}{\begin{rnumerate}}
+\newcommand{\reenum}{\end{rnumerate}}
+
+
+
+%%%%%%%%%%%%%%%%%%%%%
+
+\newcommand{\titleplus}[4]{
+\pagenumbering{roman}
+\begin{titlepage}
+\vfill\vfill
+\begin{center}
+\Huge {#1}
+\end{center}
+\vfill\vfill
+\begin{center}
+\Large A Senior Project submitted to\\
+The Division of Science, Mathematics, and Computing\\
+of\\
+Bard College
+\end{center}
+\vskip 0.2truein
+\begin{center}
+\Large by\\
+{#2}
+\end{center}
+\vfill\vfill\vfill
+\begin{center}
+\Large Annandale-on-Hudson, New York\\
+{#3}, {#4}
+\end{center}
+\end{titlepage}
+\tableofcontents    
+}
+
+\newcommand{\titlepg}[4]{
+\pagenumbering{roman}
+\begin{titlepage}
+\vfill\vfill
+\begin{center}
+\Huge {#1}
+\end{center}
+\vfill\vfill
+\begin{center}
+\Large A Senior Project submitted to\\
+The Division of Science, Mathematics, and Computing\\
+of\\
+Bard College
+\end{center}
+\vskip 0.2truein
+\begin{center}
+\Large by\\
+{#2}
+\end{center}
+\vfill\vfill\vfill
+\begin{center}
+\Large Annandale-on-Hudson, New York\\
+{#3}, {#4}
+\end{center}
+\end{titlepage}
+}
+
+\newcommand{\titleplusmat}[4]{
+\pagenumbering{roman}
+\begin{titlepage}
+\vfill\vfill
+\begin{center}
+\Huge {#1}
+\end{center}
+\vfill\vfill
+\begin{center}
+\Large A Mathematics Research Project submitted to\\
+The Master of Arts in Teaching Program\\
+of\\
+Bard College
+\end{center}
+\vskip 0.2truein
+\begin{center}
+\Large by\\
+{#2}
+\end{center}
+\vfill\vfill\vfill
+\begin{center}
+\Large Annandale-on-Hudson, New York\\
+{#3}, {#4}
+\end{center}
+\end{titlepage}
+\tableofcontents    
+}
+
+\newcommand{\titlepgmat}[4]{
+\pagenumbering{roman}
+\begin{titlepage}
+\vfill\vfill
+\begin{center}
+\Huge {#1}
+\end{center}
+\vfill\vfill
+\begin{center}
+\Large A Mathematics Research Project submitted to\\
+The Master of Arts in Teaching Program\\
+of\\
+Bard College
+\end{center}
+\vskip 0.2truein
+\begin{center}
+\Large by\\
+{#2}
+\end{center}
+\vfill\vfill\vfill
+\begin{center}
+\Large Annandale-on-Hudson, New York\\
+{#3}, {#4}
+\end{center}
+\end{titlepage}
+}
+
+\newcommand{\titlepgjrsem}[4]{
+\pagenumbering{roman}
+\begin{titlepage}
+\vfill\vfill
+\begin{center}
+\Huge {#1}
+\end{center}
+\vfill\vfill
+\begin{center}
+\Large Expository Writing submitted to\\
+The Mathematics Junior Seminar\\
+of\\
+Bard College
+\end{center}
+\vskip 0.2truein
+\begin{center}
+\Large by\\
+{#2}
+\end{center}
+\vfill\vfill\vfill
+\begin{center}
+\Large Annandale-on-Hudson, New York\\
+{#3}, {#4}
+\end{center}
+\end{titlepage}
+}
+
+
+%%Homework information
+
+%%Format: \hwinfo{Ethan Bloch}{Math 888}{5/5/55}
+
+\newcommand{\hwinfo}[3]{\hfill\hfill #1 \par
+\hfill\hfill #2 \par
+\hfill\hfill #3 \par
+\par\bigskip}
+
+
+\newcommand{\doublespace}{\setlength{\baselineskip}{24pt}}
+\newcommand{\singlespace}{\setlength{\baselineskip}{12pt}}
+
+%%%%%%%%%%%%%%%%%%%%%
+
+%%For use with EPS files.  Must use PS mode.
+%%Requires \usepackage{graphics}
+\newcommand{\figeps}[3]
+{\vskip\figskip
+\begin{figure}[ht]
+\hfil\includegraphics{#1}\hfil
+\caption{#3}\label{#2}
+\end{figure}}
+
+\newcommand{\figspace}[2]{
+\begin{figure}[ht]
+\begin{center}
+\vskip #1
+\end{center}
+\caption{\label{#2}}
+\end{figure}
+}
+
+
+
+\long\def\@makecaption#1{{
+   \vskip 6pt
+   \small
+   \setbox\@tempboxa\hbox{#1}
+   \ifdim \wd\@tempboxa >\hsize   % IF longer than one line:
+      \unhbox\@tempboxa\hfil\par      %  THEN set as ordinary
+%paragraph.
+     \else                        %   ELSE  center.
+       \hbox to\hsize{\hfil\box\@tempboxa\hfil}
+   \fi}}
+%%Here
+\def\fnum@figure{\small Figure \thefigure}
+%{\sc FIGURE~}\thefigure}
+
+
+\makeatletter
+
+
+\long\def\@makecaption#1#2{%
+  \vskip\abovecaptionskip
+  \sbox\@tempboxa{#1. #2}%
+  \ifdim \wd\@tempboxa >\hsize
+    #1. #2\par
+  \else
+    \global \@minipagefalse
+    \hbox to\hsize{\hfil\box\@tempboxa\hfil}%
+  \fi
+  \vskip\belowcaptionskip}
+
+\makeatother
+
+
+
+%%From Amy Hendrickson, for Proofs \& Fundamentals
+
+\makeatletter
+\@addtoreset{equation}{section}
+\renewcommand{\theequation}{\thesection.\arabic{equation}}
+
+
+\renewcommand{\thefigure}{\thesection.\@arabic\c@figure}
+\@addtoreset{figure}{section}
+
+\renewcommand{\thetable}{\thesection.\@arabic\c@table}
+\@addtoreset{table}{section}
+
+
+
+%%%%%%poster stuff
+
+\newlength{\titlefontsize}
+\setlength{\titlefontsize}{1.1in}
+\newlength{\namefontsize}
+\setlength{\namefontsize}{0.8in}
+\newlength{\advfontsize}
+\setlength{\advfontsize}{0.6in}
+\newlength{\progdatefontsize}
+\setlength{\progdatefontsize}{0.6in}
+\newlength{\boxfontsize}
+\setlength{\boxfontsize}{0.4in}
+\newlength{\boxheadingfontsize}
+\setlength{\boxheadingfontsize}{0.8in}
+
+\newcommand{\bibliographyfontsize}{\fontsize{0.9\boxfontsize}{1.1\boxfontsize}\selectfont}
+
+
+
+\newcommand{\fontoption}[1]
+{
+\ifthenelse{\equal{#1}{helveteul}}{
+\usepackage[T1]{fontenc}
+\usepackage[scaled=0.85]{helvet}
+\renewcommand*\familydefault{\sfdefault}
+\usepackage{eulervm}
+}{
+\ifthenelse{\equal{#1}{mathptmx}}{\usepackage{mathptmx}}{}
+}
+}
+
+\newcommand{\helveteulfont}{
+\usepackage[T1]{fontenc}
+\usepackage[scaled=0.85]{helvet}
+\renewcommand*\familydefault{\sfdefault}
+\usepackage{eulervm}
+}
+
+
+%Write \leftlogo{figure file name}{height in inches}
+
+\newcommand{\leftlogofigp}{}
+\newcommand{\leftlogooldp}[2]
+{
+\renewcommand{\leftlogofigp}
+{
+\resizebox{!}{#2 in}{%
+\includegraphics{#1}
+}%
+}
+}
+\newcommand{\leftlogop}[1]
+{
+\renewcommand{\leftlogofigp}
+{
+\resizebox{!}{2.8 in}{%
+\includegraphics{#1}
+}%
+}
+}
+\newcommand{\rightlogofigp}{}
+\newcommand{\rightlogooldp}[2]
+{
+\renewcommand{\rightlogofigp}
+{
+\resizebox{!}{#2 in}{%
+\includegraphics{#1}
+}%
+}
+}
+\newcommand{\rightlogop}[1]
+{
+\renewcommand{\rightlogofigp}
+{
+\resizebox{!}{2.8 in}{%
+\includegraphics{#1}
+}%
+}
+}
+
+\newcommand{\leftrightlogooldp}[2]
+{
+\renewcommand{\leftlogofigp}
+{
+\resizebox{!}{#2 in}{%
+\includegraphics{#1}
+}%
+}
+\renewcommand{\rightlogofigp}
+{
+\resizebox{!}{#2 in}{%
+\includegraphics{#1}
+}%
+}
+}
+
+\newcommand{\leftrightlogop}[1]
+{
+\renewcommand{\leftlogofigp}
+{
+\resizebox{!}{2.8 in}{%
+\includegraphics{#1}
+}%
+}
+\renewcommand{\rightlogofigp}
+{
+\resizebox{!}{2.8 in}{%
+\includegraphics{#1}
+}%
+}
+}
+
+
+%%%%%
+
+%Write \leftlogon{figure file name}{height in inches}
+
+
+\newcommand{\leftlogofig}{}
+\newcommand{\leftlogoold}[2]
+{
+\renewcommand{\leftlogofig}
+{
+\includegraphics[height=2.8in]{#1}
+}
+}
+\newcommand{\leftlogo}[1]
+{
+\renewcommand{\leftlogofig}
+{
+\includegraphics[height=2.8in]{#1}}
+}
+
+\newcommand{\rightlogofig}{}
+\newcommand{\rightlogoold}[2]
+{
+\renewcommand{\rightlogofig}
+{
+\resizebox{#2 in}{!}{%
+\includegraphics{#1}
+}%
+}
+}
+\newcommand{\rightlogo}[1]
+{
+\renewcommand{\rightlogofig}
+{
+\includegraphics[height=2.8in]{#1}
+}
+}
+
+\newcommand{\leftrightlogoold}[2]
+{
+\renewcommand{\leftlogofig}
+{
+\resizebox{#2 in}{!}{%
+\includegraphics{#1}
+}%
+}
+\renewcommand{\rightlogofig}
+{
+\includegraphics[height=2.8in]{#1}}
+}
+
+\newcommand{\leftrightlogo}[1]
+{
+\renewcommand{\leftlogofig}
+{
+\includegraphics[height=2.8in]{#1}
+}
+\renewcommand{\rightlogofig}
+{
+\includegraphics[height=2.8in]{#1}
+}
+}
+
+
+
+%%%%%
+
+\newcommand{\mathptmxfont}{
+\usepackage{mathptmx}
+}
+
+\newcounter{countroman}
+\newenvironment{rnumerate}%
+{\begin{list}{{\rm (\roman{countroman})}}{\usecounter{countroman}}}%
+{\end{list}}
+
+
+\def\dotmin{\buildrel\textstyle.\over
+    {\hbox{\vrule height.55ex width0pt
+        \smash{\hbox{\mathsurround=0pt$-$}}}}}
+
+\def\mathsl#1{\expandafter\def\csname#1\endcsname{\mathop{\sl #1}\nolimits}}
+\def\mathbf#1{\expandafter\def\csname#1\endcsname{\mathop{\rm\bf #1}\nolimits}}
+
+\def\mathopn#1{\expandafter\def\csname#1\endcsname{\mathop{\rm #1}\nolimits}}
+\def\mathname#1{\expandafter\def\csname#1\endcsname{\mathop{\bf #1}\nolimits}}
+\mathopn{op}
+\mathopn{comp}
+
+%%%%%%%%%%%%%%%%%%%%%
+
+%Write \postertopo{title}{student name}{program}{month and year}{adviser name}
+
+\newcommand{\postertopo}[5]{
+\begin{center} 
+\begin{tabular}{ m{0.13\textwidth}  m{0.66\textwidth}  m{0.13\textwidth} }
+\begin{center}
+\leftlogofig
+\end{center}
+ &
+\begin{center}
+\begin{Sbox}
+\begin{minipage}{0.55\textwidth}
+\begin{center}
+\bf \fontsize{\titlefontsize}{\titlefontsize}\selectfont
+ #1\\ \bigskip
+\fontsize{\namefontsize}{\namefontsize}\selectfont
+ #2 \qquad \fontsize{\advfontsize}{\advfontsize}\selectfont \addviser: #5\\ \bigskip\bigskip
+\fontsize{\progdatefontsize}{\progdatefontsize}\selectfont 
+#3 \pprogram, Bard College, #4
+\end{center}
+\end{minipage}
+\end{Sbox}
+\setlength{\fboxrule}{2pt}
+\setlength{\fboxsep}{20pt}
+\cshadowbox{\TheSbox}{\postercolor}
+ \end{center}
+& 
+\begin{center}
+\rightlogofig
+\end{center}
+\\
+\end{tabular}
+\end{center}
+\bigskip\bigskip
+\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont
+\setlength{\columnseprule}{0pt}
+\setlength{\columnsep}{0.01\textwidth}
+\setcounter{finalcolumnbadness}{0}
+\begin{multicols}{3}\raggedcolumns
+}
+
+
+%Write \postertopold{title}{student name}{program}{month and year}{adviser name}
+
+\newcommand{\postertopold}[5]{
+\begin{center} 
+\begin{tabular}{ m{0.13\textwidth}  m{0.66\textwidth}  m{0.13\textwidth} }
+\begin{center}
+\leftlogofig
+\end{center}
+ &
+\begin{center}
+\begin{Sbox}
+\begin{minipage}{0.55\textwidth}
+\begin{center}
+\bf \fontsize{\titlefontsize}{\titlefontsize}\selectfont
+ #1\\ \bigskip
+\fontsize{\namefontsize}{\namefontsize}\selectfont
+ #2 \qquad \fontsize{\advfontsize}{\advfontsize}\selectfont \addviser: #5\\ \bigskip\bigskip
+\fontsize{\progdatefontsize}{\progdatefontsize}\selectfont 
+#3 \pprogram, Bard College, #4
+\end{center}
+\end{minipage}
+\end{Sbox}
+\setlength{\fboxrule}{4pt}
+\setlength{\fboxsep}{20pt}
+\fcolorbox{\boxxcolor}{White}{\TheSbox}
+ \end{center}
+& 
+\begin{center}
+\rightlogofig
+\end{center}
+\\
+\end{tabular}
+\end{center}
+\bigskip\bigskip
+\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont
+\setlength{\columnseprule}{0pt}
+\setlength{\columnsep}{0.01\textwidth}
+\setcounter{finalcolumnbadness}{0}
+\begin{multicols}{3}\raggedcolumns
+}
+
+
+%Write \postertop{title}{student name}{program}{month and year}{adviser name}
+
+\newcommand{\postertopoldless}[5]{
+\begin{center} 
+\begin{tabular}{ m{0.13\textwidth}  m{0.66\textwidth}  m{0.13\textwidth} }
+\begin{center}
+\leftlogofig
+\end{center}
+ &
+\begin{center}
+\begin{Sbox}
+\begin{minipage}{0.55\textwidth}
+\begin{center}
+\bf \fontsize{\titlefontsize}{\titlefontsize}\selectfont
+ \textcolor{\topptitlecolor}{#1}\\ \bigskip
+\fontsize{\namefontsize}{\namefontsize}\selectfont
+ #2 \qquad \fontsize{\advfontsize}{\advfontsize}\selectfont \addviser: #5\\ \bigskip\bigskip
+\fontsize{\progdatefontsize}{\progdatefontsize}\selectfont 
+#3 \pprogram, Bard College, #4
+\end{center}
+\end{minipage}
+\end{Sbox}
+\setlength{\fboxrule}{4pt}
+\setlength{\fboxsep}{20pt}
+\fcolorbox{\boxxcolor}{White}{\TheSbox}
+ \end{center}
+& 
+\begin{center}
+\rightlogofig
+\end{center}
+\\
+\end{tabular}
+\end{center}
+\bigskip\bigskip
+\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont
+\setlength{\columnseprule}{0pt}
+\setlength{\columnsep}{0.01\textwidth}
+\setcounter{finalcolumnbadness}{0}
+\begin{multicols}{3}\raggedcolumns
+}
+
+\newcommand{\postertopoldlessv}[5]{
+\begin{center} 
+\begin{tabular}{ m{0.13\textwidth}  m{0.76\textwidth}  m{0.13\textwidth} }
+\begin{center}
+\leftlogofig
+\end{center}
+ &
+\begin{center}
+\begin{Sbox}
+\begin{minipage}{0.65\textwidth}
+\begin{center}
+\bf \fontsize{\titlefontsize}{\titlefontsize}\selectfont
+ \textcolor{\topptitlecolor}{#1}\\ \bigskip
+\fontsize{\namefontsize}{\namefontsize}\selectfont
+ #2 \qquad \fontsize{\advfontsize}{\advfontsize}\selectfont \addviser: #5\\ \bigskip\bigskip
+\fontsize{\progdatefontsize}{\progdatefontsize}\selectfont 
+#3 \pprogram, Bard College, #4
+\end{center}
+\end{minipage}
+\end{Sbox}
+\setlength{\fboxrule}{4pt}
+\setlength{\fboxsep}{20pt}
+\fcolorbox{\boxxcolor}{White}{\TheSbox}
+ \end{center}
+& 
+\begin{center}
+\rightlogofig
+\end{center}
+\\
+\end{tabular}
+\end{center}
+\bigskip\bigskip
+\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont
+\setlength{\columnseprule}{0pt}
+\setlength{\columnsep}{0.01\textwidth}
+\setcounter{finalcolumnbadness}{0}
+\begin{multicols}{3}\raggedcolumns
+}
+
+
+\newcommand{\postertoponetwo}[6]{
+\newlength{\hssize}
+\setlength{\hssize}{0.13\textwidth}
+\newlength{\hbsize}
+\setlength{\hbsize}{\textwidth - 2.62\hssize}
+\newlength{\ohbsize}
+\setlength{\ohbsize}{0.66\textwidth}
+\newlength{\nhbsize}
+\setlength{\nhbsize}{#6\ohbsize}
+\newlength{\bhbsize}
+\setlength{\bhbsize}{0.8\nhbsize}
+\newlength{\nhssize}
+\setlength{\nhssize}{0.45\textwidth - 0.5\nhbsize}
+\begin{center} 
+\begin{tabular}{ m{\nhssize}  m{\nhbsize}  m{\nhssize} }
+\begin{center}
+\leftlogofig
+\end{center}
+ &
+\begin{center}
+\begin{Sbox}
+\begin{minipage}{\bhbsize}
+\begin{center}
+\bf \fontsize{\titlefontsize}{\titlefontsize}\selectfont
+ \textcolor{\topptitlecolor}{#1}\\ \bigskip
+\fontsize{\namefontsize}{\namefontsize}\selectfont
+ #2 \qquad \fontsize{\advfontsize}{\advfontsize}\selectfont \addviser: #5\\ \bigskip\bigskip
+\fontsize{\progdatefontsize}{\progdatefontsize}\selectfont 
+#3 \pprogram, Bard College, #4
+\end{center}
+\end{minipage}
+\end{Sbox}
+\setlength{\fboxrule}{4pt}
+\setlength{\fboxsep}{20pt}
+\fcolorbox{\boxxcolor}{White}{\TheSbox}
+ \end{center}
+& 
+\begin{center}
+\rightlogofig
+\end{center}
+\\
+\end{tabular}
+\end{center}
+\bigskip\bigskip
+\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont
+\setlength{\columnseprule}{0pt}
+\setlength{\columnsep}{0.01\textwidth}
+\setcounter{finalcolumnbadness}{0}
+\begin{multicols}{3}\raggedcolumns
+}
+
+\newcommand{\postertoponetwon}[6]{
+\newlength{\hssize}
+\setlength{\hssize}{0.13\textwidth}
+\newlength{\hbsize}
+\setlength{\hbsize}{\textwidth - 2.62\hssize}
+\newlength{\ohbsize}
+\setlength{\ohbsize}{0.66\textwidth}
+\newlength{\nhbsize}
+\setlength{\nhbsize}{#6\ohbsize}
+\newlength{\bhbsize}
+\setlength{\bhbsize}{0.8\nhbsize}
+\newlength{\nhssize}
+\setlength{\nhssize}{0.45\textwidth - 0.5\nhbsize}
+\begin{center} 
+\begin{tabular}{ m{\nhssize}  m{\nhbsize}  m{\nhssize} }
+\fbox{\centering
+\leftlogofign
+}
+ &
+\begin{center}
+\begin{Sbox}
+\begin{minipage}{\bhbsize}
+\begin{center}
+\bf \fontsize{\titlefontsize}{\titlefontsize}\selectfont
+ \textcolor{\topptitlecolor}{#1}\\ \bigskip
+\fontsize{\namefontsize}{\namefontsize}\selectfont
+ #2 \qquad \fontsize{\advfontsize}{\advfontsize}\selectfont \addviser: #5\\ \bigskip\bigskip
+\fontsize{\progdatefontsize}{\progdatefontsize}\selectfont 
+#3 \pprogram, Bard College, #4
+\end{center}
+\end{minipage}
+\end{Sbox}
+\setlength{\fboxrule}{4pt}
+\setlength{\fboxsep}{20pt}
+\fcolorbox{\boxxcolor}{White}{\TheSbox}
+ \end{center}
+& 
+\fbox{\centering
+\rightlogofign
+}
+\\
+\end{tabular}
+\end{center}
+\bigskip\bigskip
+\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont
+\setlength{\columnseprule}{0pt}
+\setlength{\columnsep}{0.01\textwidth}
+\setcounter{finalcolumnbadness}{0}
+\begin{multicols}{3}\raggedcolumns
+}
+
+
+
+\newlength{\postertopwidthfact}
+\setlength{\postertopwidthfact}{\textwidth}
+
+\newcommand{\postertopwidthfac}{1.5}
+\newcommand{\postertopwidthfactor}[1]{\renewcommand{\postertopwidthfac}{#1}}
+
+\newcommand{\postertopfour}[5]{
+\begin{center} 
+\begin{tabular}{ m{0.1\textwidth}  m{0.75\textwidth}  m{0.1\textwidth} }
+\begin{center}
+\leftlogofig
+\end{center}
+ &
+\begin{center}
+\begin{Sbox}
+\begin{minipage}{\postertopwidthfac\postertopwidthfact}
+\begin{center}
+\bf \fontsize{\titlefontsize}{\titlefontsize}\selectfont
+ \textcolor{\topptitlecolor}{#1}\\ \bigskip
+\fontsize{\namefontsize}{\namefontsize}\selectfont
+ #2 \qquad \fontsize{\advfontsize}{\advfontsize}\selectfont \addviser: #5\\ \bigskip\bigskip
+\fontsize{\progdatefontsize}{\progdatefontsize}\selectfont 
+#3 \pprogram, Bard College, #4
+\end{center}
+\end{minipage}
+\end{Sbox}
+\setlength{\fboxrule}{4pt}
+\setlength{\fboxsep}{20pt}
+\fcolorbox{\boxxcolor}{White}{\TheSbox}
+ \end{center}
+& 
+\begin{center}
+\rightlogofig
+\end{center}
+\\
+\end{tabular}
+\end{center}
+\bigskip\bigskip
+\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont
+\setlength{\columnseprule}{0pt}
+\setlength{\columnsep}{0.01\textwidth}
+\setcounter{finalcolumnbadness}{0}
+\begin{multicols}{3}\raggedcolumns
+}
+
+\newcommand{\postertopfive}[5]{
+\hfill
+\leftlogofig
+\hfill
+\begin{Sbox}
+\begin{minipage}{\postertopwidthfac\postertopwidthfact}
+\begin{center}
+\bf \fontsize{\titlefontsize}{\titlefontsize}\selectfont
+ \textcolor{\topptitlecolor}{#1}\\ \bigskip
+\fontsize{\namefontsize}{\namefontsize}\selectfont
+ #2 \qquad \fontsize{\advfontsize}{\advfontsize}\selectfont \addviser: #5\\ \bigskip\bigskip
+\fontsize{\progdatefontsize}{\progdatefontsize}\selectfont 
+#3 \pprogram, Bard College, #4
+\end{center}
+\end{minipage}
+\end{Sbox}
+\setlength{\fboxrule}{4pt}
+\setlength{\fboxsep}{20pt}
+\fcolorbox{\boxxcolor}{White}{\TheSbox}
+\hfill 
+\rightlogofig
+\hfill
+\bigskip\bigskip
+\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont
+\setlength{\columnseprule}{0pt}
+\setlength{\columnsep}{0.01\textwidth}
+\setcounter{finalcolumnbadness}{0}
+\begin{multicols}{3}\raggedcolumns
+}
+
+\usepackage{calc}
+\newlength{\smallsize}
+\setlength{\smallsize}{2in}
+\newlength{\bigsize}
+\setlength{\bigsize}{\textwidth - 2.5\smallsize}
+
+\newcommand{\postertopsix}[5]{
+\begin{center}
+\makebox[0pt][c]{\parbox{\textwidth}{%
+    \begin{minipage}[c]{\smallsize}\centering
+      \leftlogofig
+    \end{minipage}
+    \setlength{\fboxrule}{4pt}
+\setlength{\fboxsep}{20pt}
+\fcolorbox{\boxxcolor}{White}{
+\begin{minipage}[c]{\bigsize}\centering
+\bf \fontsize{\titlefontsize}{\titlefontsize}\selectfont
+ \textcolor{\topptitlecolor}{#1}\\ \bigskip
+\fontsize{\namefontsize}{\namefontsize}\selectfont
+ #2 \qquad \fontsize{\advfontsize}{\advfontsize}\selectfont \addviser: #5\\ \bigskip\bigskip
+\fontsize{\progdatefontsize}{\progdatefontsize}\selectfont 
+#3 \pprogram, Bard College, #4
+    \end{minipage}
+    }
+    \begin{minipage}[c]{\smallsize}\centering
+        \rightlogofig
+    \end{minipage}%
+}}
+\end{center}
+\bigskip\bigskip
+\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont
+\setlength{\columnseprule}{0pt}
+\setlength{\columnsep}{0.01\textwidth}
+\setcounter{finalcolumnbadness}{0}
+\begin{multicols}{3}\raggedcolumns
+}
+
+\newcommand{\postertopseven}[5]{
+\begin{center}
+\makebox[0pt][c]{\parbox{0.5\textwidth}{%
+    \begin{minipage}[c]{\smallsize}\centering
+      \leftlogofig
+    \end{minipage}
+    \hfill
+\begin{minipage}[c]{\postertopwidthfac\postertopwidthfact}\centering
+\begin{Sbox}
+\begin{minipage}{\postertopwidthfac\postertopwidthfact}
+\begin{center}
+\bf \fontsize{\titlefontsize}{\titlefontsize}\selectfont
+ \textcolor{\topptitlecolor}{#1}\\ \bigskip
+\fontsize{\namefontsize}{\namefontsize}\selectfont
+ #2 \qquad \fontsize{\advfontsize}{\advfontsize}\selectfont \addviser: #5\\ \bigskip\bigskip
+\fontsize{\progdatefontsize}{\progdatefontsize}\selectfont 
+#3 \pprogram, Bard College, #4
+\end{center}
+\end{minipage}
+\end{Sbox}
+\setlength{\fboxrule}{4pt}
+\setlength{\fboxsep}{20pt}
+\fcolorbox{\boxxcolor}{White}{\TheSbox}
+\end{minipage}
+    \hfill
+    \begin{minipage}[c]{\smallsize}\centering
+        \rightlogofig
+    \end{minipage}%
+}}
+\end{center}
+\bigskip\bigskip
+\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont
+\setlength{\columnseprule}{0pt}
+\setlength{\columnsep}{0.01\textwidth}
+\setcounter{finalcolumnbadness}{0}
+\begin{multicols}{3}\raggedcolumns
+}
+
+\newlength{\ssize}
+\setlength{\ssize}{2in}
+\newlength{\bsize}
+\setlength{\bsize}{3\textwidth - 2.5\ssize}
+
+\newcommand{\postertopeight}[5]{
+\begin{center}
+    \begin{minipage}[c]{0.5\ssize}\centering
+      \leftlogofig
+    \end{minipage}
+    \hfill
+\begin{minipage}[c]{\postertopwidthfac\postertopwidthfact}\centering
+\begin{Sbox}
+\begin{minipage}{\postertopwidthfac\postertopwidthfact}
+\begin{center}
+\bf \fontsize{\titlefontsize}{\titlefontsize}\selectfont
+ \textcolor{\topptitlecolor}{#1}\\ \bigskip
+\fontsize{\namefontsize}{\namefontsize}\selectfont
+ #2 \qquad \fontsize{\advfontsize}{\advfontsize}\selectfont \addviser: #5\\ \bigskip\bigskip
+\fontsize{\progdatefontsize}{\progdatefontsize}\selectfont 
+#3 \pprogram, Bard College, #4
+\end{center}
+\end{minipage}
+\end{Sbox}
+\setlength{\fboxrule}{4pt}
+\setlength{\fboxsep}{20pt}
+\fcolorbox{\boxxcolor}{White}{\TheSbox}
+\end{minipage}
+    \hfill
+    \begin{minipage}[c]{\ssize}\centering
+        \rightlogofig
+    \end{minipage}
+\end{center}
+\bigskip\bigskip
+\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont
+\setlength{\columnseprule}{0pt}
+\setlength{\columnsep}{0.01\textwidth}
+\setcounter{finalcolumnbadness}{0}
+\begin{multicols}{3}\raggedcolumns
+}
+
+\newcommand{\postertopninetwo}[6]{
+\newlength{\hssize}
+\setlength{\hssize}{0.13\textwidth}
+\newlength{\hbsize}
+\setlength{\hbsize}{\textwidth - 2.62\hssize}
+\newlength{\ohbsize}
+\setlength{\ohbsize}{0.6\textwidth}
+\newlength{\nhbsize}
+\setlength{\nhbsize}{#6\ohbsize}
+\newlength{\bhbsize}
+\setlength{\bhbsize}{0.95\nhbsize}
+\newlength{\nhssize}
+\setlength{\nhssize}{0.45\textwidth - 0.5\nhbsize}
+
+\begin{center}
+    \begin{minipage}[c]{\nhssize}\centering
+      \leftlogofig
+    \end{minipage}
+    \hfill
+\begin{minipage}[c]{\nhbsize}\centering
+\begin{Sbox}
+\begin{minipage}{\bhbsize}
+\begin{center}
+\bf \fontsize{\titlefontsize}{\titlefontsize}\selectfont
+ \textcolor{\topptitlecolor}{#1}\\ \bigskip
+\fontsize{\namefontsize}{\namefontsize}\selectfont
+ #2 \qquad \fontsize{\advfontsize}{\advfontsize}\selectfont \addviser: #5\\ \bigskip\bigskip
+\fontsize{\progdatefontsize}{\progdatefontsize}\selectfont 
+#3 \pprogram, Bard College, #4
+\end{center}
+\end{minipage}
+\end{Sbox}
+\setlength{\fboxrule}{4pt}
+\setlength{\fboxsep}{20pt}
+\fcolorbox{\boxxcolor}{White}{\TheSbox}
+\end{minipage}
+    \hfill
+    \begin{minipage}[c]{\nhssize}\centering
+        \rightlogofig
+    \end{minipage}
+\end{center}
+\bigskip\bigskip
+\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont
+\setlength{\columnseprule}{0pt}
+\setlength{\columnsep}{0.01\textwidth}
+\setcounter{finalcolumnbadness}{0}
+\begin{multicols}{3}\raggedcolumns
+}
+
+
+\newcommand{\postertoptenscale}[6]{
+\newlength{\hssize}
+\setlength{\hssize}{0.13\textwidth}
+\newlength{\hbsize}
+\setlength{\hbsize}{\textwidth - 2.62\hssize}
+\newlength{\ohbsize}
+\setlength{\ohbsize}{0.49\textwidth}
+\newlength{\nhbsize}
+\setlength{\nhbsize}{#6\ohbsize}
+\newlength{\bhbsize}
+\setlength{\bhbsize}{0.98\nhbsize}
+\newlength{\nhssize}
+\setlength{\nhssize}{0.48\textwidth - 0.5\nhbsize}
+\begin{center}
+\setlength{\fboxrule}{0pt}
+\fbox{\centering
+\hfill
+    \begin{minipage}[c]{\nhssize}\centering $\ $
+    \leftlogofign
+    $\ $
+    \end{minipage}
+    \hfill
+\begin{minipage}[c]{\nhbsize}\centering
+\begin{Sbox}
+\begin{minipage}{\bhbsize}
+\begin{center}
+\bf \fontsize{\titlefontsize}{\titlefontsize}\selectfont
+ \textcolor{\topptitlecolor}{#1}\\ \bigskip
+\fontsize{\namefontsize}{\namefontsize}\selectfont
+ #2 \qquad \fontsize{\advfontsize}{\advfontsize}\selectfont \addviser: #5\\ \bigskip\bigskip
+\fontsize{\progdatefontsize}{\progdatefontsize}\selectfont 
+#3 \pprogram, Bard College, #4
+\end{center}
+\end{minipage}
+\end{Sbox}
+\setlength{\fboxrule}{4pt}
+\setlength{\fboxsep}{20pt}
+\fcolorbox{\boxxcolor}{White}{\TheSbox}
+\end{minipage}
+    \hfill
+ \begin{minipage}[c]{\nhssize}\centering $\ $
+        \rightlogofign
+        $\ $
+ \end{minipage}
+\hfill
+}
+\end{center}
+\bigskip\bigskip
+\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont
+\setlength{\columnseprule}{0pt}
+\setlength{\columnsep}{0.01\textwidth}
+\setcounter{finalcolumnbadness}{0}
+\begin{multicols}{3}\raggedcolumns
+}
+
+\newcommand{\postertopten}[5]{\postertoptenscale {#1}{#2}{#3}{#4}{#5}{1}}
+
+%scale values 1 -> 2 without logo
+%scale values 1 -> 1.6 with math_prog_logo.pdf logos, or other logos roughly the same height at width
+\newcommand{\postertopscale}[6]{
+\begin{center}
+\newlength{\hssizeea}
+\setlength{\hssizeea}{-0.15\textwidth}
+\newlength{\hssizeeb}
+\setlength{\hssizeeb}{0.34\textwidth}
+\newlength{\hssizeer}
+\setlength{\hssizeer}{#6\hssizeea + \hssizeeb}
+\newlength{\hbsizeer}
+\setlength{\hbsizeer}{0.98\textwidth - 2.3\hssizeer}
+\setlength{\fboxrule}{0pt}
+\fbox{
+\begin{minipage}{\hssizeer}
+\begin{center}
+\leftlogofig
+\end{center}
+\end{minipage}
+}
+\hfill
+\setlength{\fboxrule}{0pt}
+\fbox{
+\begin{minipage}{\hbsizeer}
+\begin{center}
+\begin{Sbox}
+\begin{minipage}{.950\hbsizeer}
+\begin{center}
+\bf \fontsize{\titlefontsize}{\titlefontsize}\selectfont
+ \textcolor{\topptitlecolor}{#1}\\ \bigskip
+\fontsize{\namefontsize}{\namefontsize}\selectfont
+ #2 \qquad \fontsize{\advfontsize}{\advfontsize}\selectfont \addviser: #5\\ \bigskip\bigskip
+\fontsize{\progdatefontsize}{\progdatefontsize}\selectfont 
+#3 \pprogram, Bard College, #4
+\end{center}
+\end{minipage}
+\end{Sbox}
+\setlength{\fboxrule}{4pt}
+\setlength{\fboxsep}{20pt}
+\fcolorbox{\boxxcolor}{White}{\TheSbox}
+\end{center}
+\end{minipage}
+}
+\hfill
+\setlength{\fboxrule}{0pt}
+\fbox{
+\begin{minipage}{\hssizeer}
+\begin{center}
+\rightlogofig
+\end{center}
+\end{minipage}
+}
+\end{center}
+\bigskip\bigskip
+\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont
+\setlength{\columnseprule}{0pt}
+\setlength{\columnsep}{0.01\textwidth}
+\setcounter{finalcolumnbadness}{0}
+\begin{multicols}{3}\raggedcolumns
+}
+
+\newcommand{\postertop}[5]{\postertopscale {#1}{#2}{#3}{#4}{#5}{1}}
+
+
+
+\newcommand{\posterbot}{
+  \end{multicols}}
+
+\newenvironment{posterbard}
+{
+\begin{Sbox} 
+ \begin{minipage}[t]
+ [0.89\paperheight]
+[t]{1.00\textwidth}\bigskip\bigskip\bigskip\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont
+}
+{
+\end{multicols}
+\bigskip\bigskip
+\end{minipage}
+\end{Sbox}
+\begin{center}
+\setlength{\fboxrule}{3pt}
+\setlength{\fboxsep}{8pt}
+\fcolorbox{\boxxcolor}{White}{\TheSbox}
+\end{center}
+}
+
+
+\newcommand{\postertext}[1]{\begin{center} \shadowbox{ \begin{minipage} {0.29\textwidth} {#1} \end{minipage}}  \end{center}\bigskip\bigskip\bigskip }
+
+\def\cshadowbox{\VerbBox\@cshadowbox}
+\def\@cshadowbox#1#2{%
+ \setbox\@fancybox\hbox{\fbox{#1}}%
+ \leavevmode\vbox{%
+   \offinterlineskip
+   \dimen@=\shadowsize
+   \advance\dimen@ .5\fboxrule
+   \hbox{\copy\@fancybox\kern-.5\fboxrule\lower\shadowsize\hbox{%
+       {\color{#2}\vrule \@height\ht\@fancybox \@depth\dp\@fancybox
+         \@width\dimen@}}}%
+   \vskip-\dimen@
+   \moveright\shadowsize\vbox{%
+     {\color{#2} \hrule \@width\wd\@fancybox \@height\dimen@}}}}
+
+\def\cshadowboxwhite{\VerbBox\@cshadowbox}
+\def\@cshadowbox#1#2{%
+ \setbox\@fancybox\hbox{\fbox{#1}}%
+ \leavevmode\vbox{%
+   \offinterlineskip
+   \dimen@=\shadowsize
+   \advance\dimen@ .5\fboxrule
+   \hbox{\copy\@fancybox\kern-.5\fboxrule\lower\shadowsize\hbox{%
+       {\color{#2}\vrule \@height\ht\@fancybox \@depth\dp\@fancybox
+         \@width\dimen@}}}%
+   \vskip-\dimen@
+   \moveright\shadowsize\vbox{%
+     {\color{#2} \hrule \@width\wd\@fancybox \@height\dimen@}}}}
+
+
+
+\newcommand{\postercolor}{Black}
+\newcommand{\shadowcolor}[1]{\renewcommand{\postercolor}{#1}}
+
+\newcommand{\boxxcolor}{Mulberry}
+\newcommand{\boxcolor}[1]{\renewcommand{\boxxcolor}{#1}}
+
+\newcommand{\topptitlecolor}{RedViolet}
+\newcommand{\toptitlecolor}[1]{\renewcommand{\topptitlecolor}{#1}}
+
+\newcommand{\boxxtitlecolor}{BlueViolet}
+\newcommand{\boxtitlecolor}[1]{\renewcommand{\boxxtitlecolor}{#1}}
+
+
+\newcommand{\addviser}{Adviser}
+
+\newcommand{\adviseroption}[1]
+{%Whole
+\ifthenelse{\equal{#1}{adviser}}
+{%if
+\renewcommand{\addviser}{Adviser}
+}%if
+{%else
+\ifthenelse{\equal{#1}{advisers}}
+{%if
+\renewcommand{\addviser}{Advisers}
+}%if
+{%else
+\ifthenelse{\equal{#1}{advisor}}
+{%if
+\renewcommand{\addviser}{Advisor}
+}%if
+{%else
+\ifthenelse{\equal{#1}{advisors}}
+{%if
+\renewcommand{\addviser}{Advisors}
+}%if
+{}
+}%else
+}%else
+}%else
+}%Whole
+
+
+\newcommand{\pprogram}{Program}
+
+\newcommand{\programoption}[1]
+{%Whole
+\ifthenelse{\equal{#1}{program}}
+{%if
+\renewcommand{\pprogram}{Program}
+}%if
+{%else
+\ifthenelse{\equal{#1}{programs}}
+{%if
+\renewcommand{\pprogram}{Programs}
+}%if
+{}
+}%else
+}%Whole
+
+
+
+
+\newenvironment{posterboxo}[1][]
+              {
+              \begin{center}
+                  \begin{Sbox}
+                    \begin{minipage}{0.28\textwidth}
+                      \begin{center}
+                        \fontsize{\boxheadingfontsize}{1.2\boxheadingfontsize} \selectfont  #1
+                      \end{center}\parindent=20pt\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont \bigskip
+              }
+              {
+              \end{minipage}
+                  \end{Sbox}
+                  \setlength{\fboxrule}{2pt}
+                  \setlength{\fboxsep}{20pt}
+                  \cshadowbox{\TheSbox}{\postercolor}
+                \end{center}\bigskip\bigskip\bigskip
+               }
+
+\newenvironment{posterbox}[1][]
+              {
+              \begin{center}
+                  \begin{Sbox}
+                    \begin{minipage}{0.28\textwidth}
+                      \begin{center}
+                        \fontsize{\boxheadingfontsize}{1.2\boxheadingfontsize} \selectfont  #1
+                      \end{center}\parindent=20pt\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont \bigskip
+              }
+              {
+              \end{minipage}
+                  \end{Sbox}
+                  \setlength{\fboxrule}{5pt}
+                  \setlength{\fboxsep}{20pt}
+                  \fcolorbox{\boxxcolor}{White}{\TheSbox}
+                \end{center}\bigskip\bigskip\bigskip
+               }
+
+\newenvironment{posterboxtitlecolor}[2]
+              {
+              \begin{center}
+                  \begin{Sbox}
+                    \begin{minipage}{0.28\textwidth}
+                      \begin{center}
+                        \fontsize{\boxheadingfontsize}{1.2\boxheadingfontsize} \selectfont  \textcolor{#2}{#1}
+                      \end{center}\parindent=20pt\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont \bigskip
+              }
+              {
+              \end{minipage}
+                  \end{Sbox}
+                  \setlength{\fboxrule}{5pt}
+                  \setlength{\fboxsep}{20pt}
+                  \fcolorbox{\boxxcolor}{White}{\TheSbox}
+                \end{center}\bigskip\bigskip\bigskip
+               }
+
+\newenvironment{posterboxtitle}[1]
+              {
+              \begin{center}
+                  \begin{Sbox}
+                    \begin{minipage}{0.28\textwidth}
+                      \begin{center}
+                        \fontsize{\boxheadingfontsize}{1.2\boxheadingfontsize} \selectfont  \textcolor{\boxxtitlecolor}{#1}
+                      \end{center}\parindent=20pt\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont \bigskip
+              }
+              {
+              \end{minipage}
+                  \end{Sbox}
+                  \setlength{\fboxrule}{5pt}
+                  \setlength{\fboxsep}{24pt}
+                  \fcolorbox{\boxxcolor}{White}{\TheSbox}
+                \end{center}\bigskip\bigskip\bigskip
+               }
+
+\newenvironment{posterboxtitletwo}[1]
+              {
+              \begin{center}
+                  \begin{Sbox}
+                    \begin{minipage}{0.28\textwidth}
+                      \parindent=-20pt
+                      \setlength{\fboxsep}{20pt}
+                       \fcolorbox{\boxxtitlecolor}{\boxxtitlecolor}
+                       {
+                       \begin{minipage}{\textwidth}
+                        \fontsize{\boxheadingfontsize}{1.2\boxheadingfontsize} \selectfont
+                        \begin{center}
+                          \textcolor{White}{#1}
+                      \end{center}
+                      \end{minipage}
+                      }\par
+                      \parindent=20pt\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont \bigskip\bigskip\bigskip
+              }
+              {
+              \end{minipage}
+                  \end{Sbox}
+                  \setlength{\fboxrule}{0pt}
+                  \setlength{\fboxsep}{0pt}
+                  \fcolorbox{\boxxcolor}{White}{\TheSbox}
+                \end{center}\bigskip\bigskip\bigskip
+               }
+
+
+\newenvironment{posterboxabstract}
+              {
+              \begin{center}
+                  \begin{Sbox}
+                    \begin{minipage}{0.28\textwidth}
+                      \begin{center}
+                        \fontsize{\boxheadingfontsize}{1.2\boxheadingfontsize} \selectfont  \textcolor{\boxxtitlecolor}{Abstract}
+                      \end{center}\parindent=20pt\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont \bigskip
+              }
+              {
+              \end{minipage}
+                  \end{Sbox}
+                  \setlength{\fboxrule}{5pt}
+                  \setlength{\fboxsep}{24pt}
+                  \fcolorbox{\boxxcolor}{White}{\TheSbox}
+                \end{center}\bigskip\bigskip\bigskip
+               }
+
+
+\newenvironment{posterboxabstracttwo}
+              {
+              \begin{center}
+                  \begin{Sbox}
+                    \begin{minipage}{0.28\textwidth}
+                      \parindent=-20pt
+                      \setlength{\fboxsep}{20pt}
+                       \fcolorbox{\boxxtitlecolor}{\boxxtitlecolor}
+                       {
+                       \begin{minipage}{\textwidth}
+                        \fontsize{\boxheadingfontsize}{1.2\boxheadingfontsize} \selectfont
+                        \begin{center}
+                          \textcolor{White}{Abstract}
+                      \end{center}
+                      \end{minipage}
+                      }\par
+                      \parindent=20pt\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont \bigskip\bigskip\bigskip
+              }
+              {
+              \end{minipage}
+                  \end{Sbox}
+                  \setlength{\fboxrule}{0pt}
+                  \setlength{\fboxsep}{0pt}
+                  \fcolorbox{\boxxcolor}{White}{\TheSbox}
+                \end{center}\bigskip\bigskip\bigskip
+               }
+
+
+
+\newenvironment{posterboxabstractnew}
+              {
+             \begin{center}
+                  \setlength{\fboxrule}{5pt}
+                  \setlength{\fboxsep}{24pt}
+ \fcolorbox{\boxxcolor}{White}
+ \lbrace
+                     \begin{minipage}{0.28\textwidth}
+                      \begin{center}
+                        \fontsize{\boxheadingfontsize}{1.2\boxheadingfontsize} \selectfont  \textcolor{\boxxtitlecolor}{Abstract}
+                      \end{center}\parindent=20pt\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont \bigskip
+              }
+              {
+              \end{minipage}
+\rbrace
+                \end{center}\bigskip\bigskip\bigskip
+               }
+
+
+\newenvironment{posterboxreferences}
+              {
+              \begin{center}
+                  \begin{Sbox}
+                    \begin{minipage}{0.28\textwidth}
+                      \begin{center}
+                        \fontsize{\boxheadingfontsize}{1.2\boxheadingfontsize} \selectfont  \textcolor{\boxxtitlecolor}{References}
+                      \end{center}\parindent=20pt
+\begin{biblist}[\bibliographyfontsize]
+              }
+              {
+             \end{biblist}
+              \end{minipage}
+                  \end{Sbox}
+                  \setlength{\fboxrule}{0pt}
+                  \setlength{\fboxsep}{0pt}
+                  \fcolorbox{\boxxcolor}{White}{\TheSbox}
+                \end{center}\bigskip\bigskip\bigskip
+               }
+
+
+\newenvironment{posterboxreferencestwo}
+              {
+              \begin{center}
+                  \begin{Sbox}
+                    \begin{minipage}{0.28\textwidth}
+                      \parindent=-20pt
+                      \setlength{\fboxsep}{20pt}
+                       \fcolorbox{\boxxtitlecolor}{\boxxtitlecolor}
+                       {
+                       \begin{minipage}{\textwidth}
+                        \fontsize{\boxheadingfontsize}{1.2\boxheadingfontsize} \selectfont
+                        \begin{center}
+                          \textcolor{White}{References}
+                      \end{center}
+                      \end{minipage}
+                      }\par
+                      \parindent=20pt
+                      $\ $\par 
+                      \bigskip                            
+\begin{biblist}[\bibliographyfontsize]
+              }
+              {
+             \end{biblist}
+              \end{minipage}
+                  \end{Sbox}
+                  \setlength{\fboxrule}{0pt}
+                  \setlength{\fboxsep}{0pt}
+                  \fcolorbox{\boxxcolor}{White}{\TheSbox}
+                \end{center}\bigskip\bigskip\bigskip
+               }
+
+
+\newenvironment{posterboxnotitle}
+              {
+              \begin{center}
+                  \begin{Sbox}
+                    \begin{minipage}{0.28\textwidth}
+                      \parindent=20pt\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont \bigskip
+              }
+              {
+              \end{minipage}
+                  \end{Sbox}
+                  \setlength{\fboxrule}{5pt}
+                  \setlength{\fboxsep}{24pt}
+                  \fcolorbox{\boxxcolor}{White}{\TheSbox}
+                \end{center}\bigskip\bigskip\bigskip
+               }
+
+
+\newenvironment{posterboxnotitletwo}
+              {
+              \begin{center}
+                  \begin{Sbox}
+                    \begin{minipage}{0.28\textwidth}
+                      \parindent=-20pt
+                      \setlength{\fboxsep}{20pt}
+                       \fcolorbox{\boxxtitlecolor}{\boxxtitlecolor}
+                       {
+                       \begin{minipage}{\textwidth}
+                        \fontsize{\boxheadingfontsize}{1.2\boxheadingfontsize} \selectfont
+                        \begin{center}
+                          \textcolor{White}{\phantom{G}}
+                      \end{center}
+                      \end{minipage}
+                      }\par
+                      \parindent=20pt\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont \bigskip\bigskip\bigskip
+              }
+              {
+              \end{minipage}
+                  \end{Sbox}
+                  \setlength{\fboxrule}{0pt}
+                  \setlength{\fboxsep}{0pt}
+                  \fcolorbox{\boxxcolor}{White}{\TheSbox}
+                \end{center}\bigskip\bigskip\bigskip
+               }
+
+
+
+\newcommand{\posterboxf}[2]
+{
+\setlength{\fboxrule}{4pt}
+\setlength{\fboxsep}{20pt}
+\begin{center}
+\fcolorbox{\boxxcolor}{White}{
+\begin{minipage}{0.28\textwidth}
+\begin{center}
+\fontsize{\boxheadingfontsize}{1.2\boxheadingfontsize} \selectfont  #1
+\end{center}\parindent=20pt\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont \bigskip
+#2
+\end{minipage}
+}
+\end{center}\bigskip\bigskip\bigskip
+}
+
+\newcommand{\posterboxfnotitle}[1]
+{
+\setlength{\fboxrule}{4pt}
+\setlength{\fboxsep}{20pt}
+\begin{center}
+\fcolorbox{\boxxcolor}{White}{
+\begin{minipage}{0.28\textwidth}
+\parindent=20pt\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont \bigskip
+#1
+\end{minipage}
+}
+\end{center}\bigskip\bigskip\bigskip
+}
+
+
+
+\newenvironment{posterboxtop}[1][]
+              {
+              \begin{center}
+                  \begin{Sbox}
+                    \begin{minipage}{0.55\textwidth}
+                      \begin{center}
+                        \fontsize{\boxheadingfontsize}{1.2\boxheadingfontsize} \selectfont  #1
+                      \end{center}\parindent=20pt\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont \bigskip
+              }
+              {
+              \end{minipage}
+                  \end{Sbox}
+                  \setlength{\fboxrule}{2pt}
+                  \setlength{\fboxsep}{20pt}
+                  \cshadowbox{\TheSbox}{\postercolor}
+                \end{center}\bigskip\bigskip\bigskip
+               }
+
+
+
+
+%%Poster style options
+
+%%%%%There is an error in the following command!!
+
+\newcommand{\posterstyle}[1]
+{%Whole
+\ifthenelse{\equal{#1}{styleone}}
+{%if
+%%Stuff \postertop posterboxabstract posterboxtitle posterboxnotitle bibliog
+\renewcommand{\postertopoldless}[5]{
+\begin{center} 
+\begin{tabular}{ m{0.13\textwidth}  m{0.66\textwidth}  m{0.13\textwidth} }
+\begin{center}
+\leftlogofig
+\end{center}
+ &
+\begin{center}
+\begin{Sbox}
+\begin{minipage}{0.55\textwidth}
+\begin{center}
+\bf \fontsize{\titlefontsize}{\titlefontsize}\selectfont
+ \textcolor{\topptitlecolor}{##1}\\ \bigskip
+\fontsize{\namefontsize}{\namefontsize}\selectfont
+ ##2 \qquad \fontsize{\advfontsize}{\advfontsize}\selectfont \addviser: ##5\\ \bigskip\bigskip
+\fontsize{\progdatefontsize}{\progdatefontsize}\selectfont 
+##3 \pprogram, Bard College, ##4
+\end{center}
+\end{minipage}
+\end{Sbox}
+\setlength{\fboxrule}{4pt}
+\setlength{\fboxsep}{20pt}
+\fcolorbox{\boxxcolor}{White}{\TheSbox}
+ \end{center}
+& 
+\begin{center}
+\rightlogofig
+\end{center}
+\\
+\end{tabular}
+\end{center}
+\bigskip\bigskip
+\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont
+\setlength{\columnseprule}{0pt}
+\setlength{\columnsep}{0.01\textwidth}
+\setcounter{finalcolumnbadness}{0}
+\begin{multicols}{3}\raggedcolumns
+}
+
+%scale values 1 -> 2 without logo
+%scale values 1 -> 1.6 with math_prog_logo.pdf logos, or other logos roughly the same height at withdth
+\renewcommand{\postertopscale}[6]{
+\begin{center}
+\newlength{\hssizeea}
+\setlength{\hssizeea}{-0.15\textwidth}
+\newlength{\hssizeeb}
+\setlength{\hssizeeb}{0.34\textwidth}
+\newlength{\hssizeer}
+\setlength{\hssizeer}{##6\hssizeea + \hssizeeb}
+\newlength{\hbsizeer}
+\setlength{\hbsizeer}{0.98\textwidth - 2.3\hssizeer}
+\setlength{\fboxrule}{0pt}
+\fbox{
+\begin{minipage}{\hssizeer}
+\begin{center}
+\leftlogofig
+\end{center}
+\end{minipage}
+}
+\hfill
+\setlength{\fboxrule}{0pt}
+\fbox{
+\begin{minipage}{\hbsizeer}
+\begin{center}
+\begin{Sbox}
+\begin{minipage}{.950\hbsizeer}
+\begin{center}
+\bf \fontsize{\titlefontsize}{\titlefontsize}\selectfont
+ \textcolor{\topptitlecolor}{##1}\\ \bigskip
+\fontsize{\namefontsize}{\namefontsize}\selectfont
+##2 \qquad \fontsize{\advfontsize}{\advfontsize}\selectfont \addviser: ##5\\ \bigskip\bigskip
+\fontsize{\progdatefontsize}{\progdatefontsize}\selectfont 
+##3 \pprogram, Bard College, ##4
+\end{center}
+\end{minipage}
+\end{Sbox}
+\setlength{\fboxrule}{4pt}
+\setlength{\fboxsep}{20pt}
+\fcolorbox{\boxxcolor}{White}{\TheSbox}
+\end{center}
+\end{minipage}
+}
+\hfill
+\setlength{\fboxrule}{0pt}
+\fbox{
+\begin{minipage}{\hssizeer}
+\begin{center}
+\rightlogofig
+\end{center}
+\end{minipage}
+}
+\end{center}
+\bigskip\bigskip
+\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont
+\setlength{\columnseprule}{0pt}
+\setlength{\columnsep}{0.01\textwidth}
+\setcounter{finalcolumnbadness}{0}
+\begin{multicols}{3}\raggedcolumns
+}
+
+\renewcommand{\postertop}[5]{\postertopscale {##1}{##2}{##3}{##4}{##5}{1}}
+
+
+\renewenvironment{posterboxabstract}
+              {
+              \begin{center}
+                  \begin{Sbox}
+                    \begin{minipage}{0.28\textwidth}
+                      \begin{center}
+                        \fontsize{\boxheadingfontsize}{1.2\boxheadingfontsize} \selectfont  \textcolor{\boxxtitlecolor}{Abstract}
+                      \end{center}\parindent=20pt\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont \bigskip
+              }
+              {
+              \end{minipage}
+                  \end{Sbox}
+                  \setlength{\fboxrule}{5pt}
+                  \setlength{\fboxsep}{24pt}
+                  \fcolorbox{\boxxcolor}{White}{\TheSbox}
+                \end{center}\bigskip\bigskip\bigskip
+               }
+\renewenvironment{posterboxtitle}[1]
+              {
+              \begin{center}
+                  \begin{Sbox}
+                    \begin{minipage}{0.28\textwidth}
+                      \begin{center}
+                        \fontsize{\boxheadingfontsize}{1.2\boxheadingfontsize} \selectfont  \textcolor{\boxxtitlecolor}{##1}
+                      \end{center}\parindent=20pt\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont \bigskip
+              }
+              {
+              \end{minipage}
+                  \end{Sbox}
+                  \setlength{\fboxrule}{5pt}
+                  \setlength{\fboxsep}{24pt}
+                  \fcolorbox{\boxxcolor}{White}{\TheSbox}
+                \end{center}\bigskip\bigskip\bigskip
+               }
+
+\renewenvironment{posterboxnotitle}
+              {
+              \begin{center}
+                  \begin{Sbox}
+                    \begin{minipage}{0.28\textwidth}
+                      \parindent=20pt\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont \bigskip
+              }
+              {
+              \end{minipage}
+                  \end{Sbox}
+                  \setlength{\fboxrule}{5pt}
+                  \setlength{\fboxsep}{24pt}
+                  \fcolorbox{\boxxcolor}{White}{\TheSbox}
+                \end{center}\bigskip\bigskip\bigskip
+               }
+
+\renewenvironment{bibliog}
+              {
+              \begin{center}
+                  \begin{Sbox}
+                    \begin{minipage}{0.28\textwidth}
+                      \begin{center}
+                        \fontsize{\boxheadingfontsize}{1.2\boxheadingfontsize} \selectfont  \textcolor{\boxxtitlecolor}{References}
+                      \end{center}\parindent=20pt
+\begin{biblist}[\bibliographyfontsize]
+              }
+              {
+             \end{biblist}
+              \end{minipage}
+                  \end{Sbox}
+                  \setlength{\fboxrule}{5pt}
+                  \setlength{\fboxsep}{24pt}
+                  \fcolorbox{\boxxcolor}{White}{\TheSbox}
+                \end{center}\bigskip\bigskip\bigskip
+               }
+
+}%if
+{%else
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\ifthenelse{\equal{#1}{styletwo}}
+{%if
+\renewcommand{\postertopoldless}[5]{
+\begin{center} 
+\begin{tabular}{ m{0.13\textwidth}  m{0.66\textwidth}  m{0.13\textwidth} }
+\begin{center}
+\leftlogofig
+\end{center}
+ &
+\begin{center}
+\begin{Sbox}
+\begin{minipage}{0.55\textwidth}
+\begin{center}
+\textcolor{White}{\bf \fontsize{\titlefontsize}{\titlefontsize}\selectfont
+ ##1\\ \bigskip
+\fontsize{\namefontsize}{\namefontsize}\selectfont
+ ##2 \qquad \fontsize{\advfontsize}{\advfontsize}\selectfont Adviser: ##5\\ \bigskip\bigskip
+\fontsize{\progdatefontsize}{\progdatefontsize}\selectfont 
+##3 \pprogram, Bard College, ##4}
+\end{center}
+\end{minipage}
+\end{Sbox}
+\setlength{\fboxrule}{0pt}
+\setlength{\fboxsep}{20pt}
+\fcolorbox{\boxxcolor}{\topptitlecolor}{\TheSbox}
+ \end{center}
+& 
+\begin{center}
+\rightlogofig
+\end{center}
+\\
+\end{tabular}
+\end{center}
+\bigskip\bigskip
+\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont
+\setlength{\columnseprule}{0pt}
+\setlength{\columnsep}{0.01\textwidth}
+\setcounter{finalcolumnbadness}{0}
+\begin{multicols}{3}\raggedcolumns
+}
+
+%scale values 1 -> 2 without logo
+%scale values 1 -> 1.6 with math_prog_logo.pdf logos, or other logos roughly the same height at width
+\renewcommand{\postertopscale}[6]{
+\begin{center}
+\newlength{\hssizeea}
+\setlength{\hssizeea}{-0.15\textwidth}
+\newlength{\hssizeeb}
+\setlength{\hssizeeb}{0.34\textwidth}
+\newlength{\hssizeer}
+\setlength{\hssizeer}{##6\hssizeea + \hssizeeb}
+\newlength{\hbsizeer}
+\setlength{\hbsizeer}{0.98\textwidth - 2.3\hssizeer}
+\setlength{\fboxrule}{0pt}
+\fbox{
+\begin{minipage}{\hssizeer}
+\begin{center}
+\leftlogofig
+\end{center}
+\end{minipage}
+}
+\hfill
+\setlength{\fboxrule}{0pt}
+\fbox{
+\begin{minipage}{\hbsizeer}
+\begin{center}
+\begin{Sbox}
+\begin{minipage}{.950\hbsizeer}
+\begin{center}
+\textcolor{White}{\bf \fontsize{\titlefontsize}{\titlefontsize}\selectfont
+ ##1\\ \bigskip
+\fontsize{\namefontsize}{\namefontsize}\selectfont
+ ##2 \qquad \fontsize{\advfontsize}{\advfontsize}\selectfont Adviser: ##5\\ \bigskip\bigskip
+\fontsize{\progdatefontsize}{\progdatefontsize}\selectfont 
+##3 \pprogram, Bard College, ##4}
+\end{center}
+\end{minipage}
+\end{Sbox}
+\setlength{\fboxrule}{0pt}
+\setlength{\fboxsep}{20pt}
+\fcolorbox{\boxxcolor}{\topptitlecolor}{\TheSbox}
+\end{center}
+\end{minipage}
+}
+\hfill
+\setlength{\fboxrule}{0pt}
+\fbox{
+\begin{minipage}{\hssizeer}
+\begin{center}
+\rightlogofig
+\end{center}
+\end{minipage}
+}
+\end{center}
+\bigskip\bigskip
+\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont
+\setlength{\columnseprule}{0pt}
+\setlength{\columnsep}{0.01\textwidth}
+\setcounter{finalcolumnbadness}{0}
+\begin{multicols}{3}\raggedcolumns
+}
+
+\renewcommand{\postertop}[5]{\postertopscale {##1}{##2}{##3}{##4}{##5}{1}}
+
+
+\renewenvironment{posterboxabstract}
+              {
+              \begin{center}
+                  \begin{Sbox}
+                    \begin{minipage}{0.28\textwidth}
+                      \parindent=-20pt
+                      \setlength{\fboxsep}{20pt}
+                       \fcolorbox{\boxxtitlecolor}{\boxxtitlecolor}
+                       {
+                       \begin{minipage}{\textwidth}
+                        \fontsize{\boxheadingfontsize}{1.2\boxheadingfontsize} \selectfont
+                        \begin{center}
+                          \textcolor{White}{Abstract}
+                      \end{center}
+                      \end{minipage}
+                      }\par
+                      \parindent=20pt\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont \bigskip\bigskip\bigskip
+              }
+              {
+              \end{minipage}
+                  \end{Sbox}
+                  \setlength{\fboxrule}{0pt}
+                  \setlength{\fboxsep}{0pt}
+                  \fcolorbox{\boxxcolor}{White}{\TheSbox}
+                \end{center}\bigskip\bigskip\bigskip
+               }
+
+
+\renewenvironment{posterboxtitle}[1]
+              {
+              \begin{center}
+                  \begin{Sbox}
+                    \begin{minipage}{0.28\textwidth}
+                      \parindent=-20pt
+                      \setlength{\fboxsep}{20pt}
+                       \fcolorbox{\boxxtitlecolor}{\boxxtitlecolor}
+                       {
+                       \begin{minipage}{\textwidth}
+                        \fontsize{\boxheadingfontsize}{1.2\boxheadingfontsize} \selectfont
+                        \begin{center}
+                          \textcolor{White}{##1}
+                      \end{center}
+                      \end{minipage}
+                      }\par
+                      \parindent=20pt\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont \bigskip\bigskip\bigskip
+              }
+              {
+              \end{minipage}
+                  \end{Sbox}
+                  \setlength{\fboxrule}{0pt}
+                  \setlength{\fboxsep}{0pt}
+                  \fcolorbox{\boxxcolor}{White}{\TheSbox}
+                \end{center}\bigskip\bigskip\bigskip
+               }
+
+\renewenvironment{posterboxnotitle}
+              {
+              \begin{center}
+                  \begin{Sbox}
+                    \begin{minipage}{0.28\textwidth}
+                      \parindent=-20pt
+                      \setlength{\fboxsep}{20pt}
+                       \fcolorbox{\boxxtitlecolor}{\boxxtitlecolor}
+                       {
+                       \begin{minipage}{\textwidth}
+                        \fontsize{\boxheadingfontsize}{1.2\boxheadingfontsize} \selectfont
+                        \begin{center}
+                          \textcolor{White}{\phantom{G}}
+                      \end{center}
+                      \end{minipage}
+                      }\par
+                      \parindent=20pt\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont \bigskip\bigskip\bigskip
+              }
+              {
+              \end{minipage}
+                  \end{Sbox}
+                  \setlength{\fboxrule}{0pt}
+                  \setlength{\fboxsep}{0pt}
+                  \fcolorbox{\boxxcolor}{White}{\TheSbox}
+                \end{center}\bigskip\bigskip\bigskip
+               }
+
+
+\renewenvironment{bibliog}
+              {
+              \begin{center}
+                  \begin{Sbox}
+                    \begin{minipage}{0.28\textwidth}
+                      \parindent=-20pt
+                      \setlength{\fboxsep}{20pt}
+                       \fcolorbox{\boxxtitlecolor}{\boxxtitlecolor}
+                       {
+                       \begin{minipage}{\textwidth}
+                        \fontsize{\boxheadingfontsize}{1.2\boxheadingfontsize} \selectfont
+                        \begin{center}
+                          \textcolor{White}{References}
+                      \end{center}
+                      \end{minipage}
+                      }\par
+                      \parindent=20pt
+                      $\ $\par 
+                      \bigskip                            
+\begin{biblist}[\bibliographyfontsize]
+              }
+              {
+             \end{biblist}
+              \end{minipage}
+                  \end{Sbox}
+                  \setlength{\fboxrule}{0pt}
+                  \setlength{\fboxsep}{0pt}
+                  \fcolorbox{\boxxcolor}{White}{\TheSbox}
+                \end{center}\bigskip\bigskip\bigskip
+               }
+
+
+}%if
+{%else
+%%%%%%%%%%%%%%%%%%%%%%
+\ifthenelse{\equal{#1}{stylethree}}
+{%if
+\renewcommand{\postertopoldless}[5]{
+\begin{center} 
+\begin{tabular}{ m{0.13\textwidth}  m{0.66\textwidth}  m{0.13\textwidth} }
+\begin{center}
+\leftlogofig
+\end{center}
+ &
+%
+              \begin{center}
+                  \begin{Sbox}
+                    \begin{minipage}{0.55\textwidth}
+                      \parindent=-20pt
+                      \setlength{\fboxsep}{25pt}
+                       \fcolorbox{\topptitlecolor}{\topptitlecolor}
+                       {
+                       \begin{minipage}{\textwidth}
+                        \fontsize{\boxheadingfontsize}{1.2\boxheadingfontsize} \selectfont
+                        \begin{center}
+                          \textcolor{White}{\bf \fontsize{\titlefontsize}{\titlefontsize}\selectfont ##1}
+                      \end{center}
+                      \end{minipage}
+                      }\par
+                      \parindent=20pt
+                      $\ $\par 
+                      \bigskip      
+                      \begin{center}
+                      \fontsize{\namefontsize}{\namefontsize}\selectfont
+ ##2 \qquad \fontsize{\advfontsize}{\advfontsize}\selectfont \addviser: ##5\\ \bigskip\bigskip
+\fontsize{\progdatefontsize}{\progdatefontsize}\selectfont 
+##3 \pprogram, Bard College, ##4
+\end{center}
+              \end{minipage}
+                  \end{Sbox}
+                  \setlength{\fboxrule}{0pt}
+                  \setlength{\fboxsep}{0pt}
+                  \fcolorbox{\boxxcolor}{White}{\TheSbox}
+                \end{center}\bigskip\bigskip\bigskip
+& 
+\begin{center}
+\rightlogofig
+\end{center}
+\\
+\end{tabular}
+\end{center}
+\bigskip\bigskip
+\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont
+\setlength{\columnseprule}{0pt}
+\setlength{\columnsep}{0.01\textwidth}
+\setcounter{finalcolumnbadness}{0}
+\begin{multicols}{3}\raggedcolumns
+}
+
+
+%scale values 1 -> 2 without logo
+%scale values 1 -> 1.6 with math_prog_logo.pdf logos, or other logos roughly the same height at width
+\renewcommand{\postertopscale}[6]{
+\begin{center}
+\newlength{\hssizeea}
+\setlength{\hssizeea}{-0.15\textwidth}
+\newlength{\hssizeeb}
+\setlength{\hssizeeb}{0.34\textwidth}
+\newlength{\hssizeer}
+\setlength{\hssizeer}{##6\hssizeea + \hssizeeb}
+\newlength{\hbsizeer}
+\setlength{\hbsizeer}{0.98\textwidth - 2.3\hssizeer}
+\setlength{\fboxrule}{0pt}
+\fbox{
+\begin{minipage}{\hssizeer}
+\begin{center}
+\leftlogofig
+\end{center}
+\end{minipage}
+}
+\hfill
+\setlength{\fboxrule}{0pt}
+\fbox{
+\begin{minipage}{\hbsizeer}
+\begin{center}
+\begin{Sbox}
+\begin{minipage}{.950\hbsizeer}
+\parindent=-20pt
+                      \setlength{\fboxsep}{25pt}
+                       \fcolorbox{\topptitlecolor}{\topptitlecolor}
+                       {
+                       \begin{minipage}{\textwidth}
+                        \fontsize{\boxheadingfontsize}{1.2\boxheadingfontsize} \selectfont
+                        \begin{center}
+                          \textcolor{White}{\bf \fontsize{\titlefontsize}{\titlefontsize}\selectfont ##1}
+                      \end{center}
+                      \end{minipage}
+                      }\par
+                      \parindent=20pt
+                      $\ $\par 
+                      \bigskip      
+                      \begin{center}
+                      \fontsize{\namefontsize}{\namefontsize}\selectfont
+ ##2 \qquad \fontsize{\advfontsize}{\advfontsize}\selectfont \addviser: ##5\\ \bigskip\bigskip
+\fontsize{\progdatefontsize}{\progdatefontsize}\selectfont 
+##3 \pprogram, Bard College, ##4
+\end{center}
+\end{minipage}
+\end{Sbox}
+\setlength{\fboxrule}{0pt}
+\setlength{\fboxsep}{0pt}
+\fcolorbox{\boxxcolor}{White}{\TheSbox}
+\end{center}
+\end{minipage}
+}
+\hfill
+\setlength{\fboxrule}{0pt}
+\fbox{
+\begin{minipage}{\hssizeer}
+\begin{center}
+\rightlogofig
+\end{center}
+\end{minipage}
+}
+\end{center}
+\bigskip\bigskip
+\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont
+\setlength{\columnseprule}{0pt}
+\setlength{\columnsep}{0.01\textwidth}
+\setcounter{finalcolumnbadness}{0}
+\begin{multicols}{3}\raggedcolumns
+}
+
+\renewcommand{\postertop}[5]{\postertopscale {##1}{##2}{##3}{##4}{##5}{1}}
+
+
+
+\renewenvironment{posterboxabstract}
+              {
+              \begin{center}
+                  \begin{Sbox}
+                    \begin{minipage}{0.28\textwidth}
+                      \parindent=-20pt
+                      \setlength{\fboxsep}{20pt}
+                       \fcolorbox{\boxxtitlecolor}{\boxxtitlecolor}
+                       {
+                       \begin{minipage}{\textwidth}
+                        \fontsize{\boxheadingfontsize}{1.2\boxheadingfontsize} \selectfont
+                        \begin{center}
+                          \textcolor{White}{Abstract}
+                      \end{center}
+                      \end{minipage}
+                      }\par
+                      \parindent=20pt\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont \bigskip\bigskip\bigskip
+              }
+              {
+              \end{minipage}
+                  \end{Sbox}
+                  \setlength{\fboxrule}{0pt}
+                  \setlength{\fboxsep}{0pt}
+                  \fcolorbox{\boxxcolor}{White}{\TheSbox}
+                \end{center}\bigskip\bigskip\bigskip
+               }
+
+\renewenvironment{posterboxtitle}[1]
+              {
+              \begin{center}
+                  \begin{Sbox}
+                    \begin{minipage}{0.28\textwidth}
+                      \parindent=-20pt
+                      \setlength{\fboxsep}{20pt}
+                       \fcolorbox{\boxxtitlecolor}{\boxxtitlecolor}
+                       {
+                       \begin{minipage}{\textwidth}
+                        \fontsize{\boxheadingfontsize}{1.2\boxheadingfontsize} \selectfont
+                        \begin{center}
+                          \textcolor{White}{##1}
+                      \end{center}
+                      \end{minipage}
+                      }\par
+                      \parindent=20pt\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont \bigskip\bigskip\bigskip
+              }
+              {
+              \end{minipage}
+                  \end{Sbox}
+                  \setlength{\fboxrule}{0pt}
+                  \setlength{\fboxsep}{0pt}
+                  \fcolorbox{\boxxcolor}{White}{\TheSbox}
+                \end{center}\bigskip\bigskip\bigskip
+               }
+
+\renewenvironment{posterboxnotitle}
+              {
+              \begin{center}
+                  \begin{Sbox}
+                    \begin{minipage}{0.28\textwidth}
+                      \parindent=-20pt
+                      \setlength{\fboxsep}{20pt}
+                       \fcolorbox{\boxxtitlecolor}{\boxxtitlecolor}
+                       {
+                       \begin{minipage}{\textwidth}
+                        \fontsize{\boxheadingfontsize}{1.2\boxheadingfontsize} \selectfont
+                        \begin{center}
+                          \textcolor{White}{\phantom{G}}
+                      \end{center}
+                      \end{minipage}
+                      }\par
+                      \parindent=20pt\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont \bigskip\bigskip\bigskip
+              }
+              {
+              \end{minipage}
+                  \end{Sbox}
+                  \setlength{\fboxrule}{0pt}
+                  \setlength{\fboxsep}{0pt}
+                  \fcolorbox{\boxxcolor}{White}{\TheSbox}
+                \end{center}\bigskip\bigskip\bigskip
+               }
+
+\renewenvironment{bibliog}
+              {
+              \begin{center}
+                  \begin{Sbox}
+                    \begin{minipage}{0.28\textwidth}
+                      \parindent=-20pt
+                      \setlength{\fboxsep}{20pt}
+                       \fcolorbox{\boxxtitlecolor}{\boxxtitlecolor}
+                       {
+                       \begin{minipage}{\textwidth}
+                        \fontsize{\boxheadingfontsize}{1.2\boxheadingfontsize} \selectfont
+                        \begin{center}
+                          \textcolor{White}{References}
+                      \end{center}
+                      \end{minipage}
+                      }\par
+                      \parindent=20pt
+                      $\ $\par 
+                      \bigskip                            
+\begin{biblist}[\bibliographyfontsize]
+              }
+              {
+             \end{biblist}
+              \end{minipage}
+                  \end{Sbox}
+                  \setlength{\fboxrule}{0pt}
+                  \setlength{\fboxsep}{0pt}
+                  \fcolorbox{\boxxcolor}{White}{\TheSbox}
+                \end{center}\bigskip\bigskip\bigskip
+               }
+
+
+}%if
+{%else
+%%%%%%%%%%%%%%%%%%%%%%
+\ifthenelse{\equal{#1}{stylefour}}
+{%if
+\renewcommand{\postertopoldless}[5]{
+\begin{center} 
+\begin{tabular}{ m{0.13\textwidth}  m{0.66\textwidth}  m{0.13\textwidth} }
+\begin{center}
+\leftlogofig
+\end{center}
+ &
+%
+              \begin{center}
+                  \begin{Sbox}
+                    \begin{minipage}{0.55\textwidth}
+                      \parindent=-25pt
+                      \setlength{\fboxsep}{22pt}
+                       \vspace{-25pt}
+                       \fcolorbox{\topptitlecolor}{\topptitlecolor}
+                       {
+                       \begin{minipage}{\textwidth}
+                        \fontsize{\boxheadingfontsize}{1.2\boxheadingfontsize} \selectfont
+                        \begin{center}
+                          \textcolor{White}{\bf \fontsize{\titlefontsize}{\titlefontsize}\selectfont ##1}
+                      \end{center}
+                      \end{minipage}
+                      }\par
+                      \parindent=20pt
+                      $\ $\par 
+                      \bigskip      
+                      \begin{center}
+                      \fontsize{\namefontsize}{\namefontsize}\selectfont
+ ##2 \qquad \fontsize{\advfontsize}{\advfontsize}\selectfont \addviser: ##5\\ \bigskip\bigskip
+\fontsize{\progdatefontsize}{\progdatefontsize}\selectfont 
+##3 \pprogram, Bard College, ##4
+\end{center}
+              \end{minipage}
+                  \end{Sbox}
+                  \setlength{\fboxrule}{5pt}
+                  \setlength{\fboxsep}{24pt}
+                  \fcolorbox{\topptitlecolor}{White}{\TheSbox}
+                \end{center}\bigskip\bigskip\bigskip
+& 
+\begin{center}
+\rightlogofig
+\end{center}
+\\
+\end{tabular}
+\end{center}
+\bigskip\bigskip
+\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont
+\setlength{\columnseprule}{0pt}
+\setlength{\columnsep}{0.01\textwidth}
+\setcounter{finalcolumnbadness}{0}
+\begin{multicols}{3}\raggedcolumns
+}
+
+
+%scale values 1 -> 2 without logo
+%scale values 1 -> 1.6 with math_prog_logo.pdf logos, or other logos roughly the same height at width
+\renewcommand{\postertopscale}[6]{
+\begin{center}
+\newlength{\hssizeea}
+\setlength{\hssizeea}{-0.15\textwidth}
+\newlength{\hssizeeb}
+\setlength{\hssizeeb}{0.34\textwidth}
+\newlength{\hssizeer}
+\setlength{\hssizeer}{##6\hssizeea + \hssizeeb}
+\newlength{\hbsizeer}
+\setlength{\hbsizeer}{0.98\textwidth - 2.3\hssizeer}
+\setlength{\fboxrule}{0pt}
+\fbox{
+\begin{minipage}{\hssizeer}
+\begin{center}
+\leftlogofig
+\end{center}
+\end{minipage}
+}
+\hfill
+\setlength{\fboxrule}{0pt}
+\fbox{
+\begin{minipage}{\hbsizeer}
+\begin{center}
+\begin{Sbox}
+\begin{minipage}{.950\hbsizeer}
+\parindent=-25pt
+                      \setlength{\fboxsep}{22pt}
+                       \vspace{-25pt}
+                       \fcolorbox{\topptitlecolor}{\topptitlecolor}
+                       {
+                       \begin{minipage}{\textwidth}
+                        \fontsize{\boxheadingfontsize}{1.2\boxheadingfontsize} \selectfont
+                        \begin{center}
+                          \textcolor{White}{\bf \fontsize{\titlefontsize}{\titlefontsize}\selectfont ##1}
+                      \end{center}
+                      \end{minipage}
+                      }\par
+                      \parindent=20pt
+                      $\ $\par 
+                      \bigskip      
+                      \begin{center}
+                      \fontsize{\namefontsize}{\namefontsize}\selectfont
+ ##2 \qquad \fontsize{\advfontsize}{\advfontsize}\selectfont \addviser: ##5\\ \bigskip\bigskip
+\fontsize{\progdatefontsize}{\progdatefontsize}\selectfont 
+##3 \pprogram, Bard College, ##4
+\end{center}
+\end{minipage}
+\end{Sbox}
+\setlength{\fboxrule}{5pt}
+\setlength{\fboxsep}{24pt}
+\fcolorbox{\topptitlecolor}{White}{\TheSbox}
+\end{center}
+\end{minipage}
+}
+\hfill
+\setlength{\fboxrule}{0pt}
+\fbox{
+\begin{minipage}{\hssizeer}
+\begin{center}
+\rightlogofig
+\end{center}
+\end{minipage}
+}
+\end{center}
+\bigskip\bigskip
+\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont
+\setlength{\columnseprule}{0pt}
+\setlength{\columnsep}{0.01\textwidth}
+\setcounter{finalcolumnbadness}{0}
+\begin{multicols}{3}\raggedcolumns
+}
+
+\renewcommand{\postertop}[5]{\postertopscale {##1}{##2}{##3}{##4}{##5}{1}}
+
+
+\renewenvironment{posterboxabstract}
+              {
+              \begin{center}
+                  \begin{Sbox}
+                    \begin{minipage}{0.28\textwidth}
+                      \parindent=-25pt
+                      \setlength{\fboxsep}{22pt}
+                      \vspace{-25pt}
+                       \fcolorbox{\boxxtitlecolor}{\boxxtitlecolor}
+                       {
+                       \begin{minipage}{\textwidth}
+                        \fontsize{\boxheadingfontsize}{1.2\boxheadingfontsize} \selectfont
+                        \begin{center}
+                          \textcolor{White}{Abstract}
+                      \end{center}
+                      \end{minipage}
+                      }\par
+                      \parindent=20pt\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont \bigskip\bigskip\bigskip
+              }
+              {
+              \end{minipage}
+                  \end{Sbox}
+                  \setlength{\fboxrule}{5pt}
+                  \setlength{\fboxsep}{24pt}
+                  \fcolorbox{\boxxtitlecolor}{White}{\TheSbox}
+                \end{center}\bigskip\bigskip\bigskip
+               }
+
+\renewenvironment{posterboxtitle}[1]
+              {
+              \begin{center}
+                  \begin{Sbox}
+                    \begin{minipage}{0.28\textwidth}
+                      \parindent=-25pt
+                      \setlength{\fboxsep}{22pt}
+                       \vspace{-25pt}
+                       \fcolorbox{\boxxtitlecolor}{\boxxtitlecolor}
+                       {
+                       \begin{minipage}{\textwidth}
+                        \fontsize{\boxheadingfontsize}{1.2\boxheadingfontsize} \selectfont
+                        \begin{center}
+                          \textcolor{White}{##1}
+                      \end{center}
+                      \end{minipage}
+                      }\par
+                      \parindent=20pt\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont \bigskip\bigskip\bigskip
+              }
+              {
+              \end{minipage}
+                  \end{Sbox}
+                  \setlength{\fboxrule}{5pt}
+                  \setlength{\fboxsep}{24pt}
+                  \fcolorbox{\boxxtitlecolor}{White}{\TheSbox}
+                \end{center}\bigskip\bigskip\bigskip
+               }
+
+\renewenvironment{posterboxnotitle}
+              {
+              \begin{center}
+                  \begin{Sbox}
+                    \begin{minipage}{0.28\textwidth}
+                      \parindent=-25pt
+                      \setlength{\fboxsep}{22pt}
+                       \vspace{-25pt}
+                       \fcolorbox{\boxxtitlecolor}{\boxxtitlecolor}
+                       {
+                       \begin{minipage}{\textwidth}
+                        \fontsize{\boxheadingfontsize}{1.2\boxheadingfontsize} \selectfont
+                        \begin{center}
+                          \textcolor{White}{\phantom{G}}
+                      \end{center}
+                      \end{minipage}
+                      }\par
+                      \parindent=20pt\fontsize{\boxfontsize}{1.2\boxfontsize} \selectfont \bigskip\bigskip\bigskip
+              }
+              {
+              \end{minipage}
+                  \end{Sbox}
+                  \setlength{\fboxrule}{5pt}
+                  \setlength{\fboxsep}{24pt}
+                  \fcolorbox{\boxxtitlecolor}{White}{\TheSbox}
+                \end{center}\bigskip\bigskip\bigskip
+               }
+
+\renewenvironment{bibliog}
+              {
+              \begin{center}
+                  \begin{Sbox}
+                    \begin{minipage}{0.28\textwidth}
+                      \parindent=-25pt
+                      \setlength{\fboxsep}{22pt}
+                       \vspace{-25pt}
+                       \fcolorbox{\boxxtitlecolor}{\boxxtitlecolor}
+                       {
+                       \begin{minipage}{\textwidth}
+                        \fontsize{\boxheadingfontsize}{1.2\boxheadingfontsize} \selectfont
+                        \begin{center}
+                          \textcolor{White}{References}
+                      \end{center}
+                      \end{minipage}
+                      }\par
+                      \parindent=20pt
+                      $\ $\par 
+                      \bigskip                            
+\begin{biblist}[\bibliographyfontsize]
+              }
+              {
+             \end{biblist}
+              \end{minipage}
+                  \end{Sbox}
+                  \setlength{\fboxrule}{5pt}
+                  \setlength{\fboxsep}{24pt}
+                  \fcolorbox{\boxxtitlecolor}{White}{\TheSbox}
+                \end{center}\bigskip\bigskip\bigskip
+               }
+
+
+}%if
+{%else
+
+}%else
+}%else
+}%else
+}%else
+}%Whole
+
+
+%%%%%%%%%%%%%%%%%%
+
+%%Todd's with variable symbol after the number
+\newenvironment{posterlist}[2]
+              {\begin{list}{\textcolor{#1}{\arabic{enumi}#2}}
+                  {\usecounter{enumi}
+                    \setlength{\rightmargin}{\leftmargin}
+                    \setlength{\leftmargin}{1in}
+                    \setlength{\itemindent}{-.5in}}}
+              {\end{list}}
+
+%%With period after the number
+\newenvironment{enumeratec}[1]
+              {\begin{list}{\textcolor{#1}{\arabic{enumi}.}}
+                  {\usecounter{enumi}
+                    \setlength{\rightmargin}{\leftmargin}
+                    \setlength{\leftmargin}{0.71in}
+                    \setlength{\itemindent}{-0.32in}}}
+              {\end{list}}
+              
+\newenvironment{itemizec}[1]
+             {\begin{list}{\textcolor{#1}{$\bullet$}}
+                 {\setlength{\rightmargin}{\leftmargin}
+                   \setlength{\leftmargin}{0.65in}
+                    \setlength{\itemindent}{-0.26in}}}
+             {\end{list}}
+
+%%With period after the number, for prospectus
+\newenvironment{enumeratecp}[1]
+              {\begin{list}{\textcolor{#1}{\arabic{enumi}.}}
+                  {\usecounter{enumi}
+                    \setlength{\rightmargin}{\leftmargin}
+                    \setlength{\leftmargin}{0.5in}
+                   \setlength{\itemindent}{0in}}}
+              {\end{list}}
+              
+\newenvironment{itemizecp}[1]
+             {\begin{list}{\textcolor{#1}{$\bullet$}}
+                 {\setlength{\rightmargin}{\leftmargin}
+                   \setlength{\leftmargin}{0.5in}
+                   \setlength{\itemindent}{0in}}}
+             {\end{list}}
+
+
+
+%\begin{enumeratec}{red}
+%\item Fred
+%\item Susan
+%\item Xanadu
+%\end{colorlist}
+
+\newenvironment{warning}
+             {\par\medskip \noindent \textbf{Warning}:}
+             {\par\medskip}
+
+\newcommand{\warningbox}[1]{
+\begin{warning}
+#1
+\end{warning}
+}
+
+
+%%%%%prospectus
+
+\newcommand{\prtitleecolor}{RoyalPurple}
+\newcommand{\prospectustitlecolor}[1]{\renewcommand{\prtitleecolor}{#1}}
+
+\newcommand{\prnameecolor}{RoyalBlue}
+\newcommand{\prospectusnamecolor}[1]{\renewcommand{\prnameecolor}{#1}}
+
+\newcommand{\prheadtextcolor}{White}
+\newcommand{\prospectusheadingtextcolor}[1]{\renewcommand{\prheadtextcolor}{#1}}
+
+\newcommand{\prheadbackcolor}{Purple}
+\newcommand{\prospectusheadingbackgroundcolor}[1]{\renewcommand{\prheadbackcolor}{#1}}
+
+\newlength{\prosptitlefontsize}
+\setlength{\prosptitlefontsize}{0.72in}
+\newlength{\prospnamefontsize}
+\setlength{\prospnamefontsize}{0.62in}
+\newlength{\prospinfofontsize}
+\setlength{\prospinfofontsize}{0.36in}
+\newlength{\prosptextfontsize}
+\setlength{\prosptextfontsize}{0.32in}
+\newlength{\prospheadfontsize}
+\setlength{\prospheadfontsize}{0.38in}
+
+
+\newcommand{\prospbibliographyfontsize}{\fontsize{\prosptextfontsize}{1.3\prosptextfontsize}\selectfont}
+
+
+\newcommand{\prtitle}{}
+\newcommand{\prname}{}
+\newcommand{\prdate}{}
+
+%Write \titleprospectus{title}{student name}{program}{month and year}{adviser name}
+
+\newcommand{\titleprospectus}[5]{
+\thispagestyle{empty}
+\renewcommand{\prtitle}{#1}
+\renewcommand{\prname}{#2}
+\renewcommand{\prdate}{#4}
+$\ $
+\vspace{-0.8\baselineskip}
+\begin{center}
+\begin{minipage}{0.95\textwidth}
+\begin{center}
+\bf
+ \fontsize{\prosptitlefontsize}{\prosptitlefontsize}\selectfont
+ \textcolor{\prtitleecolor}{#1}\\
+\vspace{1.5\baselineskip}
+ 
+\fontsize{\prospnamefontsize}{\prospnamefontsize}\selectfont
+
+\textcolor{\prnameecolor}{#2}\\
+\vspace{2\baselineskip}
+
+\fontsize{\prospinfofontsize}{\prospinfofontsize}\selectfont 
+Adviser: #5\\
+\vspace{0.8\baselineskip}
+
+#3\\
+\vspace{0.8\baselineskip}
+
+#4
+\end{center}
+\end{minipage}
+\end{center}
+}
+
+%Write \titleprospectusonen{title}{first name}{program}{month and year}
+
+\newcommand{\titleprospectusonen}[4]{
+\thispagestyle{empty}
+\renewcommand{\prtitle}{#1}
+\renewcommand{\prname}{#2}
+\renewcommand{\prdate}{#4}
+$\ $
+\vspace{-0.8\baselineskip}
+\begin{center}
+\begin{minipage}{0.95\textwidth}
+\begin{center}
+\bf
+ \fontsize{\prosptitlefontsize}{\prosptitlefontsize}\selectfont
+ \textcolor{\prtitleecolor}{#1}\\
+\vspace{1.5\baselineskip}
+ 
+\fontsize{\prospnamefontsize}{\prospnamefontsize}\selectfont
+
+\textcolor{\prnameecolor}{#2}\\
+\vspace{2.1\baselineskip}
+
+\fontsize{\prospinfofontsize}{\prospinfofontsize}\selectfont 
+
+#3\\
+\vspace{0.5\baselineskip}
+
+#4
+\end{center}
+\end{minipage}
+\end{center}
+}
+
+
+%Write \titleprospectustwon{title}{first name}{second name}{program}{month and year}
+
+\newcommand{\titleprospectustwon}[5]{
+\thispagestyle{empty}
+\renewcommand{\prtitle}{#1}
+\renewcommand{\prname}{#2}
+\renewcommand{\prdate}{#4}
+$\ $
+\vspace{-0.8\baselineskip}
+\begin{center}
+\begin{minipage}{0.95\textwidth}
+\begin{center}
+\bf
+ \fontsize{\prosptitlefontsize}{\prosptitlefontsize}\selectfont
+ \textcolor{\prtitleecolor}{#1}\\
+\vspace{1.5\baselineskip}
+ 
+\fontsize{\prospnamefontsize}{\prospnamefontsize}\selectfont
+
+\textcolor{\prnameecolor}{#2}\\
+\textcolor{\prnameecolor}{#3}\\
+\vspace{1.9\baselineskip}
+
+\fontsize{\prospinfofontsize}{\prospinfofontsize}\selectfont 
+
+#4\\
+\vspace{0.5\baselineskip}
+
+#5
+\end{center}
+\end{minipage}
+\end{center}
+}
+
+
+%Write \titleprospectusthreen{title}{first name}{second name}{third name}{program}{month and year}
+
+\newcommand{\titleprospectusthreen}[6]{
+\thispagestyle{empty}
+\renewcommand{\prtitle}{#1}
+\renewcommand{\prname}{#2}
+\renewcommand{\prdate}{#4}
+$\ $
+\vspace{-0.8\baselineskip}
+\begin{center}
+\begin{minipage}{0.95\textwidth}
+\begin{center}
+\bf
+ \fontsize{\prosptitlefontsize}{\prosptitlefontsize}\selectfont
+ \textcolor{\prtitleecolor}{#1}\\
+\vspace{1.5\baselineskip}
+ 
+\fontsize{\prospnamefontsize}{\prospnamefontsize}\selectfont
+
+\textcolor{\prnameecolor}{#2}\\
+\textcolor{\prnameecolor}{#3}\\
+\textcolor{\prnameecolor}{#4}\\
+\vspace{1.6\baselineskip}
+
+\fontsize{\prospinfofontsize}{\prospinfofontsize}\selectfont 
+
+#5\\
+\vspace{0.5\baselineskip}
+
+#6
+\end{center}
+\end{minipage}
+\end{center}
+}
+
+
+
+\newcommand{\titleprospectusold}[5]{
+\renewcommand{\prtitle}{#1}
+\renewcommand{\prname}{#2}
+\renewcommand{\prdate}{#4}
+\pagestyle{empty}
+$\ $\vfill
+\begin{center}
+\begin{minipage}{0.95\textwidth}
+\begin{center}
+\bf
+ \fontsize{\prosptitlefontsize}{\prosptitlefontsize}\selectfont
+ \textcolor{\prtitleecolor}{#1}\\
+\vspace{1.5\baselineskip}
+ 
+\fontsize{\prospnamefontsize}{\prospnamefontsize}\selectfont
+
+\textcolor{\prnameecolor}{#2}\\
+\vspace{2\baselineskip}
+
+\fontsize{\prospinfofontsize}{\prospinfofontsize}\selectfont 
+Adviser: #5\\
+\vspace{0.8\baselineskip}
+
+#3\\
+\vspace{0.8\baselineskip}
+
+#4
+\end{center}
+\end{minipage}
+\end{center}
+\vfill\vfill
+}
+
+
+%Write \prospectusslideone{title}
+
+\newcommand{\prospectusslideone}[1]{
+\fontsize{\prosptextfontsize}{1.3\prosptextfontsize}\selectfont
+\newpage
+\thispagestyle{fancy}
+\lhead{}
+\rhead{}
+\lfoot{}
+\cfoot{}
+\rfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\chead{
+\begin{Sbox}
+\begin{minipage}{0.96\textwidth}
+\bf \fontsize{\prospheadfontsize}{\prospheadfontsize}\selectfont
+\textcolor{\prheadtextcolor}{
+1. #1
+}
+\end{minipage}
+\end{Sbox}
+\setlength{\fboxrule}{0pt}
+\setlength{\fboxsep}{12pt}
+\fcolorbox{\boxxcolor}{\prheadbackcolor}{\TheSbox}
+}
+}
+
+\newcommand{\prospectuspageoneold}[1]{
+\fontsize{\prosptextfontsize}{1.3\prosptextfontsize}\selectfont
+\newpage
+\begin{center}
+\begin{Sbox}
+\begin{minipage}{\textwidth}
+\bf \fontsize{\prospheadfontsize}{\prospheadfontsize}\selectfont
+\textcolor{\prheadtextcolor}{
+1. #1
+}
+\end{minipage}
+\end{Sbox}
+\setlength{\fboxrule}{0pt}
+\setlength{\fboxsep}{12pt}
+\fcolorbox{\boxxcolor}{\prheadbackcolor}{\TheSbox}
+\end{center}
+\vspace{0.4\baselineskip}
+}
+
+\newcommand{\prospectusslidetwo}[1]{
+\fontsize{\prosptextfontsize}{1.3\prosptextfontsize}\selectfont
+\newpage
+\thispagestyle{fancy}
+\lhead{}
+\rhead{}
+\lfoot{}
+\cfoot{}
+\rfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\chead{
+\begin{Sbox}
+\begin{minipage}{0.96\textwidth}
+\bf \fontsize{\prospheadfontsize}{\prospheadfontsize}\selectfont
+\textcolor{\prheadtextcolor}{
+2. #1
+}
+\end{minipage}
+\end{Sbox}
+\setlength{\fboxrule}{0pt}
+\setlength{\fboxsep}{12pt}
+\fcolorbox{\boxxcolor}{\prheadbackcolor}{\TheSbox}
+}
+}
+
+\newcommand{\prospectuspagetwoold}[1]{
+\fontsize{\prosptextfontsize}{1.3\prosptextfontsize}\selectfont
+\newpage
+\begin{center}
+\begin{Sbox}
+\begin{minipage}{\textwidth}
+\bf \fontsize{\prospheadfontsize}{\prospheadfontsize}\selectfont
+\textcolor{\prheadtextcolor}{2. #1}
+\end{minipage}
+\end{Sbox}
+\setlength{\fboxrule}{0pt}
+\setlength{\fboxsep}{12pt}
+\fcolorbox{\boxxcolor}{\prheadbackcolor}{\TheSbox}
+\end{center}
+\vspace{0.4\baselineskip}
+}
+
+\newcommand{\prospectusslidethree}[1]{
+\fontsize{\prosptextfontsize}{1.3\prosptextfontsize}\selectfont
+\newpage
+\thispagestyle{fancy}
+\lhead{}
+\rhead{}
+\lfoot{}
+\cfoot{}
+\rfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\chead{
+\begin{Sbox}
+\begin{minipage}{0.96\textwidth}
+\bf \fontsize{\prospheadfontsize}{\prospheadfontsize}\selectfont
+\textcolor{\prheadtextcolor}{
+3. #1
+}
+\end{minipage}
+\end{Sbox}
+\setlength{\fboxrule}{0pt}
+\setlength{\fboxsep}{12pt}
+\fcolorbox{\boxxcolor}{\prheadbackcolor}{\TheSbox}
+}
+}
+
+\newcommand{\prospectuspagethreeold}[1]{
+\fontsize{\prosptextfontsize}{1.3\prosptextfontsize}\selectfont
+\newpage
+\begin{center}
+\begin{Sbox}
+\begin{minipage}{\textwidth}
+\bf \fontsize{\prospheadfontsize}{\prospheadfontsize}\selectfont
+\textcolor{\prheadtextcolor}{3. #1}
+\end{minipage}
+\end{Sbox}
+\setlength{\fboxrule}{0pt}
+\setlength{\fboxsep}{12pt}
+\fcolorbox{\boxxcolor}{\prheadbackcolor}{\TheSbox}
+\end{center}
+\vspace{0.4\baselineskip}
+}
+
+\newcommand{\prospectusslidefour}[1]{
+\fontsize{\prosptextfontsize}{1.3\prosptextfontsize}\selectfont
+\newpage
+\thispagestyle{fancy}
+\lhead{}
+\rhead{}
+\lfoot{}
+\cfoot{}
+\rfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\chead{
+\begin{Sbox}
+\begin{minipage}{0.96\textwidth}
+\bf \fontsize{\prospheadfontsize}{\prospheadfontsize}\selectfont
+\textcolor{\prheadtextcolor}{
+4. #1
+}
+\end{minipage}
+\end{Sbox}
+\setlength{\fboxrule}{0pt}
+\setlength{\fboxsep}{12pt}
+\fcolorbox{\boxxcolor}{\prheadbackcolor}{\TheSbox}
+}
+}
+
+\newcommand{\prospectuspagefourold}[1]{
+\fontsize{\prosptextfontsize}{1.3\prosptextfontsize}\selectfont
+\newpage
+\begin{center}
+\begin{Sbox}
+\begin{minipage}{\textwidth}
+\bf \fontsize{\prospheadfontsize}{\prospheadfontsize}\selectfont
+\textcolor{\prheadtextcolor}{4. #1}
+\end{minipage}
+\end{Sbox}
+\setlength{\fboxrule}{0pt}
+\setlength{\fboxsep}{12pt}
+\fcolorbox{\boxxcolor}{\prheadbackcolor}{\TheSbox}
+\end{center}
+\vspace{0.4\baselineskip}
+}
+
+
+\newcommand{\prospectusslidefive}[1]{
+\fontsize{\prosptextfontsize}{1.3\prosptextfontsize}\selectfont
+\newpage
+\thispagestyle{fancy}
+\lhead{}
+\rhead{}
+\lfoot{}
+\cfoot{}
+\rfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\chead{
+\begin{Sbox}
+\begin{minipage}{0.96\textwidth}
+\bf \fontsize{\prospheadfontsize}{\prospheadfontsize}\selectfont
+\textcolor{\prheadtextcolor}{
+5. #1
+}
+\end{minipage}
+\end{Sbox}
+\setlength{\fboxrule}{0pt}
+\setlength{\fboxsep}{12pt}
+\fcolorbox{\boxxcolor}{\prheadbackcolor}{\TheSbox}
+}
+}
+
+\newcommand{\prospectuspagefiveold}[1]{
+\fontsize{\prosptextfontsize}{1.3\prosptextfontsize}\selectfont
+\newpage
+\begin{center}
+\begin{Sbox}
+\begin{minipage}{\textwidth}
+\bf \fontsize{\prospheadfontsize}{\prospheadfontsize}\selectfont
+\textcolor{\prheadtextcolor}{5. #1}
+\end{minipage}
+\end{Sbox}
+\setlength{\fboxrule}{0pt}
+\setlength{\fboxsep}{12pt}
+\fcolorbox{\boxxcolor}{\prheadbackcolor}{\TheSbox}
+\end{center}
+\vspace{0.4\baselineskip}
+}
+
+\newcommand{\prospectusbibliog}{
+\fontsize{\prosptextfontsize}{1.3\prosptextfontsize}\selectfont
+\newpage
+\thispagestyle{fancy}
+\lhead{}
+\rhead{}
+\lfoot{}
+\cfoot{}
+\rfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\chead{
+\begin{Sbox}
+\begin{minipage}{0.96\textwidth}
+\bf \fontsize{\prospheadfontsize}{\prospheadfontsize}\selectfont
+\textcolor{\prheadtextcolor}{
+References
+}
+\end{minipage}
+\end{Sbox}
+\setlength{\fboxrule}{0pt}
+\setlength{\fboxsep}{12pt}
+\fcolorbox{\boxxcolor}{\prheadbackcolor}{\TheSbox}
+}
+}
+
+\newcommand{\presentationbibliog}{
+\fontsize{\prosptextfontsize}{1.3\prosptextfontsize}\selectfont
+\newpage
+\pagestyle{fancy}
+\lhead{}
+\rhead{}
+\lfoot{}
+\cfoot{}
+\rfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\chead{
+\begin{Sbox}
+\begin{minipage}{0.96\textwidth}
+\bf \fontsize{\prospheadfontsize}{\prospheadfontsize}\selectfont
+\textcolor{\prheadtextcolor}{
+References
+}
+\end{minipage}
+\end{Sbox}
+\setlength{\fboxrule}{0pt}
+\setlength{\fboxsep}{12pt}
+\fcolorbox{\boxxcolor}{\prheadbackcolor}{\TheSbox}
+}
+}
+
+
+
+\newenvironment{prospectusbox}
+              {
+              \begin{center}
+                  \begin{Sbox}
+                    \begin{minipage}{0.99\textwidth}
+                      \bigskip
+              }
+              {
+              \end{minipage}
+                  \end{Sbox}
+                  \setlength{\fboxrule}{3pt}
+                  \setlength{\fboxsep}{12pt}
+                  \fcolorbox{\boxxcolor}{White}{\TheSbox}
+                \end{center}\bigskip\bigskip\bigskip
+               }
+
+
+
+%%%%%prospectus
+
+\newcommand{\presentationtitlecolor}[1]{\renewcommand{\prtitleecolor}{#1}}
+
+\newcommand{\presentationnamecolor}[1]{\renewcommand{\prnameecolor}{#1}}
+
+\newcommand{\presentationheadingtextcolor}[1]{\renewcommand{\prheadtextcolor}{#1}}
+
+\newcommand{\presentationheadingbackgroundcolor}[1]{\renewcommand{\prheadbackcolor}{#1}}
+
+%Write \titlepresentation{title}{name}{affiliation}{date}
+
+\newcommand{\titlepresentationgeneric}[4]{
+\thispagestyle{empty}
+\renewcommand{\prtitle}{#1}
+\renewcommand{\prname}{#2}
+\renewcommand{\prdate}{#4}
+$\ $
+\vspace{-0.8\baselineskip}
+\begin{center}
+\begin{minipage}{0.95\textwidth}
+\begin{center}
+\bf
+ \fontsize{\prosptitlefontsize}{\prosptitlefontsize}\selectfont
+ \textcolor{\prtitleecolor}{#1}\\
+\vspace{1.5\baselineskip}
+ 
+\fontsize{\prospnamefontsize}{\prospnamefontsize}\selectfont
+
+\textcolor{\prnameecolor}{#2}\\
+\vspace{2\baselineskip}
+
+\fontsize{\prospinfofontsize}{\prospinfofontsize}\selectfont 
+#3\\
+\vspace{0.8\baselineskip}
+
+#4
+\end{center}
+\end{minipage}
+\end{center}
+}
+
+
+%Write \titlepresentation{title}{student name}{program}{month and year}{adviser name}
+
+\newcommand{\titlepresentationseniorproject}[5]{
+\thispagestyle{empty}
+\renewcommand{\prtitle}{#1}
+\renewcommand{\prname}{#2}
+\renewcommand{\prdate}{#4}
+$\ $
+\vspace{-0.8\baselineskip}
+\begin{center}
+\begin{minipage}{0.95\textwidth}
+\begin{center}
+\bf
+ \fontsize{\prosptitlefontsize}{\prosptitlefontsize}\selectfont
+ \textcolor{\prtitleecolor}{#1}\\
+\vspace{1.5\baselineskip}
+ 
+\fontsize{\prospnamefontsize}{\prospnamefontsize}\selectfont
+
+\textcolor{\prnameecolor}{#2}\\
+\vspace{2\baselineskip}
+
+\fontsize{\prospinfofontsize}{\prospinfofontsize}\selectfont 
+Adviser: #5\\
+\vspace{0.8\baselineskip}
+
+#3\\
+\vspace{0.8\baselineskip}
+
+#4
+\end{center}
+\end{minipage}
+\end{center}
+}
+
+
+
+\newcommand{\presentationslideheading}[1]{
+\fontsize{\prosptextfontsize}{1.3\prosptextfontsize}\selectfont
+\newpage
+\pagestyle{fancy}
+\lhead{}
+\rhead{}
+\lfoot{}
+\cfoot{}
+\rfoot{}
+\renewcommand{\headrulewidth}{0pt}
+\renewcommand{\footrulewidth}{0pt}
+\chead{
+\begin{Sbox}
+\begin{minipage}{0.96\textwidth}
+\bf \fontsize{\prospheadfontsize}{\prospheadfontsize}\selectfont
+\textcolor{\prheadtextcolor}{
+#1
+}
+\end{minipage}
+\end{Sbox}
+\setlength{\fboxrule}{0pt}
+\setlength{\fboxsep}{12pt}
+\fcolorbox{\boxxcolor}{\prheadbackcolor}{\TheSbox}
+}
+}
+
+
+
+%colors
+
+\definecolor{GreenYellow}{cmyk}{0.15,0,0.69,0}
+\definecolor{RoyalPurple}{cmyk}{0.75,0.90,0,0}
+\definecolor{Yellow}{cmyk}{0,0,1,0}
+\definecolor{BlueViolet}{cmyk}{0.86,0.91,0,0.04}
+\definecolor{Goldenrod}{cmyk}{0,0.10,0.84,0}
+\definecolor{Periwinkle}{cmyk}{0.57,0.55,0,0}
+\definecolor{Dandelion}{cmyk}{0,0.29,0.84,0}
+\definecolor{CadetBlue}{cmyk}{0.62,0.57,0.23,0}
+\definecolor{Apricot}{cmyk}{0,0.32,0.52,0}
+\definecolor{CornflowerBlue}{cmyk}{0.65,0.13,0,0}
+\definecolor{Peach}{cmyk}{0,0.50,0.70,0}
+\definecolor{MidnightBlue}{cmyk}{0.98,0.13,0,0.43}
+\definecolor{Melon}{cmyk}{0,0.46,0.5,0}
+\definecolor{NavyBlue}{cmyk}{0.94,0.54,0,0}
+\definecolor{YellowOrange}{cmyk}{0,0.42,1,0}
+\definecolor{RoyalBlue}{cmyk}{1,0.50,0,0}
+\definecolor{Orange}{cmyk}{0,0.61,0.87,0}
+\definecolor{Blue}{cmyk}{1,1,0,0}
+\definecolor{BurntOrange}{cmyk}{0,0.51,1,0}
+\definecolor{Cerulean}{cmyk}{0.94,0.11,0,0}
+\definecolor{Bittersweet}{cmyk}{0,0.75,1,0.24}
+\definecolor{Cyan}{cmyk}{1,0,0,0}
+\definecolor{RedOrange}{cmyk}{0,0.77,0.87,0}
+\definecolor{ProcessBlue}{cmyk}{0.96,0,0,0}
+\definecolor{Mahogany}{cmyk}{0,0.85,0.87,0.35}
+\definecolor{SkyBlue}{cmyk}{0.62,0,0.12,0}
+\definecolor{Maroon}{cmyk}{0,0.87,0.68,0.32}
+\definecolor{Turquoise}{cmyk}{0.85,0,0.20,0}
+\definecolor{BrickRed}{cmyk}{0,0.89,0.94,0.28}
+\definecolor{TealBlue}{cmyk}{0.86,0,0.34,0.02}
+\definecolor{Red}{cmyk}{0,1,1,0}
+\definecolor{Aquamarine}{cmyk}{0.82,0,0.30,0}
+\definecolor{OrangeRed}{cmyk}{0,1,0.50,0}
+\definecolor{BlueGreen}{cmyk}{0.85,0,0.33,0}
+\definecolor{RubineRed}{cmyk}{0,1,0.13,0}
+\definecolor{Emerald}{cmyk}{1,0,0.50,0}
+\definecolor{WildStrawberry}{cmyk}{0,0.96,0.39,0}
+\definecolor{JungleGreen}{cmyk}{0.99,0,0.52,0}
+\definecolor{Salmon}{cmyk}{0,0.53,0.38,0}
+\definecolor{SeaGreen}{cmyk}{0.69,0,0.50,0}
+\definecolor{CarnationPink}{cmyk}{0,0.63,0,0}
+\definecolor{Green}{cmyk}{1,0,1,0}
+\definecolor{Magenta}{cmyk}{0,1,0,0}
+\definecolor{ForestGreen}{cmyk}{0.91,0,0.88,0.12}
+\definecolor{VioletRed}{cmyk}{0,0.81,0,0}
+\definecolor{PineGreen}{cmyk}{0.92,0,0.59,0.25}
+\definecolor{Rhodamine}{cmyk}{0,0.82,0,0}
+\definecolor{LimeGreen}{cmyk}{0.50,0,1,0}
+\definecolor{Mulberry}{cmyk}{0.34,0.90,0,0.02}
+\definecolor{YellowGreen}{cmyk}{0.44,0,0.74,0}
+\definecolor{RedViolet}{cmyk}{0.07,0.90,0,0.34}
+\definecolor{SpringGreen}{cmyk}{0.26,0,0.76,0}
+\definecolor{Fuchsia}{cmyk}{0.47,0.91,0,0.08}
+\definecolor{OliveGreen}{cmyk}{0.64,0,0.95,0.40}
+\definecolor{Lavender}{cmyk}{0,0.48,0,0}
+\definecolor{RawSienna}{cmyk}{0,0.72,1,0.45}
+\definecolor{Thistle}{cmyk}{0.12,0.59,0,0}
+\definecolor{Sepia}{cmyk}{0,0.83,1,0.70}
+\definecolor{Orchid}{cmyk}{0.32,0.64,0,0}
+\definecolor{Brown}{cmyk}{0,0.81,1,0.60}
+\definecolor{DarkOrchid}{cmyk}{0.40,0.80,0.20,0}
+\definecolor{Tan}{cmyk}{0.14,0.42,0.56,0}
+\definecolor{Purple}{cmyk}{0.45,0.86,0,0}
+\definecolor{Gray}{cmyk}{0,0,0,0.50}
+\definecolor{Plum}{cmyk}{0.50,1,0,0}
+\definecolor{Black}{cmyk}{0,0,0,1}
+\definecolor{Violet}{cmyk}{0.79,0.88,0,0}
+\definecolor{White}{cmyk}{0,0,0,0}
+
+%%%%%%%
+
+\newcommand{\secnew}[1]{\newpage \section{#1}}
+\newcommand{\secspce}[1]{\vspace{3\baselineskip} \section{#1}}
+\newcommand{\subsecst}[1]{\subsection*{#1}}
+\newcommand{\subsecstit}[1]{\subsection*{\textit{#1}}}
+\newcommand{\subsecsl}[1]{\subsection{\textsl{#1}}}
+\newcommand{\subsubsecsl}[1]{\subsubsection{\textsl{#1}}}
+\newcommand{\subsecstsl}[1]{\subsection*{\textsl{#1}}}
+\newcommand{\subseccit}[1]{\vspace{0.75\baselineskip}\noindent \textbf{\textit{#1}}\vspace{0.75\baselineskip}}
+\newcommand{\subseccsl}[1]{\vspace{0.75\baselineskip}\noindent \textbf{\textsl{#1}}\vspace{0.75\baselineskip}}
+
+
+
+
