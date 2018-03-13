@@ -6,7 +6,7 @@ import pandas as pd
 from datetime import time, date, datetime, timedelta
 from nltk.tokenize import TweetTokenizer
 
-consumer_key, consumer_secret, access_token, access_token_secret = open("credentials.txt").read().split("\n")
+consumer_key, consumer_secret, access_token, access_token_secret = open("../../credentials.txt").read().split("\n")
 
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
