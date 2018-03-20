@@ -13,13 +13,13 @@
 
 # #### Import libraries
 
-# In[ ]:
+# In[1]:
 
 
-# %matplotlib inline
+# get_ipython().run_line_magic('matplotlib', 'inline')
 
 
-# In[ ]:
+# In[2]:
 
 
 from sklearn.base import TransformerMixin, BaseEstimator
@@ -44,7 +44,7 @@ import re
 
 # #### Set max column width for dataframes
 
-# In[ ]:
+# In[3]:
 
 
 # pd.set_option("max_colwidth", 280)
@@ -52,7 +52,7 @@ import re
 
 # #### Load the CSV
 
-# In[ ]:
+# In[4]:
 
 
 df = pd.read_csv("../data/data_for_training/final_training_data/Subtweets_Classifier_Training_Data.csv")
@@ -60,7 +60,7 @@ df = pd.read_csv("../data/data_for_training/final_training_data/Subtweets_Classi
 
 # #### Create training and test sets from the single training set I made before
 
-# In[ ]:
+# In[5]:
 
 
 text_train, text_test, class_train, class_test = train_test_split(df.alleged_subtweet.tolist(), 
@@ -69,7 +69,7 @@ text_train, text_test, class_train, class_test = train_test_split(df.alleged_sub
 
 # #### Use NLTK's tokenizer instead of Scikit's
 
-# In[ ]:
+# In[6]:
 
 
 tokenizer = nltk.casual.TweetTokenizer(preserve_case=False, reduce_len=True)
@@ -77,7 +77,7 @@ tokenizer = nltk.casual.TweetTokenizer(preserve_case=False, reduce_len=True)
 
 # #### Function for managing TextBlob polarities
 
-# In[ ]:
+# In[7]:
 
 
 def simplify_polarity(polarity):
@@ -88,7 +88,7 @@ def simplify_polarity(polarity):
 
 # #### Class for distinguishing polarizing parts of speech as features
 
-# In[ ]:
+# In[8]:
 
 
 class TweetStats(BaseEstimator, TransformerMixin):
@@ -179,7 +179,6 @@ class TweetStats(BaseEstimator, TransformerMixin):
         for text in posts:
             tokenized_text = tokenizer.tokenize(text)
             
-            text_length = len(text)
             num_pronouns = len(prounouns_lower.intersection(tokenized_text))
             num_names = len(first_names_lower.intersection(tokenized_text))
             num_first_person = len(first_person_pronouns_lower.intersection(tokenized_text))
@@ -187,18 +186,23 @@ class TweetStats(BaseEstimator, TransformerMixin):
             num_subtweet = text.count("subtweet") + text.count("Subtweet")
             num_urls = len(re.findall(pattern, text))
             
-            weighted_dict = {"useful": text_length,
-                             "sentiment": simplify_polarity(TextBlob(text).sentiment.polarity),
-                             "impossible": num_subtweet + num_at_symbols + num_urls,
-                             "likely": num_pronouns,
-                             "unlikely": num_names + num_first_person + num_at_symbols + num_subtweet + num_urls}
+            weighted_dict = {"sentiment": simplify_polarity(TextBlob(text).sentiment.polarity), 
+                             "num_subtweet": num_subtweet,
+                             "num_at_symbols": num_at_symbols, 
+                             "num_urls": num_urls,
+                             "num_pronouns": num_pronouns,
+                             "num_names": num_names, 
+                             "num_first_person": num_first_person, 
+                             "num_at_symbols": num_at_symbols,
+                             "num_subtweet": num_subtweet,
+                             "num_urls": num_urls}
             final_output.append(weighted_dict)
         return final_output
 
 
 # #### Build the pipeline
 
-# In[ ]:
+# In[9]:
 
 
 sentiment_pipeline = Pipeline([
@@ -209,8 +213,8 @@ sentiment_pipeline = Pipeline([
         ])),
         ("stats_vect", Pipeline([
             ("tweet_stats", TweetStats()),
-            ("vect", DictVectorizer()),
-        ])),
+            ("vect", DictVectorizer())
+        ]))
     ])),
     ("classifier", MultinomialNB())
 ])
@@ -218,14 +222,14 @@ sentiment_pipeline = Pipeline([
 
 # #### Show the results
 
-# In[ ]:
+# In[10]:
 
 
 sentiment_pipeline.fit(text_train, class_train)
 predictions = sentiment_pipeline.predict(text_test)
 
 
-# In[ ]:
+# In[11]:
 
 
 print(classification_report(class_test, predictions))
@@ -233,36 +237,36 @@ print(classification_report(class_test, predictions))
 
 # #### Define function for visualizing confusion matrices
 
-# In[ ]:
+# In[12]:
 
 
-def plot_confusion_matrix(cm, classes, normalize=False,
-                          title='Confusion matrix', cmap=plt.cm.Blues):
-    if normalize:
-        cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
-
-    plt.imshow(cm, interpolation='nearest', cmap=cmap)
-    plt.title(title)
-    plt.colorbar()
-    tick_marks = np.arange(len(classes))
-    plt.xticks(tick_marks, classes, rotation=45)
-    plt.yticks(tick_marks, classes)
-
-    fmt = '.2f' if normalize else 'd'
-    thresh = cm.max() / 2.
-    for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
-        plt.text(j, i, format(cm[i, j], fmt),
-                 horizontalalignment="center",
-                 color="white" if cm[i, j] > thresh else "black")
-
-    plt.tight_layout()
-    plt.ylabel('True label')
-    plt.xlabel('Predicted label')
+# def plot_confusion_matrix(cm, classes, normalize=False,
+#                           title='Confusion matrix', cmap=plt.cm.Blues):
+#     if normalize:
+#         cm = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
+# 
+#     plt.imshow(cm, interpolation='nearest', cmap=cmap)
+#     plt.title(title)
+#     plt.colorbar()
+#     tick_marks = np.arange(len(classes))
+#     plt.xticks(tick_marks, classes, rotation=45)
+#     plt.yticks(tick_marks, classes)
+# 
+#     fmt = '.2f' if normalize else 'd'
+#     thresh = cm.max() / 2.
+#     for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
+#         plt.text(j, i, format(cm[i, j], fmt),
+#                  horizontalalignment="center",
+#                  color="white" if cm[i, j] > thresh else "black")
+# 
+#     plt.tight_layout()
+#     plt.ylabel('True label')
+#     plt.xlabel('Predicted label')
 
 
 # #### Show the matrices
 
-# In[ ]:
+# In[13]:
 
 
 # class_names = ["negative", "positive"]
@@ -283,7 +287,7 @@ def plot_confusion_matrix(cm, classes, normalize=False,
 
 # #### Save the classifier for another time
 
-# In[ ]:
+# In[14]:
 
 
 joblib.dump(sentiment_pipeline, "../data/other_data/subtweets_classifier.pkl") 
@@ -291,7 +295,7 @@ joblib.dump(sentiment_pipeline, "../data/other_data/subtweets_classifier.pkl")
 
 # #### Print tests for the classifier
 
-# In[ ]:
+# In[15]:
 
 
 def tests_dataframe(tweets_dataframe, text_column="SentimentText", sentiment_column="Sentiment"):
@@ -307,7 +311,7 @@ def tests_dataframe(tweets_dataframe, text_column="SentimentText", sentiment_col
 
 # #### Make up some tweets
 
-# In[ ]:
+# In[16]:
 
 
 # test_tweets = ["Some people don't know their place.", 
@@ -325,7 +329,7 @@ def tests_dataframe(tweets_dataframe, text_column="SentimentText", sentiment_col
 
 # #### Make a dataframe from the list
 
-# In[ ]:
+# In[17]:
 
 
 # test_tweets_df = pd.DataFrame({"Tweet": test_tweets, "Sentiment": [None]*len(test_tweets)})
@@ -333,7 +337,7 @@ def tests_dataframe(tweets_dataframe, text_column="SentimentText", sentiment_col
 
 # #### Print the tests
 
-# In[ ]:
+# In[18]:
 
 
 # tests_dataframe(test_tweets_df, text_column="Tweet", sentiment_column="Sentiment").head()
@@ -341,202 +345,331 @@ def tests_dataframe(tweets_dataframe, text_column="SentimentText", sentiment_col
 
 # #### Test on actual tweets
 
-# In[ ]:
+# In[19]:
 
 
-naji_df = pd.read_csv("../data/data_for_testing/other_data/naji_data.csv", error_bad_lines=False)
+# naji_df = pd.read_csv("../data/data_for_testing/other_data/naji_data.csv", error_bad_lines=False)
 
 
 # #### Repair some leftover HTML
 
-# In[ ]:
+# In[20]:
 
 
-naji_df["SentimentText"] = naji_df["SentimentText"].str.replace("&quot;", "\"")
-naji_df["SentimentText"] = naji_df["SentimentText"].str.replace("&amp;", "&")
-naji_df["SentimentText"] = naji_df["SentimentText"].str.replace("&gt;", ">")
-naji_df["SentimentText"] = naji_df["SentimentText"].str.replace("&lt;", "<")
+# naji_df["SentimentText"] = naji_df["SentimentText"].str.replace("&quot;", "\"")
+# naji_df["SentimentText"] = naji_df["SentimentText"].str.replace("&amp;", "&")
+# naji_df["SentimentText"] = naji_df["SentimentText"].str.replace("&gt;", ">")
+# naji_df["SentimentText"] = naji_df["SentimentText"].str.replace("&lt;", "<")
 
 
 # #### Remove rows with non-English
 
-# In[ ]:
+# In[21]:
 
 
-def is_english(s):
-    return all(ord(char) < 128 for char in s)
+# def is_english(s):
+#     return all(ord(char) < 128 for char in s)
 
 
-# In[ ]:
+# In[22]:
 
 
-naji_df = naji_df[naji_df["SentimentText"].map(is_english)]
+# naji_df = naji_df[naji_df["SentimentText"].map(is_english)]
 
 
 # #### Show the length of the dataset
 
-# In[ ]:
+# In[23]:
 
 
-print(len(naji_df))
+# print("Length of dataset: {}".format(len(naji_df)))
 
 
-# #### Use randomly selected 500K rows from dataset
+# #### Use randomly selected 100K rows from dataset
 
-# In[ ]:
+# In[24]:
 
 
-# naji_df = naji_df.sample(n=500000).reset_index(drop=True)
+# naji_df = naji_df.sample(n=100000).reset_index(drop=True)
 
 
 # #### Print and time the tests
 
-# In[ ]:
+# In[25]:
 
 
-# %%time
-naji_df = tests_dataframe(naji_df)
+# get_ipython().run_cell_magic('time', '', 'naji_df = tests_dataframe(naji_df)')
 
 
-# In[ ]:
+# In[26]:
 
 
-naji_df.to_csv("../data/data_from_testing/other_data/naji_tests.csv")
+# naji_df.to_csv("../data/data_from_testing/other_data/naji_tests.csv")
 
 
-# In[ ]:
+# In[27]:
 
 
 # naji_df.head()
 
 
+# #### Plot the results
+
+# In[28]:
+
+
+# naji_df_columns = ["sentiment_score", "subtweet_negative_probability"]
+
+
+# In[29]:
+
+
+# naji_df = naji_df.set_index("tweet").drop(naji_df_columns, axis=1).head(10)
+
+
+# In[30]:
+
+
+# naji_df.plot.barh(logx=True);
+
+
 # #### Tests on friends' tweets
 
-# In[ ]:
+# In[31]:
 
 
-aaron_df = pd.read_csv("../data/data_for_testing/friends_data/akrapf96_tweets.csv").dropna()
-aaron_df["Sentiment"] = None
+# aaron_df = pd.read_csv("../data/data_for_testing/friends_data/akrapf96_tweets.csv").dropna()
+# aaron_df["Sentiment"] = None
 
 
-# In[ ]:
+# In[32]:
 
 
-# %%time
-aaron_df = tests_dataframe(aaron_df, text_column="Text", sentiment_column="Sentiment")
+# get_ipython().run_cell_magic('time', '', 'aaron_df = tests_dataframe(aaron_df, text_column="Text", sentiment_column="Sentiment")')
 
 
-# In[ ]:
+# In[33]:
 
 
-aaron_df.to_csv("../data/data_from_testing/friends_data/akrapf96_tests.csv")
+# aaron_df.to_csv("../data/data_from_testing/friends_data/akrapf96_tests.csv")
 
 
-# In[ ]:
+# In[34]:
+
+
+# aaron_df["tweet"] = aaron_df["tweet"].str[:140]
+
+
+# In[35]:
 
 
 # aaron_df.head()
 
 
-# In[ ]:
+# #### Plot the results
+
+# In[36]:
 
 
-julia_df = pd.read_csv("../data/data_for_testing/friends_data/juliaeberry_tweets.csv").dropna()
-julia_df["Sentiment"] = None
+# aaron_df_columns = ["sentiment_score", "subtweet_negative_probability"]
 
 
-# In[ ]:
+# In[37]:
 
 
-# %%time
-julia_df = tests_dataframe(julia_df, text_column="Text", sentiment_column="Sentiment")
+# aaron_df = aaron_df.set_index("tweet").drop(aaron_df_columns, axis=1).head(10)
 
 
-# In[ ]:
+# In[38]:
 
 
-julia_df.to_csv("../data/data_from_testing/friends_data/juliaeberry_tests.csv")
+# aaron_df.plot.barh(logx=True);
 
 
-# In[ ]:
+# In[39]:
+
+
+# julia_df = pd.read_csv("../data/data_for_testing/friends_data/juliaeberry_tweets.csv").dropna()
+# julia_df["Sentiment"] = None
+
+
+# In[40]:
+
+
+# get_ipython().run_cell_magic('time', '', 'julia_df = tests_dataframe(julia_df, text_column="Text", sentiment_column="Sentiment")')
+
+
+# In[41]:
+
+
+# julia_df.to_csv("../data/data_from_testing/friends_data/juliaeberry_tests.csv")
+
+
+# In[42]:
+
+
+# julia_df["tweet"] = julia_df["tweet"].str[:140]
+
+
+# In[43]:
 
 
 # julia_df.head()
 
 
-# In[ ]:
+# #### Plot the results
+
+# In[44]:
 
 
-zoe_df = pd.read_csv("../data/data_for_testing/friends_data/zoeterhune_tweets.csv").dropna()
-zoe_df["Sentiment"] = None
+# julia_df_columns = ["sentiment_score", "subtweet_negative_probability"]
 
 
-# In[ ]:
+# In[45]:
 
 
-# %%time
-zoe_df = tests_dataframe(zoe_df, text_column="Text", sentiment_column="Sentiment")
+# julia_df = julia_df.set_index("tweet").drop(julia_df_columns, axis=1).head(10)
 
 
-# In[ ]:
+# In[46]:
 
 
-zoe_df.to_csv("../data/data_from_testing/friends_data/zoeterhune_tests.csv")
+# julia_df.plot.barh(logx=True);
 
 
-# In[ ]:
+# In[47]:
+
+
+# zoe_df = pd.read_csv("../data/data_for_testing/friends_data/zoeterhune_tweets.csv").dropna()
+# zoe_df["Sentiment"] = None
+
+
+# In[48]:
+
+
+# get_ipython().run_cell_magic('time', '', 'zoe_df = tests_dataframe(zoe_df, text_column="Text", sentiment_column="Sentiment")')
+
+
+# In[49]:
+
+
+# zoe_df.to_csv("../data/data_from_testing/friends_data/zoeterhune_tests.csv")
+
+
+# In[50]:
+
+
+# zoe_df["tweet"] = zoe_df["tweet"].str[:140]
+
+
+# In[51]:
 
 
 # zoe_df.head()
 
 
-# In[ ]:
+# #### Plot the results
+
+# In[52]:
 
 
-noah_df = pd.read_csv("../data/data_for_testing/friends_data/noahsegalgould_tweets.csv").dropna()
-noah_df["Sentiment"] = None
+# zoe_df_columns = ["sentiment_score", "subtweet_negative_probability"]
 
 
-# In[ ]:
+# In[53]:
 
 
-# %%time
-noah_df = tests_dataframe(noah_df, text_column="Text", sentiment_column="Sentiment")
+# zoe_df = zoe_df.set_index("tweet").drop(zoe_df_columns, axis=1).head(10)
 
 
-# In[ ]:
+# In[54]:
 
 
-noah_df.to_csv("../data/data_from_testing/friends_data/noahsegalgould_tests.csv")
+# zoe_df.plot.barh(logx=True);
 
 
-# In[ ]:
+# In[55]:
+
+
+# noah_df = pd.read_csv("../data/data_for_testing/friends_data/noahsegalgould_tweets.csv").dropna()
+# noah_df["Sentiment"] = None
+
+
+# In[56]:
+
+
+# get_ipython().run_cell_magic('time', '', 'noah_df = tests_dataframe(noah_df, text_column="Text", sentiment_column="Sentiment")')
+
+
+# In[57]:
+
+
+# noah_df.to_csv("../data/data_from_testing/friends_data/noahsegalgould_tests.csv")
+
+
+# In[58]:
+
+
+# noah_df["tweet"] = noah_df["tweet"].str[:140]
+
+
+# In[59]:
 
 
 # noah_df.head()
 
 
+# #### Plot the results
+
+# In[60]:
+
+
+# noah_df_columns = ["sentiment_score", "subtweet_negative_probability"]
+
+
+# In[61]:
+
+
+# noah_df = noah_df.set_index("tweet").drop(noah_df_columns, axis=1).head(10)
+
+
+# In[62]:
+
+
+# noah_df.plot.barh(logx=True);
+
+
 # #### Test it in realtime
 # #### Define some useful variables for later
 
-# In[ ]:
+# In[63]:
 
 
 THRESHOLD = 0.95
-DURATION = 3600 # 1 hour
+DURATION = 60*60*24*7 # 1 week
 
 
 # #### Load Twitter API credentials
 
-# In[ ]:
+# In[64]:
 
 
 consumer_key, consumer_secret, access_token, access_token_secret = open("../../credentials.txt").read().split("\n")
 
 
+# #### Use the API credentials to connect to the API
+
+# In[65]:
+
+
+auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+auth.set_access_token(access_token, access_token_secret)
+api = tweepy.API(auth, retry_delay=5, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
+
+
 # #### Prepare the final dataframe
 
-# In[ ]:
+# In[66]:
 
 
 subtweets_live_list = []
@@ -545,7 +678,7 @@ non_subtweets_live_list = []
 
 # #### Create a custom class for streaming subtweets
 
-# In[ ]:
+# In[67]:
 
 
 class StreamListener(tweepy.StreamListener):
@@ -577,15 +710,15 @@ class StreamListener(tweepy.StreamListener):
                 "RT @" not in text, 
                 not status.in_reply_to_status_id]):
             
+            api.retweet(status.id)
+            
             subtweets_live_list.append(row)
             subtweets_df = pd.DataFrame(subtweets_live_list).sort_values(by="subtweet_probability", 
                                                                          ascending=False)
             subtweets_df.to_csv("../data/data_from_testing/live_downloaded_data/subtweets_live_data.csv")
             
-            print("Subtweet:\n{}\nGeo Data:{}\nTotal tweets acquired: {}\n".format(print_list, 
-                                                                                   status.place.bounding_box.coordinates, 
-                                                                                   (len(subtweets_live_list) 
-                                                                                    + len(non_subtweets_live_list))))
+            print("Subtweet:\n{}\nTotal tweets acquired: {}\n".format(str(print_list)[1:-1], (len(subtweets_live_list)
+                                                                                              + len(non_subtweets_live_list))))
             
             return row
         else:
@@ -598,19 +731,9 @@ class StreamListener(tweepy.StreamListener):
             return row
 
 
-# #### Use the API credentials to connect to the API
-
-# In[ ]:
-
-
-auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-auth.set_access_token(access_token, access_token_secret)
-api = tweepy.API(auth, retry_delay=5, wait_on_rate_limit=True, wait_on_rate_limit_notify=True, )
-
-
 # #### Create a list of all my followers' account IDs
 
-# In[ ]:
+# In[68]:
 
 
 my_followers_int = list(set(list(tweepy.Cursor(api.followers_ids, screen_name="NoahSegalGould").pages())[0]))
@@ -619,7 +742,7 @@ my_followers_str = [str(i) for i in my_followers_int]
 
 # #### Instantiate the listener
 
-# In[ ]:
+# In[69]:
 
 
 stream_listener = StreamListener()
@@ -628,17 +751,43 @@ stream = tweepy.Stream(auth=api.auth, listener=stream_listener)
 
 # #### Start the stream asynchronously, and stop it after some duration of seconds
 
-# In[ ]:
+# In[70]:
 
 
-# %%time
-bounding_box = [-73.920176, 42.009637,
-                -73.899739, 42.033421]
-stream.filter(locations=bounding_box, async=True) # Bard College
-#stream.filter(follow=my_followers_str, async=True)
-#stream.filter(track="some people", async=True)
+stream.filter(follow=my_followers_str, async=True)
 print("Columns:")
 print("screen_name, sentiment_polarity, sentiment_subjectivity, subtweet_probability, time, text")
 sleep(DURATION)
 stream.disconnect()
 
+
+# #### Plot the results
+
+# In[71]:
+
+
+# subtweets_df = pd.read_csv("../data/data_from_testing/live_downloaded_data/subtweets_live_data.csv", index_col=0)
+
+
+# In[72]:
+
+
+# subtweets_df["tweet"] = subtweets_df["tweet"].str[:140]
+
+
+# In[73]:
+
+
+# subtweets_df_columns = ["screen_name", "time"]
+
+
+# In[74]:
+
+
+# subtweets_df = subtweets_df.set_index("tweet").drop(subtweets_df_columns, axis=1).head(10)
+
+
+# In[75]:
+
+
+# subtweets_df.plot.barh(logx=True);

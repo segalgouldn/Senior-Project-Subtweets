@@ -169,7 +169,6 @@ class TweetStats(BaseEstimator, TransformerMixin):
         for text in posts:
             tokenized_text = tokenizer.tokenize(text)
             
-            text_length = len(text)
             num_pronouns = len(prounouns_lower.intersection(tokenized_text))
             num_names = len(first_names_lower.intersection(tokenized_text))
             num_first_person = len(first_person_pronouns_lower.intersection(tokenized_text))
@@ -177,11 +176,16 @@ class TweetStats(BaseEstimator, TransformerMixin):
             num_subtweet = text.count("subtweet") + text.count("Subtweet")
             num_urls = len(re.findall(pattern, text))
             
-            weighted_dict = {"useful": text_length,
-                             "sentiment": simplify_polarity(TextBlob(text).sentiment.polarity),
-                             "impossible": num_subtweet + num_at_symbols + num_urls,
-                             "likely": num_pronouns,
-                             "unlikely": num_names + num_first_person + num_at_symbols + num_subtweet + num_urls}
+            weighted_dict = {"sentiment": simplify_polarity(TextBlob(text).sentiment.polarity), 
+                             "num_subtweet": num_subtweet,
+                             "num_at_symbols": num_at_symbols, 
+                             "num_urls": num_urls,
+                             "num_pronouns": num_pronouns,
+                             "num_names": num_names, 
+                             "num_first_person": num_first_person, 
+                             "num_at_symbols": num_at_symbols,
+                             "num_subtweet": num_subtweet,
+                             "num_urls": num_urls}
             final_output.append(weighted_dict)
         return final_output
 ```
@@ -198,8 +202,8 @@ sentiment_pipeline = Pipeline([
         ])),
         ("stats_vect", Pipeline([
             ("tweet_stats", TweetStats()),
-            ("vect", DictVectorizer()),
-        ])),
+            ("vect", DictVectorizer())
+        ]))
     ])),
     ("classifier", MultinomialNB())
 ])
@@ -220,10 +224,10 @@ print(classification_report(class_test, predictions))
 
                  precision    recall  f1-score   support
     
-       negative       0.94      0.87      0.90      2055
-       positive       0.88      0.95      0.91      2074
+       negative       0.98      0.85      0.91      1382
+       positive       0.86      0.98      0.92      1296
     
-    avg / total       0.91      0.91      0.91      4129
+    avg / total       0.92      0.91      0.91      2678
     
 
 
@@ -372,39 +376,39 @@ tests_dataframe(test_tweets_df, text_column="Tweet", sentiment_column="Sentiment
   </thead>
   <tbody>
     <tr>
-      <th>2</th>
+      <th>0</th>
       <td>None</td>
-      <td>0.039276</td>
-      <td>0.960724</td>
-      <td>How come you people act like this?</td>
+      <td>0.049255</td>
+      <td>0.950745</td>
+      <td>Some people don't know their place.</td>
     </tr>
     <tr>
       <th>1</th>
       <td>None</td>
-      <td>0.039667</td>
-      <td>0.960333</td>
+      <td>0.058178</td>
+      <td>0.941822</td>
       <td>Isn't it funny how some people don't know their place?</td>
     </tr>
     <tr>
-      <th>0</th>
+      <th>2</th>
       <td>None</td>
-      <td>0.050852</td>
-      <td>0.949148</td>
-      <td>Some people don't know their place.</td>
+      <td>0.088949</td>
+      <td>0.911051</td>
+      <td>How come you people act like this?</td>
     </tr>
     <tr>
       <th>3</th>
       <td>None</td>
-      <td>0.382041</td>
-      <td>0.617959</td>
+      <td>0.126599</td>
+      <td>0.873401</td>
       <td>You're such a nerd.</td>
     </tr>
     <tr>
-      <th>5</th>
+      <th>4</th>
       <td>None</td>
-      <td>0.614666</td>
-      <td>0.385334</td>
-      <td>Who the heck is Noah?</td>
+      <td>0.227174</td>
+      <td>0.772826</td>
+      <td>I love Noah, he's so cool.</td>
     </tr>
   </tbody>
 </table>
@@ -450,17 +454,17 @@ naji_df = naji_df[naji_df["SentimentText"].map(is_english)]
 
 
 ```python
-print(len(naji_df))
+print("Length of dataset: {}".format(len(naji_df)))
 ```
 
-    1564156
+    Length of dataset: 1564156
 
 
-#### Use randomly selected 500K rows from dataset
+#### Use randomly selected 100K rows from dataset
 
 
 ```python
-# naji_df = naji_df.sample(n=500000).reset_index(drop=True)
+naji_df = naji_df.sample(n=100000).reset_index(drop=True)
 ```
 
 #### Print and time the tests
@@ -471,8 +475,8 @@ print(len(naji_df))
 naji_df = tests_dataframe(naji_df)
 ```
 
-    CPU times: user 23min 17s, sys: 20.5 s, total: 23min 37s
-    Wall time: 26min 6s
+    CPU times: user 1min 30s, sys: 1.49 s, total: 1min 31s
+    Wall time: 1min 42s
 
 
 
@@ -514,44 +518,65 @@ naji_df.head()
   </thead>
   <tbody>
     <tr>
-      <th>678024</th>
+      <th>27768</th>
       <td>0</td>
-      <td>0.001058</td>
-      <td>0.998942</td>
-      <td>FUCK DIS ALL DIS SHIT IS BULLSHIT REAL TALK.... STOP ALL THE FAKE SHIT BITCHES AND YOU HOE ASS NIGGAS......... NOT HAPPY</td>
+      <td>0.003174</td>
+      <td>0.996826</td>
+      <td>I'm so jelouse of the people of los angles they get to have charlie in they're city,  I would freak if he was comming her</td>
     </tr>
     <tr>
-      <th>1324948</th>
+      <th>8957</th>
       <td>0</td>
-      <td>0.001090</td>
-      <td>0.998910</td>
-      <td>Why is it when you think someone likes you, they don't and actually like two other people, one of whom is your friend. Mood - upset</td>
+      <td>0.004615</td>
+      <td>0.995385</td>
+      <td>I feel so bad I think I got my girls sick and its the worst when your kids r sick you feel bad and you can't do anything</td>
     </tr>
     <tr>
-      <th>1395228</th>
+      <th>45467</th>
       <td>0</td>
-      <td>0.001707</td>
-      <td>0.998293</td>
-      <td>don't you just hate it when you're talking to someone on MSN and they don't respond for ages and you think you've made them upset</td>
+      <td>0.004776</td>
+      <td>0.995224</td>
+      <td>your stupid games and we would play them over the phone together. I miss alot of things.. I miss being your friend..I wish you missed me</td>
     </tr>
     <tr>
-      <th>1255435</th>
+      <th>5571</th>
       <td>0</td>
-      <td>0.001877</td>
-      <td>0.998123</td>
-      <td>thinks people really dont understand even when their words to you say they do  u think something then realise something else</td>
+      <td>0.005159</td>
+      <td>0.994841</td>
+      <td>Imagine seeing a cute girl then when you ask for her name she sounds like a chain smoker old man... that is me  I hate being sick!</td>
     </tr>
     <tr>
-      <th>1422164</th>
+      <th>6784</th>
       <td>0</td>
-      <td>0.001898</td>
-      <td>0.998102</td>
-      <td>hate the fact that you walk past a person like they were never a part of you, when they were the biggest part of your life</td>
+      <td>0.005480</td>
+      <td>0.994520</td>
+      <td>My neighbor is like beating her kid, he's screaming OW &amp; she's telling him to get out of the apartment  so sad.</td>
     </tr>
   </tbody>
 </table>
 </div>
 
+
+
+#### Plot the results
+
+
+```python
+naji_df_columns = ["sentiment_score", "subtweet_negative_probability"]
+```
+
+
+```python
+naji_df = naji_df.set_index("tweet").drop(naji_df_columns, axis=1).head(10)
+```
+
+
+```python
+naji_df.plot.barh(logx=True);
+```
+
+
+![png](output_55_0.png)
 
 
 #### Tests on friends' tweets
@@ -568,13 +593,18 @@ aaron_df["Sentiment"] = None
 aaron_df = tests_dataframe(aaron_df, text_column="Text", sentiment_column="Sentiment")
 ```
 
-    CPU times: user 2.85 s, sys: 18.3 ms, total: 2.87 s
-    Wall time: 2.87 s
+    CPU times: user 3.94 s, sys: 84.8 ms, total: 4.03 s
+    Wall time: 5.32 s
 
 
 
 ```python
 aaron_df.to_csv("../data/data_from_testing/friends_data/akrapf96_tests.csv")
+```
+
+
+```python
+aaron_df["tweet"] = aaron_df["tweet"].str[:140]
 ```
 
 
@@ -611,44 +641,65 @@ aaron_df.head()
   </thead>
   <tbody>
     <tr>
-      <th>264</th>
+      <th>385</th>
       <td>None</td>
-      <td>0.003064</td>
-      <td>0.996936</td>
-      <td>paparazzi are the worst kind of people\ntabloids are the worst kind of publication\nthe people that actively read and fund these people are the second worst kind of people</td>
-    </tr>
-    <tr>
-      <th>492</th>
-      <td>None</td>
-      <td>0.004858</td>
-      <td>0.995142</td>
-      <td>The first half makes sense\nThe second doesn't \nBuying (obv not real values) 1 bitcoin for $20 is the same investment as 10 for $20. Yes it's cheaper but it's the $20 you invest that matters, not the # of bitcoin you get from it</td>
-    </tr>
-    <tr>
-      <th>742</th>
-      <td>None</td>
-      <td>0.005105</td>
-      <td>0.994895</td>
-      <td>Gonna tweet about a whole bunch of stuff to get them out of the way:\nClocks ticking\nWhen will it end\nI'm so done\nI expected this really\nDisappointed again\nConstantly tired\nFuck off\nUhhhhhhhhhhhhhhhhhh k\nStill hungry \nSeriously?\nThat was quick\nWhatever\nIdk</td>
+      <td>0.006295</td>
+      <td>0.993705</td>
+      <td>My dog literally changed positions on my bed just so she could watch me eat at my desk but pretends she asleep when I look at her like I can</td>
     </tr>
     <tr>
       <th>1722</th>
       <td>None</td>
-      <td>0.005361</td>
-      <td>0.994639</td>
+      <td>0.006552</td>
+      <td>0.993448</td>
       <td>PewDiePie posts video "apologizing" for his Kill All Jews "joke" and it's really about how he makes a ton of money and the media hates him</td>
     </tr>
     <tr>
-      <th>2563</th>
+      <th>3491</th>
       <td>None</td>
-      <td>0.006079</td>
-      <td>0.993921</td>
-      <td>Apparently you can get notifications when someone posts on Instagram why is the setting hidden away</td>
+      <td>0.006814</td>
+      <td>0.993186</td>
+      <td>2 people have asked me if I know their grandchildren because they were in my high school class.</td>
+    </tr>
+    <tr>
+      <th>3281</th>
+      <td>None</td>
+      <td>0.006825</td>
+      <td>0.993175</td>
+      <td>What he doesn't know (unless he stalks my twitter which I know he does) is that I have fake accounts following all his social media</td>
+    </tr>
+    <tr>
+      <th>2893</th>
+      <td>None</td>
+      <td>0.007923</td>
+      <td>0.992077</td>
+      <td>I love arguing with conservative bigots who don't understand basic decency. People have their own beliefs, just let them believe.</td>
     </tr>
   </tbody>
 </table>
 </div>
 
+
+
+#### Plot the results
+
+
+```python
+aaron_df_columns = ["sentiment_score", "subtweet_negative_probability"]
+```
+
+
+```python
+aaron_df = aaron_df.set_index("tweet").drop(aaron_df_columns, axis=1).head(10)
+```
+
+
+```python
+aaron_df.plot.barh(logx=True);
+```
+
+
+![png](output_65_0.png)
 
 
 
@@ -663,13 +714,18 @@ julia_df["Sentiment"] = None
 julia_df = tests_dataframe(julia_df, text_column="Text", sentiment_column="Sentiment")
 ```
 
-    CPU times: user 5.45 s, sys: 27.2 ms, total: 5.47 s
-    Wall time: 5.48 s
+    CPU times: user 6.81 s, sys: 86.3 ms, total: 6.89 s
+    Wall time: 7.3 s
 
 
 
 ```python
 julia_df.to_csv("../data/data_from_testing/friends_data/juliaeberry_tests.csv")
+```
+
+
+```python
+julia_df["tweet"] = julia_df["tweet"].str[:140]
 ```
 
 
@@ -708,42 +764,63 @@ julia_df.head()
     <tr>
       <th>1138</th>
       <td>None</td>
-      <td>0.000255</td>
-      <td>0.999745</td>
-      <td>"what a COINcidence that you're here," drawls Bitcoin lustily. your palms sweat as you imagine what it would be like to own this creature, to do with him what you will. you drag your cursor over his coinhood, and he gasps. \n"transaction complete," you whisper into his ear la...</td>
+      <td>0.001387</td>
+      <td>0.998613</td>
+      <td>"what a COINcidence that you're here," drawls Bitcoin lustily. your palms sweat as you imagine what it would be like to own this creature, t</td>
     </tr>
     <tr>
-      <th>663</th>
+      <th>236</th>
       <td>None</td>
-      <td>0.000282</td>
-      <td>0.999718</td>
-      <td>even if you are committed to cheating how can you possibly think that p/c are on the same level as v/m when you're watching papadakis shakily clamber onto cizeron for a lift in their short dance after you've just seen tessa hook her legs around scott's head and spin in THEIR ...</td>
-    </tr>
-    <tr>
-      <th>994</th>
-      <td>None</td>
-      <td>0.000907</td>
-      <td>0.999093</td>
-      <td>I cannot fucking BELIEVE that you can see scott mouthing the lyrics to "come what may" to tessa while they're skating their moulin rouge program at the canadian nationals....now I have to rewatch all of the other times they've skated this program to see if he always does it</td>
+      <td>0.002276</td>
+      <td>0.997724</td>
+      <td>look I've been thinking about it and even if they're older and less able to perform (although, they're at the top of their game now) they co</td>
     </tr>
     <tr>
       <th>193</th>
       <td>None</td>
-      <td>0.001030</td>
-      <td>0.998970</td>
-      <td>I know part of the reason they can do it early is bc they're still tiny and their bodies haven't gone through puberty but if female skaters (at this point in time) likely won't be able to land quads by the time they're competing as seniors, why bother with such a risk so young?</td>
+      <td>0.003406</td>
+      <td>0.996594</td>
+      <td>I know part of the reason they can do it early is bc they're still tiny and their bodies haven't gone through puberty but if female skaters</td>
     </tr>
     <tr>
-      <th>773</th>
+      <th>902</th>
       <td>None</td>
-      <td>0.001178</td>
-      <td>0.998822</td>
-      <td>"I do feel grateful for the fact that we have one another, because I think people search their whole lives for someone that special" -tessa\n\nwho even says this about somebody that they don't want to marry/be with forever? v/m soundbytes will be the death of me #virtuemoir</td>
+      <td>0.003493</td>
+      <td>0.996507</td>
+      <td>tbh if they don't start publically dating in a year after pyeongchang I'm going to be S H O C K E D how can you look at somebody like that i</td>
+    </tr>
+    <tr>
+      <th>770</th>
+      <td>None</td>
+      <td>0.003761</td>
+      <td>0.996239</td>
+      <td>what are these people SEEING in them that's so wonderful??? I don't know how people can justify their technical inferiority by saying "oh, t</td>
     </tr>
   </tbody>
 </table>
 </div>
 
+
+
+#### Plot the results
+
+
+```python
+julia_df_columns = ["sentiment_score", "subtweet_negative_probability"]
+```
+
+
+```python
+julia_df = julia_df.set_index("tweet").drop(julia_df_columns, axis=1).head(10)
+```
+
+
+```python
+julia_df.plot.barh(logx=True);
+```
+
+
+![png](output_74_0.png)
 
 
 
@@ -758,13 +835,18 @@ zoe_df["Sentiment"] = None
 zoe_df = tests_dataframe(zoe_df, text_column="Text", sentiment_column="Sentiment")
 ```
 
-    CPU times: user 1.08 s, sys: 7.22 ms, total: 1.08 s
-    Wall time: 1.09 s
+    CPU times: user 1.4 s, sys: 24.8 ms, total: 1.42 s
+    Wall time: 1.57 s
 
 
 
 ```python
 zoe_df.to_csv("../data/data_from_testing/friends_data/zoeterhune_tests.csv")
+```
+
+
+```python
+zoe_df["tweet"] = zoe_df["tweet"].str[:140]
 ```
 
 
@@ -801,44 +883,65 @@ zoe_df.head()
   </thead>
   <tbody>
     <tr>
+      <th>277</th>
+      <td>None</td>
+      <td>0.003547</td>
+      <td>0.996453</td>
+      <td>ok so people from my old school keep lamenting the death of someone to whom they claim to be close but also like continually misgender them</td>
+    </tr>
+    <tr>
       <th>584</th>
       <td>None</td>
-      <td>0.000526</td>
-      <td>0.999474</td>
-      <td>the funny thing about anxiety is one minute you could be playing one of your favorite tabletop games w some of your favorite people and then the next you could be having a panic attack in the bathroom bc three people laughing/yelling (in jest) at you suddenly set something off</td>
+      <td>0.009169</td>
+      <td>0.990831</td>
+      <td>the funny thing about anxiety is one minute you could be playing one of your favorite tabletop games w some of your favorite people and then</td>
     </tr>
     <tr>
-      <th>583</th>
+      <th>650</th>
       <td>None</td>
-      <td>0.000705</td>
-      <td>0.999295</td>
-      <td>and u decide to tweet about it weeks later bc no one ever talked about it and ur anxious mind decided 2 interpret that as no one caring when, in reality, it's probably people forgetting because you, and your particular brand of anxiety, bounce haphazardly from one mood 2 the ...</td>
+      <td>0.015358</td>
+      <td>0.984642</td>
+      <td>sometimes i think about how pinwheel and i are actually best friends. like he is my best friend and i am his. and i smile,</td>
     </tr>
     <tr>
-      <th>1304</th>
+      <th>1105</th>
       <td>None</td>
-      <td>0.001410</td>
-      <td>0.998590</td>
-      <td>maybe girls don’t “go for nice guys” bc they’re too busy going for nice girls</td>
+      <td>0.018196</td>
+      <td>0.981804</td>
+      <td>The guy who had the audacity to write a Buzzfeed "article" called "28 problems only ridiculously good looking people have" thinks he's ridic</td>
     </tr>
     <tr>
-      <th>1186</th>
+      <th>848</th>
       <td>None</td>
-      <td>0.002315</td>
-      <td>0.997685</td>
-      <td>no offense but what kind of school doesn’t let students park in a lot that’s literally called the main lot</td>
-    </tr>
-    <tr>
-      <th>207</th>
-      <td>None</td>
-      <td>0.002376</td>
-      <td>0.997624</td>
-      <td>blonde bitch blonde bitch blonde bitch blonde bitch blonde bitch blonde bitch blonde bitch blonde bitch blonde bitch blonde bitch blonde bitch blonde bitch blonde bitch blonde bitch blonde bitch blonde bitch blonde bitch blonde bitch blonde bitch blonde bitch blonde bitch blonde</td>
+      <td>0.018510</td>
+      <td>0.981490</td>
+      <td>that one buzzfeed employee who thinks they're really funny but they aren't</td>
     </tr>
   </tbody>
 </table>
 </div>
 
+
+
+#### Plot the results
+
+
+```python
+zoe_df_columns = ["sentiment_score", "subtweet_negative_probability"]
+```
+
+
+```python
+zoe_df = zoe_df.set_index("tweet").drop(zoe_df_columns, axis=1).head(10)
+```
+
+
+```python
+zoe_df.plot.barh(logx=True);
+```
+
+
+![png](output_83_0.png)
 
 
 
@@ -853,13 +956,18 @@ noah_df["Sentiment"] = None
 noah_df = tests_dataframe(noah_df, text_column="Text", sentiment_column="Sentiment")
 ```
 
-    CPU times: user 3.57 s, sys: 19.1 ms, total: 3.59 s
-    Wall time: 3.6 s
+    CPU times: user 3.8 s, sys: 45.2 ms, total: 3.85 s
+    Wall time: 3.91 s
 
 
 
 ```python
 noah_df.to_csv("../data/data_from_testing/friends_data/noahsegalgould_tests.csv")
+```
+
+
+```python
+noah_df["tweet"] = noah_df["tweet"].str[:140]
 ```
 
 
@@ -898,42 +1006,63 @@ noah_df.head()
     <tr>
       <th>877</th>
       <td>None</td>
-      <td>0.000043</td>
-      <td>0.999957</td>
-      <td>I guess I think it’s foolish to rely on any website for being your source of personal fulfillment and especially as your only source for political change. The companies which own your speech aren’t going to let you dismantle them. And their goal isn’t ever going to be to help...</td>
+      <td>0.001543</td>
+      <td>0.998457</td>
+      <td>I guess I think it’s foolish to rely on any website for being your source of personal fulfillment and especially as your only source for pol</td>
     </tr>
     <tr>
-      <th>105</th>
+      <th>3525</th>
       <td>None</td>
-      <td>0.000419</td>
-      <td>0.999581</td>
-      <td>In a target parking lot, I see him: he’s carrying a frozen Starbucks beverage that doesn’t appear to be coffee and his hood is missing a drawstring, so the wind keeps blowing it down. I don’t know his name, but I want to.</td>
+      <td>0.001848</td>
+      <td>0.998152</td>
+      <td>some people want their kids to take care of them when they are elderly but I plan to enslave sentient AI to do that for me until the end.</td>
     </tr>
     <tr>
-      <th>136</th>
+      <th>1042</th>
       <td>None</td>
-      <td>0.000503</td>
-      <td>0.999497</td>
-      <td>The saddest thing about Violet Evergarden is the disconnect between what she feels and what she can say. She chooses to learn more about the words people use to describe how they feel so she can understand how she felt, even when it hurts to understand.</td>
+      <td>0.002925</td>
+      <td>0.997075</td>
+      <td>Someone in the class of 2021 Facebook group wanted to know when they get their final grades and I told them May 2021</td>
     </tr>
     <tr>
-      <th>624</th>
+      <th>3712</th>
       <td>None</td>
-      <td>0.000585</td>
-      <td>0.999415</td>
-      <td>things people do differently that nobody talks about:\n\nsleeping positions\nsleeping clothing options\nass wiping \nloofa ownership\nwho you look at when you laugh aloud in a group of friends implying you feel the strongest connection with that unintentionally chosen individual</td>
+      <td>0.005537</td>
+      <td>0.994463</td>
+      <td>Do I confront someone I barely know to explain to them that they can't just drink out of my water bottle without asking?</td>
     </tr>
     <tr>
-      <th>1288</th>
+      <th>201</th>
       <td>None</td>
-      <td>0.000723</td>
-      <td>0.999277</td>
-      <td>I am going to bed with a challenge for you all: be nice to me and remind me that you’re not doing it because you pity me and that I shouldn’t feel guilty for letting you be nice to me.\nYes, this may be difficult, but with years of work I’m sure you’ll all get it.</td>
+      <td>0.006098</td>
+      <td>0.993902</td>
+      <td>I guy in my algorithms class commented on a facebook post from the guy who thinks he's the son of god saying "can I have what you're on" and</td>
     </tr>
   </tbody>
 </table>
 </div>
 
+
+
+#### Plot the results
+
+
+```python
+noah_df_columns = ["sentiment_score", "subtweet_negative_probability"]
+```
+
+
+```python
+noah_df = noah_df.set_index("tweet").drop(noah_df_columns, axis=1).head(10)
+```
+
+
+```python
+noah_df.plot.barh(logx=True);
+```
+
+
+![png](output_92_0.png)
 
 
 #### Test it in realtime
@@ -942,7 +1071,7 @@ noah_df.head()
 
 ```python
 THRESHOLD = 0.95
-DURATION = 7200 # 2 hours
+DURATION = 60*60*6 # 6 hours
 ```
 
 #### Load Twitter API credentials
@@ -950,6 +1079,15 @@ DURATION = 7200 # 2 hours
 
 ```python
 consumer_key, consumer_secret, access_token, access_token_secret = open("../../credentials.txt").read().split("\n")
+```
+
+#### Use the API credentials to connect to the API
+
+
+```python
+auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+auth.set_access_token(access_token, access_token_secret)
+api = tweepy.API(auth, retry_delay=5, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 ```
 
 #### Prepare the final dataframe
@@ -993,15 +1131,15 @@ class StreamListener(tweepy.StreamListener):
                 "RT @" not in text, 
                 not status.in_reply_to_status_id]):
             
+            api.retweet(status.id)
+            
             subtweets_live_list.append(row)
             subtweets_df = pd.DataFrame(subtweets_live_list).sort_values(by="subtweet_probability", 
                                                                          ascending=False)
             subtweets_df.to_csv("../data/data_from_testing/live_downloaded_data/subtweets_live_data.csv")
             
-            print("Subtweet:\n{}\nGeo Data:{}\nTotal tweets acquired: {}\n".format(print_list, 
-                                                                                   status.place.bounding_box.coordinates, 
-                                                                                   (len(subtweets_live_list) 
-                                                                                    + len(non_subtweets_live_list))))
+            print("Subtweet:\n{}\nTotal tweets acquired: {}\n".format(str(print_list)[1:-1], (len(subtweets_live_list)
+                                                                                              + len(non_subtweets_live_list))))
             
             return row
         else:
@@ -1014,21 +1152,12 @@ class StreamListener(tweepy.StreamListener):
             return row
 ```
 
-#### Use the API credentials to connect to the API
-
-
-```python
-auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-auth.set_access_token(access_token, access_token_secret)
-api = tweepy.API(auth, retry_delay=5, wait_on_rate_limit=True, wait_on_rate_limit_notify=True, )
-```
-
 #### Create a list of all my followers' account IDs
 
 
 ```python
-# my_followers_int = list(set(list(tweepy.Cursor(api.followers_ids, screen_name="NoahSegalGould").pages())[0]))
-# my_followers_str = [str(i) for i in my_followers_int]
+my_followers_int = list(set(list(tweepy.Cursor(api.followers_ids, screen_name="NoahSegalGould").pages())[0]))
+my_followers_str = [str(i) for i in my_followers_int]
 ```
 
 #### Instantiate the listener
@@ -1043,12 +1172,12 @@ stream = tweepy.Stream(auth=api.auth, listener=stream_listener)
 
 
 ```python
-# %%time
-bounding_box = [-73.920176, 42.009637,
-                -73.899739, 42.033421]
-stream.filter(locations=bounding_box, async=True) # Bard College
-#stream.filter(follow=my_followers_str, async=True)
-#stream.filter(track="some people", async=True)
+%%time
+# bounding_box = [-73.920176, 42.009637,
+#                 -73.899739, 42.033421]
+# stream.filter(locations=bounding_box, async=True) # Bard College
+stream.filter(follow=my_followers_str, async=True)
+# stream.filter(track="some people", async=True)
 print("Columns:")
 print("screen_name, sentiment_polarity, sentiment_subjectivity, subtweet_probability, time, text")
 sleep(DURATION)
@@ -1064,133 +1193,60 @@ stream.disconnect()
 
 
     Subtweet:
-    ['ndssssss_', -0.8, 0.9, 0.9872649162875703, Timestamp('2018-03-19 21:01:17'), 'Hate ppl who pick n choose, n if u gotta pick n choose wit me just don’t choose me 😇💯']
-    Geo Data:[[[-79.76259, 40.477383], [-79.76259, 45.015851], [-71.777492, 45.015851], [-71.777492, 40.477383]]]
-    Total tweets acquired: 119
+    'N04H5G', 0.5, 0.9444444444444444, 0.9738565578076357, Timestamp('2018-03-20 10:00:00'), "Sure, you could study abroad but I swear to god if it's magic that saved him I'm gonna watch some anime"
+    Total tweets acquired: 5
     
     Subtweet:
-    ['Globalmess65', -0.5, 0.65, 0.9519215723341505, Timestamp('2018-03-19 21:10:58'), 'you need to really short $AAPL this guy is the worst.']
-    Geo Data:[[[-79.76259, 40.477383], [-79.76259, 45.015851], [-71.777492, 45.015851], [-71.777492, 40.477383]]]
-    Total tweets acquired: 235
+    'trevornoahebook', -0.08333333333333333, 0.2791666666666667, 0.9550589223758802, Timestamp('2018-03-20 10:14:00'), 'Suit Larry. But because they pulled me and Abel was nothing and black, in the same look: the bleeding.'
+    Total tweets acquired: 15
     
     Subtweet:
-    ['alegnxzz', -0.75, 1.0, 0.9889190822681715, Timestamp('2018-03-19 21:14:56'), 'I don’t want to leave NY :(']
-    Geo Data:[[[-79.76259, 40.477383], [-79.76259, 45.015851], [-71.777492, 45.015851], [-71.777492, 40.477383]]]
-    Total tweets acquired: 282
+    'trevornoahebook', -0.012499999999999997, 1.0, 0.9574072927012385, Timestamp('2018-03-20 11:13:59'), 'When Bongani was extremely frugal, the way too far side was for weeks and he got caught on with all we see him knowing who'
+    Total tweets acquired: 27
     
     Subtweet:
-    ['leiabear11', 0.5, 0.6, 0.9948145347752679, Timestamp('2018-03-19 21:17:22'), 'Love and be grateful for your friends because they will always be there for you!!!❤️❤️']
-    Geo Data:[[[-79.76259, 40.477383], [-79.76259, 45.015851], [-71.777492, 45.015851], [-71.777492, 40.477383]]]
-    Total tweets acquired: 315
+    'N04H5G', -0.22361111111111115, 0.41527777777777775, 0.9564693451918405, Timestamp('2018-03-20 12:00:00'), 'someone buy me hard lemonade and I turned her down.'
+    Total tweets acquired: 39
     
     Subtweet:
-    ['melissamplourde', 0.55, 0.75, 0.9974407342022442, Timestamp('2018-03-19 21:20:48'), 'there’s a HUGE difference between being friends with your ex and being on good terms and respecting the breakup, stay in your lane']
-    Geo Data:[[[-79.76259, 40.477383], [-79.76259, 45.015851], [-71.777492, 45.015851], [-71.777492, 40.477383]]]
-    Total tweets acquired: 370
+    'trevornoahebook', 0.0, 0.0, 0.9860646355996162, Timestamp('2018-03-20 13:14:01'), 'Some might show on him as friends and I would wake you weren’t picking some white people.'
+    Total tweets acquired: 69
     
     Subtweet:
-    ['slightly_sky', 0.0, 0.5, 0.9656556785408753, Timestamp('2018-03-19 21:24:51'), 'Don’t gotta ask me if I brought enough cuz we won’t run out']
-    Geo Data:[[[-79.76259, 40.477383], [-79.76259, 45.015851], [-71.777492, 45.015851], [-71.777492, 40.477383]]]
-    Total tweets acquired: 414
+    'whoisleormiller', 0.35, 0.8, 0.9663889355261864, Timestamp('2018-03-20 15:02:36'), 'only good part of call me by your name is when he cums in the peach, i don’t make the rules'
+    Total tweets acquired: 156
     
-    Subtweet:
-    ['slightly_sky', 0.0, 0.5, 0.9815133130200739, Timestamp('2018-03-19 21:28:07'), 'Don’t gotta ask me if I brought enough cuz we don’t run out']
-    Geo Data:[[[-79.76259, 40.477383], [-79.76259, 45.015851], [-71.777492, 45.015851], [-71.777492, 40.477383]]]
-    Total tweets acquired: 449
-    
-    Subtweet:
-    ['ItMightBMed', 0.0, 0.0, 0.9868888282842615, Timestamp('2018-03-19 21:29:05'), 'God told me to leave my ex’s alone and I haven’t turned back since 😭']
-    Geo Data:[[[-79.76259, 40.477383], [-79.76259, 45.015851], [-71.777492, 45.015851], [-71.777492, 40.477383]]]
-    Total tweets acquired: 462
-    
-    Subtweet:
-    ['kelsiebert', 0.3333333333333333, 0.39999999999999997, 0.9930871108550444, Timestamp('2018-03-19 21:36:52'), 'Don’t tell me that you love me cause I won’t love back']
-    Geo Data:[[[-79.76259, 40.477383], [-79.76259, 45.015851], [-71.777492, 45.015851], [-71.777492, 40.477383]]]
-    Total tweets acquired: 543
-    
-    Subtweet:
-    ['AlbalirisH', -0.25, 0.7666666666666666, 0.9547475583535537, Timestamp('2018-03-19 21:44:14'), 'You fail to realize the abuse because every hurtful word comes with “I’m sorry” but no, they’re not sorry because t… https://t.co/lSejRL5mGc']
-    Geo Data:[[[-79.76259, 40.477383], [-79.76259, 45.015851], [-71.777492, 45.015851], [-71.777492, 40.477383]]]
-    Total tweets acquired: 589
-    
-    Subtweet:
-    ['landsrauhl', -0.8, 0.9, 0.9816763259962468, Timestamp('2018-03-19 21:44:35'), 'I’ve taken like 200 selfies and I hATE all of them ugh delete']
-    Geo Data:[[[-79.76259, 40.477383], [-79.76259, 45.015851], [-71.777492, 45.015851], [-71.777492, 40.477383]]]
-    Total tweets acquired: 592
-    
-    Subtweet:
-    ['trinityrathbun', 0.0, 0.0, 0.9778856552255711, Timestamp('2018-03-19 21:49:01'), 'when will people realize that idgaf about their opinions???']
-    Geo Data:[[[-79.76259, 40.477383], [-79.76259, 45.015851], [-71.777492, 45.015851], [-71.777492, 40.477383]]]
-    Total tweets acquired: 631
-    
-    Subtweet:
-    ['_aroyalove', 0.0, 0.0, 0.9836409100107678, Timestamp('2018-03-19 21:56:22'), 'The balance of accepting who someone IS & trusting that God will make them who HE sees them to be.']
-    Geo Data:[[[-79.76259, 40.477383], [-79.76259, 45.015851], [-71.777492, 45.015851], [-71.777492, 40.477383]]]
-    Total tweets acquired: 700
-    
-    Subtweet:
-    ['meg_liz1992', -0.13333333333333333, 0.5, 0.9547341660821381, Timestamp('2018-03-19 22:00:20'), 'You know I do everything for everyone for their birthday but when it comes to mine no one wants to do shit just fuck my birthday this year.']
-    Geo Data:[[[-79.76259, 40.477383], [-79.76259, 45.015851], [-71.777492, 45.015851], [-71.777492, 40.477383]]]
-    Total tweets acquired: 738
-    
-    Subtweet:
-    ['KAYLAEELIZABETH', 0.2, 0.755, 0.9822608095003473, Timestamp('2018-03-19 22:13:52'), 'i’m willing to give up everything in hopes of a future with you and it’s terrifying and beautiful incredible all at once']
-    Geo Data:[[[-79.76259, 40.477383], [-79.76259, 45.015851], [-71.777492, 45.015851], [-71.777492, 40.477383]]]
-    Total tweets acquired: 835
-    
-    Subtweet:
-    ['nemcleish', 0.15, 0.65, 0.9562078225291687, Timestamp('2018-03-19 22:16:14'), 'okay so my tensor tympani muscle will noooooootttttt stop spasming and i think i’m about to lose my shit']
-    Geo Data:[[[-79.76259, 40.477383], [-79.76259, 45.015851], [-71.777492, 45.015851], [-71.777492, 40.477383]]]
-    Total tweets acquired: 845
-    
-    Subtweet:
-    ['DerekTHEmanWISE', -0.30476190476190484, 0.6785714285714285, 0.9918410087932368, Timestamp('2018-03-19 22:21:12'), "I hate when people try to change to make others like them, if you don't like the way I am then you can fuck right off"]
-    Geo Data:[[[-79.76259, 40.477383], [-79.76259, 45.015851], [-71.777492, 45.015851], [-71.777492, 40.477383]]]
-    Total tweets acquired: 881
-    
-    Subtweet:
-    ['KAYLAEELIZABETH', 0.2, 0.755, 0.9825587193831095, Timestamp('2018-03-19 22:21:57'), 'i’m willing to give up everything in hopes of a future with you and it’s terrifying and beautiful and incredible all at once']
-    Geo Data:[[[-79.76259, 40.477383], [-79.76259, 45.015851], [-71.777492, 45.015851], [-71.777492, 40.477383]]]
-    Total tweets acquired: 891
-    
-    Subtweet:
-    ['wolfbeer88', 0.0, 0.0, 0.9918032796526915, Timestamp('2018-03-19 22:32:54'), 'Reminder\n\nIf she leaves once, she will leave twice, and keep leaving as often as you allow it. \n\nIt is a self inflicted wound. Stop.']
-    Geo Data:[[[-79.76259, 40.477383], [-79.76259, 45.015851], [-71.777492, 45.015851], [-71.777492, 40.477383]]]
-    Total tweets acquired: 983
-    
-    Subtweet:
-    ['jordangasper_', -0.05, 0.4, 0.9814956724439915, Timestamp('2018-03-19 22:33:03'), 'I don’t need you, I stopped needing people a long time ago..I want you.']
-    Geo Data:[[[-79.76259, 40.477383], [-79.76259, 45.015851], [-71.777492, 45.015851], [-71.777492, 40.477383]]]
-    Total tweets acquired: 985
-    
-    Subtweet:
-    ['d_eee11', 0.2857142857142857, 0.5357142857142857, 0.9841584980855242, Timestamp('2018-03-19 22:36:15'), 'Treat her right & she won’t complain.']
-    Geo Data:[[[-79.76259, 40.477383], [-79.76259, 45.015851], [-71.777492, 45.015851], [-71.777492, 40.477383]]]
-    Total tweets acquired: 998
-    
-    Subtweet:
-    ['landsrauhl', 0.05, 0.55, 0.9706869792698011, Timestamp('2018-03-19 22:43:25'), 'my brothers seeing some girl at the moment so he’s actually brushing his teeth and taking care oh himself wow all it took was a girl']
-    Geo Data:[[[-79.76259, 40.477383], [-79.76259, 45.015851], [-71.777492, 45.015851], [-71.777492, 40.477383]]]
-    Total tweets acquired: 1055
-    
-    Subtweet:
-    ['NadeauBailey', 0.0, 0.0, 0.9937770365883968, Timestamp('2018-03-19 22:44:42'), 'Omfg, y’all broke up, stop with the goddamn drama🤣🙄']
-    Geo Data:[[[-79.76259, 40.477383], [-79.76259, 45.015851], [-71.777492, 45.015851], [-71.777492, 40.477383]]]
-    Total tweets acquired: 1062
-    
-    Subtweet:
-    ['loyaltoherron', 0.0, 0.0, 0.9749407296407308, Timestamp('2018-03-19 22:46:48'), 'i’m gonna post the zach edit i made and then i’ll do the facetime thing']
-    Geo Data:[[[-79.76259, 40.477383], [-79.76259, 45.015851], [-71.777492, 45.015851], [-71.777492, 40.477383]]]
-    Total tweets acquired: 1075
-    
-    Subtweet:
-    ['rachaeldcrose', 0.06818181818181818, 0.22727272727272727, 0.9998725309732873, Timestamp('2018-03-19 22:50:40'), 'Y’all don’t have to announce your new pro pic cuz it kinda already pops up next to yo name 🤷🏼\u200d♀️🤷🏼\u200d♀️']
-    Geo Data:[[[-79.76259, 40.477383], [-79.76259, 45.015851], [-71.777492, 45.015851], [-71.777492, 40.477383]]]
-    Total tweets acquired: 1098
-    
-    Subtweet:
-    ['Bridget_Lee_', 0.0, 1.0, 0.975179574180711, Timestamp('2018-03-19 22:53:00'), 'So I didn’t think it was possible but you can over season with chiavettas. Who knew?']
-    Geo Data:[[[-79.76259, 40.477383], [-79.76259, 45.015851], [-71.777492, 45.015851], [-71.777492, 40.477383]]]
-    Total tweets acquired: 1115
-    
+    CPU times: user 3.99 s, sys: 1.74 s, total: 5.73 s
+    Wall time: 6h
+
+
+#### Plot the results
+
+
+```python
+subtweets_df = pd.read_csv("../data/data_from_testing/live_downloaded_data/subtweets_live_data.csv", index_col=0)
+```
+
+
+```python
+subtweets_df["tweet"] = subtweets_df["tweet"].str[:140]
+```
+
+
+```python
+subtweets_df_columns = ["screen_name", "time"]
+```
+
+
+```python
+subtweets_df = subtweets_df.set_index("tweet").drop(subtweets_df_columns, axis=1).head(10)
+```
+
+
+```python
+subtweets_df.plot.barh(logx=True);
+```
+
+
+![png](output_114_0.png)
 
