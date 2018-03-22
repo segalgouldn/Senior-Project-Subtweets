@@ -1497,7 +1497,7 @@ stream = tweepy.Stream(auth=api.auth, listener=stream_listener)
 ```python
 %%time
 # bounding_box = [-73.920176, 42.009637,
-#                 -73.899739, 42.033421]http://localhost:8888/notebooks/development/classifier_creator.ipynb#
+#                 -73.899739, 42.033421]
 # stream.filter(locations=bounding_box, async=True) # Bard College
 stream.filter(follow=my_mutuals, async=True)
 print("Columns:")
