@@ -27,7 +27,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, confusion_matrix
 from sklearn.externals import joblib
 from textblob import TextBlob
-from time import sleep
+from time import time, sleep
 import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
@@ -35,6 +35,7 @@ import itertools
 import datetime
 import tweepy
 import nltk
+import json
 import re
 ```
 
@@ -224,10 +225,10 @@ print(classification_report(class_test, predictions))
 
                  precision    recall  f1-score   support
     
-       negative       0.98      0.85      0.91      1382
-       positive       0.86      0.98      0.92      1296
+       negative       0.97      0.86      0.91      1397
+       positive       0.87      0.97      0.92      1381
     
-    avg / total       0.92      0.91      0.91      2678
+    avg / total       0.92      0.91      0.91      2778
     
 
 
@@ -351,19 +352,6 @@ tests_dataframe(test_tweets_df, text_column="Tweet", sentiment_column="Sentiment
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -378,36 +366,36 @@ tests_dataframe(test_tweets_df, text_column="Tweet", sentiment_column="Sentiment
     <tr>
       <th>0</th>
       <td>None</td>
-      <td>0.049255</td>
-      <td>0.950745</td>
+      <td>0.044404</td>
+      <td>0.955596</td>
       <td>Some people don't know their place.</td>
     </tr>
     <tr>
       <th>1</th>
       <td>None</td>
-      <td>0.058178</td>
-      <td>0.941822</td>
+      <td>0.052663</td>
+      <td>0.947337</td>
       <td>Isn't it funny how some people don't know their place?</td>
     </tr>
     <tr>
       <th>2</th>
       <td>None</td>
-      <td>0.088949</td>
-      <td>0.911051</td>
+      <td>0.108819</td>
+      <td>0.891181</td>
       <td>How come you people act like this?</td>
     </tr>
     <tr>
       <th>3</th>
       <td>None</td>
-      <td>0.126599</td>
-      <td>0.873401</td>
+      <td>0.176988</td>
+      <td>0.823012</td>
       <td>You're such a nerd.</td>
     </tr>
     <tr>
       <th>4</th>
       <td>None</td>
-      <td>0.227174</td>
-      <td>0.772826</td>
+      <td>0.251143</td>
+      <td>0.748857</td>
       <td>I love Noah, he's so cool.</td>
     </tr>
   </tbody>
@@ -460,11 +448,11 @@ print("Length of dataset: {}".format(len(naji_df)))
     Length of dataset: 1564156
 
 
-#### Use randomly selected 100K rows from dataset
+#### Use randomly selected 50K rows from dataset
 
 
 ```python
-naji_df = naji_df.sample(n=100000).reset_index(drop=True)
+naji_df = naji_df.sample(n=50000).reset_index(drop=True)
 ```
 
 #### Print and time the tests
@@ -475,8 +463,8 @@ naji_df = naji_df.sample(n=100000).reset_index(drop=True)
 naji_df = tests_dataframe(naji_df)
 ```
 
-    CPU times: user 1min 30s, sys: 1.49 s, total: 1min 31s
-    Wall time: 1min 42s
+    CPU times: user 45.1 s, sys: 746 ms, total: 45.8 s
+    Wall time: 53 s
 
 
 
@@ -493,19 +481,6 @@ naji_df.head()
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -518,39 +493,39 @@ naji_df.head()
   </thead>
   <tbody>
     <tr>
-      <th>27768</th>
+      <th>13817</th>
       <td>0</td>
-      <td>0.003174</td>
-      <td>0.996826</td>
-      <td>I'm so jelouse of the people of los angles they get to have charlie in they're city,  I would freak if he was comming her</td>
+      <td>0.003028</td>
+      <td>0.996972</td>
+      <td>You never really realize how much of an impact someone has on your daily life until all their stuff is packed and they are gone.</td>
     </tr>
     <tr>
-      <th>8957</th>
+      <th>38866</th>
       <td>0</td>
-      <td>0.004615</td>
-      <td>0.995385</td>
-      <td>I feel so bad I think I got my girls sick and its the worst when your kids r sick you feel bad and you can't do anything</td>
+      <td>0.005830</td>
+      <td>0.994170</td>
+      <td>how do you remove followers from your actual followers list? blocked them but they ARE STILL THERE</td>
     </tr>
     <tr>
-      <th>45467</th>
+      <th>41007</th>
       <td>0</td>
-      <td>0.004776</td>
-      <td>0.995224</td>
-      <td>your stupid games and we would play them over the phone together. I miss alot of things.. I miss being your friend..I wish you missed me</td>
+      <td>0.006756</td>
+      <td>0.993244</td>
+      <td>I hate how you can't hang around your 'guy friends' cuz they always want a guys night together, minus you. Cuz you're not a guy</td>
     </tr>
     <tr>
-      <th>5571</th>
+      <th>23775</th>
       <td>0</td>
-      <td>0.005159</td>
-      <td>0.994841</td>
-      <td>Imagine seeing a cute girl then when you ask for her name she sounds like a chain smoker old man... that is me  I hate being sick!</td>
+      <td>0.007760</td>
+      <td>0.992240</td>
+      <td>i guess its true- once your dating someone then all the guys ask you out and flirt- but when you are single they all STOP</td>
     </tr>
     <tr>
-      <th>6784</th>
+      <th>40976</th>
       <td>0</td>
-      <td>0.005480</td>
-      <td>0.994520</td>
-      <td>My neighbor is like beating her kid, he's screaming OW &amp; she's telling him to get out of the apartment  so sad.</td>
+      <td>0.008600</td>
+      <td>0.991400</td>
+      <td>Why when your anticipating something the weeks drag on so slow?&amp; when you want them to go slow they fly by</td>
     </tr>
   </tbody>
 </table>
@@ -593,8 +568,8 @@ aaron_df["Sentiment"] = None
 aaron_df = tests_dataframe(aaron_df, text_column="Text", sentiment_column="Sentiment")
 ```
 
-    CPU times: user 3.94 s, sys: 84.8 ms, total: 4.03 s
-    Wall time: 5.32 s
+    CPU times: user 3.17 s, sys: 53.7 ms, total: 3.22 s
+    Wall time: 3.65 s
 
 
 
@@ -616,19 +591,6 @@ aaron_df.head()
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -641,39 +603,39 @@ aaron_df.head()
   </thead>
   <tbody>
     <tr>
-      <th>385</th>
-      <td>None</td>
-      <td>0.006295</td>
-      <td>0.993705</td>
-      <td>My dog literally changed positions on my bed just so she could watch me eat at my desk but pretends she asleep when I look at her like I can</td>
-    </tr>
-    <tr>
       <th>1722</th>
       <td>None</td>
-      <td>0.006552</td>
-      <td>0.993448</td>
+      <td>0.006081</td>
+      <td>0.993919</td>
       <td>PewDiePie posts video "apologizing" for his Kill All Jews "joke" and it's really about how he makes a ton of money and the media hates him</td>
     </tr>
     <tr>
-      <th>3491</th>
+      <th>3283</th>
       <td>None</td>
-      <td>0.006814</td>
-      <td>0.993186</td>
-      <td>2 people have asked me if I know their grandchildren because they were in my high school class.</td>
+      <td>0.006190</td>
+      <td>0.993810</td>
+      <td>It's funny because he blocked our whole family on facebook (you can find him if you log out) and insists he "doesn't use it"</td>
     </tr>
     <tr>
       <th>3281</th>
       <td>None</td>
-      <td>0.006825</td>
-      <td>0.993175</td>
+      <td>0.007563</td>
+      <td>0.992437</td>
       <td>What he doesn't know (unless he stalks my twitter which I know he does) is that I have fake accounts following all his social media</td>
     </tr>
     <tr>
       <th>2893</th>
       <td>None</td>
-      <td>0.007923</td>
-      <td>0.992077</td>
+      <td>0.007570</td>
+      <td>0.992430</td>
       <td>I love arguing with conservative bigots who don't understand basic decency. People have their own beliefs, just let them believe.</td>
+    </tr>
+    <tr>
+      <th>3236</th>
+      <td>None</td>
+      <td>0.008416</td>
+      <td>0.991584</td>
+      <td>What will straight cis people do now with their "legalize gay" shirts? Frame them, probably</td>
     </tr>
   </tbody>
 </table>
@@ -714,8 +676,8 @@ julia_df["Sentiment"] = None
 julia_df = tests_dataframe(julia_df, text_column="Text", sentiment_column="Sentiment")
 ```
 
-    CPU times: user 6.81 s, sys: 86.3 ms, total: 6.89 s
-    Wall time: 7.3 s
+    CPU times: user 6.04 s, sys: 91.4 ms, total: 6.13 s
+    Wall time: 6.88 s
 
 
 
@@ -737,19 +699,6 @@ julia_df.head()
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -764,37 +713,37 @@ julia_df.head()
     <tr>
       <th>1138</th>
       <td>None</td>
-      <td>0.001387</td>
-      <td>0.998613</td>
+      <td>0.002422</td>
+      <td>0.997578</td>
       <td>"what a COINcidence that you're here," drawls Bitcoin lustily. your palms sweat as you imagine what it would be like to own this creature, t</td>
-    </tr>
-    <tr>
-      <th>236</th>
-      <td>None</td>
-      <td>0.002276</td>
-      <td>0.997724</td>
-      <td>look I've been thinking about it and even if they're older and less able to perform (although, they're at the top of their game now) they co</td>
-    </tr>
-    <tr>
-      <th>193</th>
-      <td>None</td>
-      <td>0.003406</td>
-      <td>0.996594</td>
-      <td>I know part of the reason they can do it early is bc they're still tiny and their bodies haven't gone through puberty but if female skaters</td>
     </tr>
     <tr>
       <th>902</th>
       <td>None</td>
-      <td>0.003493</td>
-      <td>0.996507</td>
+      <td>0.004004</td>
+      <td>0.995996</td>
       <td>tbh if they don't start publically dating in a year after pyeongchang I'm going to be S H O C K E D how can you look at somebody like that i</td>
+    </tr>
+    <tr>
+      <th>850</th>
+      <td>None</td>
+      <td>0.005445</td>
+      <td>0.994555</td>
+      <td>honestly they should be I can't believe they're even considered such high threats to tessa and scott on their underwhelming lifts alone</td>
     </tr>
     <tr>
       <th>770</th>
       <td>None</td>
-      <td>0.003761</td>
-      <td>0.996239</td>
+      <td>0.005526</td>
+      <td>0.994474</td>
       <td>what are these people SEEING in them that's so wonderful??? I don't know how people can justify their technical inferiority by saying "oh, t</td>
+    </tr>
+    <tr>
+      <th>236</th>
+      <td>None</td>
+      <td>0.005698</td>
+      <td>0.994302</td>
+      <td>look I've been thinking about it and even if they're older and less able to perform (although, they're at the top of their game now) they co</td>
     </tr>
   </tbody>
 </table>
@@ -835,8 +784,8 @@ zoe_df["Sentiment"] = None
 zoe_df = tests_dataframe(zoe_df, text_column="Text", sentiment_column="Sentiment")
 ```
 
-    CPU times: user 1.4 s, sys: 24.8 ms, total: 1.42 s
-    Wall time: 1.57 s
+    CPU times: user 1.16 s, sys: 20.9 ms, total: 1.18 s
+    Wall time: 1.37 s
 
 
 
@@ -858,19 +807,6 @@ zoe_df.head()
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -885,37 +821,37 @@ zoe_df.head()
     <tr>
       <th>277</th>
       <td>None</td>
-      <td>0.003547</td>
-      <td>0.996453</td>
+      <td>0.005355</td>
+      <td>0.994645</td>
       <td>ok so people from my old school keep lamenting the death of someone to whom they claim to be close but also like continually misgender them</td>
     </tr>
     <tr>
       <th>584</th>
       <td>None</td>
-      <td>0.009169</td>
-      <td>0.990831</td>
+      <td>0.007600</td>
+      <td>0.992400</td>
       <td>the funny thing about anxiety is one minute you could be playing one of your favorite tabletop games w some of your favorite people and then</td>
     </tr>
     <tr>
-      <th>650</th>
+      <th>583</th>
       <td>None</td>
-      <td>0.015358</td>
-      <td>0.984642</td>
-      <td>sometimes i think about how pinwheel and i are actually best friends. like he is my best friend and i am his. and i smile,</td>
+      <td>0.013254</td>
+      <td>0.986746</td>
+      <td>and u decide to tweet about it weeks later bc no one ever talked about it and ur anxious mind decided 2 interpret that as no one caring when</td>
+    </tr>
+    <tr>
+      <th>334</th>
+      <td>None</td>
+      <td>0.017399</td>
+      <td>0.982601</td>
+      <td>Literally every time one of us little people makes a tweet that gets popular one of our friends HAS to comment "don't forget us little peopl</td>
     </tr>
     <tr>
       <th>1105</th>
       <td>None</td>
-      <td>0.018196</td>
-      <td>0.981804</td>
+      <td>0.018083</td>
+      <td>0.981917</td>
       <td>The guy who had the audacity to write a Buzzfeed "article" called "28 problems only ridiculously good looking people have" thinks he's ridic</td>
-    </tr>
-    <tr>
-      <th>848</th>
-      <td>None</td>
-      <td>0.018510</td>
-      <td>0.981490</td>
-      <td>that one buzzfeed employee who thinks they're really funny but they aren't</td>
     </tr>
   </tbody>
 </table>
@@ -956,8 +892,8 @@ noah_df["Sentiment"] = None
 noah_df = tests_dataframe(noah_df, text_column="Text", sentiment_column="Sentiment")
 ```
 
-    CPU times: user 3.8 s, sys: 45.2 ms, total: 3.85 s
-    Wall time: 3.91 s
+    CPU times: user 3.92 s, sys: 66.5 ms, total: 3.99 s
+    Wall time: 4.63 s
 
 
 
@@ -979,19 +915,6 @@ noah_df.head()
 
 
 <div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1006,37 +929,37 @@ noah_df.head()
     <tr>
       <th>877</th>
       <td>None</td>
-      <td>0.001543</td>
-      <td>0.998457</td>
+      <td>0.003053</td>
+      <td>0.996947</td>
       <td>I guess I think it’s foolish to rely on any website for being your source of personal fulfillment and especially as your only source for pol</td>
     </tr>
     <tr>
       <th>3525</th>
       <td>None</td>
-      <td>0.001848</td>
-      <td>0.998152</td>
+      <td>0.004462</td>
+      <td>0.995538</td>
       <td>some people want their kids to take care of them when they are elderly but I plan to enslave sentient AI to do that for me until the end.</td>
     </tr>
     <tr>
-      <th>1042</th>
+      <th>845</th>
       <td>None</td>
-      <td>0.002925</td>
-      <td>0.997075</td>
-      <td>Someone in the class of 2021 Facebook group wanted to know when they get their final grades and I told them May 2021</td>
+      <td>0.005960</td>
+      <td>0.994040</td>
+      <td>my plan to watch list has 224 entires! that is one of them! I treat all my children equally and fairly, and they will each be given their du</td>
     </tr>
     <tr>
-      <th>3712</th>
+      <th>379</th>
       <td>None</td>
-      <td>0.005537</td>
-      <td>0.994463</td>
-      <td>Do I confront someone I barely know to explain to them that they can't just drink out of my water bottle without asking?</td>
+      <td>0.008052</td>
+      <td>0.991948</td>
+      <td>The washer on the far left of the Robbins laundry room won’t start unless you press the start button really hard and someone forgot to start</td>
     </tr>
     <tr>
-      <th>201</th>
+      <th>1777</th>
       <td>None</td>
-      <td>0.006098</td>
-      <td>0.993902</td>
-      <td>I guy in my algorithms class commented on a facebook post from the guy who thinks he's the son of god saying "can I have what you're on" and</td>
+      <td>0.008098</td>
+      <td>0.991902</td>
+      <td>I feel like being able to tweet twice as many characters is a nice addition but I wonder about the priorities of the platforms we use. The w</td>
     </tr>
   </tbody>
 </table>
@@ -1070,8 +993,8 @@ noah_df.plot.barh(logx=True);
 
 
 ```python
-THRESHOLD = 0.95
-DURATION = 60*60*6 # 6 hours
+THRESHOLD = 0.925 # 92.5% positives and higher, only
+DURATION = 60*60*12 # 12 hours
 ```
 
 #### Load Twitter API credentials
@@ -1087,7 +1010,8 @@ consumer_key, consumer_secret, access_token, access_token_secret = open("../../c
 ```python
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
-api = tweepy.API(auth, retry_delay=5, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
+api = tweepy.API(auth, retry_delay=1, timeout=120, # 2 minutes
+                 compression=True, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 ```
 
 #### Prepare the final dataframe
@@ -1131,15 +1055,19 @@ class StreamListener(tweepy.StreamListener):
                 "RT @" not in text, 
                 not status.in_reply_to_status_id]):
             
-            api.retweet(status.id)
+            api.update_status("{:.1%} \nhttps://twitter.com/{}/status/{}".format(positive_probability, 
+                                                                                 screen_name, 
+                                                                                 status.id))
             
             subtweets_live_list.append(row)
             subtweets_df = pd.DataFrame(subtweets_live_list).sort_values(by="subtweet_probability", 
                                                                          ascending=False)
             subtweets_df.to_csv("../data/data_from_testing/live_downloaded_data/subtweets_live_data.csv")
             
-            print("Subtweet:\n{}\nTotal tweets acquired: {}\n".format(str(print_list)[1:-1], (len(subtweets_live_list)
-                                                                                              + len(non_subtweets_live_list))))
+            print("Subtweet:\n{}\nGeographical Bounding Box: {}\nTotal tweets acquired: {}\n".format(str(print_list)[1:-1],
+                                                                                                     None,
+                                                                                                     # status.place.bounding_box.coordinates, 
+                                                                                                     (len(subtweets_live_list) + len(non_subtweets_live_list))))
             
             return row
         else:
@@ -1152,13 +1080,408 @@ class StreamListener(tweepy.StreamListener):
             return row
 ```
 
-#### Create a list of all my followers' account IDs
+#### Get a list of the IDs of all my mutuals and my mutuals' followers
 
 
 ```python
-my_followers_int = list(set(list(tweepy.Cursor(api.followers_ids, screen_name="NoahSegalGould").pages())[0]))
-my_followers_str = [str(i) for i in my_followers_int]
+%%time
+my_followers = [str(user_id) for ids_list in 
+                tweepy.Cursor(api.followers_ids, 
+                              screen_name="NoahSegalGould").pages() 
+                for user_id in ids_list]
+users_i_follow = [str(user_id) for ids_list in 
+                  tweepy.Cursor(api.friends_ids, 
+                                screen_name="NoahSegalGould").pages() 
+                  for user_id in ids_list]
+
+mutuals = list(set(my_followers) & set(users_i_follow))
+
+my_mutuals = mutuals[:]
+for i, mutual in enumerate(mutuals):
+    start_time = time()
+    user = api.get_user(user_id=mutual)
+    if not user.protected:
+        individual_mutuals_followers = []
+        c = tweepy.Cursor(api.followers_ids, user_id=mutual).items()
+        while True:
+            try:
+                individual_mutuals_follower = c.next()
+                individual_mutuals_followers.append(str(individual_mutuals_follower))
+            except tweepy.TweepError:
+                sleep(600) # 10 minutes
+                continue
+            except StopIteration:
+                break
+        total = len(individual_mutuals_followers)
+        name = user.screen_name
+        print("{} followers for mutual {}: {}".format(total, i+1, name))
+        if total <= 2500:
+            my_mutuals.extend(individual_mutuals_followers)
+        else:
+            print("\tMutual {0}: {1} has too many followers: {2}".format(i+1, name, total))
+    else:
+        continue
+    end_time = time()
+    with open("../data/other_data/NoahSegalGould_Mutuals_and_Mutuals_Followers_ids.json", "w") as outfile:
+        json.dump(my_mutuals, outfile)
+    print("{0:.2f} seconds for getting the followers' IDs of mutual {1}: {2}\n".format((end_time - start_time), 
+                                                                                       i+1, user.screen_name))
+    sleep(5)
+my_mutuals = list(set(my_mutuals))
 ```
+
+    77 followers for mutual 1: cleostaryeyed
+    0.72 seconds for getting the followers' IDs of mutual 1: cleostaryeyed
+    
+    3 followers for mutual 2: 1017hokage
+    0.74 seconds for getting the followers' IDs of mutual 2: 1017hokage
+    
+    25 followers for mutual 4: BardCourses
+    0.75 seconds for getting the followers' IDs of mutual 4: BardCourses
+    
+    33 followers for mutual 5: beachaliens
+    0.72 seconds for getting the followers' IDs of mutual 5: beachaliens
+    
+    45 followers for mutual 6: valunept
+    0.80 seconds for getting the followers' IDs of mutual 6: valunept
+    
+    393 followers for mutual 7: bluhoopz
+    0.78 seconds for getting the followers' IDs of mutual 7: bluhoopz
+    
+    34 followers for mutual 9: plurell
+    0.70 seconds for getting the followers' IDs of mutual 9: plurell
+    
+    14 followers for mutual 10: zozotherobo
+    2.71 seconds for getting the followers' IDs of mutual 10: zozotherobo
+    
+    66 followers for mutual 11: katie_burke_
+    0.77 seconds for getting the followers' IDs of mutual 11: katie_burke_
+    
+    128 followers for mutual 13: evaanderson33
+    0.72 seconds for getting the followers' IDs of mutual 13: evaanderson33
+    
+    140 followers for mutual 14: jizzyjtiz
+    0.77 seconds for getting the followers' IDs of mutual 14: jizzyjtiz
+    
+    8 followers for mutual 16: OfLatvia
+    0.73 seconds for getting the followers' IDs of mutual 16: OfLatvia
+    
+    31 followers for mutual 17: nanabee807
+    1.73 seconds for getting the followers' IDs of mutual 17: nanabee807
+    
+    468 followers for mutual 18: john__wick__3
+    0.74 seconds for getting the followers' IDs of mutual 18: john__wick__3
+    
+
+
+    Rate limit reached. Sleeping for: 813
+
+
+    153 followers for mutual 19: Garrettisajoke
+    1476.71 seconds for getting the followers' IDs of mutual 19: Garrettisajoke
+    
+    50 followers for mutual 20: andrewdjang
+    0.69 seconds for getting the followers' IDs of mutual 20: andrewdjang
+    
+    228 followers for mutual 21: Pumpkinheadgal
+    0.74 seconds for getting the followers' IDs of mutual 21: Pumpkinheadgal
+    
+    180 followers for mutual 22: Tageist97
+    0.71 seconds for getting the followers' IDs of mutual 22: Tageist97
+    
+    45 followers for mutual 23: itsnemily
+    0.75 seconds for getting the followers' IDs of mutual 23: itsnemily
+    
+    92 followers for mutual 25: UpToneMusic
+    0.69 seconds for getting the followers' IDs of mutual 25: UpToneMusic
+    
+    204 followers for mutual 26: sycamorethrone
+    0.75 seconds for getting the followers' IDs of mutual 26: sycamorethrone
+    
+    332 followers for mutual 29: real_john_wilks
+    0.68 seconds for getting the followers' IDs of mutual 29: real_john_wilks
+    
+    31055 followers for mutual 30: extrafabulous
+    	Mutual 30: extrafabulous has too many followers: 31055
+    1.72 seconds for getting the followers' IDs of mutual 30: extrafabulous
+    
+
+
+    Rate limit reached. Sleeping for: 845
+
+
+    172 followers for mutual 31: Meg_Murph26
+    1501.64 seconds for getting the followers' IDs of mutual 31: Meg_Murph26
+    
+    152 followers for mutual 32: dramallama_x3
+    0.74 seconds for getting the followers' IDs of mutual 32: dramallama_x3
+    
+    140 followers for mutual 33: akrapf96
+    0.69 seconds for getting the followers' IDs of mutual 33: akrapf96
+    
+    27 followers for mutual 34: TannerCohan
+    0.70 seconds for getting the followers' IDs of mutual 34: TannerCohan
+    
+    174 followers for mutual 36: FearlessFierlit
+    0.71 seconds for getting the followers' IDs of mutual 36: FearlessFierlit
+    
+    16 followers for mutual 38: ARKB0T
+    0.70 seconds for getting the followers' IDs of mutual 38: ARKB0T
+    
+    345 followers for mutual 39: KayleeSue
+    0.69 seconds for getting the followers' IDs of mutual 39: KayleeSue
+    
+    90 followers for mutual 40: christinabeenas
+    0.71 seconds for getting the followers' IDs of mutual 40: christinabeenas
+    
+    182 followers for mutual 41: Momose_13
+    0.68 seconds for getting the followers' IDs of mutual 41: Momose_13
+    
+    63 followers for mutual 42: QuailSpotting
+    0.71 seconds for getting the followers' IDs of mutual 42: QuailSpotting
+    
+    90 followers for mutual 43: generatedtext
+    0.69 seconds for getting the followers' IDs of mutual 43: generatedtext
+    
+    19 followers for mutual 44: PetrovFireBuild
+    0.80 seconds for getting the followers' IDs of mutual 44: PetrovFireBuild
+    
+    463 followers for mutual 45: laurensofar
+    0.73 seconds for getting the followers' IDs of mutual 45: laurensofar
+    
+    1115 followers for mutual 46: paul_hembree
+    0.71 seconds for getting the followers' IDs of mutual 46: paul_hembree
+    
+    59 followers for mutual 47: Garage_Grrl
+    0.73 seconds for getting the followers' IDs of mutual 47: Garage_Grrl
+    
+
+
+    Rate limit reached. Sleeping for: 813
+
+
+    25 followers for mutual 48: motherbored3017
+    1472.43 seconds for getting the followers' IDs of mutual 48: motherbored3017
+    
+    289 followers for mutual 49: jaypatricksmith
+    0.72 seconds for getting the followers' IDs of mutual 49: jaypatricksmith
+    
+    116 followers for mutual 50: Oblivion_Mag
+    0.77 seconds for getting the followers' IDs of mutual 50: Oblivion_Mag
+    
+    347 followers for mutual 51: graysonjmorley
+    0.72 seconds for getting the followers' IDs of mutual 51: graysonjmorley
+    
+    45 followers for mutual 52: jmzaccagnino
+    1.34 seconds for getting the followers' IDs of mutual 52: jmzaccagnino
+    
+    29 followers for mutual 53: wdya0
+    1.73 seconds for getting the followers' IDs of mutual 53: wdya0
+    
+    53 followers for mutual 54: KaiMalowany
+    0.74 seconds for getting the followers' IDs of mutual 54: KaiMalowany
+    
+    20 followers for mutual 55: Terrible_Goose
+    0.74 seconds for getting the followers' IDs of mutual 55: Terrible_Goose
+    
+    52 followers for mutual 56: level99andahalf
+    1.40 seconds for getting the followers' IDs of mutual 56: level99andahalf
+    
+    159 followers for mutual 57: QKlauren
+    0.73 seconds for getting the followers' IDs of mutual 57: QKlauren
+    
+    99 followers for mutual 58: minorsuspect
+    0.82 seconds for getting the followers' IDs of mutual 58: minorsuspect
+    
+    18 followers for mutual 59: GayPatSmith
+    1.76 seconds for getting the followers' IDs of mutual 59: GayPatSmith
+    
+    58 followers for mutual 60: steflamethrower
+    0.81 seconds for getting the followers' IDs of mutual 60: steflamethrower
+    
+    14 followers for mutual 61: nora_cady
+    0.77 seconds for getting the followers' IDs of mutual 61: nora_cady
+    
+    256 followers for mutual 62: sarahisharsh
+    0.71 seconds for getting the followers' IDs of mutual 62: sarahisharsh
+    
+
+
+    Rate limit reached. Sleeping for: 810
+
+
+    163 followers for mutual 63: duheiii
+    1478.33 seconds for getting the followers' IDs of mutual 63: duheiii
+    
+    218 followers for mutual 64: forgotlogininfo
+    0.75 seconds for getting the followers' IDs of mutual 64: forgotlogininfo
+    
+    406 followers for mutual 65: keithohara
+    0.85 seconds for getting the followers' IDs of mutual 65: keithohara
+    
+    28 followers for mutual 66: PieterFildes
+    0.76 seconds for getting the followers' IDs of mutual 66: PieterFildes
+    
+    6 followers for mutual 67: KenCooperBot
+    0.76 seconds for getting the followers' IDs of mutual 67: KenCooperBot
+    
+    154 followers for mutual 68: Maxiscoffee
+    0.81 seconds for getting the followers' IDs of mutual 68: Maxiscoffee
+    
+    17 followers for mutual 69: hydrothermal_
+    0.98 seconds for getting the followers' IDs of mutual 69: hydrothermal_
+    
+    192 followers for mutual 70: ahung23
+    0.71 seconds for getting the followers' IDs of mutual 70: ahung23
+    
+    2 followers for mutual 71: nedcoz
+    0.75 seconds for getting the followers' IDs of mutual 71: nedcoz
+    
+    34 followers for mutual 72: Mattlarsony
+    1.55 seconds for getting the followers' IDs of mutual 72: Mattlarsony
+    
+    13 followers for mutual 74: jossislost
+    0.75 seconds for getting the followers' IDs of mutual 74: jossislost
+    
+    453 followers for mutual 75: akkobbi
+    0.75 seconds for getting the followers' IDs of mutual 75: akkobbi
+    
+    56 followers for mutual 76: futchaIex
+    0.73 seconds for getting the followers' IDs of mutual 76: futchaIex
+    
+    210 followers for mutual 77: AndalusianDoge
+    0.76 seconds for getting the followers' IDs of mutual 77: AndalusianDoge
+    
+    41 followers for mutual 78: starblasters_
+    0.76 seconds for getting the followers' IDs of mutual 78: starblasters_
+    
+
+
+    Rate limit reached. Sleeping for: 812
+
+
+    387 followers for mutual 79: whoisleormiller
+    1471.52 seconds for getting the followers' IDs of mutual 79: whoisleormiller
+    
+    157 followers for mutual 80: por_eleanor
+    0.76 seconds for getting the followers' IDs of mutual 80: por_eleanor
+    
+    1 followers for mutual 81: anaturalnumber
+    0.79 seconds for getting the followers' IDs of mutual 81: anaturalnumber
+    
+    75 followers for mutual 82: h0tsccrgirl1996
+    0.73 seconds for getting the followers' IDs of mutual 82: h0tsccrgirl1996
+    
+    33 followers for mutual 83: UpToneOfficial
+    0.81 seconds for getting the followers' IDs of mutual 83: UpToneOfficial
+    
+    71 followers for mutual 84: AdamMuhsin
+    0.79 seconds for getting the followers' IDs of mutual 84: AdamMuhsin
+    
+    81 followers for mutual 85: metalgarurumonz
+    0.81 seconds for getting the followers' IDs of mutual 85: metalgarurumonz
+    
+    98 followers for mutual 86: lisasimpsonstan
+    0.74 seconds for getting the followers' IDs of mutual 86: lisasimpsonstan
+    
+    499 followers for mutual 87: cmands
+    0.76 seconds for getting the followers' IDs of mutual 87: cmands
+    
+    18 followers for mutual 88: N04H5G
+    0.73 seconds for getting the followers' IDs of mutual 88: N04H5G
+    
+    234 followers for mutual 89: strawBERRYsmooh
+    0.76 seconds for getting the followers' IDs of mutual 89: strawBERRYsmooh
+    
+    268 followers for mutual 90: __tackle
+    0.79 seconds for getting the followers' IDs of mutual 90: __tackle
+    
+    258 followers for mutual 91: two_shanezz
+    0.69 seconds for getting the followers' IDs of mutual 91: two_shanezz
+    
+    15 followers for mutual 92: S1m0ntr0n
+    0.75 seconds for getting the followers' IDs of mutual 92: S1m0ntr0n
+    
+    12 followers for mutual 93: 10_furlongs
+    0.76 seconds for getting the followers' IDs of mutual 93: 10_furlongs
+    
+
+
+    Rate limit reached. Sleeping for: 813
+
+
+    5 followers for mutual 94: jeffdaugherty15
+    1486.74 seconds for getting the followers' IDs of mutual 94: jeffdaugherty15
+    
+    2 followers for mutual 95: RogerAlmonds
+    0.77 seconds for getting the followers' IDs of mutual 95: RogerAlmonds
+    
+    252 followers for mutual 96: cassy_savs
+    0.80 seconds for getting the followers' IDs of mutual 96: cassy_savs
+    
+    36 followers for mutual 97: TheCzarchitect
+    0.73 seconds for getting the followers' IDs of mutual 97: TheCzarchitect
+    
+    163 followers for mutual 98: carsonscabinet
+    0.74 seconds for getting the followers' IDs of mutual 98: carsonscabinet
+    
+    218 followers for mutual 99: zoeterhune
+    0.76 seconds for getting the followers' IDs of mutual 99: zoeterhune
+    
+    435 followers for mutual 100: stfwlkr
+    0.72 seconds for getting the followers' IDs of mutual 100: stfwlkr
+    
+    325 followers for mutual 101: scorpiodisaster
+    0.81 seconds for getting the followers' IDs of mutual 101: scorpiodisaster
+    
+    15 followers for mutual 102: maggersmay
+    0.75 seconds for getting the followers' IDs of mutual 102: maggersmay
+    
+    72 followers for mutual 103: twelveangrybens
+    0.77 seconds for getting the followers' IDs of mutual 103: twelveangrybens
+    
+    262 followers for mutual 104: gothodile
+    0.80 seconds for getting the followers' IDs of mutual 104: gothodile
+    
+    428 followers for mutual 105: rosettabones
+    0.74 seconds for getting the followers' IDs of mutual 105: rosettabones
+    
+    601 followers for mutual 106: BardCollegeCDO
+    0.77 seconds for getting the followers' IDs of mutual 106: BardCollegeCDO
+    
+    124 followers for mutual 107: ninanet23
+    0.72 seconds for getting the followers' IDs of mutual 107: ninanet23
+    
+    474 followers for mutual 108: juliaeberry
+    0.72 seconds for getting the followers' IDs of mutual 108: juliaeberry
+    
+
+
+    Rate limit reached. Sleeping for: 812
+
+
+    1 followers for mutual 109: robyn53966273
+    1539.18 seconds for getting the followers' IDs of mutual 109: robyn53966273
+    
+    CPU times: user 5.91 s, sys: 1.38 s, total: 7.29 s
+    Wall time: 3h 3min 26s
+
+
+
+```python
+print("Total number of my mutuals: {}".format(len(mutuals)))
+```
+
+    Total number of my mutuals: 109
+
+
+
+```python
+print("Total number of my mutuals' followers: {}".format(len(my_mutuals) - len(mutuals)))
+```
+
+    Total number of my mutuals' followers: 11682
+
 
 #### Instantiate the listener
 
@@ -1174,10 +1497,9 @@ stream = tweepy.Stream(auth=api.auth, listener=stream_listener)
 ```python
 %%time
 # bounding_box = [-73.920176, 42.009637,
-#                 -73.899739, 42.033421]
+#                 -73.899739, 42.033421]http://localhost:8888/notebooks/development/classifier_creator.ipynb#
 # stream.filter(locations=bounding_box, async=True) # Bard College
-stream.filter(follow=my_followers_str, async=True)
-# stream.filter(track="some people", async=True)
+stream.filter(follow=my_mutuals, async=True)
 print("Columns:")
 print("screen_name, sentiment_polarity, sentiment_subjectivity, subtweet_probability, time, text")
 sleep(DURATION)
@@ -1186,38 +1508,6 @@ stream.disconnect()
 
     Columns:
     screen_name, sentiment_polarity, sentiment_subjectivity, subtweet_probability, time, text
-
-
-    /Users/Noah/anaconda/envs/work/lib/python3.6/site-packages/sklearn/externals/joblib/parallel.py:547: UserWarning: Multiprocessing-backed parallel loops cannot be nested below threads, setting n_jobs=1
-      **self._backend_args)
-
-
-    Subtweet:
-    'N04H5G', 0.5, 0.9444444444444444, 0.9738565578076357, Timestamp('2018-03-20 10:00:00'), "Sure, you could study abroad but I swear to god if it's magic that saved him I'm gonna watch some anime"
-    Total tweets acquired: 5
-    
-    Subtweet:
-    'trevornoahebook', -0.08333333333333333, 0.2791666666666667, 0.9550589223758802, Timestamp('2018-03-20 10:14:00'), 'Suit Larry. But because they pulled me and Abel was nothing and black, in the same look: the bleeding.'
-    Total tweets acquired: 15
-    
-    Subtweet:
-    'trevornoahebook', -0.012499999999999997, 1.0, 0.9574072927012385, Timestamp('2018-03-20 11:13:59'), 'When Bongani was extremely frugal, the way too far side was for weeks and he got caught on with all we see him knowing who'
-    Total tweets acquired: 27
-    
-    Subtweet:
-    'N04H5G', -0.22361111111111115, 0.41527777777777775, 0.9564693451918405, Timestamp('2018-03-20 12:00:00'), 'someone buy me hard lemonade and I turned her down.'
-    Total tweets acquired: 39
-    
-    Subtweet:
-    'trevornoahebook', 0.0, 0.0, 0.9860646355996162, Timestamp('2018-03-20 13:14:01'), 'Some might show on him as friends and I would wake you weren’t picking some white people.'
-    Total tweets acquired: 69
-    
-    Subtweet:
-    'whoisleormiller', 0.35, 0.8, 0.9663889355261864, Timestamp('2018-03-20 15:02:36'), 'only good part of call me by your name is when he cums in the peach, i don’t make the rules'
-    Total tweets acquired: 156
-    
-    CPU times: user 3.99 s, sys: 1.74 s, total: 5.73 s
-    Wall time: 6h
 
 
 #### Plot the results
@@ -1246,7 +1536,3 @@ subtweets_df = subtweets_df.set_index("tweet").drop(subtweets_df_columns, axis=1
 ```python
 subtweets_df.plot.barh(logx=True);
 ```
-
-
-![png](output_114_0.png)
-
