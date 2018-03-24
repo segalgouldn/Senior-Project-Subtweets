@@ -177,7 +177,8 @@ class TweetStats(BaseEstimator, TransformerMixin):
             num_subtweet = text.count("subtweet") + text.count("Subtweet")
             num_urls = len(re.findall(pattern, text))
             
-            weighted_dict = {"sentiment": simplify_polarity(TextBlob(text).sentiment.polarity), 
+            weighted_dict = {"length": len(text),
+                             "sentiment": simplify_polarity(TextBlob(text).sentiment.polarity), 
                              "num_subtweet": num_subtweet,
                              "num_at_symbols": num_at_symbols, 
                              "num_urls": num_urls,
@@ -225,10 +226,10 @@ print(classification_report(class_test, predictions))
 
                  precision    recall  f1-score   support
     
-       negative       0.97      0.86      0.91      1397
-       positive       0.87      0.97      0.92      1381
+       negative       0.98      0.84      0.90      1428
+       positive       0.86      0.99      0.92      1415
     
-    avg / total       0.92      0.91      0.91      2778
+    avg / total       0.92      0.91      0.91      2843
     
 
 
@@ -292,15 +293,8 @@ plt.show()
 
 
 ```python
-joblib.dump(sentiment_pipeline, "../data/other_data/subtweets_classifier.pkl") 
+joblib.dump(sentiment_pipeline, "../data/other_data/subtweets_classifier.pkl");
 ```
-
-
-
-
-    ['../data/other_data/subtweets_classifier.pkl']
-
-
 
 #### Print tests for the classifier
 
@@ -352,6 +346,7 @@ tests_dataframe(test_tweets_df, text_column="Tweet", sentiment_column="Sentiment
 
 
 <div>
+
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -364,38 +359,38 @@ tests_dataframe(test_tweets_df, text_column="Tweet", sentiment_column="Sentiment
   </thead>
   <tbody>
     <tr>
-      <th>0</th>
-      <td>None</td>
-      <td>0.044404</td>
-      <td>0.955596</td>
-      <td>Some people don't know their place.</td>
-    </tr>
-    <tr>
       <th>1</th>
       <td>None</td>
-      <td>0.052663</td>
-      <td>0.947337</td>
+      <td>0.039673</td>
+      <td>0.960327</td>
       <td>Isn't it funny how some people don't know their place?</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>None</td>
+      <td>0.063204</td>
+      <td>0.936796</td>
+      <td>Some people don't know their place.</td>
     </tr>
     <tr>
       <th>2</th>
       <td>None</td>
-      <td>0.108819</td>
-      <td>0.891181</td>
+      <td>0.124174</td>
+      <td>0.875826</td>
       <td>How come you people act like this?</td>
     </tr>
     <tr>
       <th>3</th>
       <td>None</td>
-      <td>0.176988</td>
-      <td>0.823012</td>
+      <td>0.342492</td>
+      <td>0.657508</td>
       <td>You're such a nerd.</td>
     </tr>
     <tr>
       <th>4</th>
       <td>None</td>
-      <td>0.251143</td>
-      <td>0.748857</td>
+      <td>0.342841</td>
+      <td>0.657159</td>
       <td>I love Noah, he's so cool.</td>
     </tr>
   </tbody>
@@ -448,11 +443,11 @@ print("Length of dataset: {}".format(len(naji_df)))
     Length of dataset: 1564156
 
 
-#### Use randomly selected 50K rows from dataset
+#### Use randomly selected 100K rows from dataset
 
 
 ```python
-naji_df = naji_df.sample(n=50000).reset_index(drop=True)
+naji_df = naji_df.sample(n=100000).reset_index(drop=True)
 ```
 
 #### Print and time the tests
@@ -463,8 +458,8 @@ naji_df = naji_df.sample(n=50000).reset_index(drop=True)
 naji_df = tests_dataframe(naji_df)
 ```
 
-    CPU times: user 45.1 s, sys: 746 ms, total: 45.8 s
-    Wall time: 53 s
+    CPU times: user 1min 31s, sys: 1.57 s, total: 1min 33s
+    Wall time: 1min 40s
 
 
 
@@ -472,15 +467,28 @@ naji_df = tests_dataframe(naji_df)
 naji_df.to_csv("../data/data_from_testing/other_data/naji_tests.csv")
 ```
 
+#### Plot the results
+
 
 ```python
-naji_df.head()
+naji_df_columns = ["sentiment_score", "subtweet_negative_probability", "tweet"]
+```
+
+
+```python
+naji_df_for_plotting = naji_df.drop(naji_df_columns, axis=1).head(10)
+```
+
+
+```python
+naji_df.head(10)
 ```
 
 
 
 
 <div>
+
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -493,39 +501,74 @@ naji_df.head()
   </thead>
   <tbody>
     <tr>
-      <th>13817</th>
+      <th>49673</th>
       <td>0</td>
-      <td>0.003028</td>
-      <td>0.996972</td>
-      <td>You never really realize how much of an impact someone has on your daily life until all their stuff is packed and they are gone.</td>
+      <td>0.000766</td>
+      <td>0.999234</td>
+      <td>Penguins lost   I wish when people twisted your words that you could go pull the words out of there mouth in the form of barbed wire.</td>
     </tr>
     <tr>
-      <th>38866</th>
-      <td>0</td>
-      <td>0.005830</td>
-      <td>0.994170</td>
-      <td>how do you remove followers from your actual followers list? blocked them but they ARE STILL THERE</td>
+      <th>27415</th>
+      <td>1</td>
+      <td>0.000898</td>
+      <td>0.999102</td>
+      <td>Just waking up thinking about my "bend over boyfriend" and how I will fuck him hard with a huge dildo until he cums likes a bitch for me</td>
     </tr>
     <tr>
-      <th>41007</th>
+      <th>57753</th>
       <td>0</td>
-      <td>0.006756</td>
-      <td>0.993244</td>
-      <td>I hate how you can't hang around your 'guy friends' cuz they always want a guys night together, minus you. Cuz you're not a guy</td>
+      <td>0.000931</td>
+      <td>0.999069</td>
+      <td>Ugh I have to go to a baseball game with the most gay and annoying kid in school.  he is such a fag and has no friends, but thinks he does</td>
     </tr>
     <tr>
-      <th>23775</th>
+      <th>11033</th>
       <td>0</td>
-      <td>0.007760</td>
-      <td>0.992240</td>
-      <td>i guess its true- once your dating someone then all the guys ask you out and flirt- but when you are single they all STOP</td>
+      <td>0.001028</td>
+      <td>0.998972</td>
+      <td>As a former Horticulture major I am driven to foamy fits when I see people hosing down their shrubs thinking they are actually watering</td>
     </tr>
     <tr>
-      <th>40976</th>
+      <th>52437</th>
+      <td>1</td>
+      <td>0.001058</td>
+      <td>0.998942</td>
+      <td>My boys have spent the last two nights at their grandparents. I hate going past their empty little rooms. I want them back now please!</td>
+    </tr>
+    <tr>
+      <th>11740</th>
+      <td>1</td>
+      <td>0.001090</td>
+      <td>0.998910</td>
+      <td>Someone taught my little sister how to say the Shahada, now she won't shut up. We have to send her to her room when ppl stop by</td>
+    </tr>
+    <tr>
+      <th>17433</th>
       <td>0</td>
-      <td>0.008600</td>
-      <td>0.991400</td>
-      <td>Why when your anticipating something the weeks drag on so slow?&amp; when you want them to go slow they fly by</td>
+      <td>0.001121</td>
+      <td>0.998879</td>
+      <td>My friend is in a bad situation. She has a BF who is a great dad to their daughter, but he has a terrible gambling habit. IDK what to say</td>
+    </tr>
+    <tr>
+      <th>43879</th>
+      <td>0</td>
+      <td>0.001232</td>
+      <td>0.998768</td>
+      <td>Im done with dating. All guys are they same. They are all selfish assholes who have the same desires when it comes to girls.</td>
+    </tr>
+    <tr>
+      <th>20533</th>
+      <td>1</td>
+      <td>0.001238</td>
+      <td>0.998762</td>
+      <td>I love being able to be loud after 9:30  Benefit of being home with the dogs, who will only tilt their heads at me, if they notice at all.</td>
+    </tr>
+    <tr>
+      <th>37778</th>
+      <td>0</td>
+      <td>0.001299</td>
+      <td>0.998701</td>
+      <td>i think people should stop lying to get what they want. i want them to tell the truth and stop making me feel horrid about it.</td>
     </tr>
   </tbody>
 </table>
@@ -533,21 +576,16 @@ naji_df.head()
 
 
 
-#### Plot the results
-
 
 ```python
-naji_df_columns = ["sentiment_score", "subtweet_negative_probability"]
-```
-
-
-```python
-naji_df = naji_df.set_index("tweet").drop(naji_df_columns, axis=1).head(10)
-```
-
-
-```python
-naji_df.plot.barh(logx=True);
+ax = naji_df_for_plotting.plot.barh(logx=True, figsize=(16, 9), color="maroon", fontsize=13);
+ax.set_alpha(0.8)
+ax.set_title("Naji Dataset Randomly Selected Subtweets Test", fontsize=18)
+ax.set_ylabel("Row Index", fontsize=18);
+ax.set_xlabel("Subtweet Percentage Probability (logarithmic)", fontsize=18);
+for i in ax.patches:
+    ax.text(i.get_width(), i.get_y() + 0.325, "{:.3%}".format(i.get_width()), fontsize=10, color="black")
+ax.invert_yaxis()
 ```
 
 
@@ -555,6 +593,8 @@ naji_df.plot.barh(logx=True);
 
 
 #### Tests on friends' tweets
+
+#### Aaron
 
 
 ```python
@@ -568,8 +608,8 @@ aaron_df["Sentiment"] = None
 aaron_df = tests_dataframe(aaron_df, text_column="Text", sentiment_column="Sentiment")
 ```
 
-    CPU times: user 3.17 s, sys: 53.7 ms, total: 3.22 s
-    Wall time: 3.65 s
+    CPU times: user 2.84 s, sys: 20 ms, total: 2.86 s
+    Wall time: 2.87 s
 
 
 
@@ -579,18 +619,24 @@ aaron_df.to_csv("../data/data_from_testing/friends_data/akrapf96_tests.csv")
 
 
 ```python
-aaron_df["tweet"] = aaron_df["tweet"].str[:140]
+aaron_df_columns = ["sentiment_score", "subtweet_negative_probability", "tweet"]
 ```
 
 
 ```python
-aaron_df.head()
+aaron_df_for_plotting = aaron_df.drop(aaron_df_columns, axis=1).head(10)
+```
+
+
+```python
+aaron_df.head(10)
 ```
 
 
 
 
 <div>
+
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -603,39 +649,74 @@ aaron_df.head()
   </thead>
   <tbody>
     <tr>
+      <th>951</th>
+      <td>None</td>
+      <td>0.000071</td>
+      <td>0.999929</td>
+      <td>Why did twitter replace the character count with this circle meter\nHow am I supposed to know how many characters I've gone over? This feels like it's been 140 characters. Is the 280 characters a thing now? Does everyone have it? I'm very overwhelmed by the amount of text on ...</td>
+    </tr>
+    <tr>
+      <th>742</th>
+      <td>None</td>
+      <td>0.000083</td>
+      <td>0.999917</td>
+      <td>Gonna tweet about a whole bunch of stuff to get them out of the way:\nClocks ticking\nWhen will it end\nI'm so done\nI expected this really\nDisappointed again\nConstantly tired\nFuck off\nUhhhhhhhhhhhhhhhhhh k\nStill hungry \nSeriously?\nThat was quick\nWhatever\nIdk</td>
+    </tr>
+    <tr>
+      <th>492</th>
+      <td>None</td>
+      <td>0.000113</td>
+      <td>0.999887</td>
+      <td>The first half makes sense\nThe second doesn't \nBuying (obv not real values) 1 bitcoin for $20 is the same investment as 10 for $20. Yes it's cheaper but it's the $20 you invest that matters, not the # of bitcoin you get from it</td>
+    </tr>
+    <tr>
+      <th>385</th>
+      <td>None</td>
+      <td>0.000194</td>
+      <td>0.999806</td>
+      <td>My dog literally changed positions on my bed just so she could watch me eat at my desk but pretends she asleep when I look at her like I can't tell when she huffs and puffs because she's not getting any</td>
+    </tr>
+    <tr>
+      <th>412</th>
+      <td>None</td>
+      <td>0.000201</td>
+      <td>0.999799</td>
+      <td>i googled "instant ramen keurig" because I wanted to know if the water would be hot enough...people seriously need instructions on how to fill a ramen cup with a keurig? just put it under and press start guys come on</td>
+    </tr>
+    <tr>
+      <th>383</th>
+      <td>None</td>
+      <td>0.000266</td>
+      <td>0.999734</td>
+      <td>My dream: brought on stage in a grand theater to apologize to all of Britain, run by Winston Churchill, for pressing a publicly available button on a grounded airplane that caused damage equivalent to the entire stock value of the Red Vines Company</td>
+    </tr>
+    <tr>
+      <th>116</th>
+      <td>None</td>
+      <td>0.000281</td>
+      <td>0.999719</td>
+      <td>i had to read an article on bipolar disorder and in class the professor asked "do any of you recognize these traits in yourselves?" and i'm not really sure what response she was expecting</td>
+    </tr>
+    <tr>
+      <th>799</th>
+      <td>None</td>
+      <td>0.000287</td>
+      <td>0.999713</td>
+      <td>If you're going to assign mandatory readings for a class of 25+ and there's only one copy available in the library......what's wrong with scanning the pages for the class so everybody can actually get the reading</td>
+    </tr>
+    <tr>
+      <th>693</th>
+      <td>None</td>
+      <td>0.000350</td>
+      <td>0.999650</td>
+      <td>when I originally pitched my idea in meetings &amp; class I was all excited to write about several specific features I found interesting, then did a bunch of interviews about those topics, and ended up using absolutely none of that information in the final draft</td>
+    </tr>
+    <tr>
       <th>1722</th>
       <td>None</td>
-      <td>0.006081</td>
-      <td>0.993919</td>
+      <td>0.000389</td>
+      <td>0.999611</td>
       <td>PewDiePie posts video "apologizing" for his Kill All Jews "joke" and it's really about how he makes a ton of money and the media hates him</td>
-    </tr>
-    <tr>
-      <th>3283</th>
-      <td>None</td>
-      <td>0.006190</td>
-      <td>0.993810</td>
-      <td>It's funny because he blocked our whole family on facebook (you can find him if you log out) and insists he "doesn't use it"</td>
-    </tr>
-    <tr>
-      <th>3281</th>
-      <td>None</td>
-      <td>0.007563</td>
-      <td>0.992437</td>
-      <td>What he doesn't know (unless he stalks my twitter which I know he does) is that I have fake accounts following all his social media</td>
-    </tr>
-    <tr>
-      <th>2893</th>
-      <td>None</td>
-      <td>0.007570</td>
-      <td>0.992430</td>
-      <td>I love arguing with conservative bigots who don't understand basic decency. People have their own beliefs, just let them believe.</td>
-    </tr>
-    <tr>
-      <th>3236</th>
-      <td>None</td>
-      <td>0.008416</td>
-      <td>0.991584</td>
-      <td>What will straight cis people do now with their "legalize gay" shirts? Frame them, probably</td>
     </tr>
   </tbody>
 </table>
@@ -643,26 +724,23 @@ aaron_df.head()
 
 
 
-#### Plot the results
-
 
 ```python
-aaron_df_columns = ["sentiment_score", "subtweet_negative_probability"]
+ax = aaron_df_for_plotting.plot.barh(logx=True, figsize=(16, 9), color="maroon", fontsize=13);
+ax.set_alpha(0.8)
+ax.set_title("Aaron Dataset Subtweets Test", fontsize=18)
+ax.set_ylabel("Row Index", fontsize=18);
+ax.set_xlabel("Subtweet Percentage Probability (logarithmic)", fontsize=18);
+for i in ax.patches:
+    ax.text(i.get_width(), i.get_y() + 0.325, "{:.3%}".format(i.get_width()), fontsize=10, color="black")
+ax.invert_yaxis()
 ```
 
 
-```python
-aaron_df = aaron_df.set_index("tweet").drop(aaron_df_columns, axis=1).head(10)
-```
+![png](output_64_0.png)
 
 
-```python
-aaron_df.plot.barh(logx=True);
-```
-
-
-![png](output_65_0.png)
-
+#### Julia
 
 
 ```python
@@ -676,8 +754,8 @@ julia_df["Sentiment"] = None
 julia_df = tests_dataframe(julia_df, text_column="Text", sentiment_column="Sentiment")
 ```
 
-    CPU times: user 6.04 s, sys: 91.4 ms, total: 6.13 s
-    Wall time: 6.88 s
+    CPU times: user 6.69 s, sys: 103 ms, total: 6.8 s
+    Wall time: 7.56 s
 
 
 
@@ -687,18 +765,24 @@ julia_df.to_csv("../data/data_from_testing/friends_data/juliaeberry_tests.csv")
 
 
 ```python
-julia_df["tweet"] = julia_df["tweet"].str[:140]
+julia_df_columns = ["sentiment_score", "subtweet_negative_probability", "tweet"]
 ```
 
 
 ```python
-julia_df.head()
+julia_df_for_plotting = julia_df.drop(julia_df_columns, axis=1).head(10)
+```
+
+
+```python
+julia_df.head(10)
 ```
 
 
 
 
 <div>
+
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -713,37 +797,72 @@ julia_df.head()
     <tr>
       <th>1138</th>
       <td>None</td>
-      <td>0.002422</td>
-      <td>0.997578</td>
-      <td>"what a COINcidence that you're here," drawls Bitcoin lustily. your palms sweat as you imagine what it would be like to own this creature, t</td>
+      <td>0.000007</td>
+      <td>0.999993</td>
+      <td>"what a COINcidence that you're here," drawls Bitcoin lustily. your palms sweat as you imagine what it would be like to own this creature, to do with him what you will. you drag your cursor over his coinhood, and he gasps. \n"transaction complete," you whisper into his ear la...</td>
     </tr>
     <tr>
-      <th>902</th>
+      <th>663</th>
       <td>None</td>
-      <td>0.004004</td>
-      <td>0.995996</td>
-      <td>tbh if they don't start publically dating in a year after pyeongchang I'm going to be S H O C K E D how can you look at somebody like that i</td>
+      <td>0.000008</td>
+      <td>0.999992</td>
+      <td>even if you are committed to cheating how can you possibly think that p/c are on the same level as v/m when you're watching papadakis shakily clamber onto cizeron for a lift in their short dance after you've just seen tessa hook her legs around scott's head and spin in THEIR ...</td>
     </tr>
     <tr>
-      <th>850</th>
+      <th>1639</th>
       <td>None</td>
-      <td>0.005445</td>
-      <td>0.994555</td>
-      <td>honestly they should be I can't believe they're even considered such high threats to tessa and scott on their underwhelming lifts alone</td>
+      <td>0.000009</td>
+      <td>0.999991</td>
+      <td>so I'm reading one of the folgers incest commercial fanfics on ao3 and honestly other than the frequent and jarring incestual sex scenes, the worst thing so far has been the brother leering at his cousin's breasts at any opportunity. isn't having daily sex with your sister en...</td>
+    </tr>
+    <tr>
+      <th>25</th>
+      <td>None</td>
+      <td>0.000011</td>
+      <td>0.999989</td>
+      <td>I've always wondered why the name "françois" is sung in v/m's umbrellas of cherbourg program considering none of the film's protagonists are named françois but I just found out it's actually "françoise" and it's what genevieve and guy wanted to name their daughter I'm sopic.t...</td>
     </tr>
     <tr>
       <th>770</th>
       <td>None</td>
-      <td>0.005526</td>
-      <td>0.994474</td>
-      <td>what are these people SEEING in them that's so wonderful??? I don't know how people can justify their technical inferiority by saying "oh, t</td>
+      <td>0.000011</td>
+      <td>0.999989</td>
+      <td>what are these people SEEING in them that's so wonderful??? I don't know how people can justify their technical inferiority by saying "oh, they're such great artists, so magical" \nI'm just hoping the wave of v/m support generated by the team event rides into the individual e...</td>
+    </tr>
+    <tr>
+      <th>69</th>
+      <td>None</td>
+      <td>0.000012</td>
+      <td>0.999988</td>
+      <td>man would it kill some of these junior ice dancers to look at each other when they skate???? I'm not asking for 2018 v/m smoldering gazes, and I'm not even asking for 2008 v/m umbrellas-level adoration! I know you're like, 16, but you're doing latin dance; just look at each o...</td>
+    </tr>
+    <tr>
+      <th>773</th>
+      <td>None</td>
+      <td>0.000013</td>
+      <td>0.999987</td>
+      <td>"I do feel grateful for the fact that we have one another, because I think people search their whole lives for someone that special" -tessa\n\nwho even says this about somebody that they don't want to marry/be with forever? v/m soundbytes will be the death of me #virtuemoir</td>
     </tr>
     <tr>
       <th>236</th>
       <td>None</td>
-      <td>0.005698</td>
-      <td>0.994302</td>
-      <td>look I've been thinking about it and even if they're older and less able to perform (although, they're at the top of their game now) they co</td>
+      <td>0.000016</td>
+      <td>0.999984</td>
+      <td>look I've been thinking about it and even if they're older and less able to perform (although, they're at the top of their game now) they could at least get the silver or bronze in the next two olympics and they'd be even more decorated ugh I'm just not ready to let them go</td>
+    </tr>
+    <tr>
+      <th>760</th>
+      <td>None</td>
+      <td>0.000018</td>
+      <td>0.999982</td>
+      <td>it's SO unbelievably absurd and those high scores from the judges have definitely impacted their support and made everyone from regular fans to former skater commentators spellbound by their "magical" routines full of "artistry" despite being devoid of technical prowess a la v/m</td>
+    </tr>
+    <tr>
+      <th>193</th>
+      <td>None</td>
+      <td>0.000023</td>
+      <td>0.999977</td>
+      <td>I know part of the reason they can do it early is bc they're still tiny and their bodies haven't gone through puberty but if female skaters (at this point in time) likely won't be able to land quads by the time they're competing as seniors, why bother with such a risk so young?</td>
     </tr>
   </tbody>
 </table>
@@ -751,26 +870,23 @@ julia_df.head()
 
 
 
-#### Plot the results
-
 
 ```python
-julia_df_columns = ["sentiment_score", "subtweet_negative_probability"]
+ax = julia_df_for_plotting.plot.barh(logx=True, figsize=(16, 9), color="maroon", fontsize=13);
+ax.set_alpha(0.8)
+ax.set_title("Julia Dataset Subtweets Test", fontsize=18)
+ax.set_ylabel("Row Index", fontsize=18);
+ax.set_xlabel("Subtweet Percentage Probability (logarithmic)", fontsize=18);
+for i in ax.patches:
+    ax.text(i.get_width(), i.get_y() + 0.325, "{:.3%}".format(i.get_width()), fontsize=10, color="black")
+ax.invert_yaxis()
 ```
 
 
-```python
-julia_df = julia_df.set_index("tweet").drop(julia_df_columns, axis=1).head(10)
-```
+![png](output_72_0.png)
 
 
-```python
-julia_df.plot.barh(logx=True);
-```
-
-
-![png](output_74_0.png)
-
+#### Zoe
 
 
 ```python
@@ -784,8 +900,8 @@ zoe_df["Sentiment"] = None
 zoe_df = tests_dataframe(zoe_df, text_column="Text", sentiment_column="Sentiment")
 ```
 
-    CPU times: user 1.16 s, sys: 20.9 ms, total: 1.18 s
-    Wall time: 1.37 s
+    CPU times: user 1.3 s, sys: 21.1 ms, total: 1.32 s
+    Wall time: 1.47 s
 
 
 
@@ -795,18 +911,24 @@ zoe_df.to_csv("../data/data_from_testing/friends_data/zoeterhune_tests.csv")
 
 
 ```python
-zoe_df["tweet"] = zoe_df["tweet"].str[:140]
+zoe_df_columns = ["sentiment_score", "subtweet_negative_probability", "tweet"]
 ```
 
 
 ```python
-zoe_df.head()
+zoe_df_for_plotting = zoe_df.drop(zoe_df_columns, axis=1).head(10)
+```
+
+
+```python
+zoe_df.head(10)
 ```
 
 
 
 
 <div>
+
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -819,39 +941,74 @@ zoe_df.head()
   </thead>
   <tbody>
     <tr>
-      <th>277</th>
-      <td>None</td>
-      <td>0.005355</td>
-      <td>0.994645</td>
-      <td>ok so people from my old school keep lamenting the death of someone to whom they claim to be close but also like continually misgender them</td>
-    </tr>
-    <tr>
       <th>584</th>
       <td>None</td>
-      <td>0.007600</td>
-      <td>0.992400</td>
-      <td>the funny thing about anxiety is one minute you could be playing one of your favorite tabletop games w some of your favorite people and then</td>
+      <td>0.000011</td>
+      <td>0.999989</td>
+      <td>the funny thing about anxiety is one minute you could be playing one of your favorite tabletop games w some of your favorite people and then the next you could be having a panic attack in the bathroom bc three people laughing/yelling (in jest) at you suddenly set something off</td>
     </tr>
     <tr>
       <th>583</th>
       <td>None</td>
-      <td>0.013254</td>
-      <td>0.986746</td>
-      <td>and u decide to tweet about it weeks later bc no one ever talked about it and ur anxious mind decided 2 interpret that as no one caring when</td>
+      <td>0.000014</td>
+      <td>0.999986</td>
+      <td>and u decide to tweet about it weeks later bc no one ever talked about it and ur anxious mind decided 2 interpret that as no one caring when, in reality, it's probably people forgetting because you, and your particular brand of anxiety, bounce haphazardly from one mood 2 the ...</td>
     </tr>
     <tr>
-      <th>334</th>
+      <th>63</th>
       <td>None</td>
-      <td>0.017399</td>
-      <td>0.982601</td>
-      <td>Literally every time one of us little people makes a tweet that gets popular one of our friends HAS to comment "don't forget us little peopl</td>
+      <td>0.000087</td>
+      <td>0.999913</td>
+      <td>brother bear..............................................................................................................................................................................................................................................................i let you ...</td>
     </tr>
     <tr>
       <th>1105</th>
       <td>None</td>
-      <td>0.018083</td>
-      <td>0.981917</td>
-      <td>The guy who had the audacity to write a Buzzfeed "article" called "28 problems only ridiculously good looking people have" thinks he's ridic</td>
+      <td>0.000087</td>
+      <td>0.999913</td>
+      <td>The guy who had the audacity to write a Buzzfeed "article" called "28 problems only ridiculously good looking people have" thinks he's ridiculously good looking when he has the body of a grecian God, sure, and the face of a muppet</td>
+    </tr>
+    <tr>
+      <th>211</th>
+      <td>None</td>
+      <td>0.000088</td>
+      <td>0.999912</td>
+      <td>easy access to firearms- assault rifles or otherwise- makes it a hell of a lot easier to hurt a lot of people in very little time. you can say guns don't kill people, but they certainly expedite the process. why don't we talk about this??? #GunReformNow</td>
+    </tr>
+    <tr>
+      <th>445</th>
+      <td>None</td>
+      <td>0.000092</td>
+      <td>0.999908</td>
+      <td>I WILL WRITE THE TWEET FOR YOU. IT IS AS FOLLOWS:\n\nDEAR MY ADORING PUBLIC,\n\nTHOUGH I HAVE A TENDENCY TO SAY THE BEAUTY AND THE BEAST (2017) WAS JUST UTTER BOILING GARBAGE, I, JULIA ELIZABETH BERRY, MAYBE BUT NOT NECESSARILY THE FIRST OF THAT PARTICULAR NAME, CRIED WATCHIN...</td>
+    </tr>
+    <tr>
+      <th>165</th>
+      <td>None</td>
+      <td>0.000129</td>
+      <td>0.999871</td>
+      <td>i tuned into the olympics for about twelve seconds, got frustrated that apparently i was watching the exact same thing as last time i tuned in, got more frustrated when the music abruptly cut to something else, and now i'm writing sproj</td>
+    </tr>
+    <tr>
+      <th>846</th>
+      <td>None</td>
+      <td>0.000130</td>
+      <td>0.999870</td>
+      <td>it took so long to get this many gs and I still messed it up?? UGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG...</td>
+    </tr>
+    <tr>
+      <th>456</th>
+      <td>None</td>
+      <td>0.000175</td>
+      <td>0.999825</td>
+      <td>when ur heart rate is fast before bed and u can't tell if it's the anxiety heart rate or the insomnia heart rate BUT you realize you're not anxious so it's probably the insomnia \n\nwelcome back old friend you have not been missed</td>
+    </tr>
+    <tr>
+      <th>1142</th>
+      <td>None</td>
+      <td>0.000198</td>
+      <td>0.999802</td>
+      <td>modern family is still on???????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????????...</td>
     </tr>
   </tbody>
 </table>
@@ -859,26 +1016,23 @@ zoe_df.head()
 
 
 
-#### Plot the results
-
 
 ```python
-zoe_df_columns = ["sentiment_score", "subtweet_negative_probability"]
+ax = zoe_df_for_plotting.plot.barh(logx=True, figsize=(16, 9), color="maroon", fontsize=13);
+ax.set_alpha(0.8)
+ax.set_title("Zoe Dataset Subtweets Test", fontsize=18)
+ax.set_ylabel("Row Index", fontsize=18);
+ax.set_xlabel("Subtweet Percentage Probability (logarithmic)", fontsize=18);
+for i in ax.patches:
+    ax.text(i.get_width(), i.get_y() + 0.325, "{:.3%}".format(i.get_width()), fontsize=10, color="black")
+ax.invert_yaxis()
 ```
 
 
-```python
-zoe_df = zoe_df.set_index("tweet").drop(zoe_df_columns, axis=1).head(10)
-```
+![png](output_80_0.png)
 
 
-```python
-zoe_df.plot.barh(logx=True);
-```
-
-
-![png](output_83_0.png)
-
+#### Noah
 
 
 ```python
@@ -892,8 +1046,8 @@ noah_df["Sentiment"] = None
 noah_df = tests_dataframe(noah_df, text_column="Text", sentiment_column="Sentiment")
 ```
 
-    CPU times: user 3.92 s, sys: 66.5 ms, total: 3.99 s
-    Wall time: 4.63 s
+    CPU times: user 4.05 s, sys: 78.1 ms, total: 4.13 s
+    Wall time: 4.48 s
 
 
 
@@ -903,18 +1057,24 @@ noah_df.to_csv("../data/data_from_testing/friends_data/noahsegalgould_tests.csv"
 
 
 ```python
-noah_df["tweet"] = noah_df["tweet"].str[:140]
+noah_df_columns = ["sentiment_score", "subtweet_negative_probability", "tweet"]
 ```
 
 
 ```python
-noah_df.head()
+noah_df_for_plotting = noah_df.drop(noah_df_columns, axis=1).head(10)
+```
+
+
+```python
+noah_df.head(10)
 ```
 
 
 
 
 <div>
+
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -929,37 +1089,72 @@ noah_df.head()
     <tr>
       <th>877</th>
       <td>None</td>
-      <td>0.003053</td>
-      <td>0.996947</td>
-      <td>I guess I think it’s foolish to rely on any website for being your source of personal fulfillment and especially as your only source for pol</td>
+      <td>0.000008</td>
+      <td>0.999992</td>
+      <td>I guess I think it’s foolish to rely on any website for being your source of personal fulfillment and especially as your only source for political change. The companies which own your speech aren’t going to let you dismantle them. And their goal isn’t ever going to be to help...</td>
     </tr>
     <tr>
-      <th>3525</th>
+      <th>878</th>
       <td>None</td>
-      <td>0.004462</td>
-      <td>0.995538</td>
-      <td>some people want their kids to take care of them when they are elderly but I plan to enslave sentient AI to do that for me until the end.</td>
-    </tr>
-    <tr>
-      <th>845</th>
-      <td>None</td>
-      <td>0.005960</td>
-      <td>0.994040</td>
-      <td>my plan to watch list has 224 entires! that is one of them! I treat all my children equally and fairly, and they will each be given their du</td>
-    </tr>
-    <tr>
-      <th>379</th>
-      <td>None</td>
-      <td>0.008052</td>
-      <td>0.991948</td>
-      <td>The washer on the far left of the Robbins laundry room won’t start unless you press the start button really hard and someone forgot to start</td>
+      <td>0.000016</td>
+      <td>0.999984</td>
+      <td>I find myself somewhere between thinking nobody should use social networking sites like this one seriously because they are commercial entities which make money specifically by controlling what you can share and also thinking it’s awesome that people can promote just causes here</td>
     </tr>
     <tr>
       <th>1777</th>
       <td>None</td>
-      <td>0.008098</td>
-      <td>0.991902</td>
-      <td>I feel like being able to tweet twice as many characters is a nice addition but I wonder about the priorities of the platforms we use. The w</td>
+      <td>0.000017</td>
+      <td>0.999983</td>
+      <td>I feel like being able to tweet twice as many characters is a nice addition but I wonder about the priorities of the platforms we use. The web is commercial by design, and it should not come as such a surprise that Twitter has chosen to lengthen Tweets instead of fighting hat...</td>
+    </tr>
+    <tr>
+      <th>696</th>
+      <td>None</td>
+      <td>0.000021</td>
+      <td>0.999979</td>
+      <td>I FIGURED OUT THAT I DON'T REALLY KNOW\nIt's not satirizing anything in particular, and he's completely genuine across all his comedy pieces. I've described it before as "broken comedy" because it's not quite entirely nonsensical but it's really clearly funny because it's bad.</td>
+    </tr>
+    <tr>
+      <th>51</th>
+      <td>None</td>
+      <td>0.000024</td>
+      <td>0.999976</td>
+      <td>I meant "apparently" because it's canon to the source manga that the 2018 anime is based on but is entirely left out of that adaptation. I've seen the last two episodes at least twice each, I am deeply flawed but when I'm that far into something I always finish it!</td>
+    </tr>
+    <tr>
+      <th>800</th>
+      <td>None</td>
+      <td>0.000029</td>
+      <td>0.999971</td>
+      <td>I had to reread this like 10 times and I think I understand what you're saying so I may not have been clear\n$20 of bitcoin right now is 0.001858 BTC, when purchased that's the amount.\nin a year it could very well be worth less or more than that original $20 in terms of USD.</td>
+    </tr>
+    <tr>
+      <th>624</th>
+      <td>None</td>
+      <td>0.000030</td>
+      <td>0.999970</td>
+      <td>things people do differently that nobody talks about:\n\nsleeping positions\nsleeping clothing options\nass wiping \nloofa ownership\nwho you look at when you laugh aloud in a group of friends implying you feel the strongest connection with that unintentionally chosen individual</td>
+    </tr>
+    <tr>
+      <th>680</th>
+      <td>None</td>
+      <td>0.000033</td>
+      <td>0.999967</td>
+      <td>the main premise is that a girl in modern Japan falls down a well and ends up in the distant past with demons and gods and such, and I'm pretty sure the Inuyasha character is a half human-half demon dog man, which is probably implied by his name somehow since "inu" means dog</td>
+    </tr>
+    <tr>
+      <th>1302</th>
+      <td>None</td>
+      <td>0.000038</td>
+      <td>0.999962</td>
+      <td>dude, sven has us doing final project presentations during completion week, which is already ridiculous. BUT also he had our project proposals due last night yet somehow failed to mention in class or anywhere but in one tiny link in the assignment description that they were due.</td>
+    </tr>
+    <tr>
+      <th>136</th>
+      <td>None</td>
+      <td>0.000044</td>
+      <td>0.999956</td>
+      <td>The saddest thing about Violet Evergarden is the disconnect between what she feels and what she can say. She chooses to learn more about the words people use to describe how they feel so she can understand how she felt, even when it hurts to understand.</td>
     </tr>
   </tbody>
 </table>
@@ -967,25 +1162,20 @@ noah_df.head()
 
 
 
-#### Plot the results
-
 
 ```python
-noah_df_columns = ["sentiment_score", "subtweet_negative_probability"]
+ax = noah_df_for_plotting.plot.barh(logx=True, figsize=(16, 9), color="maroon", fontsize=13);
+ax.set_alpha(0.8)
+ax.set_title("Noah Dataset Subtweets Test", fontsize=18)
+ax.set_ylabel("Row Index", fontsize=18);
+ax.set_xlabel("Subtweet Percentage Probability (logarithmic)", fontsize=18);
+for i in ax.patches:
+    ax.text(i.get_width(), i.get_y() + 0.325, "{:.3%}".format(i.get_width()), fontsize=10, color="black")
+ax.invert_yaxis()
 ```
 
 
-```python
-noah_df = noah_df.set_index("tweet").drop(noah_df_columns, axis=1).head(10)
-```
-
-
-```python
-noah_df.plot.barh(logx=True);
-```
-
-
-![png](output_92_0.png)
+![png](output_88_0.png)
 
 
 #### Test it in realtime
@@ -993,7 +1183,7 @@ noah_df.plot.barh(logx=True);
 
 
 ```python
-THRESHOLD = 0.925 # 92.5% positives and higher, only
+THRESHOLD = 0.99 # 99% positives and higher, only
 DURATION = 60*60*12 # 12 hours
 ```
 
@@ -1055,7 +1245,7 @@ class StreamListener(tweepy.StreamListener):
                 "RT @" not in text, 
                 not status.in_reply_to_status_id]):
             
-            api.update_status("{:.1%} \nhttps://twitter.com/{}/status/{}".format(positive_probability, 
+            api.update_status("{:.3%} \nhttps://twitter.com/{}/status/{}".format(positive_probability, 
                                                                                  screen_name, 
                                                                                  status.id))
             
@@ -1064,10 +1254,18 @@ class StreamListener(tweepy.StreamListener):
                                                                          ascending=False)
             subtweets_df.to_csv("../data/data_from_testing/live_downloaded_data/subtweets_live_data.csv")
             
-            print("Subtweet:\n{}\nGeographical Bounding Box: {}\nTotal tweets acquired: {}\n".format(str(print_list)[1:-1],
-                                                                                                     None,
-                                                                                                     # status.place.bounding_box.coordinates, 
-                                                                                                     (len(subtweets_live_list) + len(non_subtweets_live_list))))
+            print(("Subtweet from @{0} (Probability of {1:.3%}):\n" + 
+                   "Sentiment Polarity: {2:.2}\n" + 
+                   "Sentiment Subjectivity: {3:.2}\n" + 
+                   "Time: {4}\n" + 
+                   "Tweet: {5}\n" +
+                   "Total tweets acquired: {6}\n").format(print_list[0], 
+                                                          print_list[3], 
+                                                          print_list[1],
+                                                          print_list[2], 
+                                                          print_list[4],
+                                                          print_list[5],
+                                                          len(subtweets_live_list) + len(non_subtweets_live_list)))
             
             return row
         else:
@@ -1084,403 +1282,83 @@ class StreamListener(tweepy.StreamListener):
 
 
 ```python
-%%time
-my_followers = [str(user_id) for ids_list in 
-                tweepy.Cursor(api.followers_ids, 
-                              screen_name="NoahSegalGould").pages() 
-                for user_id in ids_list]
-users_i_follow = [str(user_id) for ids_list in 
-                  tweepy.Cursor(api.friends_ids, 
-                                screen_name="NoahSegalGould").pages() 
-                  for user_id in ids_list]
+def get_mutuals_ids(mutuals_threshold=250):
+    my_followers = [str(user_id) for ids_list in 
+                    tweepy.Cursor(api.followers_ids, 
+                                  screen_name="NoahSegalGould").pages() 
+                    for user_id in ids_list]
+    my_followeds = [str(user_id) for ids_list in 
+                   tweepy.Cursor(api.friends_ids, 
+                                 screen_name="NoahSegalGould").pages() 
+                   for user_id in ids_list]
 
-mutuals = list(set(my_followers) & set(users_i_follow))
+    my_mutuals = list(set(my_followers) & set(my_followeds))
+    my_mutuals_mutuals = my_mutuals[:]
 
-my_mutuals = mutuals[:]
-for i, mutual in enumerate(mutuals):
-    start_time = time()
-    user = api.get_user(user_id=mutual)
-    if not user.protected:
-        individual_mutuals_followers = []
-        c = tweepy.Cursor(api.followers_ids, user_id=mutual).items()
-        while True:
-            try:
-                individual_mutuals_follower = c.next()
-                individual_mutuals_followers.append(str(individual_mutuals_follower))
-            except tweepy.TweepError:
-                sleep(600) # 10 minutes
-                continue
-            except StopIteration:
-                break
-        total = len(individual_mutuals_followers)
+    for i, mutual in enumerate(my_mutuals):
+        start_time = time()
+        user = api.get_user(user_id=mutual)
         name = user.screen_name
-        print("{} followers for mutual {}: {}".format(total, i+1, name))
-        if total <= 2500:
-            my_mutuals.extend(individual_mutuals_followers)
+        is_protected = user.protected
+        if not is_protected:
+            mutuals_followers = []
+            followers_cursor = tweepy.Cursor(api.followers_ids, user_id=mutual).items()
+            while True:
+                try:
+                    mutuals_follower = followers_cursor.next()
+                    mutuals_followers.append(str(mutuals_follower))
+                except tweepy.TweepError:
+                    sleep(30) # 30 seconds
+                    continue
+                except StopIteration:
+                    break
+            mutuals_followeds = []
+            followeds_cursor = tweepy.Cursor(api.friends_ids, user_id=mutual).items()
+            while True:
+                try:
+                    mutuals_followed = followeds_cursor.next()
+                    mutuals_followeds.append(str(mutuals_followed))
+                except tweepy.TweepError:
+                    sleep(30) # 30 seconds
+                    continue
+                except StopIteration:
+                    break
+            mutuals_mutuals = list(set(mutuals_followers) & set(mutuals_followeds))
+            print("{} mutuals for mutual {}: {}".format(len(mutuals_mutuals), i+1, name))
+            if len(mutuals_mutuals) <= mutuals_threshold: # Ignore my mutuals if they have a lot of mutuals
+                my_mutuals_mutuals.extend(mutuals_mutuals)
+            else:
+                print("\tSkipping: {}".format(name))
         else:
-            print("\tMutual {0}: {1} has too many followers: {2}".format(i+1, name, total))
-    else:
-        continue
-    end_time = time()
-    with open("../data/other_data/NoahSegalGould_Mutuals_and_Mutuals_Followers_ids.json", "w") as outfile:
-        json.dump(my_mutuals, outfile)
-    print("{0:.2f} seconds for getting the followers' IDs of mutual {1}: {2}\n".format((end_time - start_time), 
-                                                                                       i+1, user.screen_name))
-    sleep(5)
-my_mutuals = list(set(my_mutuals))
+            continue
+        end_time = time()
+        with open("../data/other_data/NoahSegalGould_Mutuals_and_Mutuals_Mutuals_ids.json", "w") as outfile:
+            json.dump(my_mutuals_mutuals, outfile)
+        print("{0:.2f} seconds for getting the mutuals' IDs of mutual {1}: {2}\n".format((end_time - start_time), 
+                                                                                         i+1, name))
+    my_mutuals_mutuals = [str(mu) for mu in sorted([int(m) for m in list(set(my_mutuals_mutuals))])]
+    with open("../data/other_data/NoahSegalGould_Mutuals_and_Mutuals_Mutuals_ids.json", "w") as outfile:
+        json.dump(my_mutuals_mutuals, outfile, indent=4)
+    return my_mutuals_mutuals
 ```
-
-    77 followers for mutual 1: cleostaryeyed
-    0.72 seconds for getting the followers' IDs of mutual 1: cleostaryeyed
-    
-    3 followers for mutual 2: 1017hokage
-    0.74 seconds for getting the followers' IDs of mutual 2: 1017hokage
-    
-    25 followers for mutual 4: BardCourses
-    0.75 seconds for getting the followers' IDs of mutual 4: BardCourses
-    
-    33 followers for mutual 5: beachaliens
-    0.72 seconds for getting the followers' IDs of mutual 5: beachaliens
-    
-    45 followers for mutual 6: valunept
-    0.80 seconds for getting the followers' IDs of mutual 6: valunept
-    
-    393 followers for mutual 7: bluhoopz
-    0.78 seconds for getting the followers' IDs of mutual 7: bluhoopz
-    
-    34 followers for mutual 9: plurell
-    0.70 seconds for getting the followers' IDs of mutual 9: plurell
-    
-    14 followers for mutual 10: zozotherobo
-    2.71 seconds for getting the followers' IDs of mutual 10: zozotherobo
-    
-    66 followers for mutual 11: katie_burke_
-    0.77 seconds for getting the followers' IDs of mutual 11: katie_burke_
-    
-    128 followers for mutual 13: evaanderson33
-    0.72 seconds for getting the followers' IDs of mutual 13: evaanderson33
-    
-    140 followers for mutual 14: jizzyjtiz
-    0.77 seconds for getting the followers' IDs of mutual 14: jizzyjtiz
-    
-    8 followers for mutual 16: OfLatvia
-    0.73 seconds for getting the followers' IDs of mutual 16: OfLatvia
-    
-    31 followers for mutual 17: nanabee807
-    1.73 seconds for getting the followers' IDs of mutual 17: nanabee807
-    
-    468 followers for mutual 18: john__wick__3
-    0.74 seconds for getting the followers' IDs of mutual 18: john__wick__3
-    
-
-
-    Rate limit reached. Sleeping for: 813
-
-
-    153 followers for mutual 19: Garrettisajoke
-    1476.71 seconds for getting the followers' IDs of mutual 19: Garrettisajoke
-    
-    50 followers for mutual 20: andrewdjang
-    0.69 seconds for getting the followers' IDs of mutual 20: andrewdjang
-    
-    228 followers for mutual 21: Pumpkinheadgal
-    0.74 seconds for getting the followers' IDs of mutual 21: Pumpkinheadgal
-    
-    180 followers for mutual 22: Tageist97
-    0.71 seconds for getting the followers' IDs of mutual 22: Tageist97
-    
-    45 followers for mutual 23: itsnemily
-    0.75 seconds for getting the followers' IDs of mutual 23: itsnemily
-    
-    92 followers for mutual 25: UpToneMusic
-    0.69 seconds for getting the followers' IDs of mutual 25: UpToneMusic
-    
-    204 followers for mutual 26: sycamorethrone
-    0.75 seconds for getting the followers' IDs of mutual 26: sycamorethrone
-    
-    332 followers for mutual 29: real_john_wilks
-    0.68 seconds for getting the followers' IDs of mutual 29: real_john_wilks
-    
-    31055 followers for mutual 30: extrafabulous
-    	Mutual 30: extrafabulous has too many followers: 31055
-    1.72 seconds for getting the followers' IDs of mutual 30: extrafabulous
-    
-
-
-    Rate limit reached. Sleeping for: 845
-
-
-    172 followers for mutual 31: Meg_Murph26
-    1501.64 seconds for getting the followers' IDs of mutual 31: Meg_Murph26
-    
-    152 followers for mutual 32: dramallama_x3
-    0.74 seconds for getting the followers' IDs of mutual 32: dramallama_x3
-    
-    140 followers for mutual 33: akrapf96
-    0.69 seconds for getting the followers' IDs of mutual 33: akrapf96
-    
-    27 followers for mutual 34: TannerCohan
-    0.70 seconds for getting the followers' IDs of mutual 34: TannerCohan
-    
-    174 followers for mutual 36: FearlessFierlit
-    0.71 seconds for getting the followers' IDs of mutual 36: FearlessFierlit
-    
-    16 followers for mutual 38: ARKB0T
-    0.70 seconds for getting the followers' IDs of mutual 38: ARKB0T
-    
-    345 followers for mutual 39: KayleeSue
-    0.69 seconds for getting the followers' IDs of mutual 39: KayleeSue
-    
-    90 followers for mutual 40: christinabeenas
-    0.71 seconds for getting the followers' IDs of mutual 40: christinabeenas
-    
-    182 followers for mutual 41: Momose_13
-    0.68 seconds for getting the followers' IDs of mutual 41: Momose_13
-    
-    63 followers for mutual 42: QuailSpotting
-    0.71 seconds for getting the followers' IDs of mutual 42: QuailSpotting
-    
-    90 followers for mutual 43: generatedtext
-    0.69 seconds for getting the followers' IDs of mutual 43: generatedtext
-    
-    19 followers for mutual 44: PetrovFireBuild
-    0.80 seconds for getting the followers' IDs of mutual 44: PetrovFireBuild
-    
-    463 followers for mutual 45: laurensofar
-    0.73 seconds for getting the followers' IDs of mutual 45: laurensofar
-    
-    1115 followers for mutual 46: paul_hembree
-    0.71 seconds for getting the followers' IDs of mutual 46: paul_hembree
-    
-    59 followers for mutual 47: Garage_Grrl
-    0.73 seconds for getting the followers' IDs of mutual 47: Garage_Grrl
-    
-
-
-    Rate limit reached. Sleeping for: 813
-
-
-    25 followers for mutual 48: motherbored3017
-    1472.43 seconds for getting the followers' IDs of mutual 48: motherbored3017
-    
-    289 followers for mutual 49: jaypatricksmith
-    0.72 seconds for getting the followers' IDs of mutual 49: jaypatricksmith
-    
-    116 followers for mutual 50: Oblivion_Mag
-    0.77 seconds for getting the followers' IDs of mutual 50: Oblivion_Mag
-    
-    347 followers for mutual 51: graysonjmorley
-    0.72 seconds for getting the followers' IDs of mutual 51: graysonjmorley
-    
-    45 followers for mutual 52: jmzaccagnino
-    1.34 seconds for getting the followers' IDs of mutual 52: jmzaccagnino
-    
-    29 followers for mutual 53: wdya0
-    1.73 seconds for getting the followers' IDs of mutual 53: wdya0
-    
-    53 followers for mutual 54: KaiMalowany
-    0.74 seconds for getting the followers' IDs of mutual 54: KaiMalowany
-    
-    20 followers for mutual 55: Terrible_Goose
-    0.74 seconds for getting the followers' IDs of mutual 55: Terrible_Goose
-    
-    52 followers for mutual 56: level99andahalf
-    1.40 seconds for getting the followers' IDs of mutual 56: level99andahalf
-    
-    159 followers for mutual 57: QKlauren
-    0.73 seconds for getting the followers' IDs of mutual 57: QKlauren
-    
-    99 followers for mutual 58: minorsuspect
-    0.82 seconds for getting the followers' IDs of mutual 58: minorsuspect
-    
-    18 followers for mutual 59: GayPatSmith
-    1.76 seconds for getting the followers' IDs of mutual 59: GayPatSmith
-    
-    58 followers for mutual 60: steflamethrower
-    0.81 seconds for getting the followers' IDs of mutual 60: steflamethrower
-    
-    14 followers for mutual 61: nora_cady
-    0.77 seconds for getting the followers' IDs of mutual 61: nora_cady
-    
-    256 followers for mutual 62: sarahisharsh
-    0.71 seconds for getting the followers' IDs of mutual 62: sarahisharsh
-    
-
-
-    Rate limit reached. Sleeping for: 810
-
-
-    163 followers for mutual 63: duheiii
-    1478.33 seconds for getting the followers' IDs of mutual 63: duheiii
-    
-    218 followers for mutual 64: forgotlogininfo
-    0.75 seconds for getting the followers' IDs of mutual 64: forgotlogininfo
-    
-    406 followers for mutual 65: keithohara
-    0.85 seconds for getting the followers' IDs of mutual 65: keithohara
-    
-    28 followers for mutual 66: PieterFildes
-    0.76 seconds for getting the followers' IDs of mutual 66: PieterFildes
-    
-    6 followers for mutual 67: KenCooperBot
-    0.76 seconds for getting the followers' IDs of mutual 67: KenCooperBot
-    
-    154 followers for mutual 68: Maxiscoffee
-    0.81 seconds for getting the followers' IDs of mutual 68: Maxiscoffee
-    
-    17 followers for mutual 69: hydrothermal_
-    0.98 seconds for getting the followers' IDs of mutual 69: hydrothermal_
-    
-    192 followers for mutual 70: ahung23
-    0.71 seconds for getting the followers' IDs of mutual 70: ahung23
-    
-    2 followers for mutual 71: nedcoz
-    0.75 seconds for getting the followers' IDs of mutual 71: nedcoz
-    
-    34 followers for mutual 72: Mattlarsony
-    1.55 seconds for getting the followers' IDs of mutual 72: Mattlarsony
-    
-    13 followers for mutual 74: jossislost
-    0.75 seconds for getting the followers' IDs of mutual 74: jossislost
-    
-    453 followers for mutual 75: akkobbi
-    0.75 seconds for getting the followers' IDs of mutual 75: akkobbi
-    
-    56 followers for mutual 76: futchaIex
-    0.73 seconds for getting the followers' IDs of mutual 76: futchaIex
-    
-    210 followers for mutual 77: AndalusianDoge
-    0.76 seconds for getting the followers' IDs of mutual 77: AndalusianDoge
-    
-    41 followers for mutual 78: starblasters_
-    0.76 seconds for getting the followers' IDs of mutual 78: starblasters_
-    
-
-
-    Rate limit reached. Sleeping for: 812
-
-
-    387 followers for mutual 79: whoisleormiller
-    1471.52 seconds for getting the followers' IDs of mutual 79: whoisleormiller
-    
-    157 followers for mutual 80: por_eleanor
-    0.76 seconds for getting the followers' IDs of mutual 80: por_eleanor
-    
-    1 followers for mutual 81: anaturalnumber
-    0.79 seconds for getting the followers' IDs of mutual 81: anaturalnumber
-    
-    75 followers for mutual 82: h0tsccrgirl1996
-    0.73 seconds for getting the followers' IDs of mutual 82: h0tsccrgirl1996
-    
-    33 followers for mutual 83: UpToneOfficial
-    0.81 seconds for getting the followers' IDs of mutual 83: UpToneOfficial
-    
-    71 followers for mutual 84: AdamMuhsin
-    0.79 seconds for getting the followers' IDs of mutual 84: AdamMuhsin
-    
-    81 followers for mutual 85: metalgarurumonz
-    0.81 seconds for getting the followers' IDs of mutual 85: metalgarurumonz
-    
-    98 followers for mutual 86: lisasimpsonstan
-    0.74 seconds for getting the followers' IDs of mutual 86: lisasimpsonstan
-    
-    499 followers for mutual 87: cmands
-    0.76 seconds for getting the followers' IDs of mutual 87: cmands
-    
-    18 followers for mutual 88: N04H5G
-    0.73 seconds for getting the followers' IDs of mutual 88: N04H5G
-    
-    234 followers for mutual 89: strawBERRYsmooh
-    0.76 seconds for getting the followers' IDs of mutual 89: strawBERRYsmooh
-    
-    268 followers for mutual 90: __tackle
-    0.79 seconds for getting the followers' IDs of mutual 90: __tackle
-    
-    258 followers for mutual 91: two_shanezz
-    0.69 seconds for getting the followers' IDs of mutual 91: two_shanezz
-    
-    15 followers for mutual 92: S1m0ntr0n
-    0.75 seconds for getting the followers' IDs of mutual 92: S1m0ntr0n
-    
-    12 followers for mutual 93: 10_furlongs
-    0.76 seconds for getting the followers' IDs of mutual 93: 10_furlongs
-    
-
-
-    Rate limit reached. Sleeping for: 813
-
-
-    5 followers for mutual 94: jeffdaugherty15
-    1486.74 seconds for getting the followers' IDs of mutual 94: jeffdaugherty15
-    
-    2 followers for mutual 95: RogerAlmonds
-    0.77 seconds for getting the followers' IDs of mutual 95: RogerAlmonds
-    
-    252 followers for mutual 96: cassy_savs
-    0.80 seconds for getting the followers' IDs of mutual 96: cassy_savs
-    
-    36 followers for mutual 97: TheCzarchitect
-    0.73 seconds for getting the followers' IDs of mutual 97: TheCzarchitect
-    
-    163 followers for mutual 98: carsonscabinet
-    0.74 seconds for getting the followers' IDs of mutual 98: carsonscabinet
-    
-    218 followers for mutual 99: zoeterhune
-    0.76 seconds for getting the followers' IDs of mutual 99: zoeterhune
-    
-    435 followers for mutual 100: stfwlkr
-    0.72 seconds for getting the followers' IDs of mutual 100: stfwlkr
-    
-    325 followers for mutual 101: scorpiodisaster
-    0.81 seconds for getting the followers' IDs of mutual 101: scorpiodisaster
-    
-    15 followers for mutual 102: maggersmay
-    0.75 seconds for getting the followers' IDs of mutual 102: maggersmay
-    
-    72 followers for mutual 103: twelveangrybens
-    0.77 seconds for getting the followers' IDs of mutual 103: twelveangrybens
-    
-    262 followers for mutual 104: gothodile
-    0.80 seconds for getting the followers' IDs of mutual 104: gothodile
-    
-    428 followers for mutual 105: rosettabones
-    0.74 seconds for getting the followers' IDs of mutual 105: rosettabones
-    
-    601 followers for mutual 106: BardCollegeCDO
-    0.77 seconds for getting the followers' IDs of mutual 106: BardCollegeCDO
-    
-    124 followers for mutual 107: ninanet23
-    0.72 seconds for getting the followers' IDs of mutual 107: ninanet23
-    
-    474 followers for mutual 108: juliaeberry
-    0.72 seconds for getting the followers' IDs of mutual 108: juliaeberry
-    
-
-
-    Rate limit reached. Sleeping for: 812
-
-
-    1 followers for mutual 109: robyn53966273
-    1539.18 seconds for getting the followers' IDs of mutual 109: robyn53966273
-    
-    CPU times: user 5.91 s, sys: 1.38 s, total: 7.29 s
-    Wall time: 3h 3min 26s
-
 
 
 ```python
-print("Total number of my mutuals: {}".format(len(mutuals)))
+# %%time
+# my_mutuals_mutuals = get_mutuals_ids()
 ```
-
-    Total number of my mutuals: 109
-
 
 
 ```python
-print("Total number of my mutuals' followers: {}".format(len(my_mutuals) - len(mutuals)))
+my_mutuals_mutuals = json.load(open("../data/other_data/NoahSegalGould_Mutuals_and_Mutuals_Mutuals_ids.json"))
 ```
 
-    Total number of my mutuals' followers: 11682
+
+```python
+print("Total number of my mutuals and my mutuals' mutuals: {}".format(len(my_mutuals_mutuals)))
+```
+
+    Total number of my mutuals and my mutuals' mutuals: 4218
 
 
 #### Instantiate the listener
@@ -1499,15 +1377,98 @@ stream = tweepy.Stream(auth=api.auth, listener=stream_listener)
 # bounding_box = [-73.920176, 42.009637,
 #                 -73.899739, 42.033421]
 # stream.filter(locations=bounding_box, async=True) # Bard College
-stream.filter(follow=my_mutuals, async=True)
-print("Columns:")
-print("screen_name, sentiment_polarity, sentiment_subjectivity, subtweet_probability, time, text")
+stream.filter(follow=my_mutuals_mutuals, async=True)
+print("Streaming has started.")
 sleep(DURATION)
 stream.disconnect()
 ```
 
-    Columns:
-    screen_name, sentiment_polarity, sentiment_subjectivity, subtweet_probability, time, text
+    Streaming has started.
+
+
+    /Users/Noah/anaconda/envs/work/lib/python3.6/site-packages/sklearn/externals/joblib/parallel.py:547: UserWarning: Multiprocessing-backed parallel loops cannot be nested below threads, setting n_jobs=1
+      **self._backend_args)
+
+
+    Subtweet from @marriedfitzsmns (Probability of 99.169%):
+    Sentiment Polarity: 0.4
+    Sentiment Subjectivity: 0.83
+    Time: 2018-03-24 15:51:09
+    Tweet: deke thinking fitz would say blimey is so cute I love one (1) grandson who knows absolutely nothing about his grandfather
+    Total tweets acquired: 406
+    
+    Subtweet from @goheadgomez (Probability of 99.751%):
+    Sentiment Polarity: 0.5
+    Sentiment Subjectivity: 0.2
+    Time: 2018-03-24 15:57:54
+    Tweet: Tanith White commentating Worlds:
+    
+    “Well you look at the very best team in the world, Virtue and Moir they’ve had 21 years together”
+    Total tweets acquired: 1137
+    
+    Subtweet from @howardmegdal (Probability of 99.153%):
+    Sentiment Polarity: -0.1
+    Sentiment Subjectivity: 0.2
+    Time: 2018-03-24 16:20:59
+    Tweet: South Carolina's turnovers in second quarter were traveling, ie. dead ball variety. So Buffalo cannot take off downhill.
+    Total tweets acquired: 4084
+    
+    Subtweet from @sapphicpirate (Probability of 99.056%):
+    Sentiment Polarity: -0.1
+    Sentiment Subjectivity: 0.23
+    Time: 2018-03-24 16:23:57
+    Tweet: I miss drawing fanart all ive been doing in the last couple weeks r stuffs for class n it makes me feel dead inside
+    Total tweets acquired: 4454
+    
+    Subtweet from @MadFatNoDiary (Probability of 99.542%):
+    Sentiment Polarity: 0.0
+    Sentiment Subjectivity: 0.75
+    Time: 2018-03-24 16:25:53
+    Tweet: my cat just walked in on me masturbating and looked at me with such disgust like he's the only pussy i'm allowed to give any attention to?
+    Total tweets acquired: 4665
+    
+    Subtweet from @buzz297 (Probability of 99.166%):
+    Sentiment Polarity: 0.0
+    Sentiment Subjectivity: 0.0
+    Time: 2018-03-24 16:28:23
+    Tweet: Can someone call my work and tell them I can't come back from lunch because I'm listening to music at Wawa and don't wanna move
+    Total tweets acquired: 4989
+    
+    Subtweet from @3yeAmHe (Probability of 99.771%):
+    Sentiment Polarity: -0.042
+    Sentiment Subjectivity: 0.43
+    Time: 2018-03-24 16:34:55
+    Tweet: No one thing is going to be a panacea for Black America. Not Hip Hop. Not Integration. Not Black business. None of these can do it all.
+    Total tweets acquired: 5725
+    
+    Subtweet from @t1ffany4scale (Probability of 99.732%):
+    Sentiment Polarity: 0.6
+    Sentiment Subjectivity: 1.0
+    Time: 2018-03-24 16:39:24
+    Tweet: My response to any yt expat who comes at me from now on: Do you speak that way to the women from your own country?
+    Total tweets acquired: 6332
+    
+    Subtweet from @MyBrooklynBoy (Probability of 99.204%):
+    Sentiment Polarity: 0.05
+    Sentiment Subjectivity: 0.1
+    Time: 2018-03-24 16:39:32
+    Tweet: I wonder why we're so fascinated by beings that could rip us apart with their bare hands, or, errr, claws...
+    Total tweets acquired: 6354
+    
+    Subtweet from @hivehum (Probability of 99.218%):
+    Sentiment Polarity: -0.0056
+    Sentiment Subjectivity: 0.75
+    Time: 2018-03-24 16:54:08
+    Tweet: im extremely amused at how hard the like, lore level overkill my light team is against some fuckin kaiju
+    Total tweets acquired: 8759
+    
+    Subtweet from @hicallista (Probability of 99.297%):
+    Sentiment Polarity: 0.2
+    Sentiment Subjectivity: 0.57
+    Time: 2018-03-24 17:05:53
+    Tweet: it shows how singleminded my focus was on virtuemoir during the olympics that i hardly remembered cappellini/lanotte's dance, it'S SO GOOD
+    Total tweets acquired: 10393
+    
 
 
 #### Plot the results
@@ -1519,20 +1480,145 @@ subtweets_df = pd.read_csv("../data/data_from_testing/live_downloaded_data/subtw
 
 
 ```python
-subtweets_df["tweet"] = subtweets_df["tweet"].str[:140]
+subtweets_df_columns = ["screen_name", "sentiment_polarity", "sentiment_subjectivity", "time", "tweet"]
 ```
 
 
 ```python
-subtweets_df_columns = ["screen_name", "time"]
+subtweets_df_for_plotting = subtweets_df.drop(subtweets_df_columns, axis=1).head(10)
 ```
 
 
 ```python
-subtweets_df = subtweets_df.set_index("tweet").drop(subtweets_df_columns, axis=1).head(10)
+subtweets_df.head(10)
 ```
+
+
+
+
+<div>
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>screen_name</th>
+      <th>sentiment_polarity</th>
+      <th>sentiment_subjectivity</th>
+      <th>subtweet_probability</th>
+      <th>time</th>
+      <th>tweet</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>6</th>
+      <td>3yeAmHe</td>
+      <td>-0.041667</td>
+      <td>0.433333</td>
+      <td>0.997713</td>
+      <td>2018-03-24 16:34:55</td>
+      <td>No one thing is going to be a panacea for Black America. Not Hip Hop. Not Integration. Not Black business. None of these can do it all.</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>goheadgomez</td>
+      <td>0.500000</td>
+      <td>0.195000</td>
+      <td>0.997505</td>
+      <td>2018-03-24 15:57:54</td>
+      <td>Tanith White commentating Worlds:\n\n“Well you look at the very best team in the world, Virtue and Moir they’ve had 21 years together”</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>t1ffany4scale</td>
+      <td>0.600000</td>
+      <td>1.000000</td>
+      <td>0.997320</td>
+      <td>2018-03-24 16:39:24</td>
+      <td>My response to any yt expat who comes at me from now on: Do you speak that way to the women from your own country?</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>MadFatNoDiary</td>
+      <td>0.000000</td>
+      <td>0.750000</td>
+      <td>0.995424</td>
+      <td>2018-03-24 16:25:53</td>
+      <td>my cat just walked in on me masturbating and looked at me with such disgust like he's the only pussy i'm allowed to give any attention to?</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>hicallista</td>
+      <td>0.204167</td>
+      <td>0.570833</td>
+      <td>0.992969</td>
+      <td>2018-03-24 17:05:53</td>
+      <td>it shows how singleminded my focus was on virtuemoir during the olympics that i hardly remembered cappellini/lanotte's dance, it'S SO GOOD</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>hivehum</td>
+      <td>-0.005556</td>
+      <td>0.747222</td>
+      <td>0.992179</td>
+      <td>2018-03-24 16:54:08</td>
+      <td>im extremely amused at how hard the like, lore level overkill my light team is against some fuckin kaiju</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>MyBrooklynBoy</td>
+      <td>0.050000</td>
+      <td>0.100000</td>
+      <td>0.992040</td>
+      <td>2018-03-24 16:39:32</td>
+      <td>I wonder why we're so fascinated by beings that could rip us apart with their bare hands, or, errr, claws...</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>marriedfitzsmns</td>
+      <td>0.400000</td>
+      <td>0.833333</td>
+      <td>0.991692</td>
+      <td>2018-03-24 15:51:09</td>
+      <td>deke thinking fitz would say blimey is so cute I love one (1) grandson who knows absolutely nothing about his grandfather</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>buzz297</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.991660</td>
+      <td>2018-03-24 16:28:23</td>
+      <td>Can someone call my work and tell them I can't come back from lunch because I'm listening to music at Wawa and don't wanna move</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>howardmegdal</td>
+      <td>-0.100000</td>
+      <td>0.200000</td>
+      <td>0.991532</td>
+      <td>2018-03-24 16:20:59</td>
+      <td>South Carolina's turnovers in second quarter were traveling, ie. dead ball variety. So Buffalo cannot take off downhill.</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
 
 
 ```python
-subtweets_df.plot.barh(logx=True);
+ax = subtweets_df_for_plotting.plot.barh(logx=True, figsize=(16, 9), color="maroon", fontsize=13);
+ax.set_alpha(0.8)
+ax.set_title("Live Downloaded Subtweets Test", fontsize=18)
+ax.set_ylabel("Row Index", fontsize=18);
+ax.set_xlabel("Subtweet Percentage Probability (logarithmic)", fontsize=18);
+for i in ax.patches:
+    ax.text(i.get_width(), i.get_y() + 0.325, "{:.3%}".format(i.get_width()), fontsize=10, color="black")
+ax.invert_yaxis()
 ```
+
+
+![png](output_113_0.png)
+
