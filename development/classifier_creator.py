@@ -166,7 +166,7 @@ def tests_dataframe(tweets_dataframe, text_column="SentimentText", sentiment_col
 def is_english(s):
     return all(ord(char) < 128 for char in s)
 
-THRESHOLD = 0.95 # 95% positives and higher, only
+THRESHOLD = 0.90 # 90% positives and higher, only
 DURATION = 60*60*24*7 # 1 week
 
 consumer_key, consumer_secret, access_token, access_token_secret = open("../../credentials.txt").read().split("\n")
@@ -324,18 +324,18 @@ def get_mutuals_and_mutuals_mutuals_ids(mutuals_threshold=250):
         json.dump(my_mutuals_mutuals, outfile, indent=4)
     return my_mutuals_mutuals
 
-my_mutuals = get_mutuals()
+# my_mutuals = get_mutuals()
 
-my_mutuals_mutuals = json.load(open("../data/other_data/NoahSegalGould_Mutuals_and_Mutuals_Mutuals_ids.json"))
+# my_mutuals_mutuals = json.load(open("../data/other_data/NoahSegalGould_Mutuals_and_Mutuals_Mutuals_ids.json"))
 
-print("Total number of my mutuals: {}".format(len(my_mutuals)))
+# print("Total number of my mutuals: {}".format(len(my_mutuals)))
 
-print("Total number of my mutuals and my mutuals' mutuals: {}".format(len(my_mutuals_mutuals)))
+# print("Total number of my mutuals and my mutuals' mutuals: {}".format(len(my_mutuals_mutuals)))
 
 stream_listener = StreamListener()
 stream = tweepy.Stream(auth=api.auth, listener=stream_listener)
-
-stream.filter(follow=my_mutuals_mutuals, stall_warnings=True, languages=["en"], async=True)
+stream.filter(locations=[-73.920176, 42.009637, -73.899739, 42.033421], stall_warnings=True, languages=["en"], async=True)
+# stream.filter(follow=my_mutuals, stall_warnings=True, languages=["en"], async=True)
 print("Streaming has started.")
 sleep(DURATION)
 stream.disconnect()
