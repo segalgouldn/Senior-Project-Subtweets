@@ -210,6 +210,15 @@ predictions = sentiment_pipeline.predict(text_test)
 print(classification_report(class_test, predictions))
 ```
 
+                 precision    recall  f1-score   support
+    
+       negative       0.96      0.85      0.90      1414
+       positive       0.87      0.97      0.92      1502
+    
+    avg / total       0.92      0.91      0.91      2916
+    
+
+
 #### Define function for visualizing confusion matrices
 
 
@@ -257,6 +266,14 @@ plot_confusion_matrix(cnf_matrix, classes=class_names, normalize=True,
 
 plt.show()
 ```
+
+
+![png](output_24_0.png)
+
+
+
+![png](output_24_1.png)
+
 
 #### Save the classifier for another time
 
@@ -311,12 +328,73 @@ test_tweets_df = pd.DataFrame({"Tweet": test_tweets, "Sentiment": [None]*len(tes
 tests_dataframe(test_tweets_df, text_column="Tweet", sentiment_column="Sentiment").head()
 ```
 
+
+
+
+<div>
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sentiment_score</th>
+      <th>subtweet_negative_probability</th>
+      <th>subtweet_positive_probability</th>
+      <th>tweet</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1</th>
+      <td>None</td>
+      <td>0.070027</td>
+      <td>0.929973</td>
+      <td>Isn't it funny how some people don't know their place?</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>None</td>
+      <td>0.070194</td>
+      <td>0.929806</td>
+      <td>Some people don't know their place.</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>None</td>
+      <td>0.122182</td>
+      <td>0.877818</td>
+      <td>How come you people act like this?</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>None</td>
+      <td>0.247561</td>
+      <td>0.752439</td>
+      <td>Who the heck is Noah?</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>None</td>
+      <td>0.282461</td>
+      <td>0.717539</td>
+      <td>I love Noah, he's so cool.</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
 #### Test on actual tweets
 
 
 ```python
 naji_df = pd.read_csv("../data/data_for_testing/other_data/naji_data.csv", error_bad_lines=False)
 ```
+
+    b'Skipping line 8836: expected 4 fields, saw 5\n'
+    b'Skipping line 535882: expected 4 fields, saw 7\n'
+
 
 #### Repair some leftover HTML
 
@@ -348,6 +426,9 @@ naji_df = naji_df[naji_df["SentimentText"].map(is_english)]
 print("Length of dataset: {}".format(len(naji_df)))
 ```
 
+    Length of dataset: 1564156
+
+
 #### Use randomly selected 10K rows from dataset
 
 
@@ -362,6 +443,10 @@ naji_df = naji_df.sample(n=10000).reset_index(drop=True)
 %%time
 naji_df = tests_dataframe(naji_df)
 ```
+
+    CPU times: user 2.11 s, sys: 50.3 ms, total: 2.16 s
+    Wall time: 2.28 s
+
 
 
 ```python
@@ -386,6 +471,98 @@ naji_df.head(10)
 ```
 
 
+
+
+<div>
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sentiment_score</th>
+      <th>subtweet_negative_probability</th>
+      <th>subtweet_positive_probability</th>
+      <th>tweet</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2119</th>
+      <td>0</td>
+      <td>0.020988</td>
+      <td>0.979012</td>
+      <td>sometimes is sad  For the once who are in love, Give youre boyfriend all the support the need, in everything. I miss my little boyfriend.</td>
+    </tr>
+    <tr>
+      <th>7684</th>
+      <td>0</td>
+      <td>0.027320</td>
+      <td>0.972680</td>
+      <td>I waited, listening to wind blowing through the tumbleweed? Are none of you old enough to know what to do when someone says "Crackerack"?</td>
+    </tr>
+    <tr>
+      <th>1131</th>
+      <td>1</td>
+      <td>0.029213</td>
+      <td>0.970787</td>
+      <td>Never explain urself to anyone. Bcoz the person who likes u doesn't need it and the person who dislikes u won't believe it</td>
+    </tr>
+    <tr>
+      <th>343</th>
+      <td>0</td>
+      <td>0.036142</td>
+      <td>0.963858</td>
+      <td>cat, very capable of giving massage! sometimes does but wont be trained. only recently i read why cats purr - its their "Omm". Now work</td>
+    </tr>
+    <tr>
+      <th>1289</th>
+      <td>0</td>
+      <td>0.038447</td>
+      <td>0.961553</td>
+      <td>sending myself pictures through hotmail takes so long. I wish they would come up with a way to make it work faster  The uploading sucks.</td>
+    </tr>
+    <tr>
+      <th>8219</th>
+      <td>1</td>
+      <td>0.039141</td>
+      <td>0.960859</td>
+      <td>No matter how good friends you have, it  will never be the same as someone beside you</td>
+    </tr>
+    <tr>
+      <th>73</th>
+      <td>1</td>
+      <td>0.042607</td>
+      <td>0.957393</td>
+      <td>Started working through my list of "things to do after leaving work". 1) Finish watching "How I Met Your Mother"</td>
+    </tr>
+    <tr>
+      <th>356</th>
+      <td>0</td>
+      <td>0.044287</td>
+      <td>0.955713</td>
+      <td>i feel like i lost all my friends. i miss the old them. how i wish we could just go back to being the crazy immature funny people again.</td>
+    </tr>
+    <tr>
+      <th>8982</th>
+      <td>0</td>
+      <td>0.045594</td>
+      <td>0.954406</td>
+      <td>gosh i hate arguing w/ the one person you care so much about..</td>
+    </tr>
+    <tr>
+      <th>2720</th>
+      <td>0</td>
+      <td>0.046311</td>
+      <td>0.953689</td>
+      <td>is thinking it's "Supercuts" time again. Why am I dragging my feet so much in looking for a hair stylist? I hate Supercuts and their ilk.</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
 ```python
 ax = naji_df_for_plotting.plot.barh(logx=True, figsize=(16, 9), color="maroon", fontsize=13);
 ax.set_alpha(0.8)
@@ -396,6 +573,10 @@ for i in ax.patches:
     ax.text(i.get_width(), i.get_y() + 0.325, "{:.3%}".format(i.get_width()), fontsize=10, color="black")
 ax.invert_yaxis()
 ```
+
+
+![png](output_53_0.png)
+
 
 #### Tests on friends' tweets
 
@@ -412,6 +593,10 @@ aaron_df["Sentiment"] = None
 %%time
 aaron_df = tests_dataframe(aaron_df, text_column="Text", sentiment_column="Sentiment")
 ```
+
+    CPU times: user 631 ms, sys: 10.7 ms, total: 642 ms
+    Wall time: 664 ms
+
 
 
 ```python
@@ -434,6 +619,98 @@ aaron_df.head(10)
 ```
 
 
+
+
+<div>
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sentiment_score</th>
+      <th>subtweet_negative_probability</th>
+      <th>subtweet_positive_probability</th>
+      <th>tweet</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1722</th>
+      <td>None</td>
+      <td>0.017616</td>
+      <td>0.982384</td>
+      <td>PewDiePie posts video "apologizing" for his Kill All Jews "joke" and it's really about how he makes a ton of money and the media hates him</td>
+    </tr>
+    <tr>
+      <th>3043</th>
+      <td>None</td>
+      <td>0.019327</td>
+      <td>0.980673</td>
+      <td>when people play shitty music through their microphones</td>
+    </tr>
+    <tr>
+      <th>2893</th>
+      <td>None</td>
+      <td>0.020232</td>
+      <td>0.979768</td>
+      <td>I love arguing with conservative bigots who don't understand basic decency. People have their own beliefs, just let them believe.</td>
+    </tr>
+    <tr>
+      <th>3540</th>
+      <td>None</td>
+      <td>0.020395</td>
+      <td>0.979605</td>
+      <td>Sometimes I wonder if people don't realize the 140 character limit and try to type a really long message and end up having it get cut off at</td>
+    </tr>
+    <tr>
+      <th>3236</th>
+      <td>None</td>
+      <td>0.021566</td>
+      <td>0.978434</td>
+      <td>What will straight cis people do now with their "legalize gay" shirts? Frame them, probably</td>
+    </tr>
+    <tr>
+      <th>3281</th>
+      <td>None</td>
+      <td>0.022676</td>
+      <td>0.977324</td>
+      <td>What he doesn't know (unless he stalks my twitter which I know he does) is that I have fake accounts following all his social media</td>
+    </tr>
+    <tr>
+      <th>919</th>
+      <td>None</td>
+      <td>0.022746</td>
+      <td>0.977254</td>
+      <td>ppl putting out wrong info about what the newest pokemon game was, how many pokemon there are now, etc\nI would correct them but I don't want to be "the video game person"</td>
+    </tr>
+    <tr>
+      <th>1891</th>
+      <td>None</td>
+      <td>0.024791</td>
+      <td>0.975209</td>
+      <td>The new year has been marked by a shitty NYE performance and shitty fake champagne \nI guess you could say 2017 is off to a great start</td>
+    </tr>
+    <tr>
+      <th>2805</th>
+      <td>None</td>
+      <td>0.025118</td>
+      <td>0.974882</td>
+      <td>"Best part of the debate is Donald Trump's tweets" HE'S ONLY RETWEETING PEOPLE NOT POSTING ANYTHING ORIGINAL????</td>
+    </tr>
+    <tr>
+      <th>2811</th>
+      <td>None</td>
+      <td>0.026256</td>
+      <td>0.973744</td>
+      <td>Mod: You seem to change your opinions based on political benefit *lists many examples*\nHillary: actually, I'm very consistent\nif u say so</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
 ```python
 ax = aaron_df_for_plotting.plot.barh(logx=True, figsize=(16, 9), color="maroon", fontsize=13);
 ax.set_alpha(0.8)
@@ -444,6 +721,10 @@ for i in ax.patches:
     ax.text(i.get_width(), i.get_y() + 0.325, "{:.3%}".format(i.get_width()), fontsize=10, color="black")
 ax.invert_yaxis()
 ```
+
+
+![png](output_62_0.png)
+
 
 #### Julia
 
@@ -458,6 +739,10 @@ julia_df["Sentiment"] = None
 %%time
 julia_df = tests_dataframe(julia_df, text_column="Text", sentiment_column="Sentiment")
 ```
+
+    CPU times: user 1.47 s, sys: 20.6 ms, total: 1.49 s
+    Wall time: 1.51 s
+
 
 
 ```python
@@ -480,6 +765,98 @@ julia_df.head(10)
 ```
 
 
+
+
+<div>
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sentiment_score</th>
+      <th>subtweet_negative_probability</th>
+      <th>subtweet_positive_probability</th>
+      <th>tweet</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>4714</th>
+      <td>None</td>
+      <td>0.014852</td>
+      <td>0.985148</td>
+      <td>1 of the most eye-roll inducing things is when some1 posts their writing 4 the sole purpose of showing off how "good" they r but it's trash</td>
+    </tr>
+    <tr>
+      <th>3856</th>
+      <td>None</td>
+      <td>0.015755</td>
+      <td>0.984245</td>
+      <td>god I do not understand why people are obsessed with all of lorde's music and every little thing that she does</td>
+    </tr>
+    <tr>
+      <th>5515</th>
+      <td>None</td>
+      <td>0.016142</td>
+      <td>0.983858</td>
+      <td>when people say they're an empath I hate them even more</td>
+    </tr>
+    <tr>
+      <th>902</th>
+      <td>None</td>
+      <td>0.016259</td>
+      <td>0.983741</td>
+      <td>tbh if they don't start publically dating in a year after pyeongchang I'm going to be S H O C K E D how can you look at somebody like that in programs for 10+ years and not want to marry them</td>
+    </tr>
+    <tr>
+      <th>6296</th>
+      <td>None</td>
+      <td>0.016607</td>
+      <td>0.983393</td>
+      <td>NONE of my fabulous snapchats have made it into the oc snapchat story so to spite them I'm sending them every single snapchat I take</td>
+    </tr>
+    <tr>
+      <th>925</th>
+      <td>None</td>
+      <td>0.017529</td>
+      <td>0.982471</td>
+      <td>look I mean obviously they're not dating or anything, but even to have an athletic partner be that much older......there's something very weird about that</td>
+    </tr>
+    <tr>
+      <th>1360</th>
+      <td>None</td>
+      <td>0.018424</td>
+      <td>0.981576</td>
+      <td>I may be twenty-two years of age, a full-blown adult, but I still harbor my old middle school fantasies of slow-dancing to secondhand serenade's "fall for you" one day</td>
+    </tr>
+    <tr>
+      <th>2085</th>
+      <td>None</td>
+      <td>0.019480</td>
+      <td>0.980520</td>
+      <td>even at the tender age of 21, I cannot imagine being romantically or sexually interested in an 18 year old. aside from maybe 20 year olds, wanting to date an 18 year old in your twenties makes no sense at all good god</td>
+    </tr>
+    <tr>
+      <th>839</th>
+      <td>None</td>
+      <td>0.019532</td>
+      <td>0.980468</td>
+      <td>either tessa and scott are really not dating and are the best actors in the world on the ice, or they're the worst actors in the world off the ice because absolutely nobody is buying the "just friends" claim anymore #virtuemoir</td>
+    </tr>
+    <tr>
+      <th>4811</th>
+      <td>None</td>
+      <td>0.020133</td>
+      <td>0.979867</td>
+      <td>a girl in one of my lit classes constructs her moodle posts w no less than 8 block quotes strewn throughout the post and it makes me ANGERY</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
 ```python
 ax = julia_df_for_plotting.plot.barh(logx=True, figsize=(16, 9), color="maroon", fontsize=13);
 ax.set_alpha(0.8)
@@ -490,6 +867,10 @@ for i in ax.patches:
     ax.text(i.get_width(), i.get_y() + 0.325, "{:.3%}".format(i.get_width()), fontsize=10, color="black")
 ax.invert_yaxis()
 ```
+
+
+![png](output_70_0.png)
+
 
 #### Zoe
 
@@ -504,6 +885,10 @@ zoe_df["Sentiment"] = None
 %%time
 zoe_df = tests_dataframe(zoe_df, text_column="Text", sentiment_column="Sentiment")
 ```
+
+    CPU times: user 236 ms, sys: 4.04 ms, total: 240 ms
+    Wall time: 240 ms
+
 
 
 ```python
@@ -526,6 +911,98 @@ zoe_df.head(10)
 ```
 
 
+
+
+<div>
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sentiment_score</th>
+      <th>subtweet_negative_probability</th>
+      <th>subtweet_positive_probability</th>
+      <th>tweet</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>753</th>
+      <td>None</td>
+      <td>0.014983</td>
+      <td>0.985017</td>
+      <td>no offense but there are maybe like two people who are not annoying on social media</td>
+    </tr>
+    <tr>
+      <th>584</th>
+      <td>None</td>
+      <td>0.016377</td>
+      <td>0.983623</td>
+      <td>the funny thing about anxiety is one minute you could be playing one of your favorite tabletop games w some of your favorite people and then the next you could be having a panic attack in the bathroom bc three people laughing/yelling (in jest) at you suddenly set something off</td>
+    </tr>
+    <tr>
+      <th>1105</th>
+      <td>None</td>
+      <td>0.024222</td>
+      <td>0.975778</td>
+      <td>The guy who had the audacity to write a Buzzfeed "article" called "28 problems only ridiculously good looking people have" thinks he's ridiculously good looking when he has the body of a grecian God, sure, and the face of a muppet</td>
+    </tr>
+    <tr>
+      <th>923</th>
+      <td>None</td>
+      <td>0.026265</td>
+      <td>0.973735</td>
+      <td>sometimes I want to kill the people around me</td>
+    </tr>
+    <tr>
+      <th>277</th>
+      <td>None</td>
+      <td>0.027629</td>
+      <td>0.972371</td>
+      <td>ok so people from my old school keep lamenting the death of someone to whom they claim to be close but also like continually misgender them in their lamentations?? I Don't Like This</td>
+    </tr>
+    <tr>
+      <th>1242</th>
+      <td>None</td>
+      <td>0.029659</td>
+      <td>0.970341</td>
+      <td>Legit conversation outside robbins: "dead ass 55% of men get prostate cancer by the age of 50...y do they need 2 raise awareness for that?"</td>
+    </tr>
+    <tr>
+      <th>547</th>
+      <td>None</td>
+      <td>0.031900</td>
+      <td>0.968100</td>
+      <td>if "definitive" lists of the worst to best episodes of black mirror have taught me anything it's that people should stop writing lists like these</td>
+    </tr>
+    <tr>
+      <th>803</th>
+      <td>None</td>
+      <td>0.032017</td>
+      <td>0.967983</td>
+      <td>the fact that twitter shows tweets people you follow have liked means that sub-liking is also a thing</td>
+    </tr>
+    <tr>
+      <th>848</th>
+      <td>None</td>
+      <td>0.033012</td>
+      <td>0.966988</td>
+      <td>that one buzzfeed employee who thinks they're really funny but they aren't</td>
+    </tr>
+    <tr>
+      <th>756</th>
+      <td>None</td>
+      <td>0.033033</td>
+      <td>0.966967</td>
+      <td>I wonder what it's like to play fortnite\n\nor any online games for that matter</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
 ```python
 ax = zoe_df_for_plotting.plot.barh(logx=True, figsize=(16, 9), color="maroon", fontsize=13);
 ax.set_alpha(0.8)
@@ -536,6 +1013,10 @@ for i in ax.patches:
     ax.text(i.get_width(), i.get_y() + 0.325, "{:.3%}".format(i.get_width()), fontsize=10, color="black")
 ax.invert_yaxis()
 ```
+
+
+![png](output_78_0.png)
+
 
 #### Noah
 
@@ -550,6 +1031,10 @@ noah_df["Sentiment"] = None
 %%time
 noah_df = tests_dataframe(noah_df, text_column="Text", sentiment_column="Sentiment")
 ```
+
+    CPU times: user 856 ms, sys: 13.4 ms, total: 869 ms
+    Wall time: 893 ms
+
 
 
 ```python
@@ -572,6 +1057,98 @@ noah_df.head(10)
 ```
 
 
+
+
+<div>
+
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>sentiment_score</th>
+      <th>subtweet_negative_probability</th>
+      <th>subtweet_positive_probability</th>
+      <th>tweet</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>3525</th>
+      <td>None</td>
+      <td>0.012594</td>
+      <td>0.987406</td>
+      <td>some people want their kids to take care of them when they are elderly but I plan to enslave sentient AI to do that for me until the end.</td>
+    </tr>
+    <tr>
+      <th>2908</th>
+      <td>None</td>
+      <td>0.015311</td>
+      <td>0.984689</td>
+      <td>It's one of those stories about someone who can't take anything seriously until everything goes to shit and then he's forced to change</td>
+    </tr>
+    <tr>
+      <th>4024</th>
+      <td>None</td>
+      <td>0.016217</td>
+      <td>0.983783</td>
+      <td>Being human means reconciling what you want with what everyone else wants and I know that but it's so damn hard sometimes.</td>
+    </tr>
+    <tr>
+      <th>2629</th>
+      <td>None</td>
+      <td>0.016221</td>
+      <td>0.983779</td>
+      <td>My mom notices when I put extra effort into being emotionally and physically present but I hate it, maybe because I hate the effort it takes</td>
+    </tr>
+    <tr>
+      <th>3712</th>
+      <td>None</td>
+      <td>0.017643</td>
+      <td>0.982357</td>
+      <td>Do I confront someone I barely know to explain to them that they can't just drink out of my water bottle without asking?</td>
+    </tr>
+    <tr>
+      <th>877</th>
+      <td>None</td>
+      <td>0.018224</td>
+      <td>0.981776</td>
+      <td>I guess I think it’s foolish to rely on any website for being your source of personal fulfillment and especially as your only source for political change. The companies which own your speech aren’t going to let you dismantle them. And their goal isn’t ever going to be to help...</td>
+    </tr>
+    <tr>
+      <th>3441</th>
+      <td>None</td>
+      <td>0.020677</td>
+      <td>0.979323</td>
+      <td>Website idea: a twitter clone but only for nazis and white supremacists but nobody reads the terms of service and I tell all their parents</td>
+    </tr>
+    <tr>
+      <th>201</th>
+      <td>None</td>
+      <td>0.020836</td>
+      <td>0.979164</td>
+      <td>I guy in my algorithms class commented on a facebook post from the guy who thinks he's the son of god saying "can I have what you're on" and the divine fellow said he's high on spirit but the algorithms guy is the head of the hookah club</td>
+    </tr>
+    <tr>
+      <th>1042</th>
+      <td>None</td>
+      <td>0.021353</td>
+      <td>0.978647</td>
+      <td>Someone in the class of 2021 Facebook group wanted to know when they get their final grades and I told them May 2021</td>
+    </tr>
+    <tr>
+      <th>624</th>
+      <td>None</td>
+      <td>0.022390</td>
+      <td>0.977610</td>
+      <td>things people do differently that nobody talks about:\n\nsleeping positions\nsleeping clothing options\nass wiping \nloofa ownership\nwho you look at when you laugh aloud in a group of friends implying you feel the strongest connection with that unintentionally chosen individual</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
 ```python
 ax = noah_df_for_plotting.plot.barh(logx=True, figsize=(16, 9), color="maroon", fontsize=13);
 ax.set_alpha(0.8)
@@ -583,13 +1160,17 @@ for i in ax.patches:
 ax.invert_yaxis()
 ```
 
+
+![png](output_86_0.png)
+
+
 #### Test it in realtime
 #### Define some useful variables for later
 
 
 ```python
 THRESHOLD = 0.95 # 95% positives and higher, only
-DURATION = 60*60*24*7 # 1 week
+DURATION = 60 # 1 minute
 ```
 
 #### Load Twitter API credentials
@@ -787,6 +1368,10 @@ def get_mutuals_and_mutuals_mutuals_ids(mutuals_threshold=250):
 my_mutuals = get_mutuals()
 ```
 
+    CPU times: user 42.6 ms, sys: 12.9 ms, total: 55.5 ms
+    Wall time: 345 ms
+
+
 
 ```python
 my_mutuals_mutuals = json.load(open("../data/other_data/NoahSegalGould_Mutuals_and_Mutuals_Mutuals_ids.json"))
@@ -797,10 +1382,16 @@ my_mutuals_mutuals = json.load(open("../data/other_data/NoahSegalGould_Mutuals_a
 print("Total number of my mutuals: {}".format(len(my_mutuals)))
 ```
 
+    Total number of my mutuals: 107
+
+
 
 ```python
 print("Total number of my mutuals and my mutuals' mutuals: {}".format(len(my_mutuals_mutuals)))
 ```
+
+    Total number of my mutuals and my mutuals' mutuals: 4218
+
 
 #### Instantiate the listener
 
@@ -815,14 +1406,23 @@ stream = tweepy.Stream(auth=api.auth, listener=stream_listener)
 
 ```python
 %%time
-# bounding_box = [-73.920176, 42.009637,
-#                 -73.899739, 42.033421]
-# stream.filter(locations=bounding_box, async=True) # Bard College
+# stream.filter(locations=[-73.920176, 42.009637, -73.899739, 42.033421], stall_warnings=True, languages=["en"], async=True)
 stream.filter(follow=my_mutuals_mutuals, stall_warnings=True, languages=["en"], async=True)
 print("Streaming has started.")
 sleep(DURATION)
 stream.disconnect()
 ```
+
+    Streaming has started.
+
+
+    /Users/Noah/anaconda/envs/work/lib/python3.6/site-packages/sklearn/externals/joblib/parallel.py:547: UserWarning: Multiprocessing-backed parallel loops cannot be nested below threads, setting n_jobs=1
+      **self._backend_args)
+
+
+    CPU times: user 493 ms, sys: 63.7 ms, total: 557 ms
+    Wall time: 1min
+
 
 #### Plot the results
 
