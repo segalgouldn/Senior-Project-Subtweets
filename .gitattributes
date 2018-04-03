@@ -1,3 +1,5 @@
 go_data.csv filter=lfs diff=lfs merge=lfs -text
 naji_data.csv filter=lfs diff=lfs merge=lfs -text
 naji_tests.csv filter=lfs diff=lfs merge=lfs -text
+subtweets.json filter=lfs diff=lfs merge=lfs -text
+non_subtweets.json filter=lfs diff=lfs merge=lfs -text
