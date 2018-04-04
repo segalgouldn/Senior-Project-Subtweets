@@ -16,5 +16,11 @@
 * Train a Naive Bayes Classifier...
   * Using Scikit-Learn
   * With a Pipeline to add features for pronouns, mentions of names, non-mentions of usernames, etc.
+  * Training data statistics
+    * Lengths
+    * Punctuation
+    * Stop words
+    * unique words
+  * K-Folds
   
 This project has a license.
