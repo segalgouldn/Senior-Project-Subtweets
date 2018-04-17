@@ -1,0 +1,1887 @@
+
+% Default to the notebook output style
+
+    
+
+
+% Inherit from the specified cell style.
+
+
+
+
+    
+\documentclass[11pt]{article}
+
+    
+    
+    \usepackage[T1]{fontenc}
+    % Nicer default font (+ math font) than Computer Modern for most use cases
+    \usepackage{mathpazo}
+
+    % Basic figure setup, for now with no caption control since it's done
+    % automatically by Pandoc (which extracts ![](path) syntax from Markdown).
+    \usepackage{graphicx}
+    % We will generate all images so they have a width \maxwidth. This means
+    % that they will get their normal width if they fit onto the page, but
+    % are scaled down if they would overflow the margins.
+    \makeatletter
+    \def\maxwidth{\ifdim\Gin@nat@width>\linewidth\linewidth
+    \else\Gin@nat@width\fi}
+    \makeatother
+    \let\Oldincludegraphics\includegraphics
+    % Set max figure width to be 80% of text width, for now hardcoded.
+    \renewcommand{\includegraphics}[1]{\Oldincludegraphics[width=.8\maxwidth]{#1}}
+    % Ensure that by default, figures have no caption (until we provide a
+    % proper Figure object with a Caption API and a way to capture that
+    % in the conversion process - todo).
+    \usepackage{caption}
+    \DeclareCaptionLabelFormat{nolabel}{}
+    \captionsetup{labelformat=nolabel}
+
+    \usepackage{adjustbox} % Used to constrain images to a maximum size 
+    \usepackage{xcolor} % Allow colors to be defined
+    \usepackage{enumerate} % Needed for markdown enumerations to work
+    \usepackage{geometry} % Used to adjust the document margins
+    \usepackage{amsmath} % Equations
+    \usepackage{amssymb} % Equations
+    \usepackage{textcomp} % defines textquotesingle
+    % Hack from http://tex.stackexchange.com/a/47451/13684:
+    \AtBeginDocument{%
+        \def\PYZsq{\textquotesingle}% Upright quotes in Pygmentized code
+    }
+    \usepackage{upquote} % Upright quotes for verbatim code
+    \usepackage{eurosym} % defines \euro
+    \usepackage[mathletters]{ucs} % Extended unicode (utf-8) support
+    \usepackage[utf8x]{inputenc} % Allow utf-8 characters in the tex document
+    \usepackage{fancyvrb} % verbatim replacement that allows latex
+    \usepackage{grffile} % extends the file name processing of package graphics 
+                         % to support a larger range 
+    % The hyperref package gives us a pdf with properly built
+    % internal navigation ('pdf bookmarks' for the table of contents,
+    % internal cross-reference links, web links for URLs, etc.)
+    \usepackage{hyperref}
+    \usepackage{longtable} % longtable support required by pandoc >1.10
+    \usepackage{booktabs}  % table support for pandoc > 1.12.2
+    \usepackage[inline]{enumitem} % IRkernel/repr support (it uses the enumerate* environment)
+    \usepackage[normalem]{ulem} % ulem is needed to support strikethroughs (\sout)
+                                % normalem makes italics be italics, not underlines
+    
+
+    
+    
+    % Colors for the hyperref package
+    \definecolor{urlcolor}{rgb}{0,.145,.698}
+    \definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+    \definecolor{citecolor}{rgb}{.12,.54,.11}
+
+    % ANSI colors
+    \definecolor{ansi-black}{HTML}{3E424D}
+    \definecolor{ansi-black-intense}{HTML}{282C36}
+    \definecolor{ansi-red}{HTML}{E75C58}
+    \definecolor{ansi-red-intense}{HTML}{B22B31}
+    \definecolor{ansi-green}{HTML}{00A250}
+    \definecolor{ansi-green-intense}{HTML}{007427}
+    \definecolor{ansi-yellow}{HTML}{DDB62B}
+    \definecolor{ansi-yellow-intense}{HTML}{B27D12}
+    \definecolor{ansi-blue}{HTML}{208FFB}
+    \definecolor{ansi-blue-intense}{HTML}{0065CA}
+    \definecolor{ansi-magenta}{HTML}{D160C4}
+    \definecolor{ansi-magenta-intense}{HTML}{A03196}
+    \definecolor{ansi-cyan}{HTML}{60C6C8}
+    \definecolor{ansi-cyan-intense}{HTML}{258F8F}
+    \definecolor{ansi-white}{HTML}{C5C1B4}
+    \definecolor{ansi-white-intense}{HTML}{A1A6B2}
+
+    % commands and environments needed by pandoc snippets
+    % extracted from the output of `pandoc -s`
+    \providecommand{\tightlist}{%
+      \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+    \DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+    % Add ',fontsize=\small' for more characters per line
+    \newenvironment{Shaded}{}{}
+    \newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.56,0.13,0.00}{{#1}}}
+    \newcommand{\DecValTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\FloatTok}[1]{\textcolor[rgb]{0.25,0.63,0.44}{{#1}}}
+    \newcommand{\CharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\StringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\CommentTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textit{{#1}}}}
+    \newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{{#1}}}
+    \newcommand{\AlertTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.02,0.16,0.49}{{#1}}}
+    \newcommand{\RegionMarkerTok}[1]{{#1}}
+    \newcommand{\ErrorTok}[1]{\textcolor[rgb]{1.00,0.00,0.00}{\textbf{{#1}}}}
+    \newcommand{\NormalTok}[1]{{#1}}
+    
+    % Additional commands for more recent versions of Pandoc
+    \newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.53,0.00,0.00}{{#1}}}
+    \newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.25,0.44,0.63}{{#1}}}
+    \newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.73,0.40,0.53}{{#1}}}
+    \newcommand{\ImportTok}[1]{{#1}}
+    \newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.73,0.13,0.13}{\textit{{#1}}}}
+    \newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\VariableTok}[1]{\textcolor[rgb]{0.10,0.09,0.49}{{#1}}}
+    \newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.44,0.13}{\textbf{{#1}}}}
+    \newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.40,0.40,0.40}{{#1}}}
+    \newcommand{\BuiltInTok}[1]{{#1}}
+    \newcommand{\ExtensionTok}[1]{{#1}}
+    \newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.74,0.48,0.00}{{#1}}}
+    \newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.49,0.56,0.16}{{#1}}}
+    \newcommand{\InformationTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    \newcommand{\WarningTok}[1]{\textcolor[rgb]{0.38,0.63,0.69}{\textbf{\textit{{#1}}}}}
+    
+    
+    % Define a nice break command that doesn't care if a line doesn't already
+    % exist.
+    \def\br{\hspace*{\fill} \\* }
+    % Math Jax compatability definitions
+    \def\gt{>}
+    \def\lt{<}
+    % Document parameters
+    \title{classifier\_creator}
+    
+    
+    
+
+    % Pygments definitions
+    
+\makeatletter
+\def\PY@reset{\let\PY@it=\relax \let\PY@bf=\relax%
+    \let\PY@ul=\relax \let\PY@tc=\relax%
+    \let\PY@bc=\relax \let\PY@ff=\relax}
+\def\PY@tok#1{\csname PY@tok@#1\endcsname}
+\def\PY@toks#1+{\ifx\relax#1\empty\else%
+    \PY@tok{#1}\expandafter\PY@toks\fi}
+\def\PY@do#1{\PY@bc{\PY@tc{\PY@ul{%
+    \PY@it{\PY@bf{\PY@ff{#1}}}}}}}
+\def\PY#1#2{\PY@reset\PY@toks#1+\relax+\PY@do{#2}}
+
+\expandafter\def\csname PY@tok@w\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.73,0.73}{##1}}}
+\expandafter\def\csname PY@tok@c\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.74,0.48,0.00}{##1}}}
+\expandafter\def\csname PY@tok@k\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.69,0.00,0.25}{##1}}}
+\expandafter\def\csname PY@tok@o\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ow\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@nn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@ne\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.82,0.25,0.23}{##1}}}
+\expandafter\def\csname PY@tok@nv\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@no\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ni\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.60,0.60,0.60}{##1}}}
+\expandafter\def\csname PY@tok@na\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.49,0.56,0.16}{##1}}}
+\expandafter\def\csname PY@tok@nt\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@nd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.67,0.13,1.00}{##1}}}
+\expandafter\def\csname PY@tok@s\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sd\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@si\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@se\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sr\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.40,0.53}{##1}}}
+\expandafter\def\csname PY@tok@ss\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sx\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@m\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@gh\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gu\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.50,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@gd\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.63,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.63,0.00}{##1}}}
+\expandafter\def\csname PY@tok@gr\endcsname{\def\PY@tc##1{\textcolor[rgb]{1.00,0.00,0.00}{##1}}}
+\expandafter\def\csname PY@tok@ge\endcsname{\let\PY@it=\textit}
+\expandafter\def\csname PY@tok@gs\endcsname{\let\PY@bf=\textbf}
+\expandafter\def\csname PY@tok@gp\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,0.50}{##1}}}
+\expandafter\def\csname PY@tok@go\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.53,0.53,0.53}{##1}}}
+\expandafter\def\csname PY@tok@gt\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.27,0.87}{##1}}}
+\expandafter\def\csname PY@tok@err\endcsname{\def\PY@bc##1{\setlength{\fboxsep}{0pt}\fcolorbox[rgb]{1.00,0.00,0.00}{1,1,1}{\strut ##1}}}
+\expandafter\def\csname PY@tok@kc\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kd\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kn\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@kr\endcsname{\let\PY@bf=\textbf\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@bp\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.50,0.00}{##1}}}
+\expandafter\def\csname PY@tok@fm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.00,0.00,1.00}{##1}}}
+\expandafter\def\csname PY@tok@vc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vg\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@vm\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.10,0.09,0.49}{##1}}}
+\expandafter\def\csname PY@tok@sa\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sc\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@dl\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s2\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@sh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@s1\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.73,0.13,0.13}{##1}}}
+\expandafter\def\csname PY@tok@mb\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mf\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mh\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mi\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@il\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@mo\endcsname{\def\PY@tc##1{\textcolor[rgb]{0.40,0.40,0.40}{##1}}}
+\expandafter\def\csname PY@tok@ch\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cm\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cpf\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@c1\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+\expandafter\def\csname PY@tok@cs\endcsname{\let\PY@it=\textit\def\PY@tc##1{\textcolor[rgb]{0.25,0.50,0.50}{##1}}}
+
+\def\PYZbs{\char`\\}
+\def\PYZus{\char`\_}
+\def\PYZob{\char`\{}
+\def\PYZcb{\char`\}}
+\def\PYZca{\char`\^}
+\def\PYZam{\char`\&}
+\def\PYZlt{\char`\<}
+\def\PYZgt{\char`\>}
+\def\PYZsh{\char`\#}
+\def\PYZpc{\char`\%}
+\def\PYZdl{\char`\$}
+\def\PYZhy{\char`\-}
+\def\PYZsq{\char`\'}
+\def\PYZdq{\char`\"}
+\def\PYZti{\char`\~}
+% for compatibility with earlier versions
+\def\PYZat{@}
+\def\PYZlb{[}
+\def\PYZrb{]}
+\makeatother
+
+
+    % Exact colors from NB
+    \definecolor{incolor}{rgb}{0.0, 0.0, 0.5}
+    \definecolor{outcolor}{rgb}{0.545, 0.0, 0.0}
+
+
+
+    
+    % Prevent overflowing lines due to hard-to-break entities
+    \sloppy 
+    % Setup hyperref package
+    \hypersetup{
+      breaklinks=true,  % so long urls are correctly broken across lines
+      colorlinks=true,
+      urlcolor=urlcolor,
+      linkcolor=linkcolor,
+      citecolor=citecolor,
+      }
+    % Slightly bigger margins than the latex defaults
+    
+    \geometry{verbose,tmargin=1in,bmargin=1in,lmargin=1in,rmargin=1in}
+    
+    
+
+    \begin{document}
+    
+    
+    \maketitle
+    
+    
+
+    
+    \subsection{Using Scikit-Learn and NLTK to build a Naive Bayes
+Classifier that identifies
+subtweets}\label{using-scikit-learn-and-nltk-to-build-a-naive-bayes-classifier-that-identifies-subtweets}
+
+    \paragraph{In all tables, assume:}\label{in-all-tables-assume}
+
+\begin{itemize}
+\tightlist
+\item
+  "➊" represents a single hashtag
+\item
+  "➋" represents a single URL
+\item
+  "➌" represents a single mention of username (e.g. "@noah")
+\end{itemize}
+
+    \paragraph{Import libraries}\label{import-libraries}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}1}]:} \PY{o}{\PYZpc{}}\PY{k}{matplotlib} inline
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}2}]:} \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{feature\PYZus{}extraction} \PY{k}{import} \PY{n}{text}
+        \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{feature\PYZus{}extraction}\PY{n+nn}{.}\PY{n+nn}{text} \PY{k}{import} \PY{n}{TfidfVectorizer}
+        \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{naive\PYZus{}bayes} \PY{k}{import} \PY{n}{MultinomialNB}
+        \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{pipeline} \PY{k}{import} \PY{n}{Pipeline}
+        \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{model\PYZus{}selection} \PY{k}{import} \PY{n}{KFold}
+        \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{metrics} \PY{k}{import} \PY{n}{classification\PYZus{}report}\PY{p}{,} \PY{n}{confusion\PYZus{}matrix}\PY{p}{,} \PY{n}{accuracy\PYZus{}score}
+        \PY{k+kn}{from} \PY{n+nn}{sklearn}\PY{n+nn}{.}\PY{n+nn}{externals} \PY{k}{import} \PY{n}{joblib}
+        \PY{k+kn}{from} \PY{n+nn}{nltk}\PY{n+nn}{.}\PY{n+nn}{corpus} \PY{k}{import} \PY{n}{stopwords}
+        \PY{k+kn}{from} \PY{n+nn}{random} \PY{k}{import} \PY{n}{choice}
+        \PY{k+kn}{from} \PY{n+nn}{string} \PY{k}{import} \PY{n}{punctuation}
+        
+        \PY{k+kn}{import} \PY{n+nn}{matplotlib}\PY{n+nn}{.}\PY{n+nn}{pyplot} \PY{k}{as} \PY{n+nn}{plt}
+        \PY{k+kn}{import} \PY{n+nn}{pandas} \PY{k}{as} \PY{n+nn}{pd}
+        \PY{k+kn}{import} \PY{n+nn}{numpy} \PY{k}{as} \PY{n+nn}{np}
+        
+        \PY{k+kn}{import} \PY{n+nn}{scipy}\PY{n+nn}{.}\PY{n+nn}{stats}
+        \PY{k+kn}{import} \PY{n+nn}{itertools}
+        \PY{k+kn}{import} \PY{n+nn}{enchant}
+        \PY{k+kn}{import} \PY{n+nn}{nltk}
+        \PY{k+kn}{import} \PY{n+nn}{json}
+        \PY{k+kn}{import} \PY{n+nn}{re}
+\end{Verbatim}
+
+
+    \paragraph{Set up some regex patterns}\label{set-up-some-regex-patterns}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}3}]:} \PY{n}{hashtags\PYZus{}pattern} \PY{o}{=} \PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{(}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{\PYZsh{}[a\PYZhy{}zA\PYZhy{}Z0\PYZhy{}9]+)}\PY{l+s+s1}{\PYZsq{}}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}4}]:} \PY{n}{urls\PYZus{}pattern} \PY{o}{=} \PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{(?i)}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{b((?:https?://|www}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{d}\PY{l+s+s1}{\PYZob{}}\PY{l+s+s1}{0,3\PYZcb{}[.]|[a\PYZhy{}z0\PYZhy{}9.}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{\PYZhy{}]+[.][a\PYZhy{}z]}\PY{l+s+s1}{\PYZob{}}\PY{l+s+s1}{2,4\PYZcb{}/)(?:[\PYZca{}}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{s()\PYZlt{}\PYZgt{}]|}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{(([\PYZca{}}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{s()\PYZlt{}\PYZgt{}]+|(}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{([\PYZca{}}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{s()\PYZlt{}\PYZgt{}]+}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{)))*}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{))+(?:}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{(([\PYZca{}}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{s()\PYZlt{}\PYZgt{}]+|(}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{([\PYZca{}}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{s()\PYZlt{}\PYZgt{}]+}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{)))*}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{)|[\PYZca{}}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{s`!()}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{[}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{]}\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s1}{;:}\PY{l+s+se}{\PYZbs{}\PYZsq{}}\PY{l+s+s1}{\PYZdq{}}\PY{l+s+s1}{.,\PYZlt{}\PYZgt{}?}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{xab}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{xbb}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{u201c}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{u201d}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{u2018}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{u2019]))}\PY{l+s+s1}{\PYZsq{}}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}5}]:} \PY{n}{at\PYZus{}mentions\PYZus{}pattern} \PY{o}{=} \PY{l+s+sa}{r}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{(?\PYZlt{}=\PYZca{}|(?\PYZlt{}=[\PYZca{}a\PYZhy{}zA\PYZhy{}Z0\PYZhy{}9\PYZhy{}}\PY{l+s+s1}{\PYZbs{}}\PY{l+s+s1}{.]))@([A\PYZhy{}Za\PYZhy{}z0\PYZhy{}9\PYZus{}]+)}\PY{l+s+s1}{\PYZsq{}}
+\end{Verbatim}
+
+
+    \paragraph{Prepare English dictionary for language
+detection}\label{prepare-english-dictionary-for-language-detection}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}6}]:} \PY{n}{english\PYZus{}dict} \PY{o}{=} \PY{n}{enchant}\PY{o}{.}\PY{n}{Dict}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{en\PYZus{}US}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \paragraph{Use NLTK's tokenizer instead of
+Scikit's}\label{use-nltks-tokenizer-instead-of-scikits}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}7}]:} \PY{n}{tokenizer} \PY{o}{=} \PY{n}{nltk}\PY{o}{.}\PY{n}{casual}\PY{o}{.}\PY{n}{TweetTokenizer}\PY{p}{(}\PY{n}{preserve\PYZus{}case}\PY{o}{=}\PY{k+kc}{False}\PY{p}{,} \PY{n}{reduce\PYZus{}len}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\end{Verbatim}
+
+
+    \paragraph{Prepare for viewing long text in CSVs and ones with really
+big and small
+numbers}\label{prepare-for-viewing-long-text-in-csvs-and-ones-with-really-big-and-small-numbers}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}8}]:} \PY{n}{pd}\PY{o}{.}\PY{n}{set\PYZus{}option}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{max\PYZus{}colwidth}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+m+mi}{280}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}9}]:} \PY{n}{pd}\PY{o}{.}\PY{n}{options}\PY{o}{.}\PY{n}{display}\PY{o}{.}\PY{n}{float\PYZus{}format} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+si}{\PYZob{}:.4f\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}
+\end{Verbatim}
+
+
+    \paragraph{Load the two data files}\label{load-the-two-data-files}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}10}]:} \PY{n}{subtweets\PYZus{}data} \PY{o}{=} \PY{p}{[}\PY{n}{t} \PY{k}{for} \PY{n}{t} \PY{o+ow}{in} \PY{n}{json}\PY{o}{.}\PY{n}{load}\PY{p}{(}\PY{n+nb}{open}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{../data/other\PYZus{}data/subtweets.json}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{)} 
+                           \PY{k}{if} \PY{n}{t}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{tweet\PYZus{}data}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{user}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{lang}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{en}\PY{l+s+s2}{\PYZdq{}} 
+                           \PY{o+ow}{and} \PY{n}{t}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{reply}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{user}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{lang}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{en}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}11}]:} \PY{n}{non\PYZus{}subtweets\PYZus{}data} \PY{o}{=} \PY{p}{[}\PY{n}{t} \PY{k}{for} \PY{n}{t} \PY{o+ow}{in} \PY{n}{json}\PY{o}{.}\PY{n}{load}\PY{p}{(}\PY{n+nb}{open}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{../data/other\PYZus{}data/non\PYZus{}subtweets.json}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{)} 
+                               \PY{k}{if} \PY{n}{t}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{tweet\PYZus{}data}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{user}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{lang}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{en}\PY{l+s+s2}{\PYZdq{}} 
+                               \PY{o+ow}{and} \PY{n}{t}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{reply}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{user}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{lang}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{==} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{en}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\end{Verbatim}
+
+
+    \paragraph{Only use tweets with at least 50\% English
+words}\label{only-use-tweets-with-at-least-50-english-words}
+
+\paragraph{Also, make the mentions of usernames, URLs, and hashtags
+generic}\label{also-make-the-mentions-of-usernames-urls-and-hashtags-generic}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}12}]:} \PY{o}{\PYZpc{}\PYZpc{}}\PY{k}{time}
+         subtweets\PYZus{}data = [(re.sub(hashtags\PYZus{}pattern, 
+                                   \PYZdq{}➊\PYZdq{}, 
+                                   re.sub(urls\PYZus{}pattern, 
+                                          \PYZdq{}➋\PYZdq{}, 
+                                          re.sub(at\PYZus{}mentions\PYZus{}pattern, 
+                                                 \PYZdq{}➌\PYZdq{}, 
+                                                 t[\PYZdq{}tweet\PYZus{}data\PYZdq{}][\PYZdq{}full\PYZus{}text\PYZdq{}])))
+                            .replace(\PYZdq{}\PYZbs{}u2018\PYZdq{}, \PYZdq{}\PYZsq{}\PYZdq{})
+                            .replace(\PYZdq{}\PYZbs{}u2019\PYZdq{}, \PYZdq{}\PYZsq{}\PYZdq{})
+                            .replace(\PYZdq{}\PYZam{}quot;\PYZdq{}, \PYZdq{}\PYZbs{}\PYZdq{}\PYZdq{})
+                            .replace(\PYZdq{}\PYZam{}amp;\PYZdq{}, \PYZdq{}\PYZam{}\PYZdq{})
+                            .replace(\PYZdq{}\PYZam{}gt;\PYZdq{}, \PYZdq{}\PYZgt{}\PYZdq{})
+                            .replace(\PYZdq{}\PYZam{}lt;\PYZdq{}, \PYZdq{}\PYZlt{}\PYZdq{}))
+                           for t in subtweets\PYZus{}data]
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+CPU times: user 248 ms, sys: 6.69 ms, total: 255 ms
+Wall time: 253 ms
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}13}]:} \PY{n}{new\PYZus{}subtweets\PYZus{}data} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+         \PY{k}{for} \PY{n}{tweet} \PY{o+ow}{in} \PY{n}{subtweets\PYZus{}data}\PY{p}{:}
+             \PY{n}{tokens} \PY{o}{=} \PY{n}{tokenizer}\PY{o}{.}\PY{n}{tokenize}\PY{p}{(}\PY{n}{tweet}\PY{p}{)}
+             \PY{n}{english\PYZus{}tokens} \PY{o}{=} \PY{p}{[}\PY{n}{english\PYZus{}dict}\PY{o}{.}\PY{n}{check}\PY{p}{(}\PY{n}{token}\PY{p}{)} \PY{k}{for} \PY{n}{token} \PY{o+ow}{in} \PY{n}{tokens}\PY{p}{]}
+             \PY{n}{percent\PYZus{}english\PYZus{}words} \PY{o}{=} \PY{n+nb}{sum}\PY{p}{(}\PY{n}{english\PYZus{}tokens}\PY{p}{)}\PY{o}{/}\PY{n+nb}{len}\PY{p}{(}\PY{n}{english\PYZus{}tokens}\PY{p}{)}
+             \PY{k}{if} \PY{n}{percent\PYZus{}english\PYZus{}words} \PY{o}{\PYZgt{}}\PY{o}{=} \PY{l+m+mf}{0.5}\PY{p}{:}
+                 \PY{n}{new\PYZus{}subtweets\PYZus{}data}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{tweet}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}14}]:} \PY{o}{\PYZpc{}\PYZpc{}}\PY{k}{time}
+         non\PYZus{}subtweets\PYZus{}data = [(re.sub(hashtags\PYZus{}pattern, 
+                                       \PYZdq{}➊\PYZdq{}, 
+                                       re.sub(urls\PYZus{}pattern, 
+                                              \PYZdq{}➋\PYZdq{}, 
+                                              re.sub(at\PYZus{}mentions\PYZus{}pattern, 
+                                                     \PYZdq{}➌\PYZdq{}, 
+                                                     t[\PYZdq{}tweet\PYZus{}data\PYZdq{}][\PYZdq{}full\PYZus{}text\PYZdq{}])))
+                                .replace(\PYZdq{}\PYZbs{}u2018\PYZdq{}, \PYZdq{}\PYZsq{}\PYZdq{})
+                                .replace(\PYZdq{}\PYZbs{}u2019\PYZdq{}, \PYZdq{}\PYZsq{}\PYZdq{})
+                                .replace(\PYZdq{}\PYZam{}quot;\PYZdq{}, \PYZdq{}\PYZbs{}\PYZdq{}\PYZdq{})
+                                .replace(\PYZdq{}\PYZam{}amp;\PYZdq{}, \PYZdq{}\PYZam{}\PYZdq{})
+                                .replace(\PYZdq{}\PYZam{}gt;\PYZdq{}, \PYZdq{}\PYZgt{}\PYZdq{})
+                                .replace(\PYZdq{}\PYZam{}lt;\PYZdq{}, \PYZdq{}\PYZlt{}\PYZdq{}))
+                               for t in non\PYZus{}subtweets\PYZus{}data]
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+CPU times: user 466 ms, sys: 34.2 ms, total: 500 ms
+Wall time: 506 ms
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}15}]:} \PY{n}{new\PYZus{}non\PYZus{}subtweets\PYZus{}data} \PY{o}{=} \PY{p}{[}\PY{p}{]}
+         \PY{k}{for} \PY{n}{tweet} \PY{o+ow}{in} \PY{n}{non\PYZus{}subtweets\PYZus{}data}\PY{p}{:}
+             \PY{n}{tokens} \PY{o}{=} \PY{n}{tokenizer}\PY{o}{.}\PY{n}{tokenize}\PY{p}{(}\PY{n}{tweet}\PY{p}{)}
+             \PY{n}{english\PYZus{}tokens} \PY{o}{=} \PY{p}{[}\PY{n}{english\PYZus{}dict}\PY{o}{.}\PY{n}{check}\PY{p}{(}\PY{n}{token}\PY{p}{)} \PY{k}{for} \PY{n}{token} \PY{o+ow}{in} \PY{n}{tokens}\PY{p}{]}
+             \PY{n}{percent\PYZus{}english\PYZus{}words} \PY{o}{=} \PY{n+nb}{sum}\PY{p}{(}\PY{n}{english\PYZus{}tokens}\PY{p}{)}\PY{o}{/}\PY{n+nb}{len}\PY{p}{(}\PY{n}{english\PYZus{}tokens}\PY{p}{)}
+             \PY{k}{if} \PY{n}{percent\PYZus{}english\PYZus{}words} \PY{o}{\PYZgt{}}\PY{o}{=} \PY{l+m+mf}{0.5}\PY{p}{:}
+                 \PY{n}{new\PYZus{}non\PYZus{}subtweets\PYZus{}data}\PY{o}{.}\PY{n}{append}\PY{p}{(}\PY{n}{tweet}\PY{p}{)}
+\end{Verbatim}
+
+
+    \paragraph{Show examples}\label{show-examples}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}16}]:} \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Subtweets dataset example:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{choice}\PY{p}{(}\PY{n}{new\PYZus{}subtweets\PYZus{}data}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Subtweets dataset example:
+I'm just noticing how many people celebrate Easter{\ldots}
+
+    \end{Verbatim}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}17}]:} \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Non\PYZhy{}subtweets dataset example:}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+         \PY{n+nb}{print}\PY{p}{(}\PY{n}{choice}\PY{p}{(}\PY{n}{new\PYZus{}non\PYZus{}subtweets\PYZus{}data}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Non-subtweets dataset example:
+damn should i go outside !
+
+    \end{Verbatim}
+
+    \paragraph{Find the length of the smaller
+dataset}\label{find-the-length-of-the-smaller-dataset}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}18}]:} \PY{n}{smallest\PYZus{}length} \PY{o}{=} \PY{n+nb}{len}\PY{p}{(}\PY{n+nb}{min}\PY{p}{(}\PY{p}{[}\PY{n}{new\PYZus{}subtweets\PYZus{}data}\PY{p}{,} \PY{n}{new\PYZus{}non\PYZus{}subtweets\PYZus{}data}\PY{p}{]}\PY{p}{,} \PY{n}{key}\PY{o}{=}\PY{n+nb}{len}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \paragraph{Cut both down to be the same
+length}\label{cut-both-down-to-be-the-same-length}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}19}]:} \PY{n}{subtweets\PYZus{}data} \PY{o}{=} \PY{n}{new\PYZus{}subtweets\PYZus{}data}\PY{p}{[}\PY{p}{:}\PY{n}{smallest\PYZus{}length}\PY{p}{]}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}20}]:} \PY{n}{non\PYZus{}subtweets\PYZus{}data} \PY{o}{=} \PY{n}{new\PYZus{}non\PYZus{}subtweets\PYZus{}data}\PY{p}{[}\PY{p}{:}\PY{n}{smallest\PYZus{}length}\PY{p}{]}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}21}]:} \PY{n+nb}{print}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Smallest dataset length: }\PY{l+s+si}{\PYZob{}\PYZcb{}}\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{format}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{non\PYZus{}subtweets\PYZus{}data}\PY{p}{)}\PY{p}{)}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Smallest dataset length: 7837
+
+    \end{Verbatim}
+
+    \paragraph{Prepare data for training}\label{prepare-data-for-training}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}22}]:} \PY{n}{subtweets\PYZus{}data} \PY{o}{=} \PY{p}{[}\PY{p}{(}\PY{n}{tweet}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{subtweet}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{k}{for} \PY{n}{tweet} \PY{o+ow}{in} \PY{n}{subtweets\PYZus{}data}\PY{p}{]}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}23}]:} \PY{n}{non\PYZus{}subtweets\PYZus{}data} \PY{o}{=} \PY{p}{[}\PY{p}{(}\PY{n}{tweet}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{non\PYZhy{}subtweet}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{k}{for} \PY{n}{tweet} \PY{o+ow}{in} \PY{n}{non\PYZus{}subtweets\PYZus{}data}\PY{p}{]}
+\end{Verbatim}
+
+
+    \paragraph{Combine them}\label{combine-them}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}24}]:} \PY{n}{training\PYZus{}data} \PY{o}{=} \PY{n}{subtweets\PYZus{}data} \PY{o}{+} \PY{n}{non\PYZus{}subtweets\PYZus{}data}
+\end{Verbatim}
+
+
+    \paragraph{Create custom stop words to include generic usernames, URLs,
+and hashtags, as well as common English first
+names}\label{create-custom-stop-words-to-include-generic-usernames-urls-and-hashtags-as-well-as-common-english-first-names}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}25}]:} \PY{n}{names\PYZus{}lower} \PY{o}{=} \PY{n+nb}{set}\PY{p}{(}\PY{p}{[}\PY{n}{name}\PY{o}{.}\PY{n}{lower}\PY{p}{(}\PY{p}{)} \PY{k}{for} \PY{n}{name} \PY{o+ow}{in} \PY{n+nb}{open}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{../data/other\PYZus{}data/first\PYZus{}names.txt}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{o}{.}\PY{n}{read}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{split}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+se}{\PYZbs{}n}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}26}]:} \PY{n}{generic\PYZus{}tokens} \PY{o}{=} \PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{➊}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{➋}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{➌}\PY{l+s+s2}{\PYZdq{}}\PY{p}{\PYZcb{}}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}27}]:} \PY{n}{stop\PYZus{}words} \PY{o}{=} \PY{n}{text}\PY{o}{.}\PY{n}{ENGLISH\PYZus{}STOP\PYZus{}WORDS} \PY{o}{|} \PY{n}{names\PYZus{}lower} \PY{o}{|} \PY{n}{generic\PYZus{}tokens}
+\end{Verbatim}
+
+
+    \paragraph{Build the pipeline}\label{build-the-pipeline}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}28}]:} \PY{n}{sentiment\PYZus{}pipeline} \PY{o}{=} \PY{n}{Pipeline}\PY{p}{(}\PY{p}{[}
+             \PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{vectorizer}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{TfidfVectorizer}\PY{p}{(}\PY{n}{tokenizer}\PY{o}{=}\PY{n}{tokenizer}\PY{o}{.}\PY{n}{tokenize}\PY{p}{,} 
+                                            \PY{n}{ngram\PYZus{}range}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{1}\PY{p}{,} \PY{l+m+mi}{3}\PY{p}{)}\PY{p}{,} 
+                                            \PY{n}{stop\PYZus{}words}\PY{o}{=}\PY{n}{stop\PYZus{}words}\PY{p}{)}\PY{p}{)}\PY{p}{,}
+             \PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{classifier}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{MultinomialNB}\PY{p}{(}\PY{p}{)}\PY{p}{)}
+         \PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+
+
+    \paragraph{K-Folds splits up and separates out 10 training and test sets
+from the data, from which the classifier is trained and the confusion
+matrix and classification reports are
+updated}\label{k-folds-splits-up-and-separates-out-10-training-and-test-sets-from-the-data-from-which-the-classifier-is-trained-and-the-confusion-matrix-and-classification-reports-are-updated}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}29}]:} \PY{n}{text\PYZus{}training\PYZus{}data} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{n}{row}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{k}{for} \PY{n}{row} \PY{o+ow}{in} \PY{n}{training\PYZus{}data}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}30}]:} \PY{n}{class\PYZus{}training\PYZus{}data} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{array}\PY{p}{(}\PY{p}{[}\PY{n}{row}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]} \PY{k}{for} \PY{n}{row} \PY{o+ow}{in} \PY{n}{training\PYZus{}data}\PY{p}{]}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}31}]:} \PY{n}{num\PYZus{}folds}\PY{o}{=}\PY{l+m+mi}{10}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}32}]:} \PY{n}{kf} \PY{o}{=} \PY{n}{KFold}\PY{p}{(}\PY{n}{n\PYZus{}splits}\PY{o}{=}\PY{n}{num\PYZus{}folds}\PY{p}{,} \PY{n}{random\PYZus{}state}\PY{o}{=}\PY{l+m+mi}{42}\PY{p}{,} \PY{n}{shuffle}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}33}]:} \PY{o}{\PYZpc{}\PYZpc{}}\PY{k}{time}
+         cnf\PYZus{}matrix = np.zeros((2, 2), dtype=int)
+         for i, (train\PYZus{}index, test\PYZus{}index) in enumerate(kf.split(text\PYZus{}training\PYZus{}data)):
+             
+             text\PYZus{}train, text\PYZus{}test = text\PYZus{}training\PYZus{}data[train\PYZus{}index], text\PYZus{}training\PYZus{}data[test\PYZus{}index]
+             class\PYZus{}train, class\PYZus{}test = class\PYZus{}training\PYZus{}data[train\PYZus{}index], class\PYZus{}training\PYZus{}data[test\PYZus{}index]
+             
+             sentiment\PYZus{}pipeline.fit(text\PYZus{}train, class\PYZus{}train)
+             predictions = sentiment\PYZus{}pipeline.predict(text\PYZus{}test)
+                 
+             cnf\PYZus{}matrix += confusion\PYZus{}matrix(class\PYZus{}test, predictions)
+             
+             print(\PYZdq{}Iteration \PYZob{}\PYZcb{}\PYZdq{}.format(i+1))
+             print(classification\PYZus{}report(class\PYZus{}test, predictions, digits=3))
+             print(\PYZdq{}null accuracy: \PYZob{}:.3f\PYZcb{}\PYZbs{}n\PYZdq{}.format(max(pd.value\PYZus{}counts(pd.Series(class\PYZus{}test)))/float(len(class\PYZus{}test))))
+             print(\PYZdq{}=\PYZdq{}*53)
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+Iteration 1
+              precision    recall  f1-score   support
+
+non-subtweet      0.732     0.644     0.685       793
+    subtweet      0.676     0.759     0.715       775
+
+ avg / total      0.704     0.701     0.700      1568
+
+null accuracy: 0.506
+
+=====================================================
+Iteration 2
+              precision    recall  f1-score   support
+
+non-subtweet      0.688     0.631     0.658       789
+    subtweet      0.655     0.710     0.681       779
+
+ avg / total      0.672     0.670     0.670      1568
+
+null accuracy: 0.503
+
+=====================================================
+Iteration 3
+              precision    recall  f1-score   support
+
+non-subtweet      0.703     0.685     0.694       769
+    subtweet      0.704     0.721     0.712       799
+
+ avg / total      0.703     0.703     0.703      1568
+
+null accuracy: 0.510
+
+=====================================================
+Iteration 4
+              precision    recall  f1-score   support
+
+non-subtweet      0.731     0.639     0.682       801
+    subtweet      0.667     0.755     0.708       767
+
+ avg / total      0.700     0.696     0.695      1568
+
+null accuracy: 0.511
+
+=====================================================
+Iteration 5
+              precision    recall  f1-score   support
+
+non-subtweet      0.708     0.656     0.681       779
+    subtweet      0.683     0.732     0.707       788
+
+ avg / total      0.695     0.694     0.694      1567
+
+null accuracy: 0.503
+
+=====================================================
+Iteration 6
+              precision    recall  f1-score   support
+
+non-subtweet      0.684     0.662     0.673       758
+    subtweet      0.693     0.713     0.703       809
+
+ avg / total      0.688     0.689     0.688      1567
+
+null accuracy: 0.516
+
+=====================================================
+Iteration 7
+              precision    recall  f1-score   support
+
+non-subtweet      0.699     0.630     0.662       751
+    subtweet      0.688     0.750     0.717       816
+
+ avg / total      0.693     0.692     0.691      1567
+
+null accuracy: 0.521
+
+=====================================================
+Iteration 8
+              precision    recall  f1-score   support
+
+non-subtweet      0.733     0.643     0.685       812
+    subtweet      0.661     0.748     0.702       755
+
+ avg / total      0.698     0.694     0.693      1567
+
+null accuracy: 0.518
+
+=====================================================
+Iteration 9
+              precision    recall  f1-score   support
+
+non-subtweet      0.731     0.642     0.683       829
+    subtweet      0.646     0.734     0.687       738
+
+ avg / total      0.691     0.685     0.685      1567
+
+null accuracy: 0.529
+
+=====================================================
+Iteration 10
+              precision    recall  f1-score   support
+
+non-subtweet      0.707     0.681     0.694       756
+    subtweet      0.713     0.737     0.725       811
+
+ avg / total      0.710     0.710     0.710      1567
+
+null accuracy: 0.518
+
+=====================================================
+CPU times: user 39.3 s, sys: 810 ms, total: 40.2 s
+Wall time: 40.4 s
+
+    \end{Verbatim}
+
+    \paragraph{See the most informative
+features}\label{see-the-most-informative-features}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}34}]:} \PY{k}{def} \PY{n+nf}{most\PYZus{}informative\PYZus{}features}\PY{p}{(}\PY{n}{pipeline}\PY{p}{,} \PY{n}{n}\PY{o}{=}\PY{l+m+mi}{50}\PY{p}{)}\PY{p}{:}
+             \PY{n}{vectorizer} \PY{o}{=} \PY{n}{pipeline}\PY{o}{.}\PY{n}{named\PYZus{}steps}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{vectorizer}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+             \PY{n}{classifier} \PY{o}{=} \PY{n}{pipeline}\PY{o}{.}\PY{n}{named\PYZus{}steps}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{classifier}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+             
+             \PY{n}{class\PYZus{}labels} \PY{o}{=} \PY{n}{classifier}\PY{o}{.}\PY{n}{classes\PYZus{}}
+             
+             \PY{n}{feature\PYZus{}names} \PY{o}{=} \PY{n}{vectorizer}\PY{o}{.}\PY{n}{get\PYZus{}feature\PYZus{}names}\PY{p}{(}\PY{p}{)}
+             
+             \PY{n}{top\PYZus{}n\PYZus{}class\PYZus{}1} \PY{o}{=} \PY{n+nb}{sorted}\PY{p}{(}\PY{n+nb}{zip}\PY{p}{(}\PY{n}{classifier}\PY{o}{.}\PY{n}{coef\PYZus{}}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,} \PY{n}{feature\PYZus{}names}\PY{p}{)}\PY{p}{)}\PY{p}{[}\PY{p}{:}\PY{n}{n}\PY{p}{]}
+             \PY{n}{top\PYZus{}n\PYZus{}class\PYZus{}2} \PY{o}{=} \PY{n+nb}{sorted}\PY{p}{(}\PY{n+nb}{zip}\PY{p}{(}\PY{n}{classifier}\PY{o}{.}\PY{n}{coef\PYZus{}}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{,} \PY{n}{feature\PYZus{}names}\PY{p}{)}\PY{p}{)}\PY{p}{[}\PY{o}{\PYZhy{}}\PY{n}{n}\PY{p}{:}\PY{p}{]}
+             
+             \PY{k}{return} \PY{p}{\PYZob{}}\PY{n}{class\PYZus{}labels}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{:} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Weight}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{p}{[}\PY{n}{tup}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{k}{for} \PY{n}{tup} \PY{o+ow}{in} \PY{n}{top\PYZus{}n\PYZus{}class\PYZus{}1}\PY{p}{]}\PY{p}{,} 
+                                                    \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Feature}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{p}{[}\PY{n}{tup}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]} \PY{k}{for} \PY{n}{tup} \PY{o+ow}{in} \PY{n}{top\PYZus{}n\PYZus{}class\PYZus{}1}\PY{p}{]}\PY{p}{\PYZcb{}}\PY{p}{)}\PY{p}{,} 
+                     \PY{n}{class\PYZus{}labels}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{:} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Weight}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{p}{[}\PY{n}{tup}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]} \PY{k}{for} \PY{n}{tup} \PY{o+ow}{in} \PY{n+nb}{reversed}\PY{p}{(}\PY{n}{top\PYZus{}n\PYZus{}class\PYZus{}2}\PY{p}{)}\PY{p}{]}\PY{p}{,}
+                                                    \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Feature}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{p}{[}\PY{n}{tup}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]} \PY{k}{for} \PY{n}{tup} \PY{o+ow}{in} \PY{n+nb}{reversed}\PY{p}{(}\PY{n}{top\PYZus{}n\PYZus{}class\PYZus{}2}\PY{p}{)}\PY{p}{]}\PY{p}{\PYZcb{}}\PY{p}{)}\PY{p}{\PYZcb{}}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}35}]:} \PY{n}{most\PYZus{}informative\PYZus{}features\PYZus{}all} \PY{o}{=} \PY{n}{most\PYZus{}informative\PYZus{}features}\PY{p}{(}\PY{n}{sentiment\PYZus{}pipeline}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}36}]:} \PY{n}{most\PYZus{}informative\PYZus{}features\PYZus{}non\PYZus{}subtweet} \PY{o}{=} \PY{n}{most\PYZus{}informative\PYZus{}features\PYZus{}all}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{non\PYZhy{}subtweet}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}37}]:} \PY{n}{most\PYZus{}informative\PYZus{}features\PYZus{}subtweet} \PY{o}{=} \PY{n}{most\PYZus{}informative\PYZus{}features\PYZus{}all}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{subtweet}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}38}]:} \PY{n}{most\PYZus{}informative\PYZus{}features\PYZus{}non\PYZus{}subtweet}\PY{o}{.}\PY{n}{join}\PY{p}{(}\PY{n}{most\PYZus{}informative\PYZus{}features\PYZus{}subtweet}\PY{p}{,} 
+                                                     \PY{n}{lsuffix}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ (Non\PYZhy{}subtweet)}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                                                     \PY{n}{rsuffix}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ (Subtweet)}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}38}]:}    Feature (Non-subtweet)  Weight (Non-subtweet) Feature (Subtweet)  \textbackslash{}
+         0                   ! ! \&               -12.6640                  .   
+         1                   ! ! (               -12.6640                  ,   
+         2                   ! ! )               -12.6640             people   
+         3                   ! ! .               -12.6640                  ?   
+         4                 ! ! 100               -12.6640              don't   
+         5                  ! ! 15               -12.6640               like   
+         6                   ! ! 3               -12.6640                  "   
+         7                   ! ! 5               -12.6640               just   
+         8                 ! ! 8am               -12.6640                i'm   
+         9                  ! ! :)               -12.6640                  !   
+         10                 ! ! ;)               -12.6640               it's   
+         11         ! ! absolutely               -12.6640                {\ldots}   
+         12            ! ! amazing               -12.6640             you're   
+         13                ! ! ask               -12.6640                  :   
+         14            ! ! awesome               -12.6640               know   
+         15                ! ! big               -12.6640            twitter   
+         16               ! ! bite               -12.6640            friends   
+         17              ! ! close               -12.6640                  ”   
+         18         ! ! collection               -12.6640                  “   
+         19               ! ! come               -12.6640               time   
+         20              ! ! don't               -12.6640               want   
+         21              ! ! enter               -12.6640                  u   
+         22               ! ! epic               -12.6640             really   
+         23          ! ! extremely               -12.6640               shit   
+         24             ! ! family               -12.6640               good   
+         25            ! ! finally               -12.6640              think   
+         26            ! ! glasgow               -12.6640               make   
+         27              ! ! guess               -12.6640                  😂   
+         28              ! ! happy               -12.6640              can't   
+         29            ! ! hardest               -12.6640                  *   
+         30               ! ! he's               -12.6640               need   
+         31           ! ! homeland               -12.6640               fuck   
+         32              ! ! isn't               -12.6640              tweet   
+         33               ! ! it's               -12.6640                say   
+         34               ! ! know               -12.6640               stop   
+         35               ! ! like               -12.6640                  )   
+         36                ! ! lol               -12.6640                  -   
+         37            ! ! looking               -12.6640                  /   
+         38              ! ! looks               -12.6640                lol   
+         39                ! ! lov               -12.6640             person   
+         40              ! ! loved               -12.6640            fucking   
+         41             ! ! maaawd               -12.6640               life   
+         42               ! ! maga               -12.6640               hate   
+         43               ! ! make               -12.6640                got   
+         44              ! ! maybe               -12.6640              y'all   
+         45               ! ! need               -12.6640                  '   
+         46               ! ! omfg               -12.6640                  (   
+         47               ! ! open               -12.6640                ! !   
+         48             ! ! packed               -12.6640              thing   
+         49             ! ! people               -12.6640                  @   
+         
+             Weight (Subtweet)  
+         0             -7.5326  
+         1             -7.9221  
+         2             -8.3929  
+         3             -8.4622  
+         4             -8.5613  
+         5             -8.5917  
+         6             -8.6097  
+         7             -8.6781  
+         8             -8.6996  
+         9             -8.9060  
+         10            -8.9756  
+         11            -9.0457  
+         12            -9.0515  
+         13            -9.0737  
+         14            -9.0953  
+         15            -9.1468  
+         16            -9.1676  
+         17            -9.2655  
+         18            -9.2730  
+         19            -9.2904  
+         20            -9.2949  
+         21            -9.3026  
+         22            -9.3542  
+         23            -9.3723  
+         24            -9.4043  
+         25            -9.4184  
+         26            -9.4248  
+         27            -9.4359  
+         28            -9.4544  
+         29            -9.5023  
+         30            -9.5308  
+         31            -9.5328  
+         32            -9.5364  
+         33            -9.5649  
+         34            -9.6284  
+         35            -9.6436  
+         36            -9.6666  
+         37            -9.6850  
+         38            -9.6878  
+         39            -9.6952  
+         40            -9.7133  
+         41            -9.7144  
+         42            -9.7286  
+         43            -9.7451  
+         44            -9.7635  
+         45            -9.7664  
+         46            -9.7790  
+         47            -9.7901  
+         48            -9.7926  
+         49            -9.7958  
+\end{Verbatim}
+            
+    \paragraph{Define function for visualizing confusion
+matrices}\label{define-function-for-visualizing-confusion-matrices}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}39}]:} \PY{k}{def} \PY{n+nf}{plot\PYZus{}confusion\PYZus{}matrix}\PY{p}{(}\PY{n}{cm}\PY{p}{,} \PY{n}{classes}\PY{p}{,} \PY{n}{normalize}\PY{o}{=}\PY{k+kc}{False}\PY{p}{,}
+                                   \PY{n}{title}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Confusion Matrix}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{cmap}\PY{o}{=}\PY{n}{plt}\PY{o}{.}\PY{n}{cm}\PY{o}{.}\PY{n}{Blues}\PY{p}{)}\PY{p}{:}
+             \PY{k}{if} \PY{n}{normalize}\PY{p}{:}
+                 \PY{n}{cm} \PY{o}{=} \PY{n}{cm}\PY{o}{.}\PY{n}{astype}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{float}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)} \PY{o}{/} \PY{n}{cm}\PY{o}{.}\PY{n}{sum}\PY{p}{(}\PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{n}{np}\PY{o}{.}\PY{n}{newaxis}\PY{p}{]}
+         
+             \PY{n}{plt}\PY{o}{.}\PY{n}{imshow}\PY{p}{(}\PY{n}{cm}\PY{p}{,} \PY{n}{interpolation}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{nearest}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{cmap}\PY{o}{=}\PY{n}{cmap}\PY{p}{)}
+             \PY{n}{plt}\PY{o}{.}\PY{n}{title}\PY{p}{(}\PY{n}{title}\PY{p}{)}
+             \PY{n}{plt}\PY{o}{.}\PY{n}{colorbar}\PY{p}{(}\PY{p}{)}
+             \PY{n}{tick\PYZus{}marks} \PY{o}{=} \PY{n}{np}\PY{o}{.}\PY{n}{arange}\PY{p}{(}\PY{n+nb}{len}\PY{p}{(}\PY{n}{classes}\PY{p}{)}\PY{p}{)}
+             \PY{n}{plt}\PY{o}{.}\PY{n}{xticks}\PY{p}{(}\PY{n}{tick\PYZus{}marks}\PY{p}{,} \PY{n}{classes}\PY{p}{,} \PY{n}{rotation}\PY{o}{=}\PY{l+m+mi}{45}\PY{p}{)}
+             \PY{n}{plt}\PY{o}{.}\PY{n}{yticks}\PY{p}{(}\PY{n}{tick\PYZus{}marks}\PY{p}{,} \PY{n}{classes}\PY{p}{)}
+         
+             \PY{n}{fmt} \PY{o}{=} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{.2f}\PY{l+s+s2}{\PYZdq{}} \PY{k}{if} \PY{n}{normalize} \PY{k}{else} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{d}\PY{l+s+s2}{\PYZdq{}}
+             \PY{n}{thresh} \PY{o}{=} \PY{n}{cm}\PY{o}{.}\PY{n}{max}\PY{p}{(}\PY{p}{)} \PY{o}{/} \PY{l+m+mf}{2.}
+             \PY{k}{for} \PY{n}{i}\PY{p}{,} \PY{n}{j} \PY{o+ow}{in} \PY{n}{itertools}\PY{o}{.}\PY{n}{product}\PY{p}{(}\PY{n+nb}{range}\PY{p}{(}\PY{n}{cm}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)}\PY{p}{,} \PY{n+nb}{range}\PY{p}{(}\PY{n}{cm}\PY{o}{.}\PY{n}{shape}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}\PY{p}{)}\PY{p}{)}\PY{p}{:}
+                 \PY{n}{plt}\PY{o}{.}\PY{n}{text}\PY{p}{(}\PY{n}{j}\PY{p}{,} \PY{n}{i}\PY{p}{,} \PY{n+nb}{format}\PY{p}{(}\PY{n}{cm}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{n}{j}\PY{p}{]}\PY{p}{,} \PY{n}{fmt}\PY{p}{)}\PY{p}{,}
+                          \PY{n}{horizontalalignment}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{center}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+                          \PY{n}{color}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{white}\PY{l+s+s2}{\PYZdq{}} \PY{k}{if} \PY{n}{cm}\PY{p}{[}\PY{n}{i}\PY{p}{,} \PY{n}{j}\PY{p}{]} \PY{o}{\PYZgt{}} \PY{n}{thresh} \PY{k}{else} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{black}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+         
+             \PY{n}{plt}\PY{o}{.}\PY{n}{tight\PYZus{}layout}\PY{p}{(}\PY{p}{)}
+             \PY{n}{plt}\PY{o}{.}\PY{n}{ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{True label}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+             \PY{n}{plt}\PY{o}{.}\PY{n}{xlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Predicted Label}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \paragraph{Show the matrices}\label{show-the-matrices}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}40}]:} \PY{n}{class\PYZus{}names} \PY{o}{=} \PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{non\PYZhy{}subtweet}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{subtweet}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+         
+         \PY{n}{np}\PY{o}{.}\PY{n}{set\PYZus{}printoptions}\PY{p}{(}\PY{n}{precision}\PY{o}{=}\PY{l+m+mi}{2}\PY{p}{)}
+         
+         \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{p}{)}
+         \PY{n}{plot\PYZus{}confusion\PYZus{}matrix}\PY{p}{(}\PY{n}{cnf\PYZus{}matrix}\PY{p}{,} \PY{n}{classes}\PY{o}{=}\PY{n}{class\PYZus{}names}\PY{p}{,}
+                               \PY{n}{title}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Confusion matrix, without normalization}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         
+         \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{p}{)}
+         \PY{n}{plot\PYZus{}confusion\PYZus{}matrix}\PY{p}{(}\PY{n}{cnf\PYZus{}matrix}\PY{p}{,} \PY{n}{classes}\PY{o}{=}\PY{n}{class\PYZus{}names}\PY{p}{,} \PY{n}{normalize}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,}
+                               \PY{n}{title}\PY{o}{=}\PY{l+s+s1}{\PYZsq{}}\PY{l+s+s1}{Normalized confusion matrix}\PY{l+s+s1}{\PYZsq{}}\PY{p}{)}
+         
+         \PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_59_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_59_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \paragraph{Update matplotlib style}\label{update-matplotlib-style}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}41}]:} \PY{n}{plt}\PY{o}{.}\PY{n}{style}\PY{o}{.}\PY{n}{use}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{fivethirtyeight}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \paragraph{Save the classifier for another
+time}\label{save-the-classifier-for-another-time}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}42}]:} \PY{n}{joblib}\PY{o}{.}\PY{n}{dump}\PY{p}{(}\PY{n}{sentiment\PYZus{}pipeline}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{../data/other\PYZus{}data/subtweets\PYZus{}classifier.pkl}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{;}
+\end{Verbatim}
+
+
+    \paragraph{Print tests for the
+classifier}\label{print-tests-for-the-classifier}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}43}]:} \PY{k}{def} \PY{n+nf}{tests\PYZus{}dataframe}\PY{p}{(}\PY{n}{tweets\PYZus{}dataframe}\PY{p}{,} \PY{n}{text\PYZus{}column}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{SentimentText}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{sentiment\PYZus{}column}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Sentiment}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{:}
+             \PY{n}{predictions} \PY{o}{=} \PY{n}{sentiment\PYZus{}pipeline}\PY{o}{.}\PY{n}{predict\PYZus{}proba}\PY{p}{(}\PY{n}{tweets\PYZus{}dataframe}\PY{p}{[}\PY{n}{text\PYZus{}column}\PY{p}{]}\PY{p}{)}
+             \PY{n}{negative\PYZus{}probability} \PY{o}{=} \PY{n}{predictions}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{l+m+mi}{0}\PY{p}{]}\PY{o}{.}\PY{n}{tolist}\PY{p}{(}\PY{p}{)}
+             \PY{n}{positive\PYZus{}probability} \PY{o}{=} \PY{n}{predictions}\PY{p}{[}\PY{p}{:}\PY{p}{,} \PY{l+m+mi}{1}\PY{p}{]}\PY{o}{.}\PY{n}{tolist}\PY{p}{(}\PY{p}{)}
+             \PY{k}{return} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{tweet}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{tweets\PYZus{}dataframe}\PY{p}{[}\PY{n}{text\PYZus{}column}\PY{p}{]}\PY{p}{,} 
+                                  \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{sentiment\PYZus{}score}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{tweets\PYZus{}dataframe}\PY{p}{[}\PY{n}{sentiment\PYZus{}column}\PY{p}{]}\PY{p}{,} 
+                                  \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{subtweet\PYZus{}negative\PYZus{}probability}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{negative\PYZus{}probability}\PY{p}{,} 
+                                  \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{subtweet\PYZus{}positive\PYZus{}probability}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{positive\PYZus{}probability}\PY{p}{\PYZcb{}}\PY{p}{)}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{subtweet\PYZus{}positive\PYZus{}probability}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                                                                                                      \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}
+\end{Verbatim}
+
+
+    \paragraph{Make up some tweets}\label{make-up-some-tweets}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}44}]:} \PY{n}{test\PYZus{}tweets} \PY{o}{=} \PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Some people don}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{t know their place.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                        \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Isn}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{t it funny how some people don}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{t know their place?}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                        \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{How come you people act like this?}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                        \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{You}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{re such a nerd.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+                        \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{I love Noah, he}\PY{l+s+s2}{\PYZsq{}}\PY{l+s+s2}{s so cool.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+                        \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Who the heck is Noah?}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+                        \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{This is a @NoahSegalGould subtweet. Go check out https://segal\PYZhy{}gould.com.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                        \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{This is a subtweet.}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                        \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Hey @jack!}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                        \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Hey Jack!}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+                        \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{http://www.google.com}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}
+\end{Verbatim}
+
+
+    \paragraph{Make a dataframe from the
+list}\label{make-a-dataframe-from-the-list}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}45}]:} \PY{n}{test\PYZus{}tweets\PYZus{}df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Tweet}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{test\PYZus{}tweets}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Sentiment}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{p}{[}\PY{k+kc}{None}\PY{p}{]}\PY{o}{*}\PY{n+nb}{len}\PY{p}{(}\PY{n}{test\PYZus{}tweets}\PY{p}{)}\PY{p}{\PYZcb{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \paragraph{Remove usernames, URLs, and
+hashtags}\label{remove-usernames-urls-and-hashtags}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}46}]:} \PY{n}{test\PYZus{}tweets\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Tweet}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{n}{test\PYZus{}tweets\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Tweet}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{replace}\PY{p}{(}\PY{n}{hashtags\PYZus{}pattern}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{➊}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}47}]:} \PY{n}{test\PYZus{}tweets\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Tweet}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{n}{test\PYZus{}tweets\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Tweet}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{replace}\PY{p}{(}\PY{n}{urls\PYZus{}pattern}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{➋}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}48}]:} \PY{n}{test\PYZus{}tweets\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Tweet}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{n}{test\PYZus{}tweets\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Tweet}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{replace}\PY{p}{(}\PY{n}{at\PYZus{}mentions\PYZus{}pattern}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{➌}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \paragraph{Print the tests}\label{print-the-tests}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}49}]:} \PY{n}{tests\PYZus{}dataframe}\PY{p}{(}\PY{n}{test\PYZus{}tweets\PYZus{}df}\PY{p}{,} \PY{n}{text\PYZus{}column}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Tweet}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                         \PY{n}{sentiment\PYZus{}column}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Sentiment}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{sentiment\PYZus{}score}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                                                             \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{subtweet\PYZus{}negative\PYZus{}probability}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}49}]:}     subtweet\_positive\_probability  \textbackslash{}
+         0                          0.7802   
+         1                          0.7730   
+         2                          0.7179   
+         3                          0.6903   
+         4                          0.5781   
+         10                         0.4981   
+         5                          0.4625   
+         6                          0.4487   
+         7                          0.4425   
+         8                          0.2996   
+         9                          0.2996   
+         
+                                                              tweet  
+         0                      Some people don't know their place.  
+         1   Isn't it funny how some people don't know their place?  
+         2                       How come you people act like this?  
+         3                                      You're such a nerd.  
+         4                               I love Noah, he's so cool.  
+         10                                                       ➋  
+         5                                    Who the heck is Noah?  
+         6                    This is a ➌ subtweet. Go check out ➋.  
+         7                                      This is a subtweet.  
+         8                                                   Hey ➌!  
+         9                                                Hey Jack!  
+\end{Verbatim}
+            
+    \paragraph{Tests on friends' tweets}\label{tests-on-friends-tweets}
+
+    \paragraph{Aaron}\label{aaron}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}50}]:} \PY{n}{aaron\PYZus{}df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{../data/data\PYZus{}for\PYZus{}testing/friends\PYZus{}data/akrapf96\PYZus{}tweets.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{o}{.}\PY{n}{dropna}\PY{p}{(}\PY{p}{)}
+         \PY{n}{aaron\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Sentiment}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{k+kc}{None}
+\end{Verbatim}
+
+
+    \paragraph{Remove usernames, URLs, and
+hashtags}\label{remove-usernames-urls-and-hashtags}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}51}]:} \PY{n}{aaron\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Text}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{n}{aaron\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Text}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{replace}\PY{p}{(}\PY{n}{hashtags\PYZus{}pattern}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{➊}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}52}]:} \PY{n}{aaron\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Text}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{n}{aaron\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Text}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{replace}\PY{p}{(}\PY{n}{urls\PYZus{}pattern}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{➋}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}53}]:} \PY{n}{aaron\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Text}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{n}{aaron\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Text}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{replace}\PY{p}{(}\PY{n}{at\PYZus{}mentions\PYZus{}pattern}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{➌}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}54}]:} \PY{n}{aaron\PYZus{}df} \PY{o}{=} \PY{n}{tests\PYZus{}dataframe}\PY{p}{(}\PY{n}{aaron\PYZus{}df}\PY{p}{,} \PY{n}{text\PYZus{}column}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Text}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                                    \PY{n}{sentiment\PYZus{}column}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Sentiment}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{sentiment\PYZus{}score}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                                                                        \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{subtweet\PYZus{}negative\PYZus{}probability}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}55}]:} \PY{n}{aaron\PYZus{}df}\PY{o}{.}\PY{n}{to\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{../data/data\PYZus{}from\PYZus{}testing/friends\PYZus{}data/akrapf96\PYZus{}tests.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}56}]:} \PY{n}{aaron\PYZus{}df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}56}]:}       subtweet\_positive\_probability  \textbackslash{}
+         2092                         0.8578   
+         2137                         0.8442   
+         2151                         0.8366   
+         2134                         0.8177   
+         181                          0.8143   
+         1510                         0.8076   
+         658                          0.8062   
+         2076                         0.8027   
+         1519                         0.8013   
+         2319                         0.8005   
+         
+                                                                                                                                                                                                tweet  
+         2092                                                                                                                                                       I hate when people overuse emojis  
+         2137                                                                                Also you don't need to resort to social media 24/7 to complain about your very privileged life ¯\textbackslash{}\_(ツ)\_/¯  
+         2151                                                                     When I try to be supportive and caring I get ignored and then I'm told I'm not being supportive or caring ¯\textbackslash{}\_(ツ)\_/¯  
+         2134                                                    What he doesn't know (unless he stalks my twitter which I know he does) is that I have fake accounts following all his social media   
+         181   I often obsess when texting older people if they will think less of me for saying "LOL" so I say "haha" instead but my mom just texting me "LOL" so maybe I've been overthinking this?  
+         1510                                                                                                            If you don't have tweet notifications turned on for me are we really friends  
+         658                                                                                                            I wonder how many animal social media accounts I follow across every platform  
+         2076                                             I still don't understand why my brother feels a need to literally narrate his life on Twitter. Nobody cares when you go to sleep or wake up  
+         1519                                                Is it weird how my mind designates which social media specific content belongs on? Like this tweet wouldn't make sense to me on facebook  
+         2319                                            Sometimes I wonder if people don't realize the 140 character limit and try to type a really long message and end up having it get cut off at  
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}57}]:} \PY{n}{aaron\PYZus{}df\PYZus{}for\PYZus{}plotting} \PY{o}{=} \PY{n}{aaron\PYZus{}df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{tweet}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+\end{Verbatim}
+
+
+    \paragraph{Julia}\label{julia}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}58}]:} \PY{n}{julia\PYZus{}df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{../data/data\PYZus{}for\PYZus{}testing/friends\PYZus{}data/juliaeberry\PYZus{}tweets.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{o}{.}\PY{n}{dropna}\PY{p}{(}\PY{p}{)}
+         \PY{n}{julia\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Sentiment}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{k+kc}{None}
+\end{Verbatim}
+
+
+    \paragraph{Remove usernames, URLs, and
+hashtags}\label{remove-usernames-urls-and-hashtags}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}59}]:} \PY{n}{julia\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Text}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{n}{julia\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Text}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{replace}\PY{p}{(}\PY{n}{hashtags\PYZus{}pattern}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{➊}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}60}]:} \PY{n}{julia\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Text}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{n}{julia\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Text}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{replace}\PY{p}{(}\PY{n}{urls\PYZus{}pattern}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{➋}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}61}]:} \PY{n}{julia\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Text}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{n}{julia\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Text}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{replace}\PY{p}{(}\PY{n}{at\PYZus{}mentions\PYZus{}pattern}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{➌}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}62}]:} \PY{n}{julia\PYZus{}df} \PY{o}{=} \PY{n}{tests\PYZus{}dataframe}\PY{p}{(}\PY{n}{julia\PYZus{}df}\PY{p}{,} \PY{n}{text\PYZus{}column}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Text}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                                    \PY{n}{sentiment\PYZus{}column}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Sentiment}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{sentiment\PYZus{}score}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                                                                        \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{subtweet\PYZus{}negative\PYZus{}probability}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}63}]:} \PY{n}{julia\PYZus{}df}\PY{o}{.}\PY{n}{to\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{../data/data\PYZus{}from\PYZus{}testing/friends\PYZus{}data/juliaeberry\PYZus{}tests.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}64}]:} \PY{n}{julia\PYZus{}df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}64}]:}       subtweet\_positive\_probability  \textbackslash{}
+         3197                         0.8674   
+         3613                         0.8566   
+         2325                         0.8399   
+         1555                         0.8317   
+         3913                         0.8153   
+         2235                         0.8152   
+         1450                         0.8129   
+         3859                         0.8108   
+         2970                         0.8066   
+         3348                         0.8026   
+         
+                                                                                                                                                     tweet  
+         3197                                  unpopular twitter opinion I don't like christine sudoku and elijah whatever and I don't think they're funny  
+         3613                      don't follow bachelor contestants u liked on insta bc it will just make u hate them for being annoying and unoriginal ➊  
+         2325                                    I love seeing people I knew from hs at the gym! and by that I mean don't talk to me don't even look at me  
+         1555                                                                                              tbt to when ➌ are real trash out of the garbage  
+         3913                              tfw ur anxiety kills ur appetite but you can't do anything done bc ur still hungry so u just get more anxiety ➊  
+         2235                                    david mitchell said the world is full of people who want to make people who don't want to dance dance{\ldots}  
+         1450                                                 between this is just to say and sophia the robot memes, twitter has been fucking On recently  
+         3859     I don't really tmi about volleyball on twitter but I wish I could bc I could vent for hours about how this sport makes me feel lyk trash  
+         2970  funny how some people have suddenly become serious ""academics"" and think they're amazingly intelligent now{\ldots}try no bitch u fake as fuck  
+         3348                          one critique I have of westworld: there are too many boring white guys with beards and it's hard to tell them apart  
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}65}]:} \PY{n}{julia\PYZus{}df\PYZus{}for\PYZus{}plotting} \PY{o}{=} \PY{n}{julia\PYZus{}df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{tweet}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+\end{Verbatim}
+
+
+    \paragraph{Noah}\label{noah}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}66}]:} \PY{n}{noah\PYZus{}df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{read\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{../data/data\PYZus{}for\PYZus{}testing/friends\PYZus{}data/noahsegalgould\PYZus{}tweets.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{o}{.}\PY{n}{dropna}\PY{p}{(}\PY{p}{)}
+         \PY{n}{noah\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Sentiment}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{k+kc}{None}
+\end{Verbatim}
+
+
+    \paragraph{Remove usernames, URLs, and
+hashtags}\label{remove-usernames-urls-and-hashtags}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}67}]:} \PY{n}{noah\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Text}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{n}{noah\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Text}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{replace}\PY{p}{(}\PY{n}{hashtags\PYZus{}pattern}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{➊}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}68}]:} \PY{n}{noah\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Text}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{n}{noah\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Text}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{replace}\PY{p}{(}\PY{n}{urls\PYZus{}pattern}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{➋}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}69}]:} \PY{n}{noah\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Text}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]} \PY{o}{=} \PY{n}{noah\PYZus{}df}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Text}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{str}\PY{o}{.}\PY{n}{replace}\PY{p}{(}\PY{n}{at\PYZus{}mentions\PYZus{}pattern}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{➌}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}70}]:} \PY{n}{noah\PYZus{}df} \PY{o}{=} \PY{n}{tests\PYZus{}dataframe}\PY{p}{(}\PY{n}{noah\PYZus{}df}\PY{p}{,} \PY{n}{text\PYZus{}column}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Text}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                                   \PY{n}{sentiment\PYZus{}column}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Sentiment}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{sentiment\PYZus{}score}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                                                                       \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{subtweet\PYZus{}negative\PYZus{}probability}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}71}]:} \PY{n}{noah\PYZus{}df}\PY{o}{.}\PY{n}{to\PYZus{}csv}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{../data/data\PYZus{}from\PYZus{}testing/friends\PYZus{}data/noahsegalgould\PYZus{}tests.csv}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}72}]:} \PY{n}{noah\PYZus{}df}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}72}]:}       subtweet\_positive\_probability  \textbackslash{}
+         2022                         0.8972   
+         1689                         0.8490   
+         1716                         0.8412   
+         2027                         0.8372   
+         1760                         0.8172   
+         340                          0.8130   
+         291                          0.8129   
+         2523                         0.8090   
+         1797                         0.8083   
+         1242                         0.8020   
+         
+                                                                                                                                                  tweet  
+         2022                           you may think you're cool but unless you're friends with my friends you're not actually as cool as you could be  
+         1689                                                                                             linkedin is better than twitter.\textbackslash{}ndon't @ me.  
+         1716                                                                   If you don't make your meatloaf with ketchup don't bother talking to me  
+         2027                                         IF U CALL URSELF A WEEB BUT DONT HAVE ANIME PROF PICS ON ALL SOCIAL MEDIA\textbackslash{}n DELETE  UR  ACCOUNTS   
+         1760                                                                                           don't ever talk to me or my hamartia ever again  
+         340   Twitter changed the way bots download tweets and now my friends’ twitter bots can’t be updated unless they give me sensitive information  
+         291                                                           if you've still got tweet notifications on for me, I'm sorry, this is a subtweet  
+         2523  Instead of posting several vague tweets revolving around my issues of self-worth I'll just ask this: Who decides how good a friend I am?  
+         1797                                                                                                                                 don't @ ➋  
+         1242                                    stupid pet peeve of the evening:\textbackslash{}nsaying "greater than" aloud 5 times sounds stupid\textbackslash{}nso why type >>>>>  
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}73}]:} \PY{n}{noah\PYZus{}df\PYZus{}for\PYZus{}plotting} \PY{o}{=} \PY{n}{noah\PYZus{}df}\PY{o}{.}\PY{n}{drop}\PY{p}{(}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{tweet}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{,} \PY{n}{axis}\PY{o}{=}\PY{l+m+mi}{1}\PY{p}{)}
+\end{Verbatim}
+
+
+    \paragraph{Rename the columns for
+later}\label{rename-the-columns-for-later}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}74}]:} \PY{n}{aaron\PYZus{}df\PYZus{}for\PYZus{}plotting\PYZus{}together} \PY{o}{=} \PY{n}{aaron\PYZus{}df\PYZus{}for\PYZus{}plotting}\PY{o}{.}\PY{n}{rename}\PY{p}{(}\PY{n}{columns}\PY{o}{=}\PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{subtweet\PYZus{}positive\PYZus{}probability}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Aaron}\PY{l+s+s2}{\PYZdq{}}\PY{p}{\PYZcb{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}75}]:} \PY{n}{julia\PYZus{}df\PYZus{}for\PYZus{}plotting\PYZus{}together} \PY{o}{=} \PY{n}{julia\PYZus{}df\PYZus{}for\PYZus{}plotting}\PY{o}{.}\PY{n}{rename}\PY{p}{(}\PY{n}{columns}\PY{o}{=}\PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{subtweet\PYZus{}positive\PYZus{}probability}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Julia}\PY{l+s+s2}{\PYZdq{}}\PY{p}{\PYZcb{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}76}]:} \PY{n}{noah\PYZus{}df\PYZus{}for\PYZus{}plotting\PYZus{}together} \PY{o}{=} \PY{n}{noah\PYZus{}df\PYZus{}for\PYZus{}plotting}\PY{o}{.}\PY{n}{rename}\PY{p}{(}\PY{n}{columns}\PY{o}{=}\PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{subtweet\PYZus{}positive\PYZus{}probability}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Noah}\PY{l+s+s2}{\PYZdq{}}\PY{p}{\PYZcb{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \paragraph{Prepare statistics on friends'
+tweets}\label{prepare-statistics-on-friends-tweets}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}77}]:} \PY{n}{friends\PYZus{}df} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{concat}\PY{p}{(}\PY{p}{[}\PY{n}{aaron\PYZus{}df\PYZus{}for\PYZus{}plotting\PYZus{}together}\PY{p}{,} 
+                                 \PY{n}{julia\PYZus{}df\PYZus{}for\PYZus{}plotting\PYZus{}together}\PY{p}{,} 
+                                 \PY{n}{noah\PYZus{}df\PYZus{}for\PYZus{}plotting\PYZus{}together}\PY{p}{]}\PY{p}{,} \PY{n}{ignore\PYZus{}index}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}78}]:} \PY{n}{friends\PYZus{}df}\PY{o}{.}\PY{n}{describe}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}78}]:}           Aaron     Julia      Noah
+         count 2640.0000 4356.0000 2814.0000
+         mean     0.5069    0.5162    0.5063
+         std      0.1147    0.1014    0.1078
+         min      0.0953    0.1522    0.1506
+         25\%      0.4295    0.4476    0.4326
+         50\%      0.5027    0.5164    0.5017
+         75\%      0.5837    0.5818    0.5736
+         max      0.8578    0.8674    0.8972
+\end{Verbatim}
+            
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}79}]:} \PY{n}{aaron\PYZus{}mean} \PY{o}{=} \PY{n}{friends\PYZus{}df}\PY{o}{.}\PY{n}{describe}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{Aaron}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}
+         \PY{n}{aaron\PYZus{}std} \PY{o}{=} \PY{n}{friends\PYZus{}df}\PY{o}{.}\PY{n}{describe}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{Aaron}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}
+         
+         \PY{n}{julia\PYZus{}mean} \PY{o}{=} \PY{n}{friends\PYZus{}df}\PY{o}{.}\PY{n}{describe}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{Julia}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}
+         \PY{n}{julia\PYZus{}std} \PY{o}{=} \PY{n}{friends\PYZus{}df}\PY{o}{.}\PY{n}{describe}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{Julia}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}
+         
+         \PY{n}{noah\PYZus{}mean} \PY{o}{=} \PY{n}{friends\PYZus{}df}\PY{o}{.}\PY{n}{describe}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{Noah}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}
+         \PY{n}{noah\PYZus{}std} \PY{o}{=} \PY{n}{friends\PYZus{}df}\PY{o}{.}\PY{n}{describe}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{Noah}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}
+\end{Verbatim}
+
+
+    \paragraph{Plot all the histograms}\label{plot-all-the-histograms}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}80}]:} \PY{o}{\PYZpc{}\PYZpc{}}\PY{k}{time}
+         fig = plt.figure(figsize=(16, 9))
+         ax = fig.add\PYZus{}subplot(111)
+         
+         n, bins, patches = ax.hist([aaron\PYZus{}df\PYZus{}for\PYZus{}plotting.subtweet\PYZus{}positive\PYZus{}probability, 
+                                     julia\PYZus{}df\PYZus{}for\PYZus{}plotting.subtweet\PYZus{}positive\PYZus{}probability, 
+                                     noah\PYZus{}df\PYZus{}for\PYZus{}plotting.subtweet\PYZus{}positive\PYZus{}probability], 
+                                    bins=\PYZdq{}scott\PYZdq{},
+                                    color=[\PYZdq{}\PYZsh{}256EFF\PYZdq{}, \PYZdq{}\PYZsh{}46237A\PYZdq{}, \PYZdq{}\PYZsh{}3DDC97\PYZdq{}],
+                                    density=True, 
+                                    label=[\PYZdq{}Aaron\PYZdq{}, \PYZdq{}Julia\PYZdq{}, \PYZdq{}Noah\PYZdq{}],
+                                    alpha=0.75)
+         
+         aaron\PYZus{}line = scipy.stats.norm.pdf(bins, aaron\PYZus{}mean, aaron\PYZus{}std)
+         ax.plot(bins, aaron\PYZus{}line, \PYZdq{}\PYZhy{}\PYZhy{}\PYZdq{}, color=\PYZdq{}\PYZsh{}256EFF\PYZdq{}, linewidth=2)
+         
+         julia\PYZus{}line = scipy.stats.norm.pdf(bins, julia\PYZus{}mean, julia\PYZus{}std)
+         ax.plot(bins, julia\PYZus{}line, \PYZdq{}\PYZhy{}\PYZhy{}\PYZdq{}, color=\PYZdq{}\PYZsh{}46237A\PYZdq{}, linewidth=2)
+         
+         noah\PYZus{}line = scipy.stats.norm.pdf(bins, noah\PYZus{}mean, noah\PYZus{}std)
+         ax.plot(bins, noah\PYZus{}line, \PYZdq{}\PYZhy{}\PYZhy{}\PYZdq{}, color=\PYZdq{}\PYZsh{}3DDC97\PYZdq{}, linewidth=2)
+         
+         ax.set\PYZus{}xticks([float(x/10) for x in range(11)], minor=False)
+         ax.set\PYZus{}title(\PYZdq{}Friends\PYZsq{} Dataset Distribution of Subtweet Probabilities\PYZdq{}, fontsize=18)
+         ax.set\PYZus{}xlabel(\PYZdq{}Probability That Tweet is a Subtweet\PYZdq{}, fontsize=18)
+         ax.set\PYZus{}ylabel(\PYZdq{}Portion of Tweets with That Probability\PYZdq{}, fontsize=18)
+         
+         ax.legend()
+         
+         plt.show()
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+/Users/Noah/anaconda/lib/python3.6/site-packages/numpy/core/fromnumeric.py:52: FutureWarning: reshape is deprecated and will raise in a subsequent release. Please use .values.reshape({\ldots}) instead
+  return getattr(obj, method)(*args, **kwds)
+
+    \end{Verbatim}
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_116_1.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+CPU times: user 693 ms, sys: 38.5 ms, total: 732 ms
+Wall time: 753 ms
+
+    \end{Verbatim}
+
+    \paragraph{Statisitics on training
+data}\label{statisitics-on-training-data}
+
+    \paragraph{Remove mentions of usernames for these
+statistics}\label{remove-mentions-of-usernames-for-these-statistics}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}81}]:} \PY{n}{training\PYZus{}data} \PY{o}{=} \PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{ }\PY{l+s+s2}{\PYZdq{}}\PY{o}{.}\PY{n}{join}\PY{p}{(}\PY{p}{[}\PY{n}{token} \PY{k}{for} \PY{n}{token} \PY{o+ow}{in} \PY{n}{tokenizer}\PY{o}{.}\PY{n}{tokenize}\PY{p}{(}\PY{n}{pair}\PY{p}{[}\PY{l+m+mi}{0}\PY{p}{]}\PY{p}{)} \PY{k}{if} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{@}\PY{l+s+s2}{\PYZdq{}} \PY{o+ow}{not} \PY{o+ow}{in} \PY{n}{token}\PY{p}{]}\PY{p}{)} 
+                          \PY{k}{for} \PY{n}{pair} \PY{o+ow}{in} \PY{n}{training\PYZus{}data}\PY{p}{]}
+\end{Verbatim}
+
+
+    \paragraph{Lengths (Less than or equal to 280 characters and greater
+than or equal to 5
+characters)}\label{lengths-less-than-or-equal-to-280-characters-and-greater-than-or-equal-to-5-characters}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}82}]:} \PY{n}{length\PYZus{}data} \PY{o}{=} \PY{p}{[}\PY{n+nb}{len}\PY{p}{(}\PY{n}{tweet}\PY{p}{)} \PY{k}{for} \PY{n}{tweet} \PY{o+ow}{in} \PY{n}{training\PYZus{}data}\PY{p}{]}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}83}]:} \PY{n}{length\PYZus{}data\PYZus{}for\PYZus{}stats} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Length}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{length\PYZus{}data}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Tweet}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{training\PYZus{}data}\PY{p}{\PYZcb{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}84}]:} \PY{c+c1}{\PYZsh{} length\PYZus{}data\PYZus{}for\PYZus{}stats = length\PYZus{}data\PYZus{}for\PYZus{}stats[length\PYZus{}data\PYZus{}for\PYZus{}stats[\PYZdq{}Length\PYZdq{}] \PYZlt{}= 280]  }
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}85}]:} \PY{c+c1}{\PYZsh{} length\PYZus{}data\PYZus{}for\PYZus{}stats = length\PYZus{}data\PYZus{}for\PYZus{}stats[length\PYZus{}data\PYZus{}for\PYZus{}stats[\PYZdq{}Length\PYZdq{}] \PYZgt{}= 5]}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}86}]:} \PY{n}{length\PYZus{}data} \PY{o}{=} \PY{n}{length\PYZus{}data\PYZus{}for\PYZus{}stats}\PY{o}{.}\PY{n}{Length}\PY{o}{.}\PY{n}{tolist}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+    \paragraph{Top 10 longest tweets}\label{top-10-longest-tweets}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}87}]:} \PY{n}{length\PYZus{}data\PYZus{}for\PYZus{}stats}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Length}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}87}]:}        Length  \textbackslash{}
+         14329     303   
+         4476      302   
+         8001      300   
+         15228     299   
+         14724     299   
+         6017      299   
+         8702      298   
+         5265      296   
+         8607      296   
+         9006      296   
+         
+                                                                                                                                                                                                                                                                                                  Tweet  
+         14329  from 10/18 / 15 when he 1st played hurt \& began noticeably throwing w poor mechanics thru end of his injured 2016 yr , luck's stats were as good as his healthiest / best 2013-2014 yrs : - injured : 61 \% comp , 7.4 ypa , 93 rtg , 41:18 td : int - healthy : 61 \% comp , 7.2 ypa {\ldots}  
+         4476   in situations of power imbalance , wealth inequality , unequal access to {\ldots} everything-can ' we ' drop the ' we ' - because it really means you not me . when . you . pretend . that . we . all . share . same . interests . you . are . helping . the . most . powerful . oppress {\ldots}  
+         8001   hotel elevator earlier today : i get in , a young man and a young woman already in the car . me : " good morning , both . " woman : " good morning . " man , clearly writhing , not wanting to say anything but caught in a vortex due to the young woman's response . ten seconds l{\ldots}  
+         15228  " it is a key agreement that shapes today's globalisation " - frau merkel on the paris ' agreement ' . climatefraud-a contrived tool of the deadly eu / un-centric marxist-globalist / islamist alliance , to wealth transfer \& to create such energy poverty , that sovereignwester{\ldots}  
+         14724  pentagon : master sergeant jonathan j . dunbar , assigned to headquarters , u . s . army special operations command , fort bragg , n . c . , was kia mar . 30 , while deployed in support of operation inherent resolve . dunbar died from wounds received during combat operations {\ldots}  
+         6017   person : * criticizes my writing * me : yup , they're right , 100 percent , spot on , very valid , absolutely agree person : * compliments my writing * me : ? ? ? did they read something else ? ? ? are they lying ? ? ? are they drunk ? ? ? i don't know what to do with this ? {\ldots}  
+         8702   i've fallen into a rabbit hole of goals from that 2016 run . faves : 1 ) crosby's goal against raanta in rd . 1 . 2 ) cullen's goal in ny . third period . tie game . 3 ) fehr's goal in game 2 vs . washington . 4 ) rust's breakaway in game 6 vs . tampa . 5 ) fehr's game 5 insu{\ldots}  
+         5265   me : " we can't deviate from the clinical policies the client's medical team chose " coworker : " well we'll ask the cto " m : " okay but he's in agreement too " c : " i don't want to talk to you . our medical licenses are on the line " m : " no {\ldots} they aren't . you didn't c{\ldots}  
+         8607   the first-time event , bucky's yard sale , is april 12 and 13 from 9am - 2pm at etsu in the quad . donations of clothing , shoes accessories , and other cool things are needed ! drop-off bins are in the cpa , outside of sorc a in the culp , and in centennial , governors , sto{\ldots}  
+         9006   ➊ campaign ideas i can't get out of my head : 💠 gothic monster hunting ( e . g . krevborna , ravenloft , solomon kane ) 💠 aetherpunk intrigue ( e . g . kaladesh , lantan , eberron ) 💠 megadungeon exploration ( e . g . doomvault , rappan athuk ) merging them would not work wel{\ldots}  
+\end{Verbatim}
+            
+    \paragraph{Top 10 shortest tweets}\label{top-10-shortest-tweets}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}88}]:} \PY{n}{length\PYZus{}data\PYZus{}for\PYZus{}stats}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Length}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}88}]:}       Length Tweet
+         7699       1     a
+         2038       2    ha
+         5896       2    uh
+         3473       2    no
+         3785       3   ugh
+         6676       3   i -
+         4596       3   die
+         9177       4  go ➋
+         636        4  us ➋
+         648        4  oh ➋
+\end{Verbatim}
+            
+    \paragraph{Tweet length statistics}\label{tweet-length-statistics}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}89}]:} \PY{n}{length\PYZus{}data\PYZus{}for\PYZus{}stats}\PY{o}{.}\PY{n}{describe}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}89}]:}           Length
+         count 15674.0000
+         mean    109.5542
+         std      75.5204
+         min       1.0000
+         25\%      50.0000
+         50\%      89.0000
+         75\%     154.0000
+         max     303.0000
+\end{Verbatim}
+            
+    \paragraph{Punctuation}\label{punctuation}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}90}]:} \PY{n}{punctuation\PYZus{}data} \PY{o}{=} \PY{p}{[}\PY{n+nb}{len}\PY{p}{(}\PY{n+nb}{set}\PY{p}{(}\PY{n}{punctuation}\PY{p}{)}\PY{o}{.}\PY{n}{intersection}\PY{p}{(}\PY{n+nb}{set}\PY{p}{(}\PY{n}{tweet}\PY{p}{)}\PY{p}{)}\PY{p}{)} \PY{k}{for} \PY{n}{tweet} \PY{o+ow}{in} \PY{n}{training\PYZus{}data}\PY{p}{]}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}91}]:} \PY{n}{punctuation\PYZus{}data\PYZus{}for\PYZus{}stats} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Punctuation}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{punctuation\PYZus{}data}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Tweet}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{training\PYZus{}data}\PY{p}{\PYZcb{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \paragraph{Top 10 most punctuated
+tweets}\label{top-10-most-punctuated-tweets}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}92}]:} \PY{n}{punctuation\PYZus{}data\PYZus{}for\PYZus{}stats}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Punctuation}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}92}]:}        Punctuation  \textbackslash{}
+         8957            10   
+         13365            9   
+         11066            9   
+         11845            9   
+         11718            9   
+         909              9   
+         6725             9   
+         13933            9   
+         13817            8   
+         14623            8   
+         
+                                                                                                                                                                                                                                                                                                  Tweet  
+         8957                     going to go ahead and crown myself the absolute emperor of finding things on menus that sound interesting , deciding i would like to try them , then being told " i'm sorry sir , that's actually not available {\ldots} " [ then why the \# \$ \% is it on your menuuu - - ]  
+         13365                                                                                                                                                                                                        billboard hot 100 : ➊ ( - 3 ) tell me you love me , ➌ [ 19 weeks ] . * peak : ➊ *  
+         11066                                    not every aspect worked , but overall had a lot of fun at ➊ . and also ( minor spoiler-ish thingy below ) {\ldots} … maybe the best " single use of the f word in a pg - 13 movie " ever ? ( didn't hurt that it was connected to a great love of mine ! )  
+         11845  tucker carlson tonight \& tfw you're asking about america but you're scolded it's really about israel {\ldots} tucker : " what is the american national security interest {\ldots} in syria ? " sen . wicker ( r ): " well , if you care about israel {\ldots} " that was the exact question \& answe{\ldots}  
+         11718                                                        self-employed people : have you ever turned to social media to call out a client who is many weeks / months delinquent on a payment ? ( obviously , you're probably burning a bridge with that move , but if they don't pay {\ldots} )  
+         909    twitter user : " if you're [ oppressed identity / status / role ] , no need to read this ; if you're [ privileged identity / status / role ] , read it " the parts of my brain responsible for assuring my physical \& emotional safety as a brainwashing survivor with 3000 diseases{\ldots}  
+         6725                                                                                                              4 - yo : daddeee ! ? let's play ! me : ok , baby . 4yo : you play w / her . put a dress on her daddeee . me : ok . * puts doll in dollhouse * 4yo : she doesn't go there ! !  
+         13933  feds had one chance to search cohen's places ! since he , alone \& w / trump , has been busy w / so much possibly criminal activity , searches covered the whole enchilada : bank fraud , tax crimes , \$ laundering \& 2016 election-related crimes , including payoffs that could be {\ldots}  
+         13817                        print orders are available in my etsy store : ➋ ( * ´ ∀ ` * ) i am very proud of these prints and i'm very happy with their quality ! ! i hope you like them . this is a great way to support my works ( ｡ ･ ω ･ ｡ ) ﾉ ♡ rt and shares are always appreciated 💕 ➋  
+         14623     park jimin fancafe 01.04 . 2018 \{ 12:30 am kst \} i left the dorm , hoseok will be alone in the room , i don't know what is army anymore you're all just from the past bye don't come to me when u see me in the street \& say jimin because ima punch u in the face ➊\_we\_are\_beardtan  
+\end{Verbatim}
+            
+    \paragraph{Tweets punctuation
+statistics}\label{tweets-punctuation-statistics}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}93}]:} \PY{n}{punctuation\PYZus{}data\PYZus{}for\PYZus{}stats}\PY{o}{.}\PY{n}{describe}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}93}]:}        Punctuation
+         count   15674.0000
+         mean        1.8610
+         std         1.5408
+         min         0.0000
+         25\%         1.0000
+         50\%         2.0000
+         75\%         3.0000
+         max        10.0000
+\end{Verbatim}
+            
+    \paragraph{Stop words}\label{stop-words}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}94}]:} \PY{n}{stop\PYZus{}words\PYZus{}data} \PY{o}{=} \PY{p}{[}\PY{n+nb}{len}\PY{p}{(}\PY{n+nb}{set}\PY{p}{(}\PY{n}{stopwords}\PY{o}{.}\PY{n}{words}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{english}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}\PY{p}{)}\PY{o}{.}\PY{n}{intersection}\PY{p}{(}\PY{n+nb}{set}\PY{p}{(}\PY{n}{tweet}\PY{o}{.}\PY{n}{lower}\PY{p}{(}\PY{p}{)}\PY{p}{)}\PY{p}{)}\PY{p}{)} 
+                            \PY{k}{for} \PY{n}{tweet} \PY{o+ow}{in} \PY{n}{training\PYZus{}data}\PY{p}{]}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}95}]:} \PY{n}{stop\PYZus{}words\PYZus{}data\PYZus{}for\PYZus{}stats} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Stop words}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{stop\PYZus{}words\PYZus{}data}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Tweet}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{training\PYZus{}data}\PY{p}{\PYZcb{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \paragraph{Top 10 tweets with most stop
+words}\label{top-10-tweets-with-most-stop-words}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}96}]:} \PY{n}{stop\PYZus{}words\PYZus{}data\PYZus{}for\PYZus{}stats}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Stop words}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}96}]:}       Stop words  \textbackslash{}
+         0              8   
+         9062           8   
+         9033           8   
+         9035           8   
+         9038           8   
+         9039           8   
+         9040           8   
+         9041           8   
+         9043           8   
+         9044           8   
+         
+                                                                                                                                                                                                                                                                                               Tweet  
+         0      i don't yet have adequate words to do so , but someday i wanna write about the beautiful dance which happens in google docs between a writer \& a good editor working simultaneously towards a deadline . when it's working , it's a beautiful dance — though no one really sees it .  
+         9062                                                                                                                                                                                                                          ➌ too fine .. ima need him to have a show in a city near me 😩  
+         9033                                                                                                                                                                          how is this still a " phase " if i'm voluntarily putting myself through a second , more intense puberty ? ? 🤔  
+         9035                                                                          the role of dag rod rosenstein will be an oscar winner in the future film about the trump presidency . i'd like the story of the first few months to be told through the eyes of the bewildered sean spicer .  
+         9038                                                                                                                                                                  done watching ' hacksaw ridge ' . if there's one thing i learned from that movie , it is simply , have faith in god .  
+         9039  i feel people who can't celebrate or at the very least respect cardi b's success have never watched the grind from the ground up . they can't understand that her work ethic has gotten her where she is now . you don't have to stand for what's she's about but she's worked for it  
+         9040                                                                                                                                                                                                                       icymi : dolphins need to improve their 2nd round draft picks : ➋  
+         9041                                                                                                                                                    another republican who wants us back in syria but doesn't want to vote for it . does the country support america going in alone ? ➋  
+         9043                                                                                                                                             you ever just have your phone in your hand and then you hand just decides it doesn't want to hold it anymore and throws it in the ground .  
+         9044                                                            footage from the night of kenneka jenkins passing . please pass this on these two men were working the night she passed and were seen following her in the hallway ! ! ! police need to ask them what was in this bag . ➌ ➋  
+\end{Verbatim}
+            
+    \paragraph{Top 10 tweets with fewest stop
+words}\label{top-10-tweets-with-fewest-stop-words}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}97}]:} \PY{n}{stop\PYZus{}words\PYZus{}data\PYZus{}for\PYZus{}stats}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Stop words}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}97}]:}        Stop words       Tweet
+         8290            0        24 ➋
+         9100            0       {\ldots} ➋
+         958             0       luv u
+         14086           0  ➊ well {\ldots}
+         3785            0         ugh
+         3632            0       {\ldots} ➋
+         11925           0      fuck ➋
+         3455            0  fuck {\ldots} ➋
+         1662            0        uh ➋
+         5896            0          uh
+\end{Verbatim}
+            
+    \paragraph{Tweets stop words
+statistics}\label{tweets-stop-words-statistics}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}98}]:} \PY{n}{stop\PYZus{}words\PYZus{}data\PYZus{}for\PYZus{}stats}\PY{o}{.}\PY{n}{describe}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}98}]:}        Stop words
+         count  15674.0000
+         mean       7.1504
+         std        1.3123
+         min        0.0000
+         25\%        7.0000
+         50\%        8.0000
+         75\%        8.0000
+         max        8.0000
+\end{Verbatim}
+            
+    \paragraph{Unique words (at least 2)}\label{unique-words-at-least-2}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}99}]:} \PY{n}{unique\PYZus{}words\PYZus{}data} \PY{o}{=} \PY{p}{[}\PY{n+nb}{len}\PY{p}{(}\PY{n+nb}{set}\PY{p}{(}\PY{n}{tokenizer}\PY{o}{.}\PY{n}{tokenize}\PY{p}{(}\PY{n}{tweet}\PY{p}{)}\PY{p}{)}\PY{p}{)} \PY{k}{for} \PY{n}{tweet} \PY{o+ow}{in} \PY{n}{training\PYZus{}data}\PY{p}{]}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}100}]:} \PY{n}{unique\PYZus{}words\PYZus{}data\PYZus{}for\PYZus{}stats} \PY{o}{=} \PY{n}{pd}\PY{o}{.}\PY{n}{DataFrame}\PY{p}{(}\PY{p}{\PYZob{}}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Unique words}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{unique\PYZus{}words\PYZus{}data}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Tweet}\PY{l+s+s2}{\PYZdq{}}\PY{p}{:} \PY{n}{training\PYZus{}data}\PY{p}{\PYZcb{}}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}101}]:} \PY{c+c1}{\PYZsh{} unique\PYZus{}words\PYZus{}data\PYZus{}for\PYZus{}stats = unique\PYZus{}words\PYZus{}data\PYZus{}for\PYZus{}stats[unique\PYZus{}words\PYZus{}data\PYZus{}for\PYZus{}stats[\PYZdq{}Unique words\PYZdq{}] \PYZgt{}= 2]}
+\end{Verbatim}
+
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}102}]:} \PY{n}{unique\PYZus{}words\PYZus{}data} \PY{o}{=} \PY{n}{unique\PYZus{}words\PYZus{}data\PYZus{}for\PYZus{}stats}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Unique words}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{o}{.}\PY{n}{tolist}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+    \paragraph{Top 10 tweets with most unique
+words}\label{top-10-tweets-with-most-unique-words}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}103}]:} \PY{n}{unique\PYZus{}words\PYZus{}data\PYZus{}for\PYZus{}stats}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Unique words}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{False}\PY{p}{)}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}103}]:}                                                                                                                                                                                                                                                                                          Tweet  \textbackslash{}
+          13936  give away ! the rules are really easy , all you have to do is : 1 . must be following me ( i check ) 2 . rt and fav this tweet 3 . tag your mutuals / anyone 4 . only 1 winner ! 5 . i ship worldwide ;) it ends in 8th may 2018 or when this tweet hit 2k rt and like ! good luck !{\ldots}   
+          4881   got into a tepid back nd forth w / a uknowwhoaj + columnist bc i said they steal their " hot takes " from blk twitter \& alike . wallahi my bdeshi ass did not sign up 4 this app to be called asinine by a 30yrold pakistani whos whole politics is post colonial memes for oriental{\ldots}   
+          7013   crazy how wrong u can be about someone . a girl i graduated w / was always doing drugs \& got pregnant at 16 . i assumed she'd end up being a loser but it turn out she now has 4 beautiful kids \& is making over \$ 4,500 / month just off of child support payments from the 3 diffe{\ldots}   
+          11542     thought i'd bring this back {\ldots} ➊ and no , i'm not talking about myself here . i wish just once i'd be so bored with my life that i'd find the time to bash people / celebs i don't like .. i mean if i despise someone that much , why still watch his / her every move ? 🤦 ‍ ♀ ️ ➋   
+          13339                  - many 👮 ‍ ♂ ️ suffer in silence , not always by choice but by design ! ➊ can be a career killer \& worse many pd's do not see p . t . s . d as an insured disability ; this has to change 🆘 - hiding mine for 3 years made my ➊ unbearable ! please help us ➊ \& ➊ ⚖ ️ ➋   
+          13107       ➌ missed meeting rey , i left at 1:30 ( 5th in line , for 2 hrs ) so i didn't miss my other event . am i able to get a refund for the prepaid that i paid for the combo ? i know it wasn't your guys fault , but if he was gonna show up later then 12 i wouldn't have bought it .   
+          13567  in loving memory of 21 yrs , my late husband i took off life support 1 yr ago this evening . the hardest thing i have ever had to do other than take your ashes to co . the memories of your 40 diff marriage proposals , i think of today . i love you \& semper fi , sgt . chris ! {\ldots}   
+          8413   i was born at 8: 48 in the morning 32 years ago . only one person calls me at that time every year and that is my mother . since the stroke she has forgotten so much . i didn't expect a call , but like clock work the phone rang . i got hit hard with the feels right now . than{\ldots}   
+          14327    never thought i was gonna kick half team but damn {\ldots} i guess i'll do it smh should've let me know so i could find some active players .. ppl now a days cant be trusted “ oh i'm active ” fuck you m8 ! ! ! y'all aren't active for shit . btw sorry if i'm mad {\ldots} but im mad 😡 ➊ ➋   
+          12224  what's the one thing you hope for your character ( s ) to have / retain in smash 5 ? no matter what changes , i hope playing sonic feels just as free and enjoyable . i love being able to freely move anywhere in his cool blue style ( hoping shadow has a fiercer \& darker versio{\ldots}   
+          
+                 Unique words  
+          13936            60  
+          4881             57  
+          7013             57  
+          11542            57  
+          13339            56  
+          13107            55  
+          13567            55  
+          8413             55  
+          14327            55  
+          12224            55  
+\end{Verbatim}
+            
+    \paragraph{Top 10 tweets with fewest unique
+words}\label{top-10-tweets-with-fewest-unique-words}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}104}]:} \PY{n}{unique\PYZus{}words\PYZus{}data\PYZus{}for\PYZus{}stats}\PY{o}{.}\PY{n}{sort\PYZus{}values}\PY{p}{(}\PY{n}{by}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Unique words}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{ascending}\PY{o}{=}\PY{k+kc}{True}\PY{p}{)}\PY{o}{.}\PY{n}{head}\PY{p}{(}\PY{l+m+mi}{10}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}104}]:}             Tweet  Unique words
+          2353      catfish             1
+          975        ginger             1
+          933   assumptions             1
+          6106     annoying             1
+          2525        bitch             1
+          7702         rude             1
+          2342        corny             1
+          7699            a             1
+          2038           ha             1
+          2351         soft             1
+\end{Verbatim}
+            
+    \paragraph{Tweets unique words
+statistics}\label{tweets-unique-words-statistics}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}105}]:} \PY{n}{unique\PYZus{}words\PYZus{}data\PYZus{}for\PYZus{}stats}\PY{o}{.}\PY{n}{describe}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+\begin{Verbatim}[commandchars=\\\{\}]
+{\color{outcolor}Out[{\color{outcolor}105}]:}        Unique words
+          count    15674.0000
+          mean        19.8939
+          std         11.9839
+          min          1.0000
+          25\%         10.0000
+          50\%         17.0000
+          75\%         28.0000
+          max         60.0000
+\end{Verbatim}
+            
+    \paragraph{Plot them}\label{plot-them}
+
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}106}]:} \PY{n}{length\PYZus{}mean} \PY{o}{=} \PY{n}{length\PYZus{}data\PYZus{}for\PYZus{}stats}\PY{o}{.}\PY{n}{describe}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{Length}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}
+          \PY{n}{length\PYZus{}std} \PY{o}{=} \PY{n}{length\PYZus{}data\PYZus{}for\PYZus{}stats}\PY{o}{.}\PY{n}{describe}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{Length}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}
+          
+          \PY{n}{fig} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{16}\PY{p}{,} \PY{l+m+mi}{9}\PY{p}{)}\PY{p}{)}
+          \PY{n}{ax} \PY{o}{=} \PY{n}{fig}\PY{o}{.}\PY{n}{add\PYZus{}subplot}\PY{p}{(}\PY{l+m+mi}{111}\PY{p}{)}
+          
+          \PY{n}{n}\PY{p}{,} \PY{n}{bins}\PY{p}{,} \PY{n}{patches} \PY{o}{=} \PY{n}{ax}\PY{o}{.}\PY{n}{hist}\PY{p}{(}\PY{n}{length\PYZus{}data}\PY{p}{,} 
+                                     \PY{n}{bins}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{scott}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                                     \PY{n}{edgecolor}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{black}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                                     \PY{n}{density}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,} 
+                                     \PY{n}{color}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZsh{}12355b}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                                     \PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.5}\PY{p}{)}
+          
+          \PY{n}{length\PYZus{}line} \PY{o}{=} \PY{n}{scipy}\PY{o}{.}\PY{n}{stats}\PY{o}{.}\PY{n}{norm}\PY{o}{.}\PY{n}{pdf}\PY{p}{(}\PY{n}{bins}\PY{p}{,} \PY{n}{length\PYZus{}mean}\PY{p}{,} \PY{n}{length\PYZus{}std}\PY{p}{)}
+          \PY{n}{ax}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{bins}\PY{p}{,} \PY{n}{length\PYZus{}line}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZhy{}\PYZhy{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{linewidth}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZsh{}415d7b}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+          
+          \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Training Dataset Distribution of Tweet Lengths}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{18}\PY{p}{)}
+          \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}xlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Tweet Length}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{18}\PY{p}{)}\PY{p}{;}
+          \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Porton of Tweets with That Length}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{18}\PY{p}{)}\PY{p}{;}
+          
+          \PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_160_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}107}]:} \PY{n}{punctuation\PYZus{}mean} \PY{o}{=} \PY{n}{punctuation\PYZus{}data\PYZus{}for\PYZus{}stats}\PY{o}{.}\PY{n}{describe}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{Punctuation}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}
+          \PY{n}{punctuation\PYZus{}std} \PY{o}{=} \PY{n}{punctuation\PYZus{}data\PYZus{}for\PYZus{}stats}\PY{o}{.}\PY{n}{describe}\PY{p}{(}\PY{p}{)}\PY{o}{.}\PY{n}{Punctuation}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}
+          
+          \PY{n}{fig} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{16}\PY{p}{,} \PY{l+m+mi}{9}\PY{p}{)}\PY{p}{)}
+          \PY{n}{ax} \PY{o}{=} \PY{n}{fig}\PY{o}{.}\PY{n}{add\PYZus{}subplot}\PY{p}{(}\PY{l+m+mi}{111}\PY{p}{)}
+          
+          \PY{n}{n}\PY{p}{,} \PY{n}{bins}\PY{p}{,} \PY{n}{patches} \PY{o}{=} \PY{n}{ax}\PY{o}{.}\PY{n}{hist}\PY{p}{(}\PY{n}{punctuation\PYZus{}data}\PY{p}{,} 
+                                     \PY{n}{bins}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{scott}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                                     \PY{n}{edgecolor}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{black}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                                     \PY{n}{density}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,} 
+                                     \PY{n}{color}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZsh{}420039}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+                                     \PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.5}\PY{p}{)}
+          
+          \PY{n}{punctution\PYZus{}line} \PY{o}{=} \PY{n}{scipy}\PY{o}{.}\PY{n}{stats}\PY{o}{.}\PY{n}{norm}\PY{o}{.}\PY{n}{pdf}\PY{p}{(}\PY{n}{bins}\PY{p}{,} \PY{n}{punctuation\PYZus{}mean}\PY{p}{,} \PY{n}{punctuation\PYZus{}std}\PY{p}{)}
+          \PY{n}{ax}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{bins}\PY{p}{,} \PY{n}{punctution\PYZus{}line}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZhy{}\PYZhy{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{linewidth}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZsh{}673260}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+          
+          \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Training Dataset Distribution of Punctuation}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{18}\PY{p}{)}
+          \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}xlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Punctuating Characters}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{18}\PY{p}{)}
+          \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Porton of Punctuating Characters}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{18}\PY{p}{)}
+          
+          \PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_161_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}108}]:} \PY{n}{stop\PYZus{}words\PYZus{}mean} \PY{o}{=} \PY{n}{stop\PYZus{}words\PYZus{}data\PYZus{}for\PYZus{}stats}\PY{o}{.}\PY{n}{describe}\PY{p}{(}\PY{p}{)}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Stop words}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}
+          \PY{n}{stop\PYZus{}words\PYZus{}std} \PY{o}{=} \PY{n}{stop\PYZus{}words\PYZus{}data\PYZus{}for\PYZus{}stats}\PY{o}{.}\PY{n}{describe}\PY{p}{(}\PY{p}{)}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Stop words}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}
+          
+          \PY{n}{fig} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{16}\PY{p}{,} \PY{l+m+mi}{9}\PY{p}{)}\PY{p}{)}
+          \PY{n}{ax} \PY{o}{=} \PY{n}{fig}\PY{o}{.}\PY{n}{add\PYZus{}subplot}\PY{p}{(}\PY{l+m+mi}{111}\PY{p}{)}
+          
+          \PY{n}{n}\PY{p}{,} \PY{n}{bins}\PY{p}{,} \PY{n}{patches} \PY{o}{=} \PY{n}{ax}\PY{o}{.}\PY{n}{hist}\PY{p}{(}\PY{n}{stop\PYZus{}words\PYZus{}data}\PY{p}{,} 
+                                     \PY{n}{bins}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{scott}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                                     \PY{n}{edgecolor}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{black}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                                     \PY{n}{density}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,} 
+                                     \PY{n}{color}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZsh{}698f3f}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+                                     \PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.5}\PY{p}{)}
+          
+          \PY{n}{stop\PYZus{}words\PYZus{}line} \PY{o}{=} \PY{n}{scipy}\PY{o}{.}\PY{n}{stats}\PY{o}{.}\PY{n}{norm}\PY{o}{.}\PY{n}{pdf}\PY{p}{(}\PY{n}{bins}\PY{p}{,} \PY{n}{stop\PYZus{}words\PYZus{}mean}\PY{p}{,} \PY{n}{stop\PYZus{}words\PYZus{}std}\PY{p}{)}
+          \PY{n}{ax}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{bins}\PY{p}{,} \PY{n}{stop\PYZus{}words\PYZus{}line}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZhy{}\PYZhy{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{linewidth}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZsh{}87a565}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+          
+          \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Training Dataset Distribution of Stop Words}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{18}\PY{p}{)}
+          \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}xlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Stop Words in Tweet}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{18}\PY{p}{)}
+          \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Porton of Tweets with That Number of Stop Words}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{18}\PY{p}{)}
+          
+          \PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_162_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+    \begin{Verbatim}[commandchars=\\\{\}]
+{\color{incolor}In [{\color{incolor}109}]:} \PY{n}{unique\PYZus{}words\PYZus{}mean} \PY{o}{=} \PY{n}{unique\PYZus{}words\PYZus{}data\PYZus{}for\PYZus{}stats}\PY{o}{.}\PY{n}{describe}\PY{p}{(}\PY{p}{)}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Unique words}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{1}\PY{p}{]}
+          \PY{n}{unique\PYZus{}words\PYZus{}std} \PY{o}{=} \PY{n}{unique\PYZus{}words\PYZus{}data\PYZus{}for\PYZus{}stats}\PY{o}{.}\PY{n}{describe}\PY{p}{(}\PY{p}{)}\PY{p}{[}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Unique words}\PY{l+s+s2}{\PYZdq{}}\PY{p}{]}\PY{p}{[}\PY{l+m+mi}{2}\PY{p}{]}
+          
+          \PY{n}{fig} \PY{o}{=} \PY{n}{plt}\PY{o}{.}\PY{n}{figure}\PY{p}{(}\PY{n}{figsize}\PY{o}{=}\PY{p}{(}\PY{l+m+mi}{16}\PY{p}{,} \PY{l+m+mi}{9}\PY{p}{)}\PY{p}{)}
+          \PY{n}{ax} \PY{o}{=} \PY{n}{fig}\PY{o}{.}\PY{n}{add\PYZus{}subplot}\PY{p}{(}\PY{l+m+mi}{111}\PY{p}{)}
+          
+          \PY{n}{n}\PY{p}{,} \PY{n}{bins}\PY{p}{,} \PY{n}{patches} \PY{o}{=} \PY{n}{ax}\PY{o}{.}\PY{n}{hist}\PY{p}{(}\PY{n}{unique\PYZus{}words\PYZus{}data}\PY{p}{,} 
+                                     \PY{n}{bins}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{scott}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                                     \PY{n}{edgecolor}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{black}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} 
+                                     \PY{n}{density}\PY{o}{=}\PY{k+kc}{True}\PY{p}{,} 
+                                     \PY{n}{color}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZsh{}Ca2e55}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,}
+                                     \PY{n}{alpha}\PY{o}{=}\PY{l+m+mf}{0.5}\PY{p}{)}
+          
+          \PY{n}{unique\PYZus{}words\PYZus{}line} \PY{o}{=} \PY{n}{scipy}\PY{o}{.}\PY{n}{stats}\PY{o}{.}\PY{n}{norm}\PY{o}{.}\PY{n}{pdf}\PY{p}{(}\PY{n}{bins}\PY{p}{,} \PY{n}{unique\PYZus{}words\PYZus{}mean}\PY{p}{,} \PY{n}{unique\PYZus{}words\PYZus{}std}\PY{p}{)}
+          \PY{n}{ax}\PY{o}{.}\PY{n}{plot}\PY{p}{(}\PY{n}{bins}\PY{p}{,} \PY{n}{unique\PYZus{}words\PYZus{}line}\PY{p}{,} \PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZhy{}\PYZhy{}}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{linewidth}\PY{o}{=}\PY{l+m+mi}{3}\PY{p}{,} \PY{n}{color}\PY{o}{=}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{\PYZsh{}d45776}\PY{l+s+s2}{\PYZdq{}}\PY{p}{)}
+          
+          \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}title}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Training Dataset Distribution of Unique Words}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{18}\PY{p}{)}
+          \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}xlabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Unique Words in Tweet}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{18}\PY{p}{)}
+          \PY{n}{ax}\PY{o}{.}\PY{n}{set\PYZus{}ylabel}\PY{p}{(}\PY{l+s+s2}{\PYZdq{}}\PY{l+s+s2}{Porton of Tweets with That Number of Unique Words}\PY{l+s+s2}{\PYZdq{}}\PY{p}{,} \PY{n}{fontsize}\PY{o}{=}\PY{l+m+mi}{18}\PY{p}{)}
+          
+          \PY{n}{plt}\PY{o}{.}\PY{n}{show}\PY{p}{(}\PY{p}{)}
+\end{Verbatim}
+
+
+    \begin{center}
+    \adjustimage{max size={0.9\linewidth}{0.9\paperheight}}{output_163_0.png}
+    \end{center}
+    { \hspace*{\fill} \\}
+    
+
+    % Add a bibliography block to the postdoc
+    
+    
+    
+    \end{document}

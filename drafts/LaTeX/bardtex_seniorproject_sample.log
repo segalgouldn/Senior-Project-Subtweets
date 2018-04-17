@@ -1,7 +1,6 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  18 MAR 2018 01:55
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  16 APR 2018 19:54
 entering extended mode
  restricted \write18 enabled.
- file:line:error style messages enabled.
  %&-line parsing enabled.
 **bardtex_seniorproject_sample.tex
 (./bardtex_seniorproject_sample.tex
@@ -585,7 +584,7 @@ Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 273.
 Here is how much of TeX's memory you used:
  8749 strings out of 492995
  118506 string characters out of 6132704
- 275276 words of memory out of 5000000
+ 275304 words of memory out of 5000000
  12136 multiletter control sequences out of 15000+600000
  10659 words of font info for 40 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
