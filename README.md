@@ -17,7 +17,7 @@
 * Provide statistics on tweet length, punctuation, stop words, and unique words
   
 #### To-Do:
-* Grid Search to find the best parameters, maybe
+* Grid Search to find the best parameters, maybe (probably not)
 * Writing
   
 This project has a license.
