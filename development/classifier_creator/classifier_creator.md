@@ -23,7 +23,10 @@ from sklearn.model_selection import KFold
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 from sklearn.externals import joblib
 from nltk.corpus import stopwords
-from random import choice
+from pprint import pprint
+from random import choice, sample
+from glob import glob
+from os.path import basename, splitext
 from string import punctuation
 
 import matplotlib.pyplot as plt
@@ -42,18 +45,17 @@ import re
 
 
 ```python
-hashtags_pattern = r'(\#[a-zA-Z0-9]+)'
+hashtags_pattern = re.compile(r'(\#[a-zA-Z0-9]+)')
 ```
 
 
 ```python
-urls_pattern = r'(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?\xab\xbb\u201c\u201d\u2018\u2019]))'
-
+urls_pattern = re.compile(r'(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?\xab\xbb\u201c\u201d\u2018\u2019]))')
 ```
 
 
 ```python
-at_mentions_pattern = r'(?<=^|(?<=[^a-zA-Z0-9-\.]))@([A-Za-z0-9_]+)'
+at_mentions_pattern = re.compile(r'(?<=^|(?<=[^a-zA-Z0-9-\.]))@([A-Za-z0-9_]+)')
 ```
 
 #### Prepare English dictionary for language detection
@@ -83,90 +85,45 @@ pd.options.display.float_format = "{:.4f}".format
 ```
 
 #### Load the two data files
-
-
-```python
-subtweets_data = [t for t in json.load(open("../data/other_data/subtweets.json")) 
-                  if t["tweet_data"]["user"]["lang"] == "en" 
-                  and t["reply"]["user"]["lang"] == "en"]
-```
-
-
-```python
-non_subtweets_data = [t for t in json.load(open("../data/other_data/non_subtweets.json")) 
-                      if t["tweet_data"]["user"]["lang"] == "en" 
-                      and t["reply"]["user"]["lang"] == "en"]
-```
-
 #### Only use tweets with at least 50% English words
 #### Also, make the mentions of usernames, URLs, and hashtags generic
 
 
 ```python
-%%time
-subtweets_data = [(re.sub(hashtags_pattern, 
-                          "➊", 
-                          re.sub(urls_pattern, 
-                                 "➋", 
-                                 re.sub(at_mentions_pattern, 
-                                        "➌", 
-                                        t["tweet_data"]["full_text"])))
-                   .replace("\u2018", "'")
-                   .replace("\u2019", "'")
-                   .replace("&quot;", "\"")
-                   .replace("&amp;", "&")
-                   .replace("&gt;", ">")
-                   .replace("&lt;", "<"))
-                  for t in subtweets_data]
-```
-
-    CPU times: user 268 ms, sys: 16.6 ms, total: 284 ms
-    Wall time: 297 ms
-
-
-
-```python
-new_subtweets_data = []
-for tweet in subtweets_data:
-    tokens = tokenizer.tokenize(tweet)
-    english_tokens = [english_dict.check(token) for token in tokens]
-    percent_english_words = sum(english_tokens)/len(english_tokens)
-    if percent_english_words >= 0.5:
-        new_subtweets_data.append(tweet)
+def load_data(filename, threshold=0.5):
+    data = [(hashtags_pattern.sub("➊", 
+             urls_pattern.sub("➋", 
+             at_mentions_pattern.sub("➌", 
+             t["tweet_data"]["full_text"])))
+             .replace("\u2018", "'")
+             .replace("\u2019", "'")
+             .replace("\u201c", "\"")
+             .replace("\u201d", "\"")
+             .replace("&quot;", "\"")
+             .replace("&amp;", "&")
+             .replace("&gt;", ">")
+             .replace("&lt;", "<")) 
+            for t in json.load(open(filename)) 
+            if t["tweet_data"]["user"]["lang"] == "en" 
+            and t["reply"]["user"]["lang"] == "en"]
+    new_data = []
+    for tweet in data:
+        tokens = tokenizer.tokenize(tweet)
+        english_tokens = [english_dict.check(token) for token in tokens]
+        percent_english_words = sum(english_tokens)/len(english_tokens)
+        if percent_english_words >= threshold:
+            new_data.append(tweet)
+    return new_data
 ```
 
 
 ```python
-%%time
-non_subtweets_data = [(re.sub(hashtags_pattern, 
-                              "➊", 
-                              re.sub(urls_pattern, 
-                                     "➋", 
-                                     re.sub(at_mentions_pattern, 
-                                            "➌", 
-                                            t["tweet_data"]["full_text"])))
-                       .replace("\u2018", "'")
-                       .replace("\u2019", "'")
-                       .replace("&quot;", "\"")
-                       .replace("&amp;", "&")
-                       .replace("&gt;", ">")
-                       .replace("&lt;", "<"))
-                      for t in non_subtweets_data]
+subtweets_data = load_data("../data/other_data/subtweets.json")
 ```
-
-    CPU times: user 418 ms, sys: 31.7 ms, total: 450 ms
-    Wall time: 452 ms
-
 
 
 ```python
-new_non_subtweets_data = []
-for tweet in non_subtweets_data:
-    tokens = tokenizer.tokenize(tweet)
-    english_tokens = [english_dict.check(token) for token in tokens]
-    percent_english_words = sum(english_tokens)/len(english_tokens)
-    if percent_english_words >= 0.5:
-        new_non_subtweets_data.append(tweet)
+non_subtweets_data = load_data("../data/other_data/non_subtweets.json")
 ```
 
 #### Show examples
@@ -174,46 +131,45 @@ for tweet in non_subtweets_data:
 
 ```python
 print("Subtweets dataset example:")
-print(choice(new_subtweets_data))
+print(choice(subtweets_data))
 ```
 
     Subtweets dataset example:
-    My feelings are all over the place. We're supposed to be engaged and both of us being busy dosen't help. I guess the babies just complete our little family and we'll have more time with each other when they come.😔
+    This is a pivotal moment to see if I am an adult or still a petty teenager and I'm leaning towards adult
 
 
 
 ```python
 print("Non-subtweets dataset example:")
-print(choice(new_non_subtweets_data))
+print(choice(non_subtweets_data))
 ```
 
     Non-subtweets dataset example:
-    ➌ Hi there! I wasn't able to get through by phone, so I thought I'd ask my MtG question here: Are you taking preorders for booster boxes of Dominaria? If so, how much are they and can they be collected at the prerelease event?
-    Thank you!
+    This is DeRozan's best game in a while.
 
 
 #### Find the length of the smaller dataset
 
 
 ```python
-smallest_length = len(min([new_subtweets_data, new_non_subtweets_data], key=len))
+smallest_length = len(min([subtweets_data, non_subtweets_data], key=len))
 ```
 
 #### Cut both down to be the same length
 
 
 ```python
-subtweets_data = new_subtweets_data[:smallest_length]
+subtweets_data = subtweets_data[:smallest_length]
 ```
 
 
 ```python
-non_subtweets_data = new_non_subtweets_data[:smallest_length]
+non_subtweets_data = non_subtweets_data[:smallest_length]
 ```
 
 
 ```python
-print("Smallest dataset length: {}".format(len(non_subtweets_data)))
+print("Smallest dataset length: {}".format(len(subtweets_data)))
 ```
 
     Smallest dataset length: 7837
@@ -271,163 +227,337 @@ sentiment_pipeline = Pipeline([
 
 
 ```python
-text_training_data = np.array([row[0] for row in training_data])
-```
+def confusion_matrices(training_data, num_folds=10):
+    text_training_data = np.array([row[0] for row in training_data])
+    class_training_data = np.array([row[1] for row in training_data])
+    kf = KFold(n_splits=num_folds, random_state=42, shuffle=True)
+    
+    cnf_matrix_test = np.zeros((2, 2), dtype=int)
+    cnf_matrix_train = np.zeros((2, 2), dtype=int)
+    
+    test_reports = []
+    train_reports = []
+    for i, (train_index, test_index) in enumerate(kf.split(text_training_data)):
 
+        text_train, text_test = text_training_data[train_index], text_training_data[test_index]
+        class_train, class_test = class_training_data[train_index], class_training_data[test_index]
 
-```python
-class_training_data = np.array([row[1] for row in training_data])
-```
+        sentiment_pipeline.fit(text_train, class_train)
+        
+        predictions_test = sentiment_pipeline.predict(text_test)
+        predictions_train = sentiment_pipeline.predict(text_train)
 
+        cnf_matrix_test += confusion_matrix(class_test, predictions_test)
+        cnf_matrix_train += confusion_matrix(class_train, predictions_train)
 
-```python
-num_folds=10
-```
-
-
-```python
-kf = KFold(n_splits=num_folds, random_state=42, shuffle=True)
+        print("Test Data Iteration {}:".format(i+1))
+        
+        test_report = classification_report(class_test, predictions_test, digits=4)
+        test_reports.append(test_report)
+        print(test_report)
+        
+        print(("Test Data Null Accuracy: {:.4f}\n"
+               .format(max(pd.value_counts(pd.Series(class_test)))/float(len(class_test)))))
+        print("="*53)
+        
+        print("Train Data Iteration {}:".format(i+1))
+        
+        train_report = classification_report(class_train, predictions_train, digits=4)
+        train_reports.append(train_report)
+        print(train_report)
+        
+        print(("Train Data Null Accuracy: {:.4f}\n"
+               .format(max(pd.value_counts(pd.Series(class_train)))/float(len(class_train)))))
+        print("="*53)
+        
+    def reports_mean(reports):
+        reports_lists_of_strings = [report.split("\n") for report in reports]
+        reports = [[[float(e) for e in report_string[2][16:].split()],
+                    [float(e) for e in report_string[3][16:].split()],
+                    [float(e) for e in report_string[5][16:].split()]]
+                   for report_string in reports_lists_of_strings]
+        mean_list = np.mean(np.array(reports), axis=0).tolist()
+        print("              precision    recall  f1-score   support")
+        print()
+        print("non-subtweet     {0:.4f}    {1:.4f}    {2:.4f}      {3:d}".format(mean_list[0][0], 
+                                                                                 mean_list[0][1], 
+                                                                                 mean_list[0][2], 
+                                                                                 int(mean_list[0][3])))
+        print("    subtweet     {0:.4f}    {1:.4f}    {2:.4f}      {3:d}".format(mean_list[1][0], 
+                                                                                 mean_list[1][1], 
+                                                                                 mean_list[1][2], 
+                                                                                 int(mean_list[1][3])))
+        print()
+        print(" avg / total     {0:.4f}    {1:.4f}    {2:.4f}      {3:d}".format(mean_list[2][0], 
+                                                                                 mean_list[2][1], 
+                                                                                 mean_list[2][2], 
+                                                                                 int(mean_list[2][3])))
+        print()
+        print("="*53)
+    
+    print("Test Data Averages Across All Folds:")
+    reports_mean(test_reports)
+    print("Train Data Averages Across All Folds:")
+    reports_mean(train_reports)
+    return {"Test": cnf_matrix_test, "Train": cnf_matrix_train}
 ```
 
 
 ```python
 %%time
-cnf_matrix = np.zeros((2, 2), dtype=int)
-for i, (train_index, test_index) in enumerate(kf.split(text_training_data)):
-    
-    text_train, text_test = text_training_data[train_index], text_training_data[test_index]
-    class_train, class_test = class_training_data[train_index], class_training_data[test_index]
-    
-    sentiment_pipeline.fit(text_train, class_train)
-    predictions = sentiment_pipeline.predict(text_test)
-        
-    cnf_matrix += confusion_matrix(class_test, predictions)
-    
-    print("Iteration {}".format(i+1))
-    print(classification_report(class_test, predictions, digits=3))
-    print("null accuracy: {:.3f}\n".format(max(pd.value_counts(pd.Series(class_test)))/float(len(class_test))))
-    print("="*53)
+cnf_matrices = confusion_matrices(training_data)
+cnf_matrix_test = cnf_matrices["Test"]
+cnf_matrix_train = cnf_matrices["Train"]
 ```
 
-    Iteration 1
+    Test Data Iteration 1:
                   precision    recall  f1-score   support
     
-    non-subtweet      0.732     0.644     0.685       793
-        subtweet      0.676     0.759     0.715       775
+    non-subtweet     0.7338    0.6431    0.6855       793
+        subtweet     0.6758    0.7613    0.7160       775
     
-     avg / total      0.704     0.701     0.700      1568
+     avg / total     0.7052    0.7015    0.7006      1568
     
-    null accuracy: 0.506
+    Test Data Null Accuracy: 0.5057
     
     =====================================================
-    Iteration 2
+    Train Data Iteration 1:
                   precision    recall  f1-score   support
     
-    non-subtweet      0.688     0.631     0.658       789
-        subtweet      0.655     0.710     0.681       779
+    non-subtweet     0.9907    0.9806    0.9856      7044
+        subtweet     0.9808    0.9908    0.9858      7062
     
-     avg / total      0.672     0.670     0.670      1568
+     avg / total     0.9857    0.9857    0.9857     14106
     
-    null accuracy: 0.503
+    Train Data Null Accuracy: 0.5006
     
     =====================================================
-    Iteration 3
+    Test Data Iteration 2:
                   precision    recall  f1-score   support
     
-    non-subtweet      0.703     0.685     0.694       769
-        subtweet      0.704     0.721     0.712       799
+    non-subtweet     0.6940    0.6324    0.6618       789
+        subtweet     0.6584    0.7176    0.6867       779
     
-     avg / total      0.703     0.703     0.703      1568
+     avg / total     0.6763    0.6747    0.6742      1568
     
-    null accuracy: 0.510
+    Test Data Null Accuracy: 0.5032
     
     =====================================================
-    Iteration 4
+    Train Data Iteration 2:
                   precision    recall  f1-score   support
     
-    non-subtweet      0.731     0.639     0.682       801
-        subtweet      0.667     0.755     0.708       767
+    non-subtweet     0.9908    0.9786    0.9847      7048
+        subtweet     0.9789    0.9909    0.9849      7058
     
-     avg / total      0.700     0.696     0.695      1568
+     avg / total     0.9848    0.9848    0.9848     14106
     
-    null accuracy: 0.511
+    Train Data Null Accuracy: 0.5004
     
     =====================================================
-    Iteration 5
+    Test Data Iteration 3:
                   precision    recall  f1-score   support
     
-    non-subtweet      0.708     0.656     0.681       779
-        subtweet      0.683     0.732     0.707       788
+    non-subtweet     0.7021    0.6866    0.6943       769
+        subtweet     0.7047    0.7196    0.7121       799
     
-     avg / total      0.695     0.694     0.694      1567
+     avg / total     0.7034    0.7034    0.7033      1568
     
-    null accuracy: 0.503
+    Test Data Null Accuracy: 0.5096
     
     =====================================================
-    Iteration 6
+    Train Data Iteration 3:
                   precision    recall  f1-score   support
     
-    non-subtweet      0.684     0.662     0.673       758
-        subtweet      0.693     0.713     0.703       809
+    non-subtweet     0.9869    0.9829    0.9849      7068
+        subtweet     0.9829    0.9869    0.9849      7038
     
-     avg / total      0.688     0.689     0.688      1567
+     avg / total     0.9849    0.9849    0.9849     14106
     
-    null accuracy: 0.516
+    Train Data Null Accuracy: 0.5011
     
     =====================================================
-    Iteration 7
+    Test Data Iteration 4:
                   precision    recall  f1-score   support
     
-    non-subtweet      0.699     0.630     0.662       751
-        subtweet      0.688     0.750     0.717       816
+    non-subtweet     0.7313    0.6355    0.6800       801
+        subtweet     0.6651    0.7562    0.7077       767
     
-     avg / total      0.693     0.692     0.691      1567
+     avg / total     0.6989    0.6945    0.6936      1568
     
-    null accuracy: 0.521
+    Test Data Null Accuracy: 0.5108
     
     =====================================================
-    Iteration 8
+    Train Data Iteration 4:
                   precision    recall  f1-score   support
     
-    non-subtweet      0.733     0.643     0.685       812
-        subtweet      0.661     0.748     0.702       755
+    non-subtweet     0.9907    0.9802    0.9854      7036
+        subtweet     0.9805    0.9908    0.9856      7070
     
-     avg / total      0.698     0.694     0.693      1567
+     avg / total     0.9856    0.9855    0.9855     14106
     
-    null accuracy: 0.518
+    Train Data Null Accuracy: 0.5012
     
     =====================================================
-    Iteration 9
+    Test Data Iteration 5:
                   precision    recall  f1-score   support
     
-    non-subtweet      0.731     0.642     0.683       829
-        subtweet      0.646     0.734     0.687       738
+    non-subtweet     0.7078    0.6560    0.6809       779
+        subtweet     0.6828    0.7322    0.7067       788
     
-     avg / total      0.691     0.685     0.685      1567
+     avg / total     0.6952    0.6943    0.6939      1567
     
-    null accuracy: 0.529
+    Test Data Null Accuracy: 0.5029
     
     =====================================================
-    Iteration 10
+    Train Data Iteration 5:
                   precision    recall  f1-score   support
     
-    non-subtweet      0.707     0.681     0.694       756
-        subtweet      0.713     0.737     0.725       811
+    non-subtweet     0.9871    0.9829    0.9849      7058
+        subtweet     0.9829    0.9871    0.9850      7049
     
-     avg / total      0.710     0.710     0.710      1567
+     avg / total     0.9850    0.9850    0.9850     14107
     
-    null accuracy: 0.518
+    Train Data Null Accuracy: 0.5003
     
     =====================================================
-    CPU times: user 45.3 s, sys: 1.49 s, total: 46.8 s
-    Wall time: 51.8 s
+    Test Data Iteration 6:
+                  precision    recall  f1-score   support
+    
+    non-subtweet     0.6836    0.6583    0.6707       758
+        subtweet     0.6906    0.7145    0.7023       809
+    
+     avg / total     0.6872    0.6873    0.6870      1567
+    
+    Test Data Null Accuracy: 0.5163
+    
+    =====================================================
+    Train Data Iteration 6:
+                  precision    recall  f1-score   support
+    
+    non-subtweet     0.9874    0.9846    0.9860      7079
+        subtweet     0.9845    0.9873    0.9859      7028
+    
+     avg / total     0.9860    0.9860    0.9860     14107
+    
+    Train Data Null Accuracy: 0.5018
+    
+    =====================================================
+    Test Data Iteration 7:
+                  precision    recall  f1-score   support
+    
+    non-subtweet     0.7003    0.6285    0.6625       751
+        subtweet     0.6876    0.7525    0.7185       816
+    
+     avg / total     0.6937    0.6930    0.6917      1567
+    
+    Test Data Null Accuracy: 0.5207
+    
+    =====================================================
+    Train Data Iteration 7:
+                  precision    recall  f1-score   support
+    
+    non-subtweet     0.9860    0.9852    0.9856      7086
+        subtweet     0.9851    0.9859    0.9855      7021
+    
+     avg / total     0.9855    0.9855    0.9855     14107
+    
+    Train Data Null Accuracy: 0.5023
+    
+    =====================================================
+    Test Data Iteration 8:
+                  precision    recall  f1-score   support
+    
+    non-subtweet     0.7342    0.6429    0.6855       812
+        subtweet     0.6612    0.7497    0.7027       755
+    
+     avg / total     0.6990    0.6943    0.6938      1567
+    
+    Test Data Null Accuracy: 0.5182
+    
+    =====================================================
+    Train Data Iteration 8:
+                  precision    recall  f1-score   support
+    
+    non-subtweet     0.9906    0.9795    0.9850      7025
+        subtweet     0.9799    0.9908    0.9853      7082
+    
+     avg / total     0.9852    0.9852    0.9852     14107
+    
+    Train Data Null Accuracy: 0.5020
+    
+    =====================================================
+    Test Data Iteration 9:
+                  precision    recall  f1-score   support
+    
+    non-subtweet     0.7321    0.6429    0.6846       829
+        subtweet     0.6472    0.7358    0.6886       738
+    
+     avg / total     0.6921    0.6867    0.6865      1567
+    
+    Test Data Null Accuracy: 0.5290
+    
+    =====================================================
+    Train Data Iteration 9:
+                  precision    recall  f1-score   support
+    
+    non-subtweet     0.9919    0.9796    0.9857      7008
+        subtweet     0.9801    0.9921    0.9861      7099
+    
+     avg / total     0.9860    0.9859    0.9859     14107
+    
+    Train Data Null Accuracy: 0.5032
+    
+    =====================================================
+    Test Data Iteration 10:
+                  precision    recall  f1-score   support
+    
+    non-subtweet     0.7060    0.6799    0.6927       756
+        subtweet     0.7116    0.7361    0.7236       811
+    
+     avg / total     0.7089    0.7090    0.7087      1567
+    
+    Test Data Null Accuracy: 0.5175
+    
+    =====================================================
+    Train Data Iteration 10:
+                  precision    recall  f1-score   support
+    
+    non-subtweet     0.9870    0.9849    0.9859      7081
+        subtweet     0.9848    0.9869    0.9859      7026
+    
+     avg / total     0.9859    0.9859    0.9859     14107
+    
+    Train Data Null Accuracy: 0.5019
+    
+    =====================================================
+    Test Data Averages Across All Folds:
+                  precision    recall  f1-score   support
+    
+    non-subtweet     0.7125    0.6506    0.6798      783
+        subtweet     0.6785    0.7376    0.7065      783
+    
+     avg / total     0.6960    0.6939    0.6933      1567
+    
+    =====================================================
+    Train Data Averages Across All Folds:
+                  precision    recall  f1-score   support
+    
+    non-subtweet     0.9889    0.9819    0.9854      7053
+        subtweet     0.9820    0.9890    0.9855      7053
+    
+     avg / total     0.9855    0.9854    0.9854      14106
+    
+    =====================================================
+    CPU times: user 1min 8s, sys: 1.59 s, total: 1min 9s
+    Wall time: 1min 13s
 
 
 #### See the most informative features
+[How does "MultinomialNB.coef_" work?](https://stackoverflow.com/a/29915740/6147528)
 
 
 ```python
-def most_informative_features(pipeline, n=50):
+def most_informative_features(pipeline, n=10000):
     vectorizer = pipeline.named_steps["vectorizer"]
     classifier = pipeline.named_steps["classifier"]
     
@@ -438,16 +568,21 @@ def most_informative_features(pipeline, n=50):
     top_n_class_1 = sorted(zip(classifier.coef_[0], feature_names))[:n]
     top_n_class_2 = sorted(zip(classifier.coef_[0], feature_names))[-n:]
     
-    return {class_labels[0]: pd.DataFrame({"Weight": [tup[0] for tup in top_n_class_1], 
+    return {class_labels[0]: pd.DataFrame({"Log Probability": [tup[0] for tup in top_n_class_1], 
                                            "Feature": [tup[1] for tup in top_n_class_1]}), 
-            class_labels[1]: pd.DataFrame({"Weight": [tup[0] for tup in reversed(top_n_class_2)],
+            class_labels[1]: pd.DataFrame({"Log Probability": [tup[0] for tup in reversed(top_n_class_2)],
                                            "Feature": [tup[1] for tup in reversed(top_n_class_2)]})}
 ```
 
 
 ```python
+%%time
 most_informative_features_all = most_informative_features(sentiment_pipeline)
 ```
+
+    CPU times: user 1.3 s, sys: 27.8 ms, total: 1.33 s
+    Wall time: 1.32 s
+
 
 
 ```python
@@ -461,376 +596,215 @@ most_informative_features_subtweet = most_informative_features_all["subtweet"]
 
 
 ```python
-most_informative_features_non_subtweet.join(most_informative_features_subtweet, 
-                                            lsuffix=" (Non-subtweet)", 
-                                            rsuffix=" (Subtweet)")
+final_features = most_informative_features_non_subtweet.join(most_informative_features_subtweet, 
+                                                             lsuffix=" (Non-subtweet)", 
+                                                             rsuffix=" (Subtweet)")
+final_features.to_csv("../data/other_data/most_informative_features.csv")
+final_features.head(25)
 ```
 
 
 
 
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
       <th></th>
       <th>Feature (Non-subtweet)</th>
-      <th>Weight (Non-subtweet)</th>
+      <th>Log Probability (Non-subtweet)</th>
       <th>Feature (Subtweet)</th>
-      <th>Weight (Subtweet)</th>
+      <th>Log Probability (Subtweet)</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>0</th>
       <td>! ! &amp;</td>
-      <td>-12.6640</td>
+      <td>-12.6618</td>
       <td>.</td>
-      <td>-7.5326</td>
+      <td>-7.5300</td>
     </tr>
     <tr>
       <th>1</th>
       <td>! ! (</td>
-      <td>-12.6640</td>
+      <td>-12.6618</td>
       <td>,</td>
-      <td>-7.9221</td>
+      <td>-7.9193</td>
     </tr>
     <tr>
       <th>2</th>
       <td>! ! )</td>
-      <td>-12.6640</td>
-      <td>people</td>
-      <td>-8.3929</td>
+      <td>-12.6618</td>
+      <td>"</td>
+      <td>-8.0928</td>
     </tr>
     <tr>
       <th>3</th>
       <td>! ! .</td>
-      <td>-12.6640</td>
-      <td>?</td>
-      <td>-8.4622</td>
+      <td>-12.6618</td>
+      <td>people</td>
+      <td>-8.3903</td>
     </tr>
     <tr>
       <th>4</th>
       <td>! ! 100</td>
-      <td>-12.6640</td>
-      <td>don't</td>
-      <td>-8.5613</td>
+      <td>-12.6618</td>
+      <td>?</td>
+      <td>-8.4594</td>
     </tr>
     <tr>
       <th>5</th>
       <td>! ! 15</td>
-      <td>-12.6640</td>
-      <td>like</td>
-      <td>-8.5917</td>
+      <td>-12.6618</td>
+      <td>don't</td>
+      <td>-8.5588</td>
     </tr>
     <tr>
       <th>6</th>
       <td>! ! 3</td>
-      <td>-12.6640</td>
-      <td>"</td>
-      <td>-8.6097</td>
+      <td>-12.6618</td>
+      <td>like</td>
+      <td>-8.5889</td>
     </tr>
     <tr>
       <th>7</th>
       <td>! ! 5</td>
-      <td>-12.6640</td>
+      <td>-12.6618</td>
       <td>just</td>
-      <td>-8.6781</td>
+      <td>-8.6754</td>
     </tr>
     <tr>
       <th>8</th>
       <td>! ! 8am</td>
-      <td>-12.6640</td>
+      <td>-12.6618</td>
       <td>i'm</td>
-      <td>-8.6996</td>
+      <td>-8.6969</td>
     </tr>
     <tr>
       <th>9</th>
       <td>! ! :)</td>
-      <td>-12.6640</td>
+      <td>-12.6618</td>
       <td>!</td>
-      <td>-8.9060</td>
+      <td>-8.9031</td>
     </tr>
     <tr>
       <th>10</th>
       <td>! ! ;)</td>
-      <td>-12.6640</td>
+      <td>-12.6618</td>
       <td>it's</td>
-      <td>-8.9756</td>
+      <td>-8.9727</td>
     </tr>
     <tr>
       <th>11</th>
       <td>! ! absolutely</td>
-      <td>-12.6640</td>
+      <td>-12.6618</td>
       <td>...</td>
-      <td>-9.0457</td>
+      <td>-9.0431</td>
     </tr>
     <tr>
       <th>12</th>
       <td>! ! amazing</td>
-      <td>-12.6640</td>
+      <td>-12.6618</td>
       <td>you're</td>
-      <td>-9.0515</td>
+      <td>-9.0488</td>
     </tr>
     <tr>
       <th>13</th>
       <td>! ! ask</td>
-      <td>-12.6640</td>
+      <td>-12.6618</td>
       <td>:</td>
-      <td>-9.0737</td>
+      <td>-9.0704</td>
     </tr>
     <tr>
       <th>14</th>
       <td>! ! awesome</td>
-      <td>-12.6640</td>
+      <td>-12.6618</td>
       <td>know</td>
-      <td>-9.0953</td>
+      <td>-9.0928</td>
     </tr>
     <tr>
       <th>15</th>
       <td>! ! big</td>
-      <td>-12.6640</td>
+      <td>-12.6618</td>
       <td>twitter</td>
-      <td>-9.1468</td>
+      <td>-9.1443</td>
     </tr>
     <tr>
       <th>16</th>
       <td>! ! bite</td>
-      <td>-12.6640</td>
+      <td>-12.6618</td>
       <td>friends</td>
-      <td>-9.1676</td>
+      <td>-9.1650</td>
     </tr>
     <tr>
       <th>17</th>
       <td>! ! close</td>
-      <td>-12.6640</td>
-      <td>”</td>
-      <td>-9.2655</td>
+      <td>-12.6618</td>
+      <td>time</td>
+      <td>-9.2879</td>
     </tr>
     <tr>
       <th>18</th>
       <td>! ! collection</td>
-      <td>-12.6640</td>
-      <td>“</td>
-      <td>-9.2730</td>
+      <td>-12.6618</td>
+      <td>want</td>
+      <td>-9.2923</td>
     </tr>
     <tr>
       <th>19</th>
       <td>! ! come</td>
-      <td>-12.6640</td>
-      <td>time</td>
-      <td>-9.2904</td>
+      <td>-12.6618</td>
+      <td>u</td>
+      <td>-9.3004</td>
     </tr>
     <tr>
       <th>20</th>
       <td>! ! don't</td>
-      <td>-12.6640</td>
-      <td>want</td>
-      <td>-9.2949</td>
+      <td>-12.6618</td>
+      <td>really</td>
+      <td>-9.3518</td>
     </tr>
     <tr>
       <th>21</th>
       <td>! ! enter</td>
-      <td>-12.6640</td>
-      <td>u</td>
-      <td>-9.3026</td>
+      <td>-12.6618</td>
+      <td>shit</td>
+      <td>-9.3699</td>
     </tr>
     <tr>
       <th>22</th>
       <td>! ! epic</td>
-      <td>-12.6640</td>
-      <td>really</td>
-      <td>-9.3542</td>
+      <td>-12.6618</td>
+      <td>good</td>
+      <td>-9.4017</td>
     </tr>
     <tr>
       <th>23</th>
       <td>! ! extremely</td>
-      <td>-12.6640</td>
-      <td>shit</td>
-      <td>-9.3723</td>
+      <td>-12.6618</td>
+      <td>think</td>
+      <td>-9.4155</td>
     </tr>
     <tr>
       <th>24</th>
       <td>! ! family</td>
-      <td>-12.6640</td>
-      <td>good</td>
-      <td>-9.4043</td>
-    </tr>
-    <tr>
-      <th>25</th>
-      <td>! ! finally</td>
-      <td>-12.6640</td>
-      <td>think</td>
-      <td>-9.4184</td>
-    </tr>
-    <tr>
-      <th>26</th>
-      <td>! ! glasgow</td>
-      <td>-12.6640</td>
+      <td>-12.6618</td>
       <td>make</td>
-      <td>-9.4248</td>
-    </tr>
-    <tr>
-      <th>27</th>
-      <td>! ! guess</td>
-      <td>-12.6640</td>
-      <td>😂</td>
-      <td>-9.4359</td>
-    </tr>
-    <tr>
-      <th>28</th>
-      <td>! ! happy</td>
-      <td>-12.6640</td>
-      <td>can't</td>
-      <td>-9.4544</td>
-    </tr>
-    <tr>
-      <th>29</th>
-      <td>! ! hardest</td>
-      <td>-12.6640</td>
-      <td>*</td>
-      <td>-9.5023</td>
-    </tr>
-    <tr>
-      <th>30</th>
-      <td>! ! he's</td>
-      <td>-12.6640</td>
-      <td>need</td>
-      <td>-9.5308</td>
-    </tr>
-    <tr>
-      <th>31</th>
-      <td>! ! homeland</td>
-      <td>-12.6640</td>
-      <td>fuck</td>
-      <td>-9.5328</td>
-    </tr>
-    <tr>
-      <th>32</th>
-      <td>! ! isn't</td>
-      <td>-12.6640</td>
-      <td>tweet</td>
-      <td>-9.5364</td>
-    </tr>
-    <tr>
-      <th>33</th>
-      <td>! ! it's</td>
-      <td>-12.6640</td>
-      <td>say</td>
-      <td>-9.5649</td>
-    </tr>
-    <tr>
-      <th>34</th>
-      <td>! ! know</td>
-      <td>-12.6640</td>
-      <td>stop</td>
-      <td>-9.6284</td>
-    </tr>
-    <tr>
-      <th>35</th>
-      <td>! ! like</td>
-      <td>-12.6640</td>
-      <td>)</td>
-      <td>-9.6436</td>
-    </tr>
-    <tr>
-      <th>36</th>
-      <td>! ! lol</td>
-      <td>-12.6640</td>
-      <td>-</td>
-      <td>-9.6666</td>
-    </tr>
-    <tr>
-      <th>37</th>
-      <td>! ! looking</td>
-      <td>-12.6640</td>
-      <td>/</td>
-      <td>-9.6850</td>
-    </tr>
-    <tr>
-      <th>38</th>
-      <td>! ! looks</td>
-      <td>-12.6640</td>
-      <td>lol</td>
-      <td>-9.6878</td>
-    </tr>
-    <tr>
-      <th>39</th>
-      <td>! ! lov</td>
-      <td>-12.6640</td>
-      <td>person</td>
-      <td>-9.6952</td>
-    </tr>
-    <tr>
-      <th>40</th>
-      <td>! ! loved</td>
-      <td>-12.6640</td>
-      <td>fucking</td>
-      <td>-9.7133</td>
-    </tr>
-    <tr>
-      <th>41</th>
-      <td>! ! maaawd</td>
-      <td>-12.6640</td>
-      <td>life</td>
-      <td>-9.7144</td>
-    </tr>
-    <tr>
-      <th>42</th>
-      <td>! ! maga</td>
-      <td>-12.6640</td>
-      <td>hate</td>
-      <td>-9.7286</td>
-    </tr>
-    <tr>
-      <th>43</th>
-      <td>! ! make</td>
-      <td>-12.6640</td>
-      <td>got</td>
-      <td>-9.7451</td>
-    </tr>
-    <tr>
-      <th>44</th>
-      <td>! ! maybe</td>
-      <td>-12.6640</td>
-      <td>y'all</td>
-      <td>-9.7635</td>
-    </tr>
-    <tr>
-      <th>45</th>
-      <td>! ! need</td>
-      <td>-12.6640</td>
-      <td>'</td>
-      <td>-9.7664</td>
-    </tr>
-    <tr>
-      <th>46</th>
-      <td>! ! omfg</td>
-      <td>-12.6640</td>
-      <td>(</td>
-      <td>-9.7790</td>
-    </tr>
-    <tr>
-      <th>47</th>
-      <td>! ! open</td>
-      <td>-12.6640</td>
-      <td>! !</td>
-      <td>-9.7901</td>
-    </tr>
-    <tr>
-      <th>48</th>
-      <td>! ! packed</td>
-      <td>-12.6640</td>
-      <td>thing</td>
-      <td>-9.7926</td>
-    </tr>
-    <tr>
-      <th>49</th>
-      <td>! ! people</td>
-      <td>-12.6640</td>
-      <td>@</td>
-      <td>-9.7958</td>
+      <td>-9.4225</td>
     </tr>
   </tbody>
 </table>
@@ -842,55 +816,53 @@ most_informative_features_non_subtweet.join(most_informative_features_subtweet,
 
 
 ```python
-def plot_confusion_matrix(cm, classes, normalize=False,
-                          title="Confusion Matrix", cmap=plt.cm.Blues):
-    if normalize:
-        cm = cm.astype("float") / cm.sum(axis=1)[:, np.newaxis]
+def plot_confusion_matrix(cm, classes=["non-subtweet", "subtweet"], 
+                          title="Confusion Matrix", cmap=plt.cm.Purples):
+    
+    cm_normalized = cm.astype("float") / cm.sum(axis=1)[:, np.newaxis]
 
     plt.imshow(cm, interpolation="nearest", cmap=cmap)
-    plt.title(title)
     plt.colorbar()
+    
+    plt.title(title, size=18)
+    
     tick_marks = np.arange(len(classes))
-    plt.xticks(tick_marks, classes, rotation=45)
-    plt.yticks(tick_marks, classes)
+    plt.xticks(tick_marks, classes, rotation=45, fontsize=14)
+    plt.yticks(tick_marks, classes, fontsize=14)
 
-    fmt = ".2f" if normalize else "d"
     thresh = cm.max() / 2.
     for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
-        plt.text(j, i, format(cm[i, j], fmt),
-                 horizontalalignment="center",
-                 color="white" if cm[i, j] > thresh else "black")
-
+        plt.text(j, i, "{} ({:.0%})".format(cm[i, j], cm_normalized[i, j]),
+                horizontalalignment="center", size=16,
+                color="white" if cm[i, j] > thresh else "black")
+        
     plt.tight_layout()
-    plt.ylabel("True label")
-    plt.xlabel("Predicted Label")
+    
+    plt.ylabel("True label", fontsize=14)
+    plt.xlabel("Predicted Label", fontsize=14)
 ```
 
 #### Show the matrices
 
 
 ```python
-class_names = ["non-subtweet", "subtweet"]
-
 np.set_printoptions(precision=2)
 
-plt.figure()
-plot_confusion_matrix(cnf_matrix, classes=class_names,
-                      title='Confusion matrix, without normalization')
+plt.figure(figsize=(6, 6))
+plot_confusion_matrix(cnf_matrix_test, title="Test Data Confusion Matrix")
 
-plt.figure()
-plot_confusion_matrix(cnf_matrix, classes=class_names, normalize=True,
-                      title='Normalized confusion matrix')
+plt.figure(figsize=(6, 6))
+plot_confusion_matrix(cnf_matrix_train, title="Train Data Confusion Matrix")
 
 plt.show()
 ```
 
 
-![png](output_59_0.png)
+![png](output_52_0.png)
 
 
 
-![png](output_59_1.png)
+![png](output_52_1.png)
 
 
 #### Update matplotlib style
@@ -911,135 +883,137 @@ joblib.dump(sentiment_pipeline, "../data/other_data/subtweets_classifier.pkl");
 
 
 ```python
-def tests_dataframe(tweets_dataframe, text_column="SentimentText", sentiment_column="Sentiment"):
-    predictions = sentiment_pipeline.predict_proba(tweets_dataframe[text_column])
-    negative_probability = predictions[:, 0].tolist()
-    positive_probability = predictions[:, 1].tolist()
-    return pd.DataFrame({"tweet": tweets_dataframe[text_column], 
-                         "sentiment_score": tweets_dataframe[sentiment_column], 
-                         "subtweet_negative_probability": negative_probability, 
-                         "subtweet_positive_probability": positive_probability}).sort_values(by="subtweet_positive_probability", 
-                                                                                             ascending=False)
+def process_tweets_for_testing(filenames):
+    dataframes = {}
+    for filename in filenames:
+        username = splitext(basename(filename))[0][:-7]
+        dataframes[username] = {}
+        
+        user_df = pd.read_csv(filename).dropna()
+        user_df["Text"] = user_df["Text"].str.replace(hashtags_pattern, "➊")
+        user_df["Text"] = user_df["Text"].str.replace(urls_pattern, "➋")
+        user_df["Text"] = user_df["Text"].str.replace(at_mentions_pattern, "➌")
+        user_df["Text"] = user_df["Text"].str.replace("\u2018", "'")
+        user_df["Text"] = user_df["Text"].str.replace("\u2019", "'")
+        user_df["Text"] = user_df["Text"].str.replace("\u201c", "\"")
+        user_df["Text"] = user_df["Text"].str.replace("\u201d", "\"")
+        user_df["Text"] = user_df["Text"].str.replace("&quot;", "\"")
+        user_df["Text"] = user_df["Text"].str.replace("&amp;", "&")
+        user_df["Text"] = user_df["Text"].str.replace("&gt;", ">")
+        user_df["Text"] = user_df["Text"].str.replace("&lt;", "<")
+        
+        predictions = sentiment_pipeline.predict_proba(user_df["Text"])[:, 1].tolist()
+        user_df["SubtweetProbability"] = predictions
+
+        dataframes[username]["all"] = user_df
+        
+        scores = user_df[["SubtweetProbability"]].rename(columns={"SubtweetProbability": username})
+        
+        dataframes[username]["scores"] = scores
+        dataframes[username]["stats"] = scores.describe()
+        
+    return dataframes
 ```
 
-#### Make up some tweets
+#### Load the CSV files
 
 
 ```python
-test_tweets = ["Some people don't know their place.", 
-               "Isn't it funny how some people don't know their place?", 
-               "How come you people act like this?", 
-               "You're such a nerd.",
-               "I love Noah, he's so cool.",
-               "Who the heck is Noah?",
-               "This is a @NoahSegalGould subtweet. Go check out https://segal-gould.com.", 
-               "This is a subtweet.", 
-               "Hey @jack!", 
-               "Hey Jack!",
-               "http://www.google.com"]
-```
-
-#### Make a dataframe from the list
-
-
-```python
-test_tweets_df = pd.DataFrame({"Tweet": test_tweets, "Sentiment": [None]*len(test_tweets)})
-```
-
-#### Remove usernames, URLs, and hashtags
-
-
-```python
-test_tweets_df["Tweet"] = test_tweets_df["Tweet"].str.replace(hashtags_pattern, "➊")
+filenames = glob("../data/data_for_testing/friends_data/*.csv")
 ```
 
 
 ```python
-test_tweets_df["Tweet"] = test_tweets_df["Tweet"].str.replace(urls_pattern, "➋")
+%%time
+dataframes = process_tweets_for_testing(filenames)
 ```
+
+    CPU times: user 8.76 s, sys: 122 ms, total: 8.88 s
+    Wall time: 9.07 s
+
+
+#### Show a random table
 
 
 ```python
-test_tweets_df["Tweet"] = test_tweets_df["Tweet"].str.replace(at_mentions_pattern, "➌")
-```
-
-#### Print the tests
-
-
-```python
-tests_dataframe(test_tweets_df, text_column="Tweet", 
-                sentiment_column="Sentiment").drop(["sentiment_score", 
-                                                    "subtweet_negative_probability"], axis=1)
+chosen_username = choice(list(dataframes.keys()))
+dataframes[chosen_username]["all"].sort_values(by="SubtweetProbability", ascending=False).head(5)
 ```
 
 
 
 
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>subtweet_positive_probability</th>
-      <th>tweet</th>
+      <th>Text</th>
+      <th>Date</th>
+      <th>Favorites</th>
+      <th>Retweets</th>
+      <th>Tweet ID</th>
+      <th>SubtweetProbability</th>
     </tr>
   </thead>
   <tbody>
     <tr>
-      <th>0</th>
-      <td>0.7802</td>
-      <td>Some people don't know their place.</td>
+      <th>462</th>
+      <td>ppl saying zionist shit on the internet really fucks w my high</td>
+      <td>2017-07-17 02:27:07</td>
+      <td>11</td>
+      <td>0</td>
+      <td>886834632125288448</td>
+      <td>0.8244</td>
     </tr>
     <tr>
-      <th>1</th>
-      <td>0.7730</td>
-      <td>Isn't it funny how some people don't know their place?</td>
+      <th>15</th>
+      <td>i hate seeing shitty straight people yelling at their kids in public like why did you breed</td>
+      <td>2018-03-21 12:49:00</td>
+      <td>24</td>
+      <td>3</td>
+      <td>976500935437496320</td>
+      <td>0.8140</td>
     </tr>
     <tr>
-      <th>2</th>
-      <td>0.7179</td>
-      <td>How come you people act like this?</td>
+      <th>392</th>
+      <td>some1 replied to my tweet about cis ppl making xcuses 4 not dating trans ppl w "bc they have a fucking cock"</td>
+      <td>2017-08-01 19:08:46</td>
+      <td>10</td>
+      <td>0</td>
+      <td>892522524361322496</td>
+      <td>0.8044</td>
     </tr>
     <tr>
-      <th>3</th>
-      <td>0.6903</td>
-      <td>You're such a nerd.</td>
+      <th>563</th>
+      <td>cw my shit mental health: u know shit is f'd up when ur lookin @ a meme abt dying of old age and yr like "this meme is actually optimistic"</td>
+      <td>2017-06-20 22:12:12</td>
+      <td>2</td>
+      <td>1</td>
+      <td>877348396029358080</td>
+      <td>0.7965</td>
     </tr>
     <tr>
-      <th>4</th>
-      <td>0.5781</td>
-      <td>I love Noah, he's so cool.</td>
-    </tr>
-    <tr>
-      <th>10</th>
-      <td>0.4981</td>
-      <td>➋</td>
-    </tr>
-    <tr>
-      <th>5</th>
-      <td>0.4625</td>
-      <td>Who the heck is Noah?</td>
-    </tr>
-    <tr>
-      <th>6</th>
-      <td>0.4487</td>
-      <td>This is a ➌ subtweet. Go check out ➋.</td>
-    </tr>
-    <tr>
-      <th>7</th>
-      <td>0.4425</td>
-      <td>This is a subtweet.</td>
-    </tr>
-    <tr>
-      <th>8</th>
-      <td>0.2996</td>
-      <td>Hey ➌!</td>
-    </tr>
-    <tr>
-      <th>9</th>
-      <td>0.2996</td>
-      <td>Hey Jack!</td>
+      <th>477</th>
+      <td>I FUCKING LOVE QUEER PEOPLE</td>
+      <td>2017-07-09 21:20:04</td>
+      <td>19</td>
+      <td>1</td>
+      <td>884220643226644480</td>
+      <td>0.7938</td>
     </tr>
   </tbody>
 </table>
@@ -1047,452 +1021,191 @@ tests_dataframe(test_tweets_df, text_column="Tweet",
 
 
 
-#### Tests on friends' tweets
-
-#### Aaron
+#### Prepare statistics on tweets
 
 
 ```python
-aaron_df = pd.read_csv("../data/data_for_testing/friends_data/akrapf96_tweets.csv").dropna()
-aaron_df["Sentiment"] = None
-```
-
-#### Remove usernames, URLs, and hashtags
-
-
-```python
-aaron_df["Text"] = aaron_df["Text"].str.replace(hashtags_pattern, "➊")
+tests_df = pd.concat([df_dict["scores"] for df_dict in dataframes.values()], ignore_index=True)
 ```
 
 
 ```python
-aaron_df["Text"] = aaron_df["Text"].str.replace(urls_pattern, "➋")
-```
-
-
-```python
-aaron_df["Text"] = aaron_df["Text"].str.replace(at_mentions_pattern, "➌")
-```
-
-
-```python
-aaron_df = tests_dataframe(aaron_df, text_column="Text", 
-                           sentiment_column="Sentiment").drop(["sentiment_score", 
-                                                               "subtweet_negative_probability"], axis=1)
-```
-
-
-```python
-aaron_df.to_csv("../data/data_from_testing/friends_data/akrapf96_tests.csv")
-```
-
-
-```python
-aaron_df.head(10)
+tests_df.describe()
 ```
 
 
 
 
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
       <th></th>
-      <th>subtweet_positive_probability</th>
-      <th>tweet</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>2092</th>
-      <td>0.8578</td>
-      <td>I hate when people overuse emojis</td>
-    </tr>
-    <tr>
-      <th>2137</th>
-      <td>0.8442</td>
-      <td>Also you don't need to resort to social media 24/7 to complain about your very privileged life ¯\_(ツ)_/¯</td>
-    </tr>
-    <tr>
-      <th>2151</th>
-      <td>0.8366</td>
-      <td>When I try to be supportive and caring I get ignored and then I'm told I'm not being supportive or caring ¯\_(ツ)_/¯</td>
-    </tr>
-    <tr>
-      <th>2134</th>
-      <td>0.8177</td>
-      <td>What he doesn't know (unless he stalks my twitter which I know he does) is that I have fake accounts following all his social media</td>
-    </tr>
-    <tr>
-      <th>181</th>
-      <td>0.8143</td>
-      <td>I often obsess when texting older people if they will think less of me for saying "LOL" so I say "haha" instead but my mom just texting me "LOL" so maybe I've been overthinking this?</td>
-    </tr>
-    <tr>
-      <th>1510</th>
-      <td>0.8076</td>
-      <td>If you don't have tweet notifications turned on for me are we really friends</td>
-    </tr>
-    <tr>
-      <th>658</th>
-      <td>0.8062</td>
-      <td>I wonder how many animal social media accounts I follow across every platform</td>
-    </tr>
-    <tr>
-      <th>2076</th>
-      <td>0.8027</td>
-      <td>I still don't understand why my brother feels a need to literally narrate his life on Twitter. Nobody cares when you go to sleep or wake up</td>
-    </tr>
-    <tr>
-      <th>1519</th>
-      <td>0.8013</td>
-      <td>Is it weird how my mind designates which social media specific content belongs on? Like this tweet wouldn't make sense to me on facebook</td>
-    </tr>
-    <tr>
-      <th>2319</th>
-      <td>0.8005</td>
-      <td>Sometimes I wonder if people don't realize the 140 character limit and try to type a really long message and end up having it get cut off at</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
-
-```python
-aaron_df_for_plotting = aaron_df.drop(["tweet"], axis=1)
-```
-
-#### Julia
-
-
-```python
-julia_df = pd.read_csv("../data/data_for_testing/friends_data/juliaeberry_tweets.csv").dropna()
-julia_df["Sentiment"] = None
-```
-
-#### Remove usernames, URLs, and hashtags
-
-
-```python
-julia_df["Text"] = julia_df["Text"].str.replace(hashtags_pattern, "➊")
-```
-
-
-```python
-julia_df["Text"] = julia_df["Text"].str.replace(urls_pattern, "➋")
-```
-
-
-```python
-julia_df["Text"] = julia_df["Text"].str.replace(at_mentions_pattern, "➌")
-```
-
-
-```python
-julia_df = tests_dataframe(julia_df, text_column="Text", 
-                           sentiment_column="Sentiment").drop(["sentiment_score", 
-                                                               "subtweet_negative_probability"], axis=1)
-```
-
-
-```python
-julia_df.to_csv("../data/data_from_testing/friends_data/juliaeberry_tests.csv")
-```
-
-
-```python
-julia_df.head(10)
-```
-
-
-
-
-<div>
-
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>subtweet_positive_probability</th>
-      <th>tweet</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>3197</th>
-      <td>0.8674</td>
-      <td>unpopular twitter opinion I don't like christine sudoku and elijah whatever and I don't think they're funny</td>
-    </tr>
-    <tr>
-      <th>3613</th>
-      <td>0.8566</td>
-      <td>don't follow bachelor contestants u liked on insta bc it will just make u hate them for being annoying and unoriginal ➊</td>
-    </tr>
-    <tr>
-      <th>2325</th>
-      <td>0.8399</td>
-      <td>I love seeing people I knew from hs at the gym! and by that I mean don't talk to me don't even look at me</td>
-    </tr>
-    <tr>
-      <th>1555</th>
-      <td>0.8317</td>
-      <td>tbt to when ➌ are real trash out of the garbage</td>
-    </tr>
-    <tr>
-      <th>3913</th>
-      <td>0.8153</td>
-      <td>tfw ur anxiety kills ur appetite but you can't do anything done bc ur still hungry so u just get more anxiety ➊</td>
-    </tr>
-    <tr>
-      <th>2235</th>
-      <td>0.8152</td>
-      <td>david mitchell said the world is full of people who want to make people who don't want to dance dance....</td>
-    </tr>
-    <tr>
-      <th>1450</th>
-      <td>0.8129</td>
-      <td>between this is just to say and sophia the robot memes, twitter has been fucking On recently</td>
-    </tr>
-    <tr>
-      <th>3859</th>
-      <td>0.8108</td>
-      <td>I don't really tmi about volleyball on twitter but I wish I could bc I could vent for hours about how this sport makes me feel lyk trash</td>
-    </tr>
-    <tr>
-      <th>2970</th>
-      <td>0.8066</td>
-      <td>funny how some people have suddenly become serious ""academics"" and think they're amazingly intelligent now....try no bitch u fake as fuck</td>
-    </tr>
-    <tr>
-      <th>3348</th>
-      <td>0.8026</td>
-      <td>one critique I have of westworld: there are too many boring white guys with beards and it's hard to tell them apart</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
-
-```python
-julia_df_for_plotting = julia_df.drop(["tweet"], axis=1)
-```
-
-#### Noah
-
-
-```python
-noah_df = pd.read_csv("../data/data_for_testing/friends_data/noahsegalgould_tweets.csv").dropna()
-noah_df["Sentiment"] = None
-```
-
-#### Remove usernames, URLs, and hashtags
-
-
-```python
-noah_df["Text"] = noah_df["Text"].str.replace(hashtags_pattern, "➊")
-```
-
-
-```python
-noah_df["Text"] = noah_df["Text"].str.replace(urls_pattern, "➋")
-```
-
-
-```python
-noah_df["Text"] = noah_df["Text"].str.replace(at_mentions_pattern, "➌")
-```
-
-
-```python
-noah_df = tests_dataframe(noah_df, text_column="Text", 
-                          sentiment_column="Sentiment").drop(["sentiment_score", 
-                                                              "subtweet_negative_probability"], axis=1)
-```
-
-
-```python
-noah_df.to_csv("../data/data_from_testing/friends_data/noahsegalgould_tests.csv")
-```
-
-
-```python
-noah_df.head(10)
-```
-
-
-
-
-<div>
-
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>subtweet_positive_probability</th>
-      <th>tweet</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <th>2022</th>
-      <td>0.8972</td>
-      <td>you may think you're cool but unless you're friends with my friends you're not actually as cool as you could be</td>
-    </tr>
-    <tr>
-      <th>1689</th>
-      <td>0.8490</td>
-      <td>linkedin is better than twitter.\ndon't @ me.</td>
-    </tr>
-    <tr>
-      <th>1716</th>
-      <td>0.8412</td>
-      <td>If you don't make your meatloaf with ketchup don't bother talking to me</td>
-    </tr>
-    <tr>
-      <th>2027</th>
-      <td>0.8372</td>
-      <td>IF U CALL URSELF A WEEB BUT DONT HAVE ANIME PROF PICS ON ALL SOCIAL MEDIA\n DELETE  UR  ACCOUNTS</td>
-    </tr>
-    <tr>
-      <th>1760</th>
-      <td>0.8172</td>
-      <td>don't ever talk to me or my hamartia ever again</td>
-    </tr>
-    <tr>
-      <th>340</th>
-      <td>0.8130</td>
-      <td>Twitter changed the way bots download tweets and now my friends’ twitter bots can’t be updated unless they give me sensitive information</td>
-    </tr>
-    <tr>
-      <th>291</th>
-      <td>0.8129</td>
-      <td>if you've still got tweet notifications on for me, I'm sorry, this is a subtweet</td>
-    </tr>
-    <tr>
-      <th>2523</th>
-      <td>0.8090</td>
-      <td>Instead of posting several vague tweets revolving around my issues of self-worth I'll just ask this: Who decides how good a friend I am?</td>
-    </tr>
-    <tr>
-      <th>1797</th>
-      <td>0.8083</td>
-      <td>don't @ ➋</td>
-    </tr>
-    <tr>
-      <th>1242</th>
-      <td>0.8020</td>
-      <td>stupid pet peeve of the evening:\nsaying "greater than" aloud 5 times sounds stupid\nso why type &gt;&gt;&gt;&gt;&gt;</td>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-
-
-
-```python
-noah_df_for_plotting = noah_df.drop(["tweet"], axis=1)
-```
-
-#### Rename the columns for later
-
-
-```python
-aaron_df_for_plotting_together = aaron_df_for_plotting.rename(columns={"subtweet_positive_probability": "Aaron"})
-```
-
-
-```python
-julia_df_for_plotting_together = julia_df_for_plotting.rename(columns={"subtweet_positive_probability": "Julia"})
-```
-
-
-```python
-noah_df_for_plotting_together = noah_df_for_plotting.rename(columns={"subtweet_positive_probability": "Noah"})
-```
-
-#### Prepare statistics on friends' tweets
-
-
-```python
-friends_df = pd.concat([aaron_df_for_plotting_together, 
-                        julia_df_for_plotting_together, 
-                        noah_df_for_plotting_together], ignore_index=True)
-```
-
-
-```python
-friends_df.describe()
-```
-
-
-
-
-<div>
-
-<table border="1" class="dataframe">
-  <thead>
-    <tr style="text-align: right;">
-      <th></th>
-      <th>Aaron</th>
-      <th>Julia</th>
-      <th>Noah</th>
+      <th>adhaardesai</th>
+      <th>akrapf96</th>
+      <th>generatedtext</th>
+      <th>gothodile</th>
+      <th>juliaeberry</th>
+      <th>kayleesue</th>
+      <th>keithohara</th>
+      <th>metalgarurumonz</th>
+      <th>noahsegalgould</th>
+      <th>paul_hembree</th>
+      <th>pumpkinheadgal</th>
+      <th>scorpiodisaster</th>
+      <th>whoisleormiller</th>
+      <th>zoeterhune</th>
     </tr>
   </thead>
   <tbody>
     <tr>
       <th>count</th>
+      <td>621.0000</td>
       <td>2640.0000</td>
+      <td>2066.0000</td>
+      <td>3488.0000</td>
       <td>4356.0000</td>
+      <td>1939.0000</td>
+      <td>1169.0000</td>
+      <td>638.0000</td>
       <td>2814.0000</td>
+      <td>445.0000</td>
+      <td>772.0000</td>
+      <td>5364.0000</td>
+      <td>853.0000</td>
+      <td>1467.0000</td>
     </tr>
     <tr>
       <th>mean</th>
-      <td>0.5069</td>
-      <td>0.5162</td>
-      <td>0.5063</td>
+      <td>0.4996</td>
+      <td>0.5086</td>
+      <td>0.5438</td>
+      <td>0.5270</td>
+      <td>0.5187</td>
+      <td>0.4976</td>
+      <td>0.4388</td>
+      <td>0.5408</td>
+      <td>0.5107</td>
+      <td>0.4496</td>
+      <td>0.5375</td>
+      <td>0.5037</td>
+      <td>0.5399</td>
+      <td>0.5355</td>
     </tr>
     <tr>
       <th>std</th>
-      <td>0.1147</td>
-      <td>0.1014</td>
-      <td>0.1078</td>
+      <td>0.1059</td>
+      <td>0.1150</td>
+      <td>0.1136</td>
+      <td>0.1086</td>
+      <td>0.1023</td>
+      <td>0.1106</td>
+      <td>0.0981</td>
+      <td>0.1152</td>
+      <td>0.1089</td>
+      <td>0.0981</td>
+      <td>0.1168</td>
+      <td>0.1129</td>
+      <td>0.1131</td>
+      <td>0.1029</td>
     </tr>
     <tr>
       <th>min</th>
+      <td>0.1981</td>
       <td>0.0953</td>
+      <td>0.1266</td>
+      <td>0.1626</td>
       <td>0.1522</td>
+      <td>0.0566</td>
+      <td>0.1497</td>
+      <td>0.1983</td>
       <td>0.1506</td>
+      <td>0.1353</td>
+      <td>0.0750</td>
+      <td>0.0618</td>
+      <td>0.1781</td>
+      <td>0.1077</td>
     </tr>
     <tr>
       <th>25%</th>
-      <td>0.4295</td>
-      <td>0.4476</td>
-      <td>0.4326</td>
+      <td>0.4291</td>
+      <td>0.4304</td>
+      <td>0.4669</td>
+      <td>0.4538</td>
+      <td>0.4492</td>
+      <td>0.4260</td>
+      <td>0.3733</td>
+      <td>0.4700</td>
+      <td>0.4368</td>
+      <td>0.3896</td>
+      <td>0.4645</td>
+      <td>0.4279</td>
+      <td>0.4677</td>
+      <td>0.4708</td>
     </tr>
     <tr>
       <th>50%</th>
-      <td>0.5027</td>
-      <td>0.5164</td>
-      <td>0.5017</td>
+      <td>0.4971</td>
+      <td>0.5037</td>
+      <td>0.5417</td>
+      <td>0.5217</td>
+      <td>0.5180</td>
+      <td>0.4981</td>
+      <td>0.4379</td>
+      <td>0.5327</td>
+      <td>0.5061</td>
+      <td>0.4596</td>
+      <td>0.5351</td>
+      <td>0.4986</td>
+      <td>0.5410</td>
+      <td>0.5335</td>
     </tr>
     <tr>
       <th>75%</th>
-      <td>0.5837</td>
-      <td>0.5818</td>
-      <td>0.5736</td>
+      <td>0.5670</td>
+      <td>0.5847</td>
+      <td>0.6213</td>
+      <td>0.5982</td>
+      <td>0.5843</td>
+      <td>0.5669</td>
+      <td>0.5016</td>
+      <td>0.6190</td>
+      <td>0.5811</td>
+      <td>0.5117</td>
+      <td>0.6138</td>
+      <td>0.5782</td>
+      <td>0.6189</td>
+      <td>0.6028</td>
     </tr>
     <tr>
       <th>max</th>
-      <td>0.8578</td>
+      <td>0.8457</td>
+      <td>0.8579</td>
+      <td>0.8497</td>
+      <td>0.8749</td>
       <td>0.8674</td>
+      <td>0.8766</td>
+      <td>0.8157</td>
+      <td>0.8498</td>
       <td>0.8972</td>
+      <td>0.7563</td>
+      <td>0.8447</td>
+      <td>0.9091</td>
+      <td>0.8244</td>
+      <td>0.8674</td>
     </tr>
   </tbody>
 </table>
@@ -1500,64 +1213,166 @@ friends_df.describe()
 
 
 
-
-```python
-aaron_mean = friends_df.describe().Aaron[1]
-aaron_std = friends_df.describe().Aaron[2]
-
-julia_mean = friends_df.describe().Julia[1]
-julia_std = friends_df.describe().Julia[2]
-
-noah_mean = friends_df.describe().Noah[1]
-noah_std = friends_df.describe().Noah[2]
-```
-
-#### Plot all the histograms
+#### Plot a histogram with three random users
 
 
 ```python
-%%time
+random_choices = sample(list(dataframes.values()), 3)
+scores = [df_dict["scores"][df_dict["scores"].columns[0]].tolist() 
+          for df_dict in random_choices]
+
 fig = plt.figure(figsize=(16, 9))
 ax = fig.add_subplot(111)
 
-n, bins, patches = ax.hist([aaron_df_for_plotting.subtweet_positive_probability, 
-                            julia_df_for_plotting.subtweet_positive_probability, 
-                            noah_df_for_plotting.subtweet_positive_probability], 
+n, bins, patches = ax.hist(scores, 
                            bins="scott",
                            color=["#256EFF", "#46237A", "#3DDC97"],
                            density=True, 
-                           label=["Aaron", "Julia", "Noah"],
+                           label=["User 1", "User 2", "User 3"],
                            alpha=0.75)
 
-aaron_line = scipy.stats.norm.pdf(bins, aaron_mean, aaron_std)
-ax.plot(bins, aaron_line, "--", color="#256EFF", linewidth=2)
+stats = [df_dict["stats"][df_dict["stats"].columns[0]].tolist() 
+         for df_dict in random_choices]
 
-julia_line = scipy.stats.norm.pdf(bins, julia_mean, julia_std)
-ax.plot(bins, julia_line, "--", color="#46237A", linewidth=2)
+line_1 = scipy.stats.norm.pdf(bins, stats[0][1], stats[0][2])
+ax.plot(bins, line_1, "--", color="#256EFF", linewidth=2)
 
-noah_line = scipy.stats.norm.pdf(bins, noah_mean, noah_std)
-ax.plot(bins, noah_line, "--", color="#3DDC97", linewidth=2)
+line_2 = scipy.stats.norm.pdf(bins, stats[1][1], stats[1][2])
+ax.plot(bins, line_2, "--", color="#46237A", linewidth=2)
+
+line_3 = scipy.stats.norm.pdf(bins, stats[2][1], stats[2][2])
+ax.plot(bins, line_3, "--", color="#3DDC97", linewidth=2)
 
 ax.set_xticks([float(x/10) for x in range(11)], minor=False)
-ax.set_title("Friends' Dataset Distribution of Subtweet Probabilities", fontsize=18)
+ax.set_title("Distribution of Subtweet Probabilities In User Accounts", fontsize=18)
 ax.set_xlabel("Probability That Tweet is a Subtweet", fontsize=18)
-ax.set_ylabel("Portion of Tweets with That Probability", fontsize=18)
+ax.set_ylabel("Percent of Tweets with That Probability", fontsize=18)
 
 ax.legend()
 
 plt.show()
 ```
 
-    /Users/Noah/anaconda/envs/work/lib/python3.6/site-packages/numpy/core/fromnumeric.py:52: FutureWarning: reshape is deprecated and will raise in a subsequent release. Please use .values.reshape(...) instead
-      return getattr(obj, method)(*args, **kwds)
+
+![png](output_68_0.png)
+
+
+#### Plot a histogram with all of them
+#### First, get some statistics
+
+
+```python
+new_tests_df = pd.concat([df_dict["scores"].rename(columns={df_dict["scores"].columns[0]:"SubtweetProbability"})
+                          for df_dict in dataframes.values()], ignore_index=True)
+
+new_tests_df_stats = new_tests_df.describe()
+```
+
+#### Then view them
+
+
+```python
+new_tests_df_stats
+```
 
 
 
-![png](output_116_1.png)
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>SubtweetProbability</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>count</th>
+      <td>28632.0000</td>
+    </tr>
+    <tr>
+      <th>mean</th>
+      <td>0.5133</td>
+    </tr>
+    <tr>
+      <th>std</th>
+      <td>0.1115</td>
+    </tr>
+    <tr>
+      <th>min</th>
+      <td>0.0566</td>
+    </tr>
+    <tr>
+      <th>25%</th>
+      <td>0.4385</td>
+    </tr>
+    <tr>
+      <th>50%</th>
+      <td>0.5093</td>
+    </tr>
+    <tr>
+      <th>75%</th>
+      <td>0.5860</td>
+    </tr>
+    <tr>
+      <th>max</th>
+      <td>0.9091</td>
+    </tr>
+  </tbody>
+</table>
+</div>
 
 
-    CPU times: user 617 ms, sys: 40.7 ms, total: 658 ms
-    Wall time: 649 ms
+
+#### Now plot
+
+
+```python
+fig = plt.figure(figsize=(16, 9))
+ax = fig.add_subplot(111)
+
+n, bins, patches = ax.hist(new_tests_df["SubtweetProbability"].tolist(), 
+                           bins="scott",
+                           color="#983B59",
+                           edgecolor="black", 
+                           density=True, 
+                           alpha=0.75)
+
+line = scipy.stats.norm.pdf(bins, new_tests_df_stats["SubtweetProbability"][1], 
+                              new_tests_df_stats["SubtweetProbability"][2])
+
+ax.plot(bins, line, "--", color="#983B59", linewidth=2)
+
+
+ax.set_xticks([float(x/10) for x in range(11)], minor=False)
+ax.set_title("Distribution of Subtweet Probabilities In All User Accounts", fontsize=18)
+ax.set_xlabel("Probability That Tweet is a Subtweet", fontsize=18)
+ax.set_ylabel("Percent of Tweets with That Probability", fontsize=18)
+
+ax.legend()
+
+plt.show()
+```
+
+    No handles with labels found to put in legend.
+
+
+
+![png](output_74_1.png)
 
 
 #### Statisitics on training data
@@ -1566,11 +1381,13 @@ plt.show()
 
 
 ```python
-training_data = [" ".join([token for token in tokenizer.tokenize(pair[0]) if "@" not in token]) 
-                 for pair in training_data]
+training_data = [(tweet[0]
+                  .replace("➊", "")
+                  .replace("➋", "")
+                  .replace("➌", "")) for tweet in training_data]
 ```
 
-#### Lengths (Less than or equal to 280 characters and greater than or equal to 5 characters)
+#### Lengths
 
 
 ```python
@@ -1597,18 +1414,30 @@ length_data_for_stats = pd.DataFrame({"Length": length_data, "Tweet": training_d
 length_data = length_data_for_stats.Length.tolist()
 ```
 
-#### Top 10 longest tweets
+#### Top 5 longest tweets
 
 
 ```python
-length_data_for_stats.sort_values(by="Length", ascending=False).head(10)
+length_data_for_stats.sort_values(by="Length", ascending=False).head()
 ```
 
 
 
 
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1619,54 +1448,29 @@ length_data_for_stats.sort_values(by="Length", ascending=False).head(10)
   </thead>
   <tbody>
     <tr>
-      <th>14329</th>
-      <td>303</td>
-      <td>from 10/18 / 15 when he 1st played hurt &amp; began noticeably throwing w poor mechanics thru end of his injured 2016 yr , luck's stats were as good as his healthiest / best 2013-2014 yrs : - injured : 61 % comp , 7.4 ypa , 93 rtg , 41:18 td : int - healthy : 61 % comp , 7.2 ypa , 92 rtg , 63:25 td : int ➋</td>
+      <th>8887</th>
+      <td>281</td>
+      <td>This Tweet does not endorse the use of Nazi Symbols in any form! I think the image which has been published on social media and MSM is a day or two old. It conjures up strong emotions for many people, My question is simple what meaning do you think is being conveyed by the image?</td>
     </tr>
     <tr>
-      <th>4476</th>
-      <td>302</td>
-      <td>in situations of power imbalance , wealth inequality , unequal access to ... everything-can ' we ' drop the ' we ' - because it really means you not me . when . you . pretend . that . we . all . share . same . interests . you . are . helping . the . most . powerful . oppress . the . least . powerful .</td>
+      <th>2198</th>
+      <td>281</td>
+      <td>I need to learn how to do this. I ask "how can I help" a lot because I genuinely want to make things better for friends , but this *can* put a burden back upon those who are suffering. Sometimes it may be best to just have exuberant and fearless compassion the same way a pet does</td>
     </tr>
     <tr>
-      <th>8001</th>
-      <td>300</td>
-      <td>hotel elevator earlier today : i get in , a young man and a young woman already in the car . me : " good morning , both . " woman : " good morning . " man , clearly writhing , not wanting to say anything but caught in a vortex due to the young woman's response . ten seconds later : " ... morning . "</td>
+      <th>1531</th>
+      <td>281</td>
+      <td>hi! I'm not normally v personal like this and I probably won't be at least for a v long time but I thought I'd share this \nwhile I was scrolling on Twitter today I had like a sudden impulse to just dump all my thoughts about what id been reading and seeing and so far it actually-</td>
     </tr>
     <tr>
-      <th>15228</th>
-      <td>299</td>
-      <td>" it is a key agreement that shapes today's globalisation " - frau merkel on the paris ' agreement ' . climatefraud-a contrived tool of the deadly eu / un-centric marxist-globalist / islamist alliance , to wealth transfer &amp; to create such energy poverty , that sovereignwesterndemocracy implodes . ➋</td>
+      <th>10533</th>
+      <td>281</td>
+      <td>Some people are undecided about testing on animals. Understandable. There's so much propaganda and secrecy about it. Here's a quick test though, &amp; you're answer should tell you. What would you do if some man came to your house &amp; squirted disinfectant in your beautiful dog's eyes?</td>
     </tr>
     <tr>
-      <th>14724</th>
-      <td>299</td>
-      <td>pentagon : master sergeant jonathan j . dunbar , assigned to headquarters , u . s . army special operations command , fort bragg , n . c . , was kia mar . 30 , while deployed in support of operation inherent resolve . dunbar died from wounds received during combat operations near manbij , syria . ➋</td>
-    </tr>
-    <tr>
-      <th>6017</th>
-      <td>299</td>
-      <td>person : * criticizes my writing * me : yup , they're right , 100 percent , spot on , very valid , absolutely agree person : * compliments my writing * me : ? ? ? did they read something else ? ? ? are they lying ? ? ? are they drunk ? ? ? i don't know what to do with this ? please just insult me ?</td>
-    </tr>
-    <tr>
-      <th>8702</th>
-      <td>298</td>
-      <td>i've fallen into a rabbit hole of goals from that 2016 run . faves : 1 ) crosby's goal against raanta in rd . 1 . 2 ) cullen's goal in ny . third period . tie game . 3 ) fehr's goal in game 2 vs . washington . 4 ) rust's breakaway in game 6 vs . tampa . 5 ) fehr's game 5 insurance goal vs . sj . ➋</td>
-    </tr>
-    <tr>
-      <th>5265</th>
-      <td>296</td>
-      <td>me : " we can't deviate from the clinical policies the client's medical team chose " coworker : " well we'll ask the cto " m : " okay but he's in agreement too " c : " i don't want to talk to you . our medical licenses are on the line " m : " no ... they aren't . you didn't choose the policies "</td>
-    </tr>
-    <tr>
-      <th>8607</th>
-      <td>296</td>
-      <td>the first-time event , bucky's yard sale , is april 12 and 13 from 9am - 2pm at etsu in the quad . donations of clothing , shoes accessories , and other cool things are needed ! drop-off bins are in the cpa , outside of sorc a in the culp , and in centennial , governors , stone , and clement . ➋</td>
-    </tr>
-    <tr>
-      <th>9006</th>
-      <td>296</td>
-      <td>➊ campaign ideas i can't get out of my head : 💠 gothic monster hunting ( e . g . krevborna , ravenloft , solomon kane ) 💠 aetherpunk intrigue ( e . g . kaladesh , lantan , eberron ) 💠 megadungeon exploration ( e . g . doomvault , rappan athuk ) merging them would not work well . need moar time .</td>
+      <th>10521</th>
+      <td>281</td>
+      <td>Enthralled by Raja Shiv Chhatrapati, a well mounted magnum opus on life of the Maratha warrior at Red Fort. Vividly brought out his philosophies, struggles, inspiration from mother Jijayee &amp; penchant for gender equality through well conceived music, dance &amp; dialogues. A must see!</td>
     </tr>
   </tbody>
 </table>
@@ -1674,18 +1478,30 @@ length_data_for_stats.sort_values(by="Length", ascending=False).head(10)
 
 
 
-#### Top 10 shortest tweets
+#### Top 5 shortest tweets
 
 
 ```python
-length_data_for_stats.sort_values(by="Length", ascending=True).head(10)
+length_data_for_stats.sort_values(by="Length", ascending=True).head()
 ```
 
 
 
 
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1698,17 +1514,7 @@ length_data_for_stats.sort_values(by="Length", ascending=True).head(10)
     <tr>
       <th>7699</th>
       <td>1</td>
-      <td>a</td>
-    </tr>
-    <tr>
-      <th>2038</th>
-      <td>2</td>
-      <td>ha</td>
-    </tr>
-    <tr>
-      <th>5896</th>
-      <td>2</td>
-      <td>uh</td>
+      <td>A</td>
     </tr>
     <tr>
       <th>3473</th>
@@ -1716,34 +1522,19 @@ length_data_for_stats.sort_values(by="Length", ascending=True).head(10)
       <td>no</td>
     </tr>
     <tr>
-      <th>3785</th>
-      <td>3</td>
-      <td>ugh</td>
+      <th>5896</th>
+      <td>2</td>
+      <td>uh</td>
     </tr>
     <tr>
       <th>6676</th>
-      <td>3</td>
-      <td>i -</td>
+      <td>2</td>
+      <td>i-</td>
     </tr>
     <tr>
-      <th>4596</th>
-      <td>3</td>
-      <td>die</td>
-    </tr>
-    <tr>
-      <th>9177</th>
-      <td>4</td>
-      <td>go ➋</td>
-    </tr>
-    <tr>
-      <th>636</th>
-      <td>4</td>
-      <td>us ➋</td>
-    </tr>
-    <tr>
-      <th>648</th>
-      <td>4</td>
-      <td>oh ➋</td>
+      <th>2038</th>
+      <td>2</td>
+      <td>Ha</td>
     </tr>
   </tbody>
 </table>
@@ -1762,7 +1553,19 @@ length_data_for_stats.describe()
 
 
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1777,11 +1580,11 @@ length_data_for_stats.describe()
     </tr>
     <tr>
       <th>mean</th>
-      <td>109.5542</td>
+      <td>106.8089</td>
     </tr>
     <tr>
       <th>std</th>
-      <td>75.5204</td>
+      <td>73.8680</td>
     </tr>
     <tr>
       <th>min</th>
@@ -1789,19 +1592,19 @@ length_data_for_stats.describe()
     </tr>
     <tr>
       <th>25%</th>
-      <td>50.0000</td>
+      <td>48.0000</td>
     </tr>
     <tr>
       <th>50%</th>
-      <td>89.0000</td>
+      <td>87.0000</td>
     </tr>
     <tr>
       <th>75%</th>
-      <td>154.0000</td>
+      <td>150.0000</td>
     </tr>
     <tr>
       <th>max</th>
-      <td>303.0000</td>
+      <td>281.0000</td>
     </tr>
   </tbody>
 </table>
@@ -1821,18 +1624,30 @@ punctuation_data = [len(set(punctuation).intersection(set(tweet))) for tweet in 
 punctuation_data_for_stats = pd.DataFrame({"Punctuation": punctuation_data, "Tweet": training_data})
 ```
 
-#### Top 10 most punctuated tweets
+#### Top 5 most punctuated tweets
 
 
 ```python
-punctuation_data_for_stats.sort_values(by="Punctuation", ascending=False).head(10)
+punctuation_data_for_stats.sort_values(by="Punctuation", ascending=False).head()
 ```
 
 
 
 
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1844,53 +1659,28 @@ punctuation_data_for_stats.sort_values(by="Punctuation", ascending=False).head(1
   <tbody>
     <tr>
       <th>8957</th>
-      <td>10</td>
-      <td>going to go ahead and crown myself the absolute emperor of finding things on menus that sound interesting , deciding i would like to try them , then being told " i'm sorry sir , that's actually not available ... " [ then why the # $ % is it on your menuuu - - ]</td>
-    </tr>
-    <tr>
-      <th>13365</th>
-      <td>9</td>
-      <td>billboard hot 100 : ➊ ( - 3 ) tell me you love me , ➌ [ 19 weeks ] . * peak : ➊ *</td>
-    </tr>
-    <tr>
-      <th>11066</th>
-      <td>9</td>
-      <td>not every aspect worked , but overall had a lot of fun at ➊ . and also ( minor spoiler-ish thingy below ) ... … maybe the best " single use of the f word in a pg - 13 movie " ever ? ( didn't hurt that it was connected to a great love of mine ! )</td>
-    </tr>
-    <tr>
-      <th>11845</th>
-      <td>9</td>
-      <td>tucker carlson tonight &amp; tfw you're asking about america but you're scolded it's really about israel ... tucker : " what is the american national security interest ... in syria ? " sen . wicker ( r ): " well , if you care about israel ... " that was the exact question &amp; answer shocking ➋</td>
-    </tr>
-    <tr>
-      <th>11718</th>
-      <td>9</td>
-      <td>self-employed people : have you ever turned to social media to call out a client who is many weeks / months delinquent on a payment ? ( obviously , you're probably burning a bridge with that move , but if they don't pay ... )</td>
-    </tr>
-    <tr>
-      <th>909</th>
-      <td>9</td>
-      <td>twitter user : " if you're [ oppressed identity / status / role ] , no need to read this ; if you're [ privileged identity / status / role ] , read it " the parts of my brain responsible for assuring my physical &amp; emotional safety as a brainwashing survivor with 3000 diseases : ➋</td>
+      <td>11</td>
+      <td>Going to go ahead and crown myself the absolute emperor of finding things on menus that sound interesting, deciding I would like to try them, then being told "I'm sorry sir, that's actually not available..."\n\n[ then why the @#$% is it ON YOUR MENUUUUUUUU-- ]</td>
     </tr>
     <tr>
       <th>6725</th>
       <td>9</td>
-      <td>4 - yo : daddeee ! ? let's play ! me : ok , baby . 4yo : you play w / her . put a dress on her daddeee . me : ok . * puts doll in dollhouse * 4yo : she doesn't go there ! !</td>
+      <td>4-yo: DADDEEEEEE!? LET'S PLAY!\nMe: Ok, baby. \n4yo: you play w/ her. put a dress on her DADDEEEEEE. \nMe: Ok. *puts doll in dollhouse*\n4yo: SHE DOESN'T GO THERE!!</td>
     </tr>
     <tr>
-      <th>13933</th>
+      <th>11718</th>
       <td>9</td>
-      <td>feds had one chance to search cohen's places ! since he , alone &amp; w / trump , has been busy w / so much possibly criminal activity , searches covered the whole enchilada : bank fraud , tax crimes , $ laundering &amp; 2016 election-related crimes , including payoffs that could be fec violations . ➋</td>
+      <td>Self-employed people: have you ever turned to social media to call out a client who is many weeks/months delinquent on a payment? \n(Obviously, you're probably burning a bridge with that move, but if they don't pay...)</td>
     </tr>
     <tr>
-      <th>13817</th>
-      <td>8</td>
-      <td>print orders are available in my etsy store : ➋ ( * ´ ∀ ` * ) i am very proud of these prints and i'm very happy with their quality ! ! i hope you like them . this is a great way to support my works ( ｡ ･ ω ･ ｡ ) ﾉ ♡ rt and shares are always appreciated 💕 ➋</td>
+      <th>13365</th>
+      <td>9</td>
+      <td>Billboard Hot 100: (-3) Tell Me You Love Me,  [19 weeks]. *peak: *</td>
     </tr>
     <tr>
-      <th>14623</th>
-      <td>8</td>
-      <td>park jimin fancafe 01.04 . 2018 { 12:30 am kst } i left the dorm , hoseok will be alone in the room , i don't know what is army anymore you're all just from the past bye don't come to me when u see me in the street &amp; say jimin because ima punch u in the face ➊_we_are_beardtan</td>
+      <th>11845</th>
+      <td>9</td>
+      <td>Tucker Carlson Tonight &amp; TFW you're asking about America\nbut you're scolded it's really about Israel ...\n \nTucker: "What is the American national security interest ... in Syria?"\n\nSen. Wicker(R): "Well, if you care about Israel ..." \n\nThat was the exact question &amp; answer\nShocking</td>
     </tr>
   </tbody>
 </table>
@@ -1909,7 +1699,19 @@ punctuation_data_for_stats.describe()
 
 
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1924,11 +1726,11 @@ punctuation_data_for_stats.describe()
     </tr>
     <tr>
       <th>mean</th>
-      <td>1.8610</td>
+      <td>1.9168</td>
     </tr>
     <tr>
       <th>std</th>
-      <td>1.5408</td>
+      <td>1.5787</td>
     </tr>
     <tr>
       <th>min</th>
@@ -1948,7 +1750,7 @@ punctuation_data_for_stats.describe()
     </tr>
     <tr>
       <th>max</th>
-      <td>10.0000</td>
+      <td>11.0000</td>
     </tr>
   </tbody>
 </table>
@@ -1969,18 +1771,30 @@ stop_words_data = [len(set(stopwords.words("english")).intersection(set(tweet.lo
 stop_words_data_for_stats = pd.DataFrame({"Stop words": stop_words_data, "Tweet": training_data})
 ```
 
-#### Top 10 tweets with most stop words
+#### Top 5 tweets with most stop words
 
 
 ```python
-stop_words_data_for_stats.sort_values(by="Stop words", ascending=False).head(10)
+stop_words_data_for_stats.sort_values(by="Stop words", ascending=False).head()
 ```
 
 
 
 
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -1993,52 +1807,27 @@ stop_words_data_for_stats.sort_values(by="Stop words", ascending=False).head(10)
     <tr>
       <th>0</th>
       <td>8</td>
-      <td>i don't yet have adequate words to do so , but someday i wanna write about the beautiful dance which happens in google docs between a writer &amp; a good editor working simultaneously towards a deadline . when it's working , it's a beautiful dance — though no one really sees it .</td>
+      <td>I don't yet have adequate words to do so, but someday I wanna write about the beautiful dance which happens in Google docs between a writer &amp; a good editor working simultaneously towards a deadline. When it's working, it's a beautiful dance—though no one really sees it.</td>
     </tr>
     <tr>
-      <th>9062</th>
+      <th>9063</th>
       <td>8</td>
-      <td>➌ too fine .. ima need him to have a show in a city near me 😩</td>
-    </tr>
-    <tr>
-      <th>9033</th>
-      <td>8</td>
-      <td>how is this still a " phase " if i'm voluntarily putting myself through a second , more intense puberty ? ? 🤔</td>
+      <td>Honestly yea i fucked up but all of you are trash asf and your opinions mean nothing to me because mother fucker i can fix shit but yall are to close minded to see.</td>
     </tr>
     <tr>
       <th>9035</th>
       <td>8</td>
-      <td>the role of dag rod rosenstein will be an oscar winner in the future film about the trump presidency . i'd like the story of the first few months to be told through the eyes of the bewildered sean spicer .</td>
+      <td>The role of DAG Rod Rosenstein will be an Oscar winner in the future film about the Trump presidency. I'd like the story of the first few months to be told through the eyes of the bewildered Sean Spicer.</td>
     </tr>
     <tr>
       <th>9038</th>
       <td>8</td>
-      <td>done watching ' hacksaw ridge ' . if there's one thing i learned from that movie , it is simply , have faith in god .</td>
+      <td>Done watching 'Hacksaw Ridge'. If there's one thing I learned from that movie, it is simply, Have Faith in God.</td>
     </tr>
     <tr>
       <th>9039</th>
       <td>8</td>
-      <td>i feel people who can't celebrate or at the very least respect cardi b's success have never watched the grind from the ground up . they can't understand that her work ethic has gotten her where she is now . you don't have to stand for what's she's about but she's worked for it</td>
-    </tr>
-    <tr>
-      <th>9040</th>
-      <td>8</td>
-      <td>icymi : dolphins need to improve their 2nd round draft picks : ➋</td>
-    </tr>
-    <tr>
-      <th>9041</th>
-      <td>8</td>
-      <td>another republican who wants us back in syria but doesn't want to vote for it . does the country support america going in alone ? ➋</td>
-    </tr>
-    <tr>
-      <th>9043</th>
-      <td>8</td>
-      <td>you ever just have your phone in your hand and then you hand just decides it doesn't want to hold it anymore and throws it in the ground .</td>
-    </tr>
-    <tr>
-      <th>9044</th>
-      <td>8</td>
-      <td>footage from the night of kenneka jenkins passing . please pass this on these two men were working the night she passed and were seen following her in the hallway ! ! ! police need to ask them what was in this bag . ➌ ➋</td>
+      <td>I feel people who can't celebrate or at the very least respect Cardi B's success have never watched the grind from the ground up. They can't understand that her work ethic has gotten her where she is now. You don't have to stand for what's she's about but she's worked for it</td>
     </tr>
   </tbody>
 </table>
@@ -2046,18 +1835,30 @@ stop_words_data_for_stats.sort_values(by="Stop words", ascending=False).head(10)
 
 
 
-#### Top 10 tweets with fewest stop words
+#### Top 5 tweets with fewest stop words
 
 
 ```python
-stop_words_data_for_stats.sort_values(by="Stop words", ascending=True).head(10)
+stop_words_data_for_stats.sort_values(by="Stop words", ascending=True).head()
 ```
 
 
 
 
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -2068,54 +1869,29 @@ stop_words_data_for_stats.sort_values(by="Stop words", ascending=True).head(10)
   </thead>
   <tbody>
     <tr>
-      <th>8290</th>
-      <td>0</td>
-      <td>24 ➋</td>
-    </tr>
-    <tr>
-      <th>9100</th>
-      <td>0</td>
-      <td>... ➋</td>
-    </tr>
-    <tr>
-      <th>958</th>
-      <td>0</td>
-      <td>luv u</td>
-    </tr>
-    <tr>
-      <th>14086</th>
-      <td>0</td>
-      <td>➊ well ...</td>
-    </tr>
-    <tr>
-      <th>3785</th>
-      <td>0</td>
-      <td>ugh</td>
-    </tr>
-    <tr>
       <th>3632</th>
       <td>0</td>
-      <td>... ➋</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <th>8290</th>
+      <td>0</td>
+      <td>24</td>
     </tr>
     <tr>
       <th>11925</th>
       <td>0</td>
-      <td>fuck ➋</td>
+      <td>FUCK</td>
     </tr>
     <tr>
-      <th>3455</th>
+      <th>10940</th>
       <td>0</td>
-      <td>fuck ... ➋</td>
+      <td>78 ... !</td>
     </tr>
     <tr>
-      <th>1662</th>
+      <th>1796</th>
       <td>0</td>
-      <td>uh ➋</td>
-    </tr>
-    <tr>
-      <th>5896</th>
-      <td>0</td>
-      <td>uh</td>
+      <td>fuck u</td>
     </tr>
   </tbody>
 </table>
@@ -2134,7 +1910,19 @@ stop_words_data_for_stats.describe()
 
 
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -2149,11 +1937,11 @@ stop_words_data_for_stats.describe()
     </tr>
     <tr>
       <th>mean</th>
-      <td>7.1504</td>
+      <td>7.1515</td>
     </tr>
     <tr>
       <th>std</th>
-      <td>1.3123</td>
+      <td>1.3116</td>
     </tr>
     <tr>
       <th>min</th>
@@ -2181,7 +1969,7 @@ stop_words_data_for_stats.describe()
 
 
 
-#### Unique words (at least 2)
+#### Unique words
 
 
 ```python
@@ -2203,18 +1991,30 @@ unique_words_data_for_stats = pd.DataFrame({"Unique words": unique_words_data, "
 unique_words_data = unique_words_data_for_stats["Unique words"].tolist()
 ```
 
-#### Top 10 tweets with most unique words
+#### Top 5 tweets with most unique words
 
 
 ```python
-unique_words_data_for_stats.sort_values(by="Unique words", ascending=False).head(10)
+unique_words_data_for_stats.sort_values(by="Unique words", ascending=False).head()
 ```
 
 
 
 
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -2226,52 +2026,27 @@ unique_words_data_for_stats.sort_values(by="Unique words", ascending=False).head
   <tbody>
     <tr>
       <th>13936</th>
-      <td>give away ! the rules are really easy , all you have to do is : 1 . must be following me ( i check ) 2 . rt and fav this tweet 3 . tag your mutuals / anyone 4 . only 1 winner ! 5 . i ship worldwide ;) it ends in 8th may 2018 or when this tweet hit 2k rt and like ! good luck ! ❤ ➋</td>
-      <td>60</td>
+      <td>GIVE AWAY!\n\nThe rules are really easy, all you have to do is :\n1. Must be following me (i check) \n2. RT and fav this tweet\n3. tag your mutuals/anyone\n4. only 1 winner! \n5. i ship worldwide;) \n\nit ends in 8th May 2018 or when this tweet hit 2k RT and like!\n\nGood luck! ❤</td>
+      <td>59</td>
     </tr>
     <tr>
       <th>4881</th>
-      <td>got into a tepid back nd forth w / a uknowwhoaj + columnist bc i said they steal their " hot takes " from blk twitter &amp; alike . wallahi my bdeshi ass did not sign up 4 this app to be called asinine by a 30yrold pakistani whos whole politics is post colonial memes for oriental minded t -</td>
+      <td>got into a tepid back nd forth w/ a uknowwhoAJ+columnist bc i said they steal their "hot takes" from blk twitter &amp; alike. wallahi my bdeshi ass did not sign up 4 this app to be called asinine by a 30yrold pakistani whos whole politics is Post Colonial Memes for Oriental Minded T-</td>
       <td>57</td>
     </tr>
     <tr>
       <th>7013</th>
-      <td>crazy how wrong u can be about someone . a girl i graduated w / was always doing drugs &amp; got pregnant at 16 . i assumed she'd end up being a loser but it turn out she now has 4 beautiful kids &amp; is making over $ 4,500 / month just off of child support payments from the 3 different dads</td>
+      <td>Crazy how wrong u can be about someone. A girl I graduated w/ was always doing drugs&amp; got pregnant at 16. I assumed she'd end up being a loser but it turn out she now has 4 beautiful kids&amp; is making over $4,500/month just off of child support payments from the 3 different dads</td>
       <td>57</td>
+    </tr>
+    <tr>
+      <th>4992</th>
+      <td>Got into an argument w/ someone I went to HS w/ &amp; I would js like to repeat again tht I cannot wait to stunt on all the ppl who were bitches to me in HS @ our reunion. Catch me rollin up w/ my sexy ass gf, a nice car, a bomb body &amp; the career of my dreams as a big fuck u to them</td>
+      <td>55</td>
     </tr>
     <tr>
       <th>11542</th>
-      <td>thought i'd bring this back ... ➊ and no , i'm not talking about myself here . i wish just once i'd be so bored with my life that i'd find the time to bash people / celebs i don't like .. i mean if i despise someone that much , why still watch his / her every move ? 🤦 ‍ ♀ ️ ➋</td>
-      <td>57</td>
-    </tr>
-    <tr>
-      <th>13339</th>
-      <td>- many 👮 ‍ ♂ ️ suffer in silence , not always by choice but by design ! ➊ can be a career killer &amp; worse many pd's do not see p . t . s . d as an insured disability ; this has to change 🆘 - hiding mine for 3 years made my ➊ unbearable ! please help us ➊ &amp; ➊ ⚖ ️ ➋</td>
-      <td>56</td>
-    </tr>
-    <tr>
-      <th>13107</th>
-      <td>➌ missed meeting rey , i left at 1:30 ( 5th in line , for 2 hrs ) so i didn't miss my other event . am i able to get a refund for the prepaid that i paid for the combo ? i know it wasn't your guys fault , but if he was gonna show up later then 12 i wouldn't have bought it .</td>
-      <td>55</td>
-    </tr>
-    <tr>
-      <th>13567</th>
-      <td>in loving memory of 21 yrs , my late husband i took off life support 1 yr ago this evening . the hardest thing i have ever had to do other than take your ashes to co . the memories of your 40 diff marriage proposals , i think of today . i love you &amp; semper fi , sgt . chris ! ❤ ️ 🇺 🇸 ➋</td>
-      <td>55</td>
-    </tr>
-    <tr>
-      <th>8413</th>
-      <td>i was born at 8: 48 in the morning 32 years ago . only one person calls me at that time every year and that is my mother . since the stroke she has forgotten so much . i didn't expect a call , but like clock work the phone rang . i got hit hard with the feels right now . thanks mom 💙 ➋</td>
-      <td>55</td>
-    </tr>
-    <tr>
-      <th>14327</th>
-      <td>never thought i was gonna kick half team but damn ... i guess i'll do it smh should've let me know so i could find some active players .. ppl now a days cant be trusted “ oh i'm active ” fuck you m8 ! ! ! y'all aren't active for shit . btw sorry if i'm mad ... but im mad 😡 ➊ ➋</td>
-      <td>55</td>
-    </tr>
-    <tr>
-      <th>12224</th>
-      <td>what's the one thing you hope for your character ( s ) to have / retain in smash 5 ? no matter what changes , i hope playing sonic feels just as free and enjoyable . i love being able to freely move anywhere in his cool blue style ( hoping shadow has a fiercer &amp; darker version of this )</td>
+      <td>Thought I'd bring this back...  and no, I'm not talking about myself here. I wish just once I'd be so bored with my life that I'd find the time to bash people/celebs I don't like.. I mean if I despise someone THAT much, why still watch his/her every move? 🤦‍♀️</td>
       <td>55</td>
     </tr>
   </tbody>
@@ -2280,18 +2055,30 @@ unique_words_data_for_stats.sort_values(by="Unique words", ascending=False).head
 
 
 
-#### Top 10 tweets with fewest unique words
+#### Top 5 tweets with fewest unique words
 
 
 ```python
-unique_words_data_for_stats.sort_values(by="Unique words", ascending=True).head(10)
+unique_words_data_for_stats.sort_values(by="Unique words", ascending=True).head()
 ```
 
 
 
 
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -2302,53 +2089,28 @@ unique_words_data_for_stats.sort_values(by="Unique words", ascending=True).head(
   </thead>
   <tbody>
     <tr>
-      <th>2353</th>
-      <td>catfish</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>975</th>
-      <td>ginger</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>933</th>
-      <td>assumptions</td>
-      <td>1</td>
-    </tr>
-    <tr>
       <th>6106</th>
-      <td>annoying</td>
+      <td>Annoying</td>
       <td>1</td>
     </tr>
     <tr>
       <th>2525</th>
-      <td>bitch</td>
+      <td>Bitch</td>
       <td>1</td>
     </tr>
     <tr>
-      <th>7702</th>
-      <td>rude</td>
+      <th>12087</th>
+      <td>Chandler</td>
       <td>1</td>
     </tr>
     <tr>
-      <th>2342</th>
-      <td>corny</td>
+      <th>14559</th>
+      <td>Yes yes yes yes yes yes</td>
       <td>1</td>
     </tr>
     <tr>
-      <th>7699</th>
-      <td>a</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>2038</th>
-      <td>ha</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>2351</th>
-      <td>soft</td>
+      <th>14442</th>
+      <td>Hello\n</td>
       <td>1</td>
     </tr>
   </tbody>
@@ -2368,7 +2130,19 @@ unique_words_data_for_stats.describe()
 
 
 <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
 
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">
@@ -2383,11 +2157,11 @@ unique_words_data_for_stats.describe()
     </tr>
     <tr>
       <th>mean</th>
-      <td>19.8939</td>
+      <td>19.2412</td>
     </tr>
     <tr>
       <th>std</th>
-      <td>11.9839</td>
+      <td>11.9298</td>
     </tr>
     <tr>
       <th>min</th>
@@ -2403,11 +2177,11 @@ unique_words_data_for_stats.describe()
     </tr>
     <tr>
       <th>75%</th>
-      <td>28.0000</td>
+      <td>27.0000</td>
     </tr>
     <tr>
       <th>max</th>
-      <td>60.0000</td>
+      <td>59.0000</td>
     </tr>
   </tbody>
 </table>
@@ -2428,22 +2202,22 @@ ax = fig.add_subplot(111)
 n, bins, patches = ax.hist(length_data, 
                            bins="scott", 
                            edgecolor="black", 
-                           density=True, 
+                           # density=True, 
                            color="#12355b", 
                            alpha=0.5)
 
-length_line = scipy.stats.norm.pdf(bins, length_mean, length_std)
-ax.plot(bins, length_line, "--", linewidth=3, color="#415d7b")
+# length_line = scipy.stats.norm.pdf(bins, length_mean, length_std)
+# ax.plot(bins, length_line, "--", linewidth=3, color="#415d7b")
 
 ax.set_title("Training Dataset Distribution of Tweet Lengths", fontsize=18)
 ax.set_xlabel("Tweet Length", fontsize=18);
-ax.set_ylabel("Porton of Tweets with That Length", fontsize=18);
+ax.set_ylabel("Number of Tweets with That Length", fontsize=18);
 
 plt.show()
 ```
 
 
-![png](output_160_0.png)
+![png](output_118_0.png)
 
 
 
@@ -2455,24 +2229,24 @@ fig = plt.figure(figsize=(16, 9))
 ax = fig.add_subplot(111)
 
 n, bins, patches = ax.hist(punctuation_data, 
-                           bins="scott", 
+                           bins="scott",
                            edgecolor="black", 
-                           density=True, 
+                           # density=True, 
                            color="#420039",
                            alpha=0.5)
 
-punctution_line = scipy.stats.norm.pdf(bins, punctuation_mean, punctuation_std)
-ax.plot(bins, punctution_line, "--", linewidth=3, color="#673260")
+# punctution_line = scipy.stats.norm.pdf(bins, punctuation_mean, punctuation_std)
+# ax.plot(bins, punctution_line, "--", linewidth=3, color="#673260")
 
 ax.set_title("Training Dataset Distribution of Punctuation", fontsize=18)
-ax.set_xlabel("Punctuating Characters", fontsize=18)
-ax.set_ylabel("Porton of Punctuating Characters", fontsize=18)
+ax.set_xlabel("Punctuating Characters in Tweet", fontsize=18)
+ax.set_ylabel("Number of Tweets with That Number of Punctuating Characters", fontsize=18)
 
 plt.show()
 ```
 
 
-![png](output_161_0.png)
+![png](output_119_0.png)
 
 
 
@@ -2486,22 +2260,22 @@ ax = fig.add_subplot(111)
 n, bins, patches = ax.hist(stop_words_data, 
                            bins="scott", 
                            edgecolor="black", 
-                           density=True, 
+                           # density=True, 
                            color="#698f3f",
                            alpha=0.5)
 
-stop_words_line = scipy.stats.norm.pdf(bins, stop_words_mean, stop_words_std)
-ax.plot(bins, stop_words_line, "--", linewidth=3, color="#87a565")
+# stop_words_line = scipy.stats.norm.pdf(bins, stop_words_mean, stop_words_std)
+# ax.plot(bins, stop_words_line, "--", linewidth=3, color="#87a565")
 
 ax.set_title("Training Dataset Distribution of Stop Words", fontsize=18)
 ax.set_xlabel("Stop Words in Tweet", fontsize=18)
-ax.set_ylabel("Porton of Tweets with That Number of Stop Words", fontsize=18)
+ax.set_ylabel("Number of Tweets with That Number of Stop Words", fontsize=18)
 
 plt.show()
 ```
 
 
-![png](output_162_0.png)
+![png](output_120_0.png)
 
 
 
@@ -2515,20 +2289,20 @@ ax = fig.add_subplot(111)
 n, bins, patches = ax.hist(unique_words_data, 
                            bins="scott", 
                            edgecolor="black", 
-                           density=True, 
-                           color="#Ca2e55",
+                           # density=True, 
+                           color="#ca2e55",
                            alpha=0.5)
 
-unique_words_line = scipy.stats.norm.pdf(bins, unique_words_mean, unique_words_std)
-ax.plot(bins, unique_words_line, "--", linewidth=3, color="#d45776")
+# unique_words_line = scipy.stats.norm.pdf(bins, unique_words_mean, unique_words_std)
+# ax.plot(bins, unique_words_line, "--", linewidth=3, color="#d45776")
 
 ax.set_title("Training Dataset Distribution of Unique Words", fontsize=18)
 ax.set_xlabel("Unique Words in Tweet", fontsize=18)
-ax.set_ylabel("Porton of Tweets with That Number of Unique Words", fontsize=18)
+ax.set_ylabel("Number of Tweets with That Number of Unique Words", fontsize=18)
 
 plt.show()
 ```
 
 
-![png](output_163_0.png)
+![png](output_121_0.png)
 

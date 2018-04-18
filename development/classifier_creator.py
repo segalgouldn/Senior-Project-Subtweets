@@ -27,7 +27,10 @@ from sklearn.model_selection import KFold
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 from sklearn.externals import joblib
 from nltk.corpus import stopwords
-from random import choice
+from pprint import pprint
+from random import choice, sample
+from glob import glob
+from os.path import basename, splitext
 from string import punctuation
 
 import matplotlib.pyplot as plt
@@ -47,19 +50,19 @@ import re
 # In[3]:
 
 
-hashtags_pattern = r'(\#[a-zA-Z0-9]+)'
+hashtags_pattern = re.compile(r'(\#[a-zA-Z0-9]+)')
 
 
 # In[4]:
 
 
-urls_pattern = r'(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?\xab\xbb\u201c\u201d\u2018\u2019]))'
+urls_pattern = re.compile(r'(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?\xab\xbb\u201c\u201d\u2018\u2019]))')
 
 
 # In[5]:
 
 
-at_mentions_pattern = r'(?<=^|(?<=[^a-zA-Z0-9-\.]))@([A-Za-z0-9_]+)'
+at_mentions_pattern = re.compile(r'(?<=^|(?<=[^a-zA-Z0-9-\.]))@([A-Za-z0-9_]+)')
 
 
 # #### Prepare English dictionary for language detection
@@ -93,115 +96,103 @@ pd.options.display.float_format = "{:.4f}".format
 
 
 # #### Load the two data files
+# #### Only use tweets with at least 50% English words
+# #### Also, make the mentions of usernames, URLs, and hashtags generic
 
 # In[10]:
 
 
-subtweets_data = [t for t in json.load(open("../data/other_data/subtweets.json")) 
-                  if t["tweet_data"]["user"]["lang"] == "en" 
-                  and t["reply"]["user"]["lang"] == "en"]
+def load_data(filename, threshold=0.5):
+    data = [(hashtags_pattern.sub("➊", 
+             urls_pattern.sub("➋", 
+             at_mentions_pattern.sub("➌", 
+             t["tweet_data"]["full_text"])))
+             .replace("\u2018", "'")
+             .replace("\u2019", "'")
+             .replace("\u201c", "\"")
+             .replace("\u201d", "\"")
+             .replace("&quot;", "\"")
+             .replace("&amp;", "&")
+             .replace("&gt;", ">")
+             .replace("&lt;", "<")) 
+            for t in json.load(open(filename)) 
+            if t["tweet_data"]["user"]["lang"] == "en" 
+            and t["reply"]["user"]["lang"] == "en"]
+    new_data = []
+    for tweet in data:
+        tokens = tokenizer.tokenize(tweet)
+        english_tokens = [english_dict.check(token) for token in tokens]
+        percent_english_words = sum(english_tokens)/len(english_tokens)
+        if percent_english_words >= threshold:
+            new_data.append(tweet)
+    return new_data
 
 
 # In[11]:
 
 
-non_subtweets_data = [t for t in json.load(open("../data/other_data/non_subtweets.json")) 
-                      if t["tweet_data"]["user"]["lang"] == "en" 
-                      and t["reply"]["user"]["lang"] == "en"]
+subtweets_data = load_data("../data/other_data/subtweets.json")
 
-
-# #### Only use tweets with at least 50% English words
-# #### Also, make the mentions of usernames, URLs, and hashtags generic
 
 # In[12]:
 
 
-get_ipython().run_cell_magic('time', '', 'subtweets_data = [(re.sub(hashtags_pattern, \n                          "➊", \n                          re.sub(urls_pattern, \n                                 "➋", \n                                 re.sub(at_mentions_pattern, \n                                        "➌", \n                                        t["tweet_data"]["full_text"])))\n                   .replace("\\u2018", "\'")\n                   .replace("\\u2019", "\'")\n                   .replace("&quot;", "\\"")\n                   .replace("&amp;", "&")\n                   .replace("&gt;", ">")\n                   .replace("&lt;", "<"))\n                  for t in subtweets_data]')
+non_subtweets_data = load_data("../data/other_data/non_subtweets.json")
 
+
+# #### Show examples
 
 # In[13]:
 
 
-new_subtweets_data = []
-for tweet in subtweets_data:
-    tokens = tokenizer.tokenize(tweet)
-    english_tokens = [english_dict.check(token) for token in tokens]
-    percent_english_words = sum(english_tokens)/len(english_tokens)
-    if percent_english_words >= 0.5:
-        new_subtweets_data.append(tweet)
+print("Subtweets dataset example:")
+print(choice(subtweets_data))
 
 
 # In[14]:
 
 
-get_ipython().run_cell_magic('time', '', 'non_subtweets_data = [(re.sub(hashtags_pattern, \n                              "➊", \n                              re.sub(urls_pattern, \n                                     "➋", \n                                     re.sub(at_mentions_pattern, \n                                            "➌", \n                                            t["tweet_data"]["full_text"])))\n                       .replace("\\u2018", "\'")\n                       .replace("\\u2019", "\'")\n                       .replace("&quot;", "\\"")\n                       .replace("&amp;", "&")\n                       .replace("&gt;", ">")\n                       .replace("&lt;", "<"))\n                      for t in non_subtweets_data]')
+print("Non-subtweets dataset example:")
+print(choice(non_subtweets_data))
 
+
+# #### Find the length of the smaller dataset
 
 # In[15]:
 
 
-new_non_subtweets_data = []
-for tweet in non_subtweets_data:
-    tokens = tokenizer.tokenize(tweet)
-    english_tokens = [english_dict.check(token) for token in tokens]
-    percent_english_words = sum(english_tokens)/len(english_tokens)
-    if percent_english_words >= 0.5:
-        new_non_subtweets_data.append(tweet)
+smallest_length = len(min([subtweets_data, non_subtweets_data], key=len))
 
 
-# #### Show examples
+# #### Cut both down to be the same length
 
 # In[16]:
 
 
-print("Subtweets dataset example:")
-print(choice(new_subtweets_data))
+subtweets_data = subtweets_data[:smallest_length]
 
 
 # In[17]:
 
 
-print("Non-subtweets dataset example:")
-print(choice(new_non_subtweets_data))
+non_subtweets_data = non_subtweets_data[:smallest_length]
 
-
-# #### Find the length of the smaller dataset
 
 # In[18]:
 
 
-smallest_length = len(min([new_subtweets_data, new_non_subtweets_data], key=len))
-
-
-# #### Cut both down to be the same length
-
-# In[19]:
-
-
-subtweets_data = new_subtweets_data[:smallest_length]
-
-
-# In[20]:
-
-
-non_subtweets_data = new_non_subtweets_data[:smallest_length]
-
-
-# In[21]:
-
-
-print("Smallest dataset length: {}".format(len(non_subtweets_data)))
+print("Smallest dataset length: {}".format(len(subtweets_data)))
 
 
 # #### Prepare data for training
 
-# In[22]:
+# In[19]:
 
 
 subtweets_data = [(tweet, "subtweet") for tweet in subtweets_data]
 
 
-# In[23]:
+# In[20]:
 
 
 non_subtweets_data = [(tweet, "non-subtweet") for tweet in non_subtweets_data]
@@ -209,7 +200,7 @@ non_subtweets_data = [(tweet, "non-subtweet") for tweet in non_subtweets_data]
 
 # #### Combine them
 
-# In[24]:
+# In[21]:
 
 
 training_data = subtweets_data + non_subtweets_data
@@ -217,19 +208,19 @@ training_data = subtweets_data + non_subtweets_data
 
 # #### Create custom stop words to include generic usernames, URLs, and hashtags, as well as common English first names
 
-# In[25]:
+# In[22]:
 
 
 names_lower = set([name.lower() for name in open("../data/other_data/first_names.txt").read().split("\n")])
 
 
-# In[26]:
+# In[23]:
 
 
 generic_tokens = {"➊", "➋", "➌"}
 
 
-# In[27]:
+# In[24]:
 
 
 stop_words = text.ENGLISH_STOP_WORDS | names_lower | generic_tokens
@@ -237,7 +228,7 @@ stop_words = text.ENGLISH_STOP_WORDS | names_lower | generic_tokens
 
 # #### Build the pipeline
 
-# In[28]:
+# In[25]:
 
 
 sentiment_pipeline = Pipeline([
@@ -250,42 +241,97 @@ sentiment_pipeline = Pipeline([
 
 # #### K-Folds splits up and separates out 10 training and test sets from the data, from which the classifier is trained and the confusion matrix and classification reports are updated
 
-# In[29]:
+# In[26]:
 
 
-text_training_data = np.array([row[0] for row in training_data])
+def confusion_matrices(training_data, num_folds=10):
+    text_training_data = np.array([row[0] for row in training_data])
+    class_training_data = np.array([row[1] for row in training_data])
+    kf = KFold(n_splits=num_folds, random_state=42, shuffle=True)
+    
+    cnf_matrix_test = np.zeros((2, 2), dtype=int)
+    cnf_matrix_train = np.zeros((2, 2), dtype=int)
+    
+    test_reports = []
+    train_reports = []
+    for i, (train_index, test_index) in enumerate(kf.split(text_training_data)):
+
+        text_train, text_test = text_training_data[train_index], text_training_data[test_index]
+        class_train, class_test = class_training_data[train_index], class_training_data[test_index]
+
+        sentiment_pipeline.fit(text_train, class_train)
+        
+        predictions_test = sentiment_pipeline.predict(text_test)
+        predictions_train = sentiment_pipeline.predict(text_train)
+
+        cnf_matrix_test += confusion_matrix(class_test, predictions_test)
+        cnf_matrix_train += confusion_matrix(class_train, predictions_train)
+
+        print("Test Data Iteration {}:".format(i+1))
+        
+        test_report = classification_report(class_test, predictions_test, digits=4)
+        test_reports.append(test_report)
+        print(test_report)
+        
+        print(("Test Data Null Accuracy: {:.4f}\n"
+               .format(max(pd.value_counts(pd.Series(class_test)))/float(len(class_test)))))
+        print("="*53)
+        
+        print("Train Data Iteration {}:".format(i+1))
+        
+        train_report = classification_report(class_train, predictions_train, digits=4)
+        train_reports.append(train_report)
+        print(train_report)
+        
+        print(("Train Data Null Accuracy: {:.4f}\n"
+               .format(max(pd.value_counts(pd.Series(class_train)))/float(len(class_train)))))
+        print("="*53)
+        
+    def reports_mean(reports):
+        reports_lists_of_strings = [report.split("\n") for report in reports]
+        reports = [[[float(e) for e in report_string[2][16:].split()],
+                    [float(e) for e in report_string[3][16:].split()],
+                    [float(e) for e in report_string[5][16:].split()]]
+                   for report_string in reports_lists_of_strings]
+        mean_list = np.mean(np.array(reports), axis=0).tolist()
+        print("              precision    recall  f1-score   support")
+        print()
+        print("non-subtweet     {0:.4f}    {1:.4f}    {2:.4f}      {3:d}".format(mean_list[0][0], 
+                                                                                 mean_list[0][1], 
+                                                                                 mean_list[0][2], 
+                                                                                 int(mean_list[0][3])))
+        print("    subtweet     {0:.4f}    {1:.4f}    {2:.4f}      {3:d}".format(mean_list[1][0], 
+                                                                                 mean_list[1][1], 
+                                                                                 mean_list[1][2], 
+                                                                                 int(mean_list[1][3])))
+        print()
+        print(" avg / total     {0:.4f}    {1:.4f}    {2:.4f}      {3:d}".format(mean_list[2][0], 
+                                                                                 mean_list[2][1], 
+                                                                                 mean_list[2][2], 
+                                                                                 int(mean_list[2][3])))
+        print()
+        print("="*53)
+    
+    print("Test Data Averages Across All Folds:")
+    reports_mean(test_reports)
+    print("Train Data Averages Across All Folds:")
+    reports_mean(train_reports)
+    return {"Test": cnf_matrix_test, "Train": cnf_matrix_train}
 
 
-# In[30]:
+# In[27]:
 
 
-class_training_data = np.array([row[1] for row in training_data])
-
-
-# In[31]:
-
-
-num_folds=10
-
-
-# In[32]:
-
-
-kf = KFold(n_splits=num_folds, random_state=42, shuffle=True)
-
-
-# In[33]:
-
-
-get_ipython().run_cell_magic('time', '', 'cnf_matrix = np.zeros((2, 2), dtype=int)\nfor i, (train_index, test_index) in enumerate(kf.split(text_training_data)):\n    \n    text_train, text_test = text_training_data[train_index], text_training_data[test_index]\n    class_train, class_test = class_training_data[train_index], class_training_data[test_index]\n    \n    sentiment_pipeline.fit(text_train, class_train)\n    predictions = sentiment_pipeline.predict(text_test)\n        \n    cnf_matrix += confusion_matrix(class_test, predictions)\n    \n    print("Iteration {}".format(i+1))\n    print(classification_report(class_test, predictions, digits=3))\n    print("null accuracy: {:.3f}\\n".format(max(pd.value_counts(pd.Series(class_test)))/float(len(class_test))))\n    print("="*53)')
+get_ipython().run_cell_magic('time', '', 'cnf_matrices = confusion_matrices(training_data)\ncnf_matrix_test = cnf_matrices["Test"]\ncnf_matrix_train = cnf_matrices["Train"]')
 
 
 # #### See the most informative features
+# [How does "MultinomialNB.coef_" work?](https://stackoverflow.com/a/29915740/6147528)
 
-# In[34]:
+# In[28]:
 
 
-def most_informative_features(pipeline, n=50):
+def most_informative_features(pipeline, n=10000):
     vectorizer = pipeline.named_steps["vectorizer"]
     classifier = pipeline.named_steps["classifier"]
     
@@ -296,90 +342,90 @@ def most_informative_features(pipeline, n=50):
     top_n_class_1 = sorted(zip(classifier.coef_[0], feature_names))[:n]
     top_n_class_2 = sorted(zip(classifier.coef_[0], feature_names))[-n:]
     
-    return {class_labels[0]: pd.DataFrame({"Weight": [tup[0] for tup in top_n_class_1], 
+    return {class_labels[0]: pd.DataFrame({"Log Probability": [tup[0] for tup in top_n_class_1], 
                                            "Feature": [tup[1] for tup in top_n_class_1]}), 
-            class_labels[1]: pd.DataFrame({"Weight": [tup[0] for tup in reversed(top_n_class_2)],
+            class_labels[1]: pd.DataFrame({"Log Probability": [tup[0] for tup in reversed(top_n_class_2)],
                                            "Feature": [tup[1] for tup in reversed(top_n_class_2)]})}
 
 
-# In[35]:
+# In[29]:
 
 
-most_informative_features_all = most_informative_features(sentiment_pipeline)
+get_ipython().run_cell_magic('time', '', 'most_informative_features_all = most_informative_features(sentiment_pipeline)')
 
 
-# In[36]:
+# In[30]:
 
 
 most_informative_features_non_subtweet = most_informative_features_all["non-subtweet"]
 
 
-# In[37]:
+# In[31]:
 
 
 most_informative_features_subtweet = most_informative_features_all["subtweet"]
 
 
-# In[38]:
+# In[32]:
 
 
-most_informative_features_non_subtweet.join(most_informative_features_subtweet, 
-                                            lsuffix=" (Non-subtweet)", 
-                                            rsuffix=" (Subtweet)")
+final_features = most_informative_features_non_subtweet.join(most_informative_features_subtweet, 
+                                                             lsuffix=" (Non-subtweet)", 
+                                                             rsuffix=" (Subtweet)")
+final_features.to_csv("../data/other_data/most_informative_features.csv")
+final_features.head(25)
 
 
 # #### Define function for visualizing confusion matrices
 
-# In[39]:
+# In[33]:
 
 
-def plot_confusion_matrix(cm, classes, normalize=False,
-                          title="Confusion Matrix", cmap=plt.cm.Blues):
-    if normalize:
-        cm = cm.astype("float") / cm.sum(axis=1)[:, np.newaxis]
+def plot_confusion_matrix(cm, classes=["non-subtweet", "subtweet"], 
+                          title="Confusion Matrix", cmap=plt.cm.Purples):
+    
+    cm_normalized = cm.astype("float") / cm.sum(axis=1)[:, np.newaxis]
 
     plt.imshow(cm, interpolation="nearest", cmap=cmap)
-    plt.title(title)
     plt.colorbar()
+    
+    plt.title(title, size=18)
+    
     tick_marks = np.arange(len(classes))
-    plt.xticks(tick_marks, classes, rotation=45)
-    plt.yticks(tick_marks, classes)
+    plt.xticks(tick_marks, classes, rotation=45, fontsize=14)
+    plt.yticks(tick_marks, classes, fontsize=14)
 
-    fmt = ".2f" if normalize else "d"
     thresh = cm.max() / 2.
     for i, j in itertools.product(range(cm.shape[0]), range(cm.shape[1])):
-        plt.text(j, i, format(cm[i, j], fmt),
-                 horizontalalignment="center",
-                 color="white" if cm[i, j] > thresh else "black")
-
+        plt.text(j, i, "{} ({:.0%})".format(cm[i, j], cm_normalized[i, j]),
+                horizontalalignment="center", size=16,
+                color="white" if cm[i, j] > thresh else "black")
+        
     plt.tight_layout()
-    plt.ylabel("True label")
-    plt.xlabel("Predicted Label")
+    
+    plt.ylabel("True label", fontsize=14)
+    plt.xlabel("Predicted Label", fontsize=14)
 
 
 # #### Show the matrices
 
-# In[40]:
+# In[34]:
 
-
-class_names = ["non-subtweet", "subtweet"]
 
 np.set_printoptions(precision=2)
 
-plt.figure()
-plot_confusion_matrix(cnf_matrix, classes=class_names,
-                      title='Confusion matrix, without normalization')
+plt.figure(figsize=(6, 6))
+plot_confusion_matrix(cnf_matrix_test, title="Test Data Confusion Matrix")
 
-plt.figure()
-plot_confusion_matrix(cnf_matrix, classes=class_names, normalize=True,
-                      title='Normalized confusion matrix')
+plt.figure(figsize=(6, 6))
+plot_confusion_matrix(cnf_matrix_train, title="Train Data Confusion Matrix")
 
 plt.show()
 
 
 # #### Update matplotlib style
 
-# In[41]:
+# In[35]:
 
 
 plt.style.use("fivethirtyeight")
@@ -387,7 +433,7 @@ plt.style.use("fivethirtyeight")
 
 # #### Save the classifier for another time
 
-# In[42]:
+# In[36]:
 
 
 joblib.dump(sentiment_pipeline, "../data/other_data/subtweets_classifier.pkl");
@@ -395,362 +441,234 @@ joblib.dump(sentiment_pipeline, "../data/other_data/subtweets_classifier.pkl");
 
 # #### Print tests for the classifier
 
+# In[37]:
+
+
+def process_tweets_for_testing(filenames):
+    dataframes = {}
+    for filename in filenames:
+        username = splitext(basename(filename))[0][:-7]
+        dataframes[username] = {}
+        
+        user_df = pd.read_csv(filename).dropna()
+        user_df["Text"] = user_df["Text"].str.replace(hashtags_pattern, "➊")
+        user_df["Text"] = user_df["Text"].str.replace(urls_pattern, "➋")
+        user_df["Text"] = user_df["Text"].str.replace(at_mentions_pattern, "➌")
+        user_df["Text"] = user_df["Text"].str.replace("\u2018", "'")
+        user_df["Text"] = user_df["Text"].str.replace("\u2019", "'")
+        user_df["Text"] = user_df["Text"].str.replace("\u201c", "\"")
+        user_df["Text"] = user_df["Text"].str.replace("\u201d", "\"")
+        user_df["Text"] = user_df["Text"].str.replace("&quot;", "\"")
+        user_df["Text"] = user_df["Text"].str.replace("&amp;", "&")
+        user_df["Text"] = user_df["Text"].str.replace("&gt;", ">")
+        user_df["Text"] = user_df["Text"].str.replace("&lt;", "<")
+        
+        predictions = sentiment_pipeline.predict_proba(user_df["Text"])[:, 1].tolist()
+        user_df["SubtweetProbability"] = predictions
+
+        dataframes[username]["all"] = user_df
+        
+        scores = user_df[["SubtweetProbability"]].rename(columns={"SubtweetProbability": username})
+        
+        dataframes[username]["scores"] = scores
+        dataframes[username]["stats"] = scores.describe()
+        
+    return dataframes
+
+
+# #### Load the CSV files
+
+# In[38]:
+
+
+filenames = glob("../data/data_for_testing/friends_data/*.csv")
+
+
+# In[39]:
+
+
+get_ipython().run_cell_magic('time', '', 'dataframes = process_tweets_for_testing(filenames)')
+
+
+# #### Show a random table
+
+# In[40]:
+
+
+chosen_username = choice(list(dataframes.keys()))
+dataframes[chosen_username]["all"].sort_values(by="SubtweetProbability", ascending=False).head(5)
+
+
+# #### Prepare statistics on tweets
+
+# In[41]:
+
+
+tests_df = pd.concat([df_dict["scores"] for df_dict in dataframes.values()], ignore_index=True)
+
+
+# In[42]:
+
+
+tests_df.describe()
+
+
+# #### Plot a histogram with three random users
+
 # In[43]:
 
 
-def tests_dataframe(tweets_dataframe, text_column="SentimentText", sentiment_column="Sentiment"):
-    predictions = sentiment_pipeline.predict_proba(tweets_dataframe[text_column])
-    negative_probability = predictions[:, 0].tolist()
-    positive_probability = predictions[:, 1].tolist()
-    return pd.DataFrame({"tweet": tweets_dataframe[text_column], 
-                         "sentiment_score": tweets_dataframe[sentiment_column], 
-                         "subtweet_negative_probability": negative_probability, 
-                         "subtweet_positive_probability": positive_probability}).sort_values(by="subtweet_positive_probability", 
-                                                                                             ascending=False)
+random_choices = sample(list(dataframes.values()), 3)
+scores = [df_dict["scores"][df_dict["scores"].columns[0]].tolist() 
+          for df_dict in random_choices]
+
+fig = plt.figure(figsize=(16, 9))
+ax = fig.add_subplot(111)
+
+n, bins, patches = ax.hist(scores, 
+                           bins="scott",
+                           color=["#256EFF", "#46237A", "#3DDC97"],
+                           density=True, 
+                           label=["User 1", "User 2", "User 3"],
+                           alpha=0.75)
+
+stats = [df_dict["stats"][df_dict["stats"].columns[0]].tolist() 
+         for df_dict in random_choices]
+
+line_1 = scipy.stats.norm.pdf(bins, stats[0][1], stats[0][2])
+ax.plot(bins, line_1, "--", color="#256EFF", linewidth=2)
+
+line_2 = scipy.stats.norm.pdf(bins, stats[1][1], stats[1][2])
+ax.plot(bins, line_2, "--", color="#46237A", linewidth=2)
+
+line_3 = scipy.stats.norm.pdf(bins, stats[2][1], stats[2][2])
+ax.plot(bins, line_3, "--", color="#3DDC97", linewidth=2)
+
+ax.set_xticks([float(x/10) for x in range(11)], minor=False)
+ax.set_title("Distribution of Subtweet Probabilities In User Accounts", fontsize=18)
+ax.set_xlabel("Probability That Tweet is a Subtweet", fontsize=18)
+ax.set_ylabel("Percent of Tweets with That Probability", fontsize=18)
+
+ax.legend()
+
+plt.show()
 
 
-# #### Make up some tweets
+# #### Plot a histogram with all of them
+# #### First, get some statistics
 
 # In[44]:
 
 
-test_tweets = ["Some people don't know their place.", 
-               "Isn't it funny how some people don't know their place?", 
-               "How come you people act like this?", 
-               "You're such a nerd.",
-               "I love Noah, he's so cool.",
-               "Who the heck is Noah?",
-               "This is a @NoahSegalGould subtweet. Go check out https://segal-gould.com.", 
-               "This is a subtweet.", 
-               "Hey @jack!", 
-               "Hey Jack!",
-               "http://www.google.com"]
+new_tests_df = pd.concat([df_dict["scores"].rename(columns={df_dict["scores"].columns[0]:"SubtweetProbability"})
+                          for df_dict in dataframes.values()], ignore_index=True)
+
+new_tests_df_stats = new_tests_df.describe()
 
 
-# #### Make a dataframe from the list
+# #### Then view them
 
 # In[45]:
 
 
-test_tweets_df = pd.DataFrame({"Tweet": test_tweets, "Sentiment": [None]*len(test_tweets)})
+new_tests_df_stats
 
 
-# #### Remove usernames, URLs, and hashtags
+# #### Now plot
 
 # In[46]:
 
 
-test_tweets_df["Tweet"] = test_tweets_df["Tweet"].str.replace(hashtags_pattern, "➊")
+fig = plt.figure(figsize=(16, 9))
+ax = fig.add_subplot(111)
 
+n, bins, patches = ax.hist(new_tests_df["SubtweetProbability"].tolist(), 
+                           bins="scott",
+                           color="#983B59",
+                           edgecolor="black", 
+                           density=True, 
+                           alpha=0.75)
 
-# In[47]:
+line = scipy.stats.norm.pdf(bins, new_tests_df_stats["SubtweetProbability"][1], 
+                              new_tests_df_stats["SubtweetProbability"][2])
 
+ax.plot(bins, line, "--", color="#983B59", linewidth=2)
 
-test_tweets_df["Tweet"] = test_tweets_df["Tweet"].str.replace(urls_pattern, "➋")
 
+ax.set_xticks([float(x/10) for x in range(11)], minor=False)
+ax.set_title("Distribution of Subtweet Probabilities In All User Accounts", fontsize=18)
+ax.set_xlabel("Probability That Tweet is a Subtweet", fontsize=18)
+ax.set_ylabel("Percent of Tweets with That Probability", fontsize=18)
 
-# In[48]:
+ax.legend()
 
-
-test_tweets_df["Tweet"] = test_tweets_df["Tweet"].str.replace(at_mentions_pattern, "➌")
-
-
-# #### Print the tests
-
-# In[49]:
-
-
-tests_dataframe(test_tweets_df, text_column="Tweet", 
-                sentiment_column="Sentiment").drop(["sentiment_score", 
-                                                    "subtweet_negative_probability"], axis=1)
-
-
-# #### Tests on friends' tweets
-
-# #### Aaron
-
-# In[50]:
-
-
-aaron_df = pd.read_csv("../data/data_for_testing/friends_data/akrapf96_tweets.csv").dropna()
-aaron_df["Sentiment"] = None
-
-
-# #### Remove usernames, URLs, and hashtags
-
-# In[51]:
-
-
-aaron_df["Text"] = aaron_df["Text"].str.replace(hashtags_pattern, "➊")
-
-
-# In[52]:
-
-
-aaron_df["Text"] = aaron_df["Text"].str.replace(urls_pattern, "➋")
-
-
-# In[53]:
-
-
-aaron_df["Text"] = aaron_df["Text"].str.replace(at_mentions_pattern, "➌")
-
-
-# In[54]:
-
-
-aaron_df = tests_dataframe(aaron_df, text_column="Text", 
-                           sentiment_column="Sentiment").drop(["sentiment_score", 
-                                                               "subtweet_negative_probability"], axis=1)
-
-
-# In[55]:
-
-
-aaron_df.to_csv("../data/data_from_testing/friends_data/akrapf96_tests.csv")
-
-
-# In[56]:
-
-
-aaron_df.head(10)
-
-
-# In[57]:
-
-
-aaron_df_for_plotting = aaron_df.drop(["tweet"], axis=1)
-
-
-# #### Julia
-
-# In[58]:
-
-
-julia_df = pd.read_csv("../data/data_for_testing/friends_data/juliaeberry_tweets.csv").dropna()
-julia_df["Sentiment"] = None
-
-
-# #### Remove usernames, URLs, and hashtags
-
-# In[59]:
-
-
-julia_df["Text"] = julia_df["Text"].str.replace(hashtags_pattern, "➊")
-
-
-# In[60]:
-
-
-julia_df["Text"] = julia_df["Text"].str.replace(urls_pattern, "➋")
-
-
-# In[61]:
-
-
-julia_df["Text"] = julia_df["Text"].str.replace(at_mentions_pattern, "➌")
-
-
-# In[62]:
-
-
-julia_df = tests_dataframe(julia_df, text_column="Text", 
-                           sentiment_column="Sentiment").drop(["sentiment_score", 
-                                                               "subtweet_negative_probability"], axis=1)
-
-
-# In[63]:
-
-
-julia_df.to_csv("../data/data_from_testing/friends_data/juliaeberry_tests.csv")
-
-
-# In[64]:
-
-
-julia_df.head(10)
-
-
-# In[65]:
-
-
-julia_df_for_plotting = julia_df.drop(["tweet"], axis=1)
-
-
-# #### Noah
-
-# In[66]:
-
-
-noah_df = pd.read_csv("../data/data_for_testing/friends_data/noahsegalgould_tweets.csv").dropna()
-noah_df["Sentiment"] = None
-
-
-# #### Remove usernames, URLs, and hashtags
-
-# In[67]:
-
-
-noah_df["Text"] = noah_df["Text"].str.replace(hashtags_pattern, "➊")
-
-
-# In[68]:
-
-
-noah_df["Text"] = noah_df["Text"].str.replace(urls_pattern, "➋")
-
-
-# In[69]:
-
-
-noah_df["Text"] = noah_df["Text"].str.replace(at_mentions_pattern, "➌")
-
-
-# In[70]:
-
-
-noah_df = tests_dataframe(noah_df, text_column="Text", 
-                          sentiment_column="Sentiment").drop(["sentiment_score", 
-                                                              "subtweet_negative_probability"], axis=1)
-
-
-# In[71]:
-
-
-noah_df.to_csv("../data/data_from_testing/friends_data/noahsegalgould_tests.csv")
-
-
-# In[72]:
-
-
-noah_df.head(10)
-
-
-# In[73]:
-
-
-noah_df_for_plotting = noah_df.drop(["tweet"], axis=1)
-
-
-# #### Rename the columns for later
-
-# In[74]:
-
-
-aaron_df_for_plotting_together = aaron_df_for_plotting.rename(columns={"subtweet_positive_probability": "Aaron"})
-
-
-# In[75]:
-
-
-julia_df_for_plotting_together = julia_df_for_plotting.rename(columns={"subtweet_positive_probability": "Julia"})
-
-
-# In[76]:
-
-
-noah_df_for_plotting_together = noah_df_for_plotting.rename(columns={"subtweet_positive_probability": "Noah"})
-
-
-# #### Prepare statistics on friends' tweets
-
-# In[77]:
-
-
-friends_df = pd.concat([aaron_df_for_plotting_together, 
-                        julia_df_for_plotting_together, 
-                        noah_df_for_plotting_together], ignore_index=True)
-
-
-# In[78]:
-
-
-friends_df.describe()
-
-
-# In[79]:
-
-
-aaron_mean = friends_df.describe().Aaron[1]
-aaron_std = friends_df.describe().Aaron[2]
-
-julia_mean = friends_df.describe().Julia[1]
-julia_std = friends_df.describe().Julia[2]
-
-noah_mean = friends_df.describe().Noah[1]
-noah_std = friends_df.describe().Noah[2]
-
-
-# #### Plot all the histograms
-
-# In[80]:
-
-
-get_ipython().run_cell_magic('time', '', 'fig = plt.figure(figsize=(16, 9))\nax = fig.add_subplot(111)\n\nn, bins, patches = ax.hist([aaron_df_for_plotting.subtweet_positive_probability, \n                            julia_df_for_plotting.subtweet_positive_probability, \n                            noah_df_for_plotting.subtweet_positive_probability], \n                           bins="scott",\n                           color=["#256EFF", "#46237A", "#3DDC97"],\n                           density=True, \n                           label=["Aaron", "Julia", "Noah"],\n                           alpha=0.75)\n\naaron_line = scipy.stats.norm.pdf(bins, aaron_mean, aaron_std)\nax.plot(bins, aaron_line, "--", color="#256EFF", linewidth=2)\n\njulia_line = scipy.stats.norm.pdf(bins, julia_mean, julia_std)\nax.plot(bins, julia_line, "--", color="#46237A", linewidth=2)\n\nnoah_line = scipy.stats.norm.pdf(bins, noah_mean, noah_std)\nax.plot(bins, noah_line, "--", color="#3DDC97", linewidth=2)\n\nax.set_xticks([float(x/10) for x in range(11)], minor=False)\nax.set_title("Friends\' Dataset Distribution of Subtweet Probabilities", fontsize=18)\nax.set_xlabel("Probability That Tweet is a Subtweet", fontsize=18)\nax.set_ylabel("Portion of Tweets with That Probability", fontsize=18)\n\nax.legend()\n\nplt.show()')
+plt.show()
 
 
 # #### Statisitics on training data
 
 # #### Remove mentions of usernames for these statistics
 
-# In[81]:
+# In[47]:
 
 
-training_data = [" ".join([token for token in tokenizer.tokenize(pair[0]) if "@" not in token]) 
-                 for pair in training_data]
+training_data = [(tweet[0]
+                  .replace("➊", "")
+                  .replace("➋", "")
+                  .replace("➌", "")) for tweet in training_data]
 
 
-# #### Lengths (Less than or equal to 280 characters and greater than or equal to 5 characters)
+# #### Lengths
 
-# In[82]:
+# In[48]:
 
 
 length_data = [len(tweet) for tweet in training_data]
 
 
-# In[83]:
+# In[49]:
 
 
 length_data_for_stats = pd.DataFrame({"Length": length_data, "Tweet": training_data})
 
 
-# In[84]:
+# In[50]:
 
 
 # length_data_for_stats = length_data_for_stats[length_data_for_stats["Length"] <= 280]  
 
 
-# In[85]:
+# In[51]:
 
 
 # length_data_for_stats = length_data_for_stats[length_data_for_stats["Length"] >= 5]
 
 
-# In[86]:
+# In[52]:
 
 
 length_data = length_data_for_stats.Length.tolist()
 
 
-# #### Top 10 longest tweets
+# #### Top 5 longest tweets
 
-# In[87]:
-
-
-length_data_for_stats.sort_values(by="Length", ascending=False).head(10)
+# In[53]:
 
 
-# #### Top 10 shortest tweets
-
-# In[88]:
+length_data_for_stats.sort_values(by="Length", ascending=False).head()
 
 
-length_data_for_stats.sort_values(by="Length", ascending=True).head(10)
+# #### Top 5 shortest tweets
+
+# In[54]:
+
+
+length_data_for_stats.sort_values(by="Length", ascending=True).head()
 
 
 # #### Tweet length statistics
 
-# In[89]:
+# In[55]:
 
 
 length_data_for_stats.describe()
@@ -758,29 +676,29 @@ length_data_for_stats.describe()
 
 # #### Punctuation
 
-# In[90]:
+# In[56]:
 
 
 punctuation_data = [len(set(punctuation).intersection(set(tweet))) for tweet in training_data]
 
 
-# In[91]:
+# In[57]:
 
 
 punctuation_data_for_stats = pd.DataFrame({"Punctuation": punctuation_data, "Tweet": training_data})
 
 
-# #### Top 10 most punctuated tweets
+# #### Top 5 most punctuated tweets
 
-# In[92]:
+# In[58]:
 
 
-punctuation_data_for_stats.sort_values(by="Punctuation", ascending=False).head(10)
+punctuation_data_for_stats.sort_values(by="Punctuation", ascending=False).head()
 
 
 # #### Tweets punctuation statistics
 
-# In[93]:
+# In[59]:
 
 
 punctuation_data_for_stats.describe()
@@ -788,88 +706,88 @@ punctuation_data_for_stats.describe()
 
 # #### Stop words
 
-# In[94]:
+# In[60]:
 
 
 stop_words_data = [len(set(stopwords.words("english")).intersection(set(tweet.lower()))) 
                    for tweet in training_data]
 
 
-# In[95]:
+# In[61]:
 
 
 stop_words_data_for_stats = pd.DataFrame({"Stop words": stop_words_data, "Tweet": training_data})
 
 
-# #### Top 10 tweets with most stop words
+# #### Top 5 tweets with most stop words
 
-# In[96]:
-
-
-stop_words_data_for_stats.sort_values(by="Stop words", ascending=False).head(10)
+# In[62]:
 
 
-# #### Top 10 tweets with fewest stop words
-
-# In[97]:
+stop_words_data_for_stats.sort_values(by="Stop words", ascending=False).head()
 
 
-stop_words_data_for_stats.sort_values(by="Stop words", ascending=True).head(10)
+# #### Top 5 tweets with fewest stop words
+
+# In[63]:
+
+
+stop_words_data_for_stats.sort_values(by="Stop words", ascending=True).head()
 
 
 # #### Tweets stop words statistics
 
-# In[98]:
+# In[64]:
 
 
 stop_words_data_for_stats.describe()
 
 
-# #### Unique words (at least 2)
+# #### Unique words
 
-# In[99]:
+# In[65]:
 
 
 unique_words_data = [len(set(tokenizer.tokenize(tweet))) for tweet in training_data]
 
 
-# In[100]:
+# In[66]:
 
 
 unique_words_data_for_stats = pd.DataFrame({"Unique words": unique_words_data, "Tweet": training_data})
 
 
-# In[101]:
+# In[67]:
 
 
 # unique_words_data_for_stats = unique_words_data_for_stats[unique_words_data_for_stats["Unique words"] >= 2]
 
 
-# In[102]:
+# In[68]:
 
 
 unique_words_data = unique_words_data_for_stats["Unique words"].tolist()
 
 
-# #### Top 10 tweets with most unique words
+# #### Top 5 tweets with most unique words
 
-# In[103]:
-
-
-unique_words_data_for_stats.sort_values(by="Unique words", ascending=False).head(10)
+# In[69]:
 
 
-# #### Top 10 tweets with fewest unique words
-
-# In[104]:
+unique_words_data_for_stats.sort_values(by="Unique words", ascending=False).head()
 
 
-unique_words_data_for_stats.sort_values(by="Unique words", ascending=True).head(10)
+# #### Top 5 tweets with fewest unique words
+
+# In[70]:
+
+
+unique_words_data_for_stats.sort_values(by="Unique words", ascending=True).head()
 
 
 # #### Tweets unique words statistics
 
-# In[105]:
+# In[71]:
 
 
 unique_words_data_for_stats.describe()
@@ -877,7 +795,7 @@ unique_words_data_for_stats.describe()
 
 # #### Plot them
 
-# In[106]:
+# In[72]:
 
 
 length_mean = length_data_for_stats.describe().Length[1]
@@ -889,21 +807,21 @@ ax = fig.add_subplot(111)
 n, bins, patches = ax.hist(length_data, 
                            bins="scott", 
                            edgecolor="black", 
-                           density=True, 
+                           # density=True, 
                            color="#12355b", 
                            alpha=0.5)
 
-length_line = scipy.stats.norm.pdf(bins, length_mean, length_std)
-ax.plot(bins, length_line, "--", linewidth=3, color="#415d7b")
+# length_line = scipy.stats.norm.pdf(bins, length_mean, length_std)
+# ax.plot(bins, length_line, "--", linewidth=3, color="#415d7b")
 
 ax.set_title("Training Dataset Distribution of Tweet Lengths", fontsize=18)
 ax.set_xlabel("Tweet Length", fontsize=18);
-ax.set_ylabel("Porton of Tweets with That Length", fontsize=18);
+ax.set_ylabel("Number of Tweets with That Length", fontsize=18);
 
 plt.show()
 
 
-# In[107]:
+# In[73]:
 
 
 punctuation_mean = punctuation_data_for_stats.describe().Punctuation[1]
@@ -913,23 +831,23 @@ fig = plt.figure(figsize=(16, 9))
 ax = fig.add_subplot(111)
 
 n, bins, patches = ax.hist(punctuation_data, 
-                           bins="scott", 
+                           bins="scott",
                            edgecolor="black", 
-                           density=True, 
+                           # density=True, 
                            color="#420039",
                            alpha=0.5)
 
-punctution_line = scipy.stats.norm.pdf(bins, punctuation_mean, punctuation_std)
-ax.plot(bins, punctution_line, "--", linewidth=3, color="#673260")
+# punctution_line = scipy.stats.norm.pdf(bins, punctuation_mean, punctuation_std)
+# ax.plot(bins, punctution_line, "--", linewidth=3, color="#673260")
 
 ax.set_title("Training Dataset Distribution of Punctuation", fontsize=18)
-ax.set_xlabel("Punctuating Characters", fontsize=18)
-ax.set_ylabel("Porton of Punctuating Characters", fontsize=18)
+ax.set_xlabel("Punctuating Characters in Tweet", fontsize=18)
+ax.set_ylabel("Number of Tweets with That Number of Punctuating Characters", fontsize=18)
 
 plt.show()
 
 
-# In[108]:
+# In[74]:
 
 
 stop_words_mean = stop_words_data_for_stats.describe()["Stop words"][1]
@@ -941,21 +859,21 @@ ax = fig.add_subplot(111)
 n, bins, patches = ax.hist(stop_words_data, 
                            bins="scott", 
                            edgecolor="black", 
-                           density=True, 
+                           # density=True, 
                            color="#698f3f",
                            alpha=0.5)
 
-stop_words_line = scipy.stats.norm.pdf(bins, stop_words_mean, stop_words_std)
-ax.plot(bins, stop_words_line, "--", linewidth=3, color="#87a565")
+# stop_words_line = scipy.stats.norm.pdf(bins, stop_words_mean, stop_words_std)
+# ax.plot(bins, stop_words_line, "--", linewidth=3, color="#87a565")
 
 ax.set_title("Training Dataset Distribution of Stop Words", fontsize=18)
 ax.set_xlabel("Stop Words in Tweet", fontsize=18)
-ax.set_ylabel("Porton of Tweets with That Number of Stop Words", fontsize=18)
+ax.set_ylabel("Number of Tweets with That Number of Stop Words", fontsize=18)
 
 plt.show()
 
 
-# In[109]:
+# In[75]:
 
 
 unique_words_mean = unique_words_data_for_stats.describe()["Unique words"][1]
@@ -967,16 +885,16 @@ ax = fig.add_subplot(111)
 n, bins, patches = ax.hist(unique_words_data, 
                            bins="scott", 
                            edgecolor="black", 
-                           density=True, 
-                           color="#Ca2e55",
+                           # density=True, 
+                           color="#ca2e55",
                            alpha=0.5)
 
-unique_words_line = scipy.stats.norm.pdf(bins, unique_words_mean, unique_words_std)
-ax.plot(bins, unique_words_line, "--", linewidth=3, color="#d45776")
+# unique_words_line = scipy.stats.norm.pdf(bins, unique_words_mean, unique_words_std)
+# ax.plot(bins, unique_words_line, "--", linewidth=3, color="#d45776")
 
 ax.set_title("Training Dataset Distribution of Unique Words", fontsize=18)
 ax.set_xlabel("Unique Words in Tweet", fontsize=18)
-ax.set_ylabel("Porton of Tweets with That Number of Unique Words", fontsize=18)
+ax.set_ylabel("Number of Tweets with That Number of Unique Words", fontsize=18)
 
 plt.show()
 
