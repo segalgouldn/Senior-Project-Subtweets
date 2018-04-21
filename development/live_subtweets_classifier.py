@@ -146,30 +146,33 @@ class StreamListener(tweepy.StreamListener):
                 not in_reply_to]):
             
             decision = choice(choices)
-            if decision == "retweet":
-                api.update_status(("Is this a subtweet? {:.3%} \n" + 
-                                   "https://twitter.com/{}/status/{}").format(positive_probability, 
-                                                                              screen_name, 
-                                                                              id_str))
-                print("Retweet!")
+            try:
+                if decision == "retweet":
+                    api.update_status(("Is this a subtweet? {:.1%} \n" + 
+                                       "https://twitter.com/{}/status/{}").format(positive_probability, 
+                                                                                  screen_name, 
+                                                                                  id_str))
+                    print("Retweet!")
             
-            if decision == "like":
-                api.create_favorite(id_str)
-                print("Like!")
+                if decision == "like":
+                    api.create_favorite(id_str)
+                    print("Like!")
             
-            if decision == "retweet and like":
-                api.update_status(("Is this a subtweet? {:.3%} \n" + 
-                                   "https://twitter.com/{}/status/{}").format(positive_probability, 
-                                                                              screen_name, 
-                                                                              id_str))
-                api.create_favorite(id_str)
-                print("Retweet and like!")
+                if decision == "retweet and like":
+                    api.update_status(("Is this a subtweet? {:.1%} \n" + 
+                                       "https://twitter.com/{}/status/{}").format(positive_probability, 
+                                                                                  screen_name, 
+                                                                                  id_str))
+                    api.create_favorite(id_str)
+                    print("Retweet and like!")
             
-            if decision == "reply":
-                api.update_status("@{} Is this a subtweet? {:.3%}".format(screen_name, 
-                                                                          positive_probability), 
-                                  id_str)
-                print("Reply!")
+                if decision == "reply":
+                    api.update_status("@{} Is this a subtweet? {:.1%}".format(screen_name, 
+                                                                              positive_probability), 
+                                      id_str)
+                    print("Reply!")
+            except:
+                print("Error encountered when trying to interact with tweet!")
             
             subtweets_live_list.append(row)
             subtweets_df = pd.DataFrame(subtweets_live_list).sort_values(by="subtweet_probability", 
@@ -177,7 +180,7 @@ class StreamListener(tweepy.StreamListener):
             
             subtweets_df.to_csv("../data/data_from_testing/live_downloaded_data/subtweets_live_data.csv")
             
-            print(("Subtweet from @{0} (Probability of {1:.3%}):\n" + 
+            print(("Subtweet from @{0} (Probability of {1:.1%}):\n" + 
                    "Time: {2}\n" + 
                    "Tweet: {3}\n" +
                    "Total tweets acquired: {4}\n").format(print_list[0], 
