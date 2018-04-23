@@ -3,14 +3,26 @@
 \contentsline {chapter}{Acknowledgments}{ix}{chapter*.4}
 \contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}
 \contentsline {section}{\numberline {1.1}Background}{1}{section.1.1}
-\contentsline {section}{\numberline {1.2}Sentiment Analysis \& Opinion Mining}{2}{section.1.2}
-\contentsline {section}{\numberline {1.3}SemEval}{2}{section.1.3}
-\contentsline {section}{\numberline {1.4}Naive Bayes}{3}{section.1.4}
-\contentsline {section}{\numberline {1.5}TF-IDF}{4}{section.1.5}
-\contentsline {section}{\numberline {1.6}Precision and Recall}{4}{section.1.6}
-\contentsline {chapter}{\numberline {2}Methods}{5}{chapter.2}
-\contentsline {section}{\numberline {2.1}Scikit Learn}{5}{section.2.1}
-\contentsline {section}{\numberline {2.2}Distribution \& Datasets}{5}{section.2.2}
-\contentsline {section}{\numberline {2.3}Confusion Matrices}{6}{section.2.3}
-\contentsline {section}{\numberline {2.4}Training, Testing, and Splitting}{6}{section.2.4}
-\contentsline {chapter}{Bibliography}{9}{chapter*.5}
+\contentsline {section}{\numberline {1.2}Motivation}{2}{section.1.2}
+\contentsline {section}{\numberline {1.3}Changes in Data Acquisition}{4}{section.1.3}
+\contentsline {section}{\numberline {1.4}Sentiment Analysis}{4}{section.1.4}
+\contentsline {section}{\numberline {1.5}The Twitter API}{4}{section.1.5}
+\contentsline {section}{\numberline {1.6}Regular Expressions, N-Grams, \& Tokenization}{4}{section.1.6}
+\contentsline {section}{\numberline {1.7}TF \& TF-IDF}{4}{section.1.7}
+\contentsline {section}{\numberline {1.8}Naive Bayes}{5}{section.1.8}
+\contentsline {section}{\numberline {1.9}Statistical Considerations}{5}{section.1.9}
+\contentsline {chapter}{\numberline {2}Implementation}{7}{chapter.2}
+\contentsline {section}{\numberline {2.1}Searching for Tweets Using the Twitter API}{7}{section.2.1}
+\contentsline {section}{\numberline {2.2}Cleaning the Data}{7}{section.2.2}
+\contentsline {section}{\numberline {2.3}Training the Classifier \& K-Folds Cross-Validation}{7}{section.2.3}
+\contentsline {chapter}{\numberline {3}Results}{9}{chapter.3}
+\contentsline {section}{\numberline {3.1}Distributions \& Datasets}{9}{section.3.1}
+\contentsline {section}{\numberline {3.2}Confusion Matrices}{9}{section.3.2}
+\contentsline {section}{\numberline {3.3}Most Informative Features}{10}{section.3.3}
+\contentsline {section}{\numberline {3.4}Statistical Analysis}{10}{section.3.4}
+\contentsline {chapter}{\numberline {4}Conclusion}{11}{chapter.4}
+\contentsline {section}{\numberline {4.1}The Twitter Bot}{11}{section.4.1}
+\contentsline {section}{\numberline {4.2}Summary of Project Achievements}{11}{section.4.2}
+\contentsline {section}{\numberline {4.3}Future Work \& Considerations}{11}{section.4.3}
+\contentsline {chapter}{Bibliography}{13}{chapter*.5}
+\contentsline {chapter}{\numberline {A}Classifier Creator iPython Notebook}{15}{Appendix.1.A}

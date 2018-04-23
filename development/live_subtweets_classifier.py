@@ -1,100 +1,122 @@
 
 # coding: utf-8
 
-# In[1]:
+# ### Script for running a Twitter bot that interacts with subtweets
+
+# #### Import some libraries
+
+# In[ ]:
 
 
-from sklearn.feature_extraction import text
+from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction import text
 from sklearn.naive_bayes import MultinomialNB
 from sklearn.pipeline import Pipeline
 from sklearn.model_selection import KFold
-from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 from sklearn.externals import joblib
 from nltk.corpus import stopwords
-from random import choice
 from string import punctuation
+from pprint import pprint
+from random import choice
 from time import sleep
 
-import matplotlib.pyplot as plt
 import pandas as pd
 import numpy as np
 
-import scipy.stats
 import itertools
-import tweepy
 import enchant
+import tweepy
 import nltk
 import json
 import re
 
 
-# In[2]:
+# #### Prepare the probability threshold for interacting with a potential subtweet and the duration for which the bot should run
+
+# In[ ]:
 
 
-# pd.set_option("max_colwidth", 1000)
+THRESHOLD = 0.8 # 80% positives and higher, only
+DURATION = 60*5 # 5 minutes
 
 
-# In[3]:
+# #### Set up regular expressions for genericizing extra features
+
+# In[ ]:
 
 
-# pd.options.display.float_format = "{:.4f}".format
+hashtags_pattern = re.compile(r'(\#[a-zA-Z0-9]+)')
 
 
-# In[4]:
+# In[ ]:
 
 
-hashtags_pattern = r'(\#[a-zA-Z0-9]+)'
+urls_pattern = re.compile(r'(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?\xab\xbb\u201c\u201d\u2018\u2019]))')
 
 
-# In[5]:
+# In[ ]:
 
 
-urls_pattern = r'(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?\xab\xbb\u201c\u201d\u2018\u2019]))'
+at_mentions_pattern = re.compile(r'(?<=^|(?<=[^a-zA-Z0-9-\.]))@([A-Za-z0-9_]+)')
 
 
-# In[6]:
+# #### Load the classifier pipeline which was previously saved
 
-
-at_mentions_pattern = r'(?<=^|(?<=[^a-zA-Z0-9-\.]))@([A-Za-z0-9_]+)'
-
-
-# In[7]:
-
-
-THRESHOLD = 0.6 # 60% positives and higher, only
-DURATION = 60*60*24*4 # 4 days
-
-
-# In[8]:
+# In[ ]:
 
 
 sentiment_pipeline = joblib.load("../data/other_data/subtweets_classifier.pkl")
 
 
-# In[9]:
+# #### Load the Twitter API credentials
+
+# In[ ]:
 
 
 consumer_key, consumer_secret, access_token, access_token_secret = open("../../credentials.txt").read().split("\n")
 
 
-# In[10]:
+# #### Connect to the API
+
+# In[ ]:
 
 
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth, retry_delay=1, timeout=120, # 2 minutes
-                 compression=True, wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
+                 compression=True,
+                 wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
 
 
-# In[11]:
+# #### Create lists to fill with tweets while the bot is streaming
+
+# In[ ]:
 
 
 subtweets_live_list = []
 non_subtweets_live_list = []
 
 
-# In[12]:
+# #### Use pyenchant to check if words are English
+
+# In[ ]:
+
+
+english_dict = enchant.Dict("en_US")
+
+
+# #### Use NLTK for tokenizing
+
+# In[ ]:
+
+
+tokenizer = nltk.casual.TweetTokenizer(preserve_case=False, reduce_len=True)
+
+
+# #### Create a custom StreamListener class for use with Tweepy
+
+# In[ ]:
 
 
 class StreamListener(tweepy.StreamListener):
@@ -105,23 +127,24 @@ class StreamListener(tweepy.StreamListener):
         screen_name = status.user.screen_name
         created_at = status.created_at
         retweeted = status.retweeted
-        in_reply_to = status.in_reply_to_status_id
+        in_reply_to = status.in_reply_to_status_id_str
         
+        # The text and media of the tweet vary based on if it's extended or not
         if "extended_tweet" in status._json:
             if "full_text" in status._json["extended_tweet"]:
                 text = status._json["extended_tweet"]["full_text"]
+                has_media = "media" in status._json["extended_tweet"]["entities"]
             else:
                 pass # Something else?
         elif "text" in status._json:
             text = status._json["text"]
+            has_media = "media" in status._json["entities"]
         
-        text = (re.sub(hashtags_pattern, 
-                       "➊", 
-                       re.sub(urls_pattern, 
-                              "➋", 
-                              re.sub(at_mentions_pattern, 
-                                     "➌", 
-                                     text)))
+        # Genericize extra features and clean up the text
+        text = (hashtags_pattern.sub("➊", 
+                urls_pattern.sub("➋", 
+                at_mentions_pattern.sub("➌",
+                text)))
                 .replace("\u2018", "'")
                 .replace("\u2019", "'")
                 .replace("\u201c", "\"")
@@ -130,7 +153,18 @@ class StreamListener(tweepy.StreamListener):
                 .replace("&amp;", "&")
                 .replace("&gt;", ">")
                 .replace("&lt;", "<"))
-                
+        
+        tokens = tokenizer.tokenize(text)
+        
+        english_tokens = [english_dict.check(token) for token in tokens]
+        percent_english_words = sum(english_tokens)/len(english_tokens)
+        
+        # Make sure the tweet is mostly english
+        is_mostly_english = False
+        if percent_english_words >= 0.5:
+            is_mostly_english = True
+        
+        # Calculate the probability using the pipeline
         positive_probability = sentiment_pipeline.predict_proba([text]).tolist()[0][1]
         
         row = {"tweet": text, 
@@ -140,39 +174,36 @@ class StreamListener(tweepy.StreamListener):
         
         print_list = pd.DataFrame([row]).values.tolist()[0]
         
+        # Only treat it as a subtweet if all conditions are met
         if all([positive_probability >= THRESHOLD, 
-                not retweeted,
-                "RT " not in text, 
-                not in_reply_to]):
+                "RT " != text[:3], is_mostly_english,
+                not retweeted, not in_reply_to, not has_media]):
             
             decision = choice(choices)
-            try:
-                if decision == "retweet":
-                    api.update_status(("Is this a subtweet? {:.1%} \n" + 
-                                       "https://twitter.com/{}/status/{}").format(positive_probability, 
-                                                                                  screen_name, 
-                                                                                  id_str))
-                    print("Retweet!")
+            if decision == "retweet":
+                api.update_status(("Is this a subtweet? {:.3%} \n" + 
+                                   "https://twitter.com/{}/status/{}").format(positive_probability, 
+                                                                              screen_name, 
+                                                                              id_str))
+                print("Retweet!")
             
-                if decision == "like":
-                    api.create_favorite(id_str)
-                    print("Like!")
+            elif decision == "like":
+                api.create_favorite(id_str)
+                print("Like!")
             
-                if decision == "retweet and like":
-                    api.update_status(("Is this a subtweet? {:.1%} \n" + 
-                                       "https://twitter.com/{}/status/{}").format(positive_probability, 
-                                                                                  screen_name, 
-                                                                                  id_str))
-                    api.create_favorite(id_str)
-                    print("Retweet and like!")
+            elif decision == "retweet and like":
+                api.update_status(("Is this a subtweet? {:.3%} \n" + 
+                                   "https://twitter.com/{}/status/{}").format(positive_probability, 
+                                                                              screen_name, 
+                                                                              id_str))
+                api.create_favorite(id_str)
+                print("Retweet and like!")
             
-                if decision == "reply":
-                    api.update_status("@{} Is this a subtweet? {:.1%}".format(screen_name, 
-                                                                              positive_probability), 
-                                      id_str)
-                    print("Reply!")
-            except:
-                print("Error encountered when trying to interact with tweet!")
+            elif decision == "reply":
+                api.update_status("@{} Is this a subtweet? {:.3%}".format(screen_name, 
+                                                                          positive_probability), 
+                                  id_str)
+                print("Reply!")
             
             subtweets_live_list.append(row)
             subtweets_df = pd.DataFrame(subtweets_live_list).sort_values(by="subtweet_probability", 
@@ -180,7 +211,7 @@ class StreamListener(tweepy.StreamListener):
             
             subtweets_df.to_csv("../data/data_from_testing/live_downloaded_data/subtweets_live_data.csv")
             
-            print(("Subtweet from @{0} (Probability of {1:.1%}):\n" + 
+            print(("Subtweet from @{0} (Probability of {1:.3%}):\n" + 
                    "Time: {2}\n" + 
                    "Tweet: {3}\n" +
                    "Total tweets acquired: {4}\n").format(print_list[0], 
@@ -200,7 +231,9 @@ class StreamListener(tweepy.StreamListener):
             return row
 
 
-# In[13]:
+# #### Create a function for downloading IDs if users I follow who also follow me
+
+# In[ ]:
 
 
 def get_mutuals():
@@ -219,6 +252,7 @@ def get_mutuals():
             "894658603977777152", "970553455709446144", 
             "786489395519983617", "975981192817373184"]
     
+    # Remove known twitter bots
     my_mutuals = [m for m in my_mutuals if m not in bots]
     
     with open("../data/other_data/NoahSegalGould_Mutuals_ids.json", "w") as outfile:
@@ -227,7 +261,9 @@ def get_mutuals():
     return my_mutuals
 
 
-# In[14]:
+# #### Create a function for downloading IDs of users who follow my mutuals who are also followed by my mutuals
+
+# In[ ]:
 
 
 def get_mutuals_and_mutuals_mutuals_ids(mutuals_threshold=250):
@@ -281,49 +317,38 @@ def get_mutuals_and_mutuals_mutuals_ids(mutuals_threshold=250):
     return my_mutuals_mutuals
 
 
-# In[15]:
+# In[ ]:
 
 
 # %%time
 # my_mutuals_mutuals = get_mutuals_and_mutuals_mutuals_ids()
 
 
-# In[16]:
+# #### Load the IDs JSON
+
+# In[ ]:
 
 
 my_mutuals_mutuals = json.load(open("../data/other_data/NoahSegalGould_Mutuals_and_Mutuals_Mutuals_ids.json"))
 
 
-# In[17]:
+# In[ ]:
 
 
 print("Total number of my mutuals and my mutuals' mutuals: {}".format(len(my_mutuals_mutuals)))
 
 
-# In[18]:
+# #### Begin streaming
+
+# In[ ]:
 
 
 stream_listener = StreamListener()
 stream = tweepy.Stream(auth=api.auth, listener=stream_listener, tweet_mode="extended")
 
 
-# In[19]:
+# In[ ]:
 
 
-stream.filter(follow=my_mutuals_mutuals, stall_warnings=True, languages=["en"], async=True)
-print("Streaming has started.")
-sleep(DURATION)
-stream.disconnect()
-
-
-# In[20]:
-
-
-# subtweets_df = pd.read_csv("../data/data_from_testing/live_downloaded_data/subtweets_live_data.csv", index_col=0)
-
-
-# In[21]:
-
-
-# subtweets_df.head(10)
+get_ipython().run_cell_magic('time', '', '# stream.filter(locations=[-73.920176, 42.009637, -73.899739, 42.033421], \n# stall_warnings=True, languages=["en"], async=True)\nstream.filter(follow=my_mutuals_mutuals, stall_warnings=True, languages=["en"], async=True)\nprint("Streaming has started.")\nsleep(DURATION)\nstream.disconnect()')
 
