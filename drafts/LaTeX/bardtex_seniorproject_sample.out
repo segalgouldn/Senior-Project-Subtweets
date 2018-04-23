@@ -25,4 +25,7 @@
 \BOOKMARK [1][-]{section.4.2}{Summary of Project Achievements}{chapter.4}% 25
 \BOOKMARK [1][-]{section.4.3}{Future Work \046 Considerations}{chapter.4}% 26
 \BOOKMARK [0][-]{chapter*.5}{Bibliography}{}% 27
-\BOOKMARK [0][-]{Appendix.1.A}{Classifier Creator Program}{}% 28
+\BOOKMARK [0][-]{Appendix.1.A}{Program for Acquiring Subtweets for Training}{}% 28
+\BOOKMARK [0][-]{Appendix.1.B}{Program for Acquiring Non-Subtweets for Training}{}% 29
+\BOOKMARK [0][-]{Appendix.1.C}{Program for Training and Testing the Classifier}{}% 30
+\BOOKMARK [0][-]{Appendix.1.D}{Program for Classifying Tweets in Real Time}{}% 31

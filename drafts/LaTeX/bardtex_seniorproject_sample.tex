@@ -103,23 +103,11 @@ In tasks pertaining to text classification, like sentiment analysis, precision r
 \section{Training the Classifier \& K-Folds Cross-Validation}
 \label{training_and_k_folds}
 
-This is a process of splitting arrays into random train and test subsets according to Scikit Learn's \begin{verbatim}sklearn.model_selection.train_test_split\end{verbatim}
-
 \chapter{Results}
 \label{results}
 
 \section{Distributions \& Datasets}
 \label{distributions_and_datasets}
-
-For this project, I acquired and combined two datasets: 
-
-\begin{itemize}
-
-\item Alec Go's Sentiment140 dataset \cite{GODATASET}. It features 1,600,000 4-point scale classified (\textbf{highly negative} to \textbf{highly positive}) Tweets. 800,000 of these Tweets are classified as \textbf{positive} and 800,000 of them are classified as \textbf{negative}. This dataset was not tagged by humans. Instead, it was based entirely on emoticons present within individual Tweets. 
-
-\item Ibrahim Naji's dataset \cite{NAJIDATASET}, which features 1,578,628 Tweets. 790,185 of these Tweets are classified as \textbf{positive} and 788,443 of these Tweets are classified as \textbf{negative}. It was tagged by humans and on a binary (either \textbf{negative} or \textbf{positive}) scale.
-
-\end{itemize}
 
 \section{Confusion Matrices}
 \label{confusion_matrices}
@@ -278,9 +266,19 @@ date={2013}
 \end{bibliog}
 
 \begin{appendices}
-	
-\chapter{Classifier Creator Program}
+
+\chapter{Program for Acquiring Subtweets for Training}
+\includepdf[pages=-]{../subtweets_downloader.pdf}
+
+\chapter{Program for Acquiring Non-Subtweets for Training}
+\includepdf[pages=-]{../non_subtweets_downloader.pdf}
+
+\chapter{Program for Training and Testing the Classifier}
 \includepdf[pages=-]{../classifier_creator.pdf}
+
+\chapter{Program for Classifying Tweets in Real Time}
+\includepdf[pages=-]{../live_subtweets_classifier.pdf}
+
 
 \end{appendices}
 

@@ -18,11 +18,14 @@
 \contentsline {chapter}{\numberline {3}Results}{9}{chapter.3}
 \contentsline {section}{\numberline {3.1}Distributions \& Datasets}{9}{section.3.1}
 \contentsline {section}{\numberline {3.2}Confusion Matrices}{9}{section.3.2}
-\contentsline {section}{\numberline {3.3}Most Informative Features}{10}{section.3.3}
-\contentsline {section}{\numberline {3.4}Statistical Analysis}{10}{section.3.4}
+\contentsline {section}{\numberline {3.3}Most Informative Features}{9}{section.3.3}
+\contentsline {section}{\numberline {3.4}Statistical Analysis}{9}{section.3.4}
 \contentsline {chapter}{\numberline {4}Conclusion}{11}{chapter.4}
 \contentsline {section}{\numberline {4.1}The Twitter Bot}{11}{section.4.1}
 \contentsline {section}{\numberline {4.2}Summary of Project Achievements}{11}{section.4.2}
 \contentsline {section}{\numberline {4.3}Future Work \& Considerations}{11}{section.4.3}
 \contentsline {chapter}{Bibliography}{13}{chapter*.5}
-\contentsline {chapter}{\numberline {A}Classifier Creator Program}{15}{Appendix.1.A}
+\contentsline {chapter}{\numberline {A}Program for Acquiring Subtweets for Training}{15}{Appendix.1.A}
+\contentsline {chapter}{\numberline {B}Program for Acquiring Non-Subtweets for Training}{19}{Appendix.1.B}
+\contentsline {chapter}{\numberline {C}Program for Training and Testing the Classifier}{23}{Appendix.1.C}
+\contentsline {chapter}{\numberline {D}Program for Classifying Tweets in Real Time}{47}{Appendix.1.D}
