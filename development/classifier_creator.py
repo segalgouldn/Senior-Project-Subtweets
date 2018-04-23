@@ -13,25 +13,25 @@
 # In[1]:
 
 
-get_ipython().run_line_magic('matplotlib', 'inline')
+# get_ipython().run_line_magic('matplotlib', 'inline')
 
 
 # In[2]:
 
 
-from sklearn.feature_extraction import text
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.pipeline import Pipeline
-from sklearn.model_selection import KFold
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction import text
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.model_selection import KFold
+from sklearn.pipeline import Pipeline
 from sklearn.externals import joblib
-from nltk.corpus import stopwords
-from pprint import pprint
-from random import choice, sample
-from glob import glob
 from os.path import basename, splitext
+from random import choice, sample
+from nltk.corpus import stopwords
 from string import punctuation
+from pprint import pprint
+from glob import glob
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -275,6 +275,8 @@ def confusion_matrices(training_data, num_folds=10):
         
         print(("Test Data Null Accuracy: {:.4f}\n"
                .format(max(pd.value_counts(pd.Series(class_test)))/float(len(class_test)))))
+        print(("Test Data Accuracy: {:.4f}\n"
+               .format(accuracy_score(class_test, predictions_test))))
         print("="*53)
         
         print("Train Data Iteration {}:".format(i+1))
@@ -285,6 +287,8 @@ def confusion_matrices(training_data, num_folds=10):
         
         print(("Train Data Null Accuracy: {:.4f}\n"
                .format(max(pd.value_counts(pd.Series(class_train)))/float(len(class_train)))))
+        print(("Train Data Accuracy: {:.4f}\n"
+               .format(accuracy_score(class_train, predictions_train))))
         print("="*53)
         
     def reports_mean(reports):
@@ -322,8 +326,9 @@ def confusion_matrices(training_data, num_folds=10):
 # In[27]:
 
 
-get_ipython().run_cell_magic('time', '', 'cnf_matrices = confusion_matrices(training_data)\ncnf_matrix_test = cnf_matrices["Test"]\ncnf_matrix_train = cnf_matrices["Train"]')
-
+cnf_matrices = confusion_matrices(training_data)
+cnf_matrix_test = cnf_matrices["Test"]
+cnf_matrix_train = cnf_matrices["Train"]
 
 # #### See the most informative features
 # [How does "MultinomialNB.coef_" work?](https://stackoverflow.com/a/29915740/6147528)
@@ -351,7 +356,7 @@ def most_informative_features(pipeline, n=10000):
 # In[29]:
 
 
-get_ipython().run_cell_magic('time', '', 'most_informative_features_all = most_informative_features(sentiment_pipeline)')
+most_informative_features_all = most_informative_features(sentiment_pipeline)
 
 
 # In[30]:
@@ -487,7 +492,7 @@ filenames = glob("../data/data_for_testing/friends_data/*.csv")
 # In[39]:
 
 
-get_ipython().run_cell_magic('time', '', 'dataframes = process_tweets_for_testing(filenames)')
+dataframes = process_tweets_for_testing(filenames)
 
 
 # #### Show a random table

@@ -1,0 +1,905 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} coding: utf\PYGZhy{}8}
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{} Using Scikit\PYGZhy{}Learn and NLTK to build a Naive Bayes Classifier that identifies subtweets}
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} In all tables, assume:}
+\PYG{c+c1}{\PYGZsh{} * \PYGZdq{}➊\PYGZdq{} represents a single hashtag}
+\PYG{c+c1}{\PYGZsh{} * \PYGZdq{}➋\PYGZdq{} represents a single URL}
+\PYG{c+c1}{\PYGZsh{} * \PYGZdq{}➌\PYGZdq{} represents a single mention of username (e.g. \PYGZdq{}@noah\PYGZdq{})}
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Import libraries}
+
+\PYG{c+c1}{\PYGZsh{} In[1]:}
+
+
+\PYG{c+c1}{\PYGZsh{} get\PYGZus{}ipython().run\PYGZus{}line\PYGZus{}magic(\PYGZsq{}matplotlib\PYGZsq{}, \PYGZsq{}inline\PYGZsq{})}
+
+
+\PYG{c+c1}{\PYGZsh{} In[2]:}
+
+
+\PYG{k+kn}{from} \PYG{n+nn}{sklearn.metrics} \PYG{k+kn}{import} \PYG{n}{classification\PYGZus{}report}\PYG{p}{,} \PYG{n}{confusion\PYGZus{}matrix}\PYG{p}{,} \PYG{n}{accuracy\PYGZus{}score}
+\PYG{k+kn}{from} \PYG{n+nn}{sklearn.feature\PYGZus{}extraction.text} \PYG{k+kn}{import} \PYG{n}{TfidfVectorizer}
+\PYG{k+kn}{from} \PYG{n+nn}{sklearn.feature\PYGZus{}extraction} \PYG{k+kn}{import} \PYG{n}{text}
+\PYG{k+kn}{from} \PYG{n+nn}{sklearn.naive\PYGZus{}bayes} \PYG{k+kn}{import} \PYG{n}{MultinomialNB}
+\PYG{k+kn}{from} \PYG{n+nn}{sklearn.model\PYGZus{}selection} \PYG{k+kn}{import} \PYG{n}{KFold}
+\PYG{k+kn}{from} \PYG{n+nn}{sklearn.pipeline} \PYG{k+kn}{import} \PYG{n}{Pipeline}
+\PYG{k+kn}{from} \PYG{n+nn}{sklearn.externals} \PYG{k+kn}{import} \PYG{n}{joblib}
+\PYG{k+kn}{from} \PYG{n+nn}{os.path} \PYG{k+kn}{import} \PYG{n}{basename}\PYG{p}{,} \PYG{n}{splitext}
+\PYG{k+kn}{from} \PYG{n+nn}{random} \PYG{k+kn}{import} \PYG{n}{choice}\PYG{p}{,} \PYG{n}{sample}
+\PYG{k+kn}{from} \PYG{n+nn}{nltk.corpus} \PYG{k+kn}{import} \PYG{n}{stopwords}
+\PYG{k+kn}{from} \PYG{n+nn}{string} \PYG{k+kn}{import} \PYG{n}{punctuation}
+\PYG{k+kn}{from} \PYG{n+nn}{pprint} \PYG{k+kn}{import} \PYG{n}{pprint}
+\PYG{k+kn}{from} \PYG{n+nn}{glob} \PYG{k+kn}{import} \PYG{n}{glob}
+
+\PYG{k+kn}{import} \PYG{n+nn}{matplotlib.pyplot} \PYG{k+kn}{as} \PYG{n+nn}{plt}
+\PYG{k+kn}{import} \PYG{n+nn}{pandas} \PYG{k+kn}{as} \PYG{n+nn}{pd}
+\PYG{k+kn}{import} \PYG{n+nn}{numpy} \PYG{k+kn}{as} \PYG{n+nn}{np}
+
+\PYG{k+kn}{import} \PYG{n+nn}{scipy.stats}
+\PYG{k+kn}{import} \PYG{n+nn}{itertools}
+\PYG{k+kn}{import} \PYG{n+nn}{enchant}
+\PYG{k+kn}{import} \PYG{n+nn}{nltk}
+\PYG{k+kn}{import} \PYG{n+nn}{json}
+\PYG{k+kn}{import} \PYG{n+nn}{re}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Set up some regex patterns}
+
+\PYG{c+c1}{\PYGZsh{} In[3]:}
+
+
+\PYG{n}{hashtags\PYGZus{}pattern} \PYG{o}{=} \PYG{n}{re}\PYG{o}{.}\PYG{n}{compile}\PYG{p}{(}\PYG{l+s+sa}{r}\PYG{l+s+s1}{\PYGZsq{}(\PYGZbs{}\PYGZsh{}[a\PYGZhy{}zA\PYGZhy{}Z0\PYGZhy{}9]+)\PYGZsq{}}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} In[4]:}
+
+
+\PYG{n}{urls\PYGZus{}pattern} \PYG{o}{=} \PYG{n}{re}\PYG{o}{.}\PYG{n}{compile}\PYG{p}{(}\PYG{l+s+sa}{r}\PYG{l+s+s1}{\PYGZsq{}(?i)\PYGZbs{}b((?:https?://|www\PYGZbs{}d\PYGZob{}0,3\PYGZcb{}[.]|[a\PYGZhy{}z0\PYGZhy{}9.\PYGZbs{}\PYGZhy{}]+[.][a\PYGZhy{}z]\PYGZob{}2,4\PYGZcb{}/)(?:[\PYGZca{}\PYGZbs{}s()\PYGZlt{}\PYGZgt{}]|\PYGZbs{}(([\PYGZca{}\PYGZbs{}s()\PYGZlt{}\PYGZgt{}]+|(\PYGZbs{}([\PYGZca{}\PYGZbs{}s()\PYGZlt{}\PYGZgt{}]+\PYGZbs{})))*\PYGZbs{}))+(?:\PYGZbs{}(([\PYGZca{}\PYGZbs{}s()\PYGZlt{}\PYGZgt{}]+|(\PYGZbs{}([\PYGZca{}\PYGZbs{}s()\PYGZlt{}\PYGZgt{}]+\PYGZbs{})))*\PYGZbs{})|[\PYGZca{}\PYGZbs{}s`!()\PYGZbs{}[\PYGZbs{}]\PYGZob{}\PYGZcb{};:}\PYG{l+s+se}{\PYGZbs{}\PYGZsq{}}\PYG{l+s+s1}{\PYGZdq{}.,\PYGZlt{}\PYGZgt{}?\PYGZbs{}xab\PYGZbs{}xbb\PYGZbs{}u201c\PYGZbs{}u201d\PYGZbs{}u2018\PYGZbs{}u2019]))\PYGZsq{}}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} In[5]:}
+
+
+\PYG{n}{at\PYGZus{}mentions\PYGZus{}pattern} \PYG{o}{=} \PYG{n}{re}\PYG{o}{.}\PYG{n}{compile}\PYG{p}{(}\PYG{l+s+sa}{r}\PYG{l+s+s1}{\PYGZsq{}(?\PYGZlt{}=\PYGZca{}|(?\PYGZlt{}=[\PYGZca{}a\PYGZhy{}zA\PYGZhy{}Z0\PYGZhy{}9\PYGZhy{}\PYGZbs{}.]))@([A\PYGZhy{}Za\PYGZhy{}z0\PYGZhy{}9\PYGZus{}]+)\PYGZsq{}}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Prepare English dictionary for language detection}
+
+\PYG{c+c1}{\PYGZsh{} In[6]:}
+
+
+\PYG{n}{english\PYGZus{}dict} \PYG{o}{=} \PYG{n}{enchant}\PYG{o}{.}\PYG{n}{Dict}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}en\PYGZus{}US\PYGZdq{}}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Use NLTK\PYGZsq{}s tokenizer instead of Scikit\PYGZsq{}s}
+
+\PYG{c+c1}{\PYGZsh{} In[7]:}
+
+
+\PYG{n}{tokenizer} \PYG{o}{=} \PYG{n}{nltk}\PYG{o}{.}\PYG{n}{casual}\PYG{o}{.}\PYG{n}{TweetTokenizer}\PYG{p}{(}\PYG{n}{preserve\PYGZus{}case}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{,} \PYG{n}{reduce\PYGZus{}len}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Prepare for viewing long text in CSVs and ones with really big and small numbers}
+
+\PYG{c+c1}{\PYGZsh{} In[8]:}
+
+
+\PYG{n}{pd}\PYG{o}{.}\PYG{n}{set\PYGZus{}option}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}max\PYGZus{}colwidth\PYGZdq{}}\PYG{p}{,} \PYG{l+m+mi}{1000}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} In[9]:}
+
+
+\PYG{n}{pd}\PYG{o}{.}\PYG{n}{options}\PYG{o}{.}\PYG{n}{display}\PYG{o}{.}\PYG{n}{float\PYGZus{}format} \PYG{o}{=} \PYG{l+s+s2}{\PYGZdq{}\PYGZob{}:.4f\PYGZcb{}\PYGZdq{}}\PYG{o}{.}\PYG{n}{format}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Load the two data files}
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Only use tweets with at least 50\PYGZpc{} English words}
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Also, make the mentions of usernames, URLs, and hashtags generic}
+
+\PYG{c+c1}{\PYGZsh{} In[10]:}
+
+
+\PYG{k}{def} \PYG{n+nf}{load\PYGZus{}data}\PYG{p}{(}\PYG{n}{filename}\PYG{p}{,} \PYG{n}{threshold}\PYG{o}{=}\PYG{l+m+mf}{0.5}\PYG{p}{):}
+    \PYG{n}{data} \PYG{o}{=} \PYG{p}{[(}\PYG{n}{hashtags\PYGZus{}pattern}\PYG{o}{.}\PYG{n}{sub}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}➊\PYGZdq{}}\PYG{p}{,} 
+             \PYG{n}{urls\PYGZus{}pattern}\PYG{o}{.}\PYG{n}{sub}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}➋\PYGZdq{}}\PYG{p}{,} 
+             \PYG{n}{at\PYGZus{}mentions\PYGZus{}pattern}\PYG{o}{.}\PYG{n}{sub}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}➌\PYGZdq{}}\PYG{p}{,} 
+             \PYG{n}{t}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}tweet\PYGZus{}data\PYGZdq{}}\PYG{p}{][}\PYG{l+s+s2}{\PYGZdq{}full\PYGZus{}text\PYGZdq{}}\PYG{p}{])))}
+             \PYG{o}{.}\PYG{n}{replace}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+se}{\PYGZbs{}u2018}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}\PYGZsq{}\PYGZdq{}}\PYG{p}{)}
+             \PYG{o}{.}\PYG{n}{replace}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+se}{\PYGZbs{}u2019}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}\PYGZsq{}\PYGZdq{}}\PYG{p}{)}
+             \PYG{o}{.}\PYG{n}{replace}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+se}{\PYGZbs{}u201c}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+se}{\PYGZbs{}\PYGZdq{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+             \PYG{o}{.}\PYG{n}{replace}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+se}{\PYGZbs{}u201d}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+se}{\PYGZbs{}\PYGZdq{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+             \PYG{o}{.}\PYG{n}{replace}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}\PYGZam{}quot;\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+se}{\PYGZbs{}\PYGZdq{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+             \PYG{o}{.}\PYG{n}{replace}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}\PYGZam{}amp;\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}\PYGZam{}\PYGZdq{}}\PYG{p}{)}
+             \PYG{o}{.}\PYG{n}{replace}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}\PYGZam{}gt;\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}\PYGZgt{}\PYGZdq{}}\PYG{p}{)}
+             \PYG{o}{.}\PYG{n}{replace}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}\PYGZam{}lt;\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}\PYGZlt{}\PYGZdq{}}\PYG{p}{))} 
+            \PYG{k}{for} \PYG{n}{t} \PYG{o+ow}{in} \PYG{n}{json}\PYG{o}{.}\PYG{n}{load}\PYG{p}{(}\PYG{n+nb}{open}\PYG{p}{(}\PYG{n}{filename}\PYG{p}{))} 
+            \PYG{k}{if} \PYG{n}{t}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}tweet\PYGZus{}data\PYGZdq{}}\PYG{p}{][}\PYG{l+s+s2}{\PYGZdq{}user\PYGZdq{}}\PYG{p}{][}\PYG{l+s+s2}{\PYGZdq{}lang\PYGZdq{}}\PYG{p}{]} \PYG{o}{==} \PYG{l+s+s2}{\PYGZdq{}en\PYGZdq{}} 
+            \PYG{o+ow}{and} \PYG{n}{t}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}reply\PYGZdq{}}\PYG{p}{][}\PYG{l+s+s2}{\PYGZdq{}user\PYGZdq{}}\PYG{p}{][}\PYG{l+s+s2}{\PYGZdq{}lang\PYGZdq{}}\PYG{p}{]} \PYG{o}{==} \PYG{l+s+s2}{\PYGZdq{}en\PYGZdq{}}\PYG{p}{]}
+    \PYG{n}{new\PYGZus{}data} \PYG{o}{=} \PYG{p}{[]}
+    \PYG{k}{for} \PYG{n}{tweet} \PYG{o+ow}{in} \PYG{n}{data}\PYG{p}{:}
+        \PYG{n}{tokens} \PYG{o}{=} \PYG{n}{tokenizer}\PYG{o}{.}\PYG{n}{tokenize}\PYG{p}{(}\PYG{n}{tweet}\PYG{p}{)}
+        \PYG{n}{english\PYGZus{}tokens} \PYG{o}{=} \PYG{p}{[}\PYG{n}{english\PYGZus{}dict}\PYG{o}{.}\PYG{n}{check}\PYG{p}{(}\PYG{n}{token}\PYG{p}{)} \PYG{k}{for} \PYG{n}{token} \PYG{o+ow}{in} \PYG{n}{tokens}\PYG{p}{]}
+        \PYG{n}{percent\PYGZus{}english\PYGZus{}words} \PYG{o}{=} \PYG{n+nb}{sum}\PYG{p}{(}\PYG{n}{english\PYGZus{}tokens}\PYG{p}{)}\PYG{o}{/}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{english\PYGZus{}tokens}\PYG{p}{)}
+        \PYG{k}{if} \PYG{n}{percent\PYGZus{}english\PYGZus{}words} \PYG{o}{\PYGZgt{}=} \PYG{n}{threshold}\PYG{p}{:}
+            \PYG{n}{new\PYGZus{}data}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{tweet}\PYG{p}{)}
+    \PYG{k}{return} \PYG{n}{new\PYGZus{}data}
+
+
+\PYG{c+c1}{\PYGZsh{} In[11]:}
+
+
+\PYG{n}{subtweets\PYGZus{}data} \PYG{o}{=} \PYG{n}{load\PYGZus{}data}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}../data/other\PYGZus{}data/subtweets.json\PYGZdq{}}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} In[12]:}
+
+
+\PYG{n}{non\PYGZus{}subtweets\PYGZus{}data} \PYG{o}{=} \PYG{n}{load\PYGZus{}data}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}../data/other\PYGZus{}data/non\PYGZus{}subtweets.json\PYGZdq{}}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Show examples}
+
+\PYG{c+c1}{\PYGZsh{} In[13]:}
+
+
+\PYG{k}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Subtweets dataset example:\PYGZdq{}}\PYG{p}{)}
+\PYG{k}{print}\PYG{p}{(}\PYG{n}{choice}\PYG{p}{(}\PYG{n}{subtweets\PYGZus{}data}\PYG{p}{))}
+
+
+\PYG{c+c1}{\PYGZsh{} In[14]:}
+
+
+\PYG{k}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Non\PYGZhy{}subtweets dataset example:\PYGZdq{}}\PYG{p}{)}
+\PYG{k}{print}\PYG{p}{(}\PYG{n}{choice}\PYG{p}{(}\PYG{n}{non\PYGZus{}subtweets\PYGZus{}data}\PYG{p}{))}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Find the length of the smaller dataset}
+
+\PYG{c+c1}{\PYGZsh{} In[15]:}
+
+
+\PYG{n}{smallest\PYGZus{}length} \PYG{o}{=} \PYG{n+nb}{len}\PYG{p}{(}\PYG{n+nb}{min}\PYG{p}{([}\PYG{n}{subtweets\PYGZus{}data}\PYG{p}{,} \PYG{n}{non\PYGZus{}subtweets\PYGZus{}data}\PYG{p}{],} \PYG{n}{key}\PYG{o}{=}\PYG{n+nb}{len}\PYG{p}{))}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Cut both down to be the same length}
+
+\PYG{c+c1}{\PYGZsh{} In[16]:}
+
+
+\PYG{n}{subtweets\PYGZus{}data} \PYG{o}{=} \PYG{n}{subtweets\PYGZus{}data}\PYG{p}{[:}\PYG{n}{smallest\PYGZus{}length}\PYG{p}{]}
+
+
+\PYG{c+c1}{\PYGZsh{} In[17]:}
+
+
+\PYG{n}{non\PYGZus{}subtweets\PYGZus{}data} \PYG{o}{=} \PYG{n}{non\PYGZus{}subtweets\PYGZus{}data}\PYG{p}{[:}\PYG{n}{smallest\PYGZus{}length}\PYG{p}{]}
+
+
+\PYG{c+c1}{\PYGZsh{} In[18]:}
+
+
+\PYG{k}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Smallest dataset length: \PYGZob{}\PYGZcb{}\PYGZdq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{subtweets\PYGZus{}data}\PYG{p}{)))}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Prepare data for training}
+
+\PYG{c+c1}{\PYGZsh{} In[19]:}
+
+
+\PYG{n}{subtweets\PYGZus{}data} \PYG{o}{=} \PYG{p}{[(}\PYG{n}{tweet}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}subtweet\PYGZdq{}}\PYG{p}{)} \PYG{k}{for} \PYG{n}{tweet} \PYG{o+ow}{in} \PYG{n}{subtweets\PYGZus{}data}\PYG{p}{]}
+
+
+\PYG{c+c1}{\PYGZsh{} In[20]:}
+
+
+\PYG{n}{non\PYGZus{}subtweets\PYGZus{}data} \PYG{o}{=} \PYG{p}{[(}\PYG{n}{tweet}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}non\PYGZhy{}subtweet\PYGZdq{}}\PYG{p}{)} \PYG{k}{for} \PYG{n}{tweet} \PYG{o+ow}{in} \PYG{n}{non\PYGZus{}subtweets\PYGZus{}data}\PYG{p}{]}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Combine them}
+
+\PYG{c+c1}{\PYGZsh{} In[21]:}
+
+
+\PYG{n}{training\PYGZus{}data} \PYG{o}{=} \PYG{n}{subtweets\PYGZus{}data} \PYG{o}{+} \PYG{n}{non\PYGZus{}subtweets\PYGZus{}data}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Create custom stop words to include generic usernames, URLs, and hashtags, as well as common English first names}
+
+\PYG{c+c1}{\PYGZsh{} In[22]:}
+
+
+\PYG{n}{names\PYGZus{}lower} \PYG{o}{=} \PYG{n+nb}{set}\PYG{p}{([}\PYG{n}{name}\PYG{o}{.}\PYG{n}{lower}\PYG{p}{()} \PYG{k}{for} \PYG{n}{name} \PYG{o+ow}{in} \PYG{n+nb}{open}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}../data/other\PYGZus{}data/first\PYGZus{}names.txt\PYGZdq{}}\PYG{p}{)}\PYG{o}{.}\PYG{n}{read}\PYG{p}{()}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)])}
+
+
+\PYG{c+c1}{\PYGZsh{} In[23]:}
+
+
+\PYG{n}{generic\PYGZus{}tokens} \PYG{o}{=} \PYG{p}{\PYGZob{}}\PYG{l+s+s2}{\PYGZdq{}➊\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}➋\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}➌\PYGZdq{}}\PYG{p}{\PYGZcb{}}
+
+
+\PYG{c+c1}{\PYGZsh{} In[24]:}
+
+
+\PYG{n}{stop\PYGZus{}words} \PYG{o}{=} \PYG{n}{text}\PYG{o}{.}\PYG{n}{ENGLISH\PYGZus{}STOP\PYGZus{}WORDS} \PYG{o}{|} \PYG{n}{names\PYGZus{}lower} \PYG{o}{|} \PYG{n}{generic\PYGZus{}tokens}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Build the pipeline}
+
+\PYG{c+c1}{\PYGZsh{} In[25]:}
+
+
+\PYG{n}{sentiment\PYGZus{}pipeline} \PYG{o}{=} \PYG{n}{Pipeline}\PYG{p}{([}
+    \PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}vectorizer\PYGZdq{}}\PYG{p}{,} \PYG{n}{TfidfVectorizer}\PYG{p}{(}\PYG{n}{tokenizer}\PYG{o}{=}\PYG{n}{tokenizer}\PYG{o}{.}\PYG{n}{tokenize}\PYG{p}{,} 
+                                   \PYG{n}{ngram\PYGZus{}range}\PYG{o}{=}\PYG{p}{(}\PYG{l+m+mi}{1}\PYG{p}{,} \PYG{l+m+mi}{3}\PYG{p}{),} 
+                                   \PYG{n}{stop\PYGZus{}words}\PYG{o}{=}\PYG{n}{stop\PYGZus{}words}\PYG{p}{)),}
+    \PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}classifier\PYGZdq{}}\PYG{p}{,} \PYG{n}{MultinomialNB}\PYG{p}{())}
+\PYG{p}{])}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} K\PYGZhy{}Folds splits up and separates out 10 training and test sets from the data, from which the classifier is trained and the confusion matrix and classification reports are updated}
+
+\PYG{c+c1}{\PYGZsh{} In[26]:}
+
+
+\PYG{k}{def} \PYG{n+nf}{confusion\PYGZus{}matrices}\PYG{p}{(}\PYG{n}{training\PYGZus{}data}\PYG{p}{,} \PYG{n}{num\PYGZus{}folds}\PYG{o}{=}\PYG{l+m+mi}{10}\PYG{p}{):}
+    \PYG{n}{text\PYGZus{}training\PYGZus{}data} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{([}\PYG{n}{row}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{k}{for} \PYG{n}{row} \PYG{o+ow}{in} \PYG{n}{training\PYGZus{}data}\PYG{p}{])}
+    \PYG{n}{class\PYGZus{}training\PYGZus{}data} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{([}\PYG{n}{row}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{k}{for} \PYG{n}{row} \PYG{o+ow}{in} \PYG{n}{training\PYGZus{}data}\PYG{p}{])}
+    \PYG{n}{kf} \PYG{o}{=} \PYG{n}{KFold}\PYG{p}{(}\PYG{n}{n\PYGZus{}splits}\PYG{o}{=}\PYG{n}{num\PYGZus{}folds}\PYG{p}{,} \PYG{n}{random\PYGZus{}state}\PYG{o}{=}\PYG{l+m+mi}{42}\PYG{p}{,} \PYG{n}{shuffle}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{)}
+    
+    \PYG{n}{cnf\PYGZus{}matrix\PYGZus{}test} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{((}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{),} \PYG{n}{dtype}\PYG{o}{=}\PYG{n+nb}{int}\PYG{p}{)}
+    \PYG{n}{cnf\PYGZus{}matrix\PYGZus{}train} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{zeros}\PYG{p}{((}\PYG{l+m+mi}{2}\PYG{p}{,} \PYG{l+m+mi}{2}\PYG{p}{),} \PYG{n}{dtype}\PYG{o}{=}\PYG{n+nb}{int}\PYG{p}{)}
+    
+    \PYG{n}{test\PYGZus{}reports} \PYG{o}{=} \PYG{p}{[]}
+    \PYG{n}{train\PYGZus{}reports} \PYG{o}{=} \PYG{p}{[]}
+    \PYG{k}{for} \PYG{n}{i}\PYG{p}{,} \PYG{p}{(}\PYG{n}{train\PYGZus{}index}\PYG{p}{,} \PYG{n}{test\PYGZus{}index}\PYG{p}{)} \PYG{o+ow}{in} \PYG{n+nb}{enumerate}\PYG{p}{(}\PYG{n}{kf}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{n}{text\PYGZus{}training\PYGZus{}data}\PYG{p}{)):}
+
+        \PYG{n}{text\PYGZus{}train}\PYG{p}{,} \PYG{n}{text\PYGZus{}test} \PYG{o}{=} \PYG{n}{text\PYGZus{}training\PYGZus{}data}\PYG{p}{[}\PYG{n}{train\PYGZus{}index}\PYG{p}{],} \PYG{n}{text\PYGZus{}training\PYGZus{}data}\PYG{p}{[}\PYG{n}{test\PYGZus{}index}\PYG{p}{]}
+        \PYG{n}{class\PYGZus{}train}\PYG{p}{,} \PYG{n}{class\PYGZus{}test} \PYG{o}{=} \PYG{n}{class\PYGZus{}training\PYGZus{}data}\PYG{p}{[}\PYG{n}{train\PYGZus{}index}\PYG{p}{],} \PYG{n}{class\PYGZus{}training\PYGZus{}data}\PYG{p}{[}\PYG{n}{test\PYGZus{}index}\PYG{p}{]}
+
+        \PYG{n}{sentiment\PYGZus{}pipeline}\PYG{o}{.}\PYG{n}{fit}\PYG{p}{(}\PYG{n}{text\PYGZus{}train}\PYG{p}{,} \PYG{n}{class\PYGZus{}train}\PYG{p}{)}
+        
+        \PYG{n}{predictions\PYGZus{}test} \PYG{o}{=} \PYG{n}{sentiment\PYGZus{}pipeline}\PYG{o}{.}\PYG{n}{predict}\PYG{p}{(}\PYG{n}{text\PYGZus{}test}\PYG{p}{)}
+        \PYG{n}{predictions\PYGZus{}train} \PYG{o}{=} \PYG{n}{sentiment\PYGZus{}pipeline}\PYG{o}{.}\PYG{n}{predict}\PYG{p}{(}\PYG{n}{text\PYGZus{}train}\PYG{p}{)}
+
+        \PYG{n}{cnf\PYGZus{}matrix\PYGZus{}test} \PYG{o}{+=} \PYG{n}{confusion\PYGZus{}matrix}\PYG{p}{(}\PYG{n}{class\PYGZus{}test}\PYG{p}{,} \PYG{n}{predictions\PYGZus{}test}\PYG{p}{)}
+        \PYG{n}{cnf\PYGZus{}matrix\PYGZus{}train} \PYG{o}{+=} \PYG{n}{confusion\PYGZus{}matrix}\PYG{p}{(}\PYG{n}{class\PYGZus{}train}\PYG{p}{,} \PYG{n}{predictions\PYGZus{}train}\PYG{p}{)}
+
+        \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Test Data Iteration \PYGZob{}\PYGZcb{}:\PYGZdq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n}{i}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{))}
+        
+        \PYG{n}{test\PYGZus{}report} \PYG{o}{=} \PYG{n}{classification\PYGZus{}report}\PYG{p}{(}\PYG{n}{class\PYGZus{}test}\PYG{p}{,} \PYG{n}{predictions\PYGZus{}test}\PYG{p}{,} \PYG{n}{digits}\PYG{o}{=}\PYG{l+m+mi}{4}\PYG{p}{)}
+        \PYG{n}{test\PYGZus{}reports}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{test\PYGZus{}report}\PYG{p}{)}
+        \PYG{k}{print}\PYG{p}{(}\PYG{n}{test\PYGZus{}report}\PYG{p}{)}
+        
+        \PYG{k}{print}\PYG{p}{((}\PYG{l+s+s2}{\PYGZdq{}Test Data Null Accuracy: \PYGZob{}:.4f\PYGZcb{}}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s2}{\PYGZdq{}}
+               \PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n+nb}{max}\PYG{p}{(}\PYG{n}{pd}\PYG{o}{.}\PYG{n}{value\PYGZus{}counts}\PYG{p}{(}\PYG{n}{pd}\PYG{o}{.}\PYG{n}{Series}\PYG{p}{(}\PYG{n}{class\PYGZus{}test}\PYG{p}{)))}\PYG{o}{/}\PYG{n+nb}{float}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{class\PYGZus{}test}\PYG{p}{)))))}
+        \PYG{k}{print}\PYG{p}{((}\PYG{l+s+s2}{\PYGZdq{}Test Data Accuracy: \PYGZob{}:.4f\PYGZcb{}}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s2}{\PYGZdq{}}
+               \PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n}{accuracy\PYGZus{}score}\PYG{p}{(}\PYG{n}{class\PYGZus{}test}\PYG{p}{,} \PYG{n}{predictions\PYGZus{}test}\PYG{p}{))))}
+        \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}=\PYGZdq{}}\PYG{o}{*}\PYG{l+m+mi}{53}\PYG{p}{)}
+        
+        \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Train Data Iteration \PYGZob{}\PYGZcb{}:\PYGZdq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n}{i}\PYG{o}{+}\PYG{l+m+mi}{1}\PYG{p}{))}
+        
+        \PYG{n}{train\PYGZus{}report} \PYG{o}{=} \PYG{n}{classification\PYGZus{}report}\PYG{p}{(}\PYG{n}{class\PYGZus{}train}\PYG{p}{,} \PYG{n}{predictions\PYGZus{}train}\PYG{p}{,} \PYG{n}{digits}\PYG{o}{=}\PYG{l+m+mi}{4}\PYG{p}{)}
+        \PYG{n}{train\PYGZus{}reports}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{train\PYGZus{}report}\PYG{p}{)}
+        \PYG{k}{print}\PYG{p}{(}\PYG{n}{train\PYGZus{}report}\PYG{p}{)}
+        
+        \PYG{k}{print}\PYG{p}{((}\PYG{l+s+s2}{\PYGZdq{}Train Data Null Accuracy: \PYGZob{}:.4f\PYGZcb{}}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s2}{\PYGZdq{}}
+               \PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n+nb}{max}\PYG{p}{(}\PYG{n}{pd}\PYG{o}{.}\PYG{n}{value\PYGZus{}counts}\PYG{p}{(}\PYG{n}{pd}\PYG{o}{.}\PYG{n}{Series}\PYG{p}{(}\PYG{n}{class\PYGZus{}train}\PYG{p}{)))}\PYG{o}{/}\PYG{n+nb}{float}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{class\PYGZus{}train}\PYG{p}{)))))}
+        \PYG{k}{print}\PYG{p}{((}\PYG{l+s+s2}{\PYGZdq{}Train Data Accuracy: \PYGZob{}:.4f\PYGZcb{}}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s2}{\PYGZdq{}}
+               \PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n}{accuracy\PYGZus{}score}\PYG{p}{(}\PYG{n}{class\PYGZus{}train}\PYG{p}{,} \PYG{n}{predictions\PYGZus{}train}\PYG{p}{))))}
+        \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}=\PYGZdq{}}\PYG{o}{*}\PYG{l+m+mi}{53}\PYG{p}{)}
+        
+    \PYG{k}{def} \PYG{n+nf}{reports\PYGZus{}mean}\PYG{p}{(}\PYG{n}{reports}\PYG{p}{):}
+        \PYG{n}{reports\PYGZus{}lists\PYGZus{}of\PYGZus{}strings} \PYG{o}{=} \PYG{p}{[}\PYG{n}{report}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)} \PYG{k}{for} \PYG{n}{report} \PYG{o+ow}{in} \PYG{n}{reports}\PYG{p}{]}
+        \PYG{n}{reports} \PYG{o}{=} \PYG{p}{[[[}\PYG{n+nb}{float}\PYG{p}{(}\PYG{n}{e}\PYG{p}{)} \PYG{k}{for} \PYG{n}{e} \PYG{o+ow}{in} \PYG{n}{report\PYGZus{}string}\PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{][}\PYG{l+m+mi}{16}\PYG{p}{:]}\PYG{o}{.}\PYG{n}{split}\PYG{p}{()],}
+                    \PYG{p}{[}\PYG{n+nb}{float}\PYG{p}{(}\PYG{n}{e}\PYG{p}{)} \PYG{k}{for} \PYG{n}{e} \PYG{o+ow}{in} \PYG{n}{report\PYGZus{}string}\PYG{p}{[}\PYG{l+m+mi}{3}\PYG{p}{][}\PYG{l+m+mi}{16}\PYG{p}{:]}\PYG{o}{.}\PYG{n}{split}\PYG{p}{()],}
+                    \PYG{p}{[}\PYG{n+nb}{float}\PYG{p}{(}\PYG{n}{e}\PYG{p}{)} \PYG{k}{for} \PYG{n}{e} \PYG{o+ow}{in} \PYG{n}{report\PYGZus{}string}\PYG{p}{[}\PYG{l+m+mi}{5}\PYG{p}{][}\PYG{l+m+mi}{16}\PYG{p}{:]}\PYG{o}{.}\PYG{n}{split}\PYG{p}{()]]}
+                   \PYG{k}{for} \PYG{n}{report\PYGZus{}string} \PYG{o+ow}{in} \PYG{n}{reports\PYGZus{}lists\PYGZus{}of\PYGZus{}strings}\PYG{p}{]}
+        \PYG{n}{mean\PYGZus{}list} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{mean}\PYG{p}{(}\PYG{n}{np}\PYG{o}{.}\PYG{n}{array}\PYG{p}{(}\PYG{n}{reports}\PYG{p}{),} \PYG{n}{axis}\PYG{o}{=}\PYG{l+m+mi}{0}\PYG{p}{)}\PYG{o}{.}\PYG{n}{tolist}\PYG{p}{()}
+        \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}              precision    recall  f1\PYGZhy{}score   support\PYGZdq{}}\PYG{p}{)}
+        \PYG{k}{print}\PYG{p}{()}
+        \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}non\PYGZhy{}subtweet     \PYGZob{}0:.4f\PYGZcb{}    \PYGZob{}1:.4f\PYGZcb{}    \PYGZob{}2:.4f\PYGZcb{}      \PYGZob{}3:d\PYGZcb{}\PYGZdq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n}{mean\PYGZus{}list}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{][}\PYG{l+m+mi}{0}\PYG{p}{],} 
+                                                                                 \PYG{n}{mean\PYGZus{}list}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{][}\PYG{l+m+mi}{1}\PYG{p}{],} 
+                                                                                 \PYG{n}{mean\PYGZus{}list}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{][}\PYG{l+m+mi}{2}\PYG{p}{],} 
+                                                                                 \PYG{n+nb}{int}\PYG{p}{(}\PYG{n}{mean\PYGZus{}list}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{][}\PYG{l+m+mi}{3}\PYG{p}{])))}
+        \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}    subtweet     \PYGZob{}0:.4f\PYGZcb{}    \PYGZob{}1:.4f\PYGZcb{}    \PYGZob{}2:.4f\PYGZcb{}      \PYGZob{}3:d\PYGZcb{}\PYGZdq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n}{mean\PYGZus{}list}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{][}\PYG{l+m+mi}{0}\PYG{p}{],} 
+                                                                                 \PYG{n}{mean\PYGZus{}list}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{][}\PYG{l+m+mi}{1}\PYG{p}{],} 
+                                                                                 \PYG{n}{mean\PYGZus{}list}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{][}\PYG{l+m+mi}{2}\PYG{p}{],} 
+                                                                                 \PYG{n+nb}{int}\PYG{p}{(}\PYG{n}{mean\PYGZus{}list}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{][}\PYG{l+m+mi}{3}\PYG{p}{])))}
+        \PYG{k}{print}\PYG{p}{()}
+        \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{} avg / total     \PYGZob{}0:.4f\PYGZcb{}    \PYGZob{}1:.4f\PYGZcb{}    \PYGZob{}2:.4f\PYGZcb{}      \PYGZob{}3:d\PYGZcb{}\PYGZdq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n}{mean\PYGZus{}list}\PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{][}\PYG{l+m+mi}{0}\PYG{p}{],} 
+                                                                                 \PYG{n}{mean\PYGZus{}list}\PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{][}\PYG{l+m+mi}{1}\PYG{p}{],} 
+                                                                                 \PYG{n}{mean\PYGZus{}list}\PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{][}\PYG{l+m+mi}{2}\PYG{p}{],} 
+                                                                                 \PYG{n+nb}{int}\PYG{p}{(}\PYG{n}{mean\PYGZus{}list}\PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{][}\PYG{l+m+mi}{3}\PYG{p}{])))}
+        \PYG{k}{print}\PYG{p}{()}
+        \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}=\PYGZdq{}}\PYG{o}{*}\PYG{l+m+mi}{53}\PYG{p}{)}
+    
+    \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Test Data Averages Across All Folds:\PYGZdq{}}\PYG{p}{)}
+    \PYG{n}{reports\PYGZus{}mean}\PYG{p}{(}\PYG{n}{test\PYGZus{}reports}\PYG{p}{)}
+    \PYG{k}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Train Data Averages Across All Folds:\PYGZdq{}}\PYG{p}{)}
+    \PYG{n}{reports\PYGZus{}mean}\PYG{p}{(}\PYG{n}{train\PYGZus{}reports}\PYG{p}{)}
+    \PYG{k}{return} \PYG{p}{\PYGZob{}}\PYG{l+s+s2}{\PYGZdq{}Test\PYGZdq{}}\PYG{p}{:} \PYG{n}{cnf\PYGZus{}matrix\PYGZus{}test}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}Train\PYGZdq{}}\PYG{p}{:} \PYG{n}{cnf\PYGZus{}matrix\PYGZus{}train}\PYG{p}{\PYGZcb{}}
+
+
+\PYG{c+c1}{\PYGZsh{} In[27]:}
+
+
+\PYG{n}{cnf\PYGZus{}matrices} \PYG{o}{=} \PYG{n}{confusion\PYGZus{}matrices}\PYG{p}{(}\PYG{n}{training\PYGZus{}data}\PYG{p}{)}
+\PYG{n}{cnf\PYGZus{}matrix\PYGZus{}test} \PYG{o}{=} \PYG{n}{cnf\PYGZus{}matrices}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Test\PYGZdq{}}\PYG{p}{]}
+\PYG{n}{cnf\PYGZus{}matrix\PYGZus{}train} \PYG{o}{=} \PYG{n}{cnf\PYGZus{}matrices}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Train\PYGZdq{}}\PYG{p}{]}
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} See the most informative features}
+\PYG{c+c1}{\PYGZsh{} [How does \PYGZdq{}MultinomialNB.coef\PYGZus{}\PYGZdq{} work?](https://stackoverflow.com/a/29915740/6147528)}
+
+\PYG{c+c1}{\PYGZsh{} In[28]:}
+
+
+\PYG{k}{def} \PYG{n+nf}{most\PYGZus{}informative\PYGZus{}features}\PYG{p}{(}\PYG{n}{pipeline}\PYG{p}{,} \PYG{n}{n}\PYG{o}{=}\PYG{l+m+mi}{10000}\PYG{p}{):}
+    \PYG{n}{vectorizer} \PYG{o}{=} \PYG{n}{pipeline}\PYG{o}{.}\PYG{n}{named\PYGZus{}steps}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}vectorizer\PYGZdq{}}\PYG{p}{]}
+    \PYG{n}{classifier} \PYG{o}{=} \PYG{n}{pipeline}\PYG{o}{.}\PYG{n}{named\PYGZus{}steps}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}classifier\PYGZdq{}}\PYG{p}{]}
+    
+    \PYG{n}{class\PYGZus{}labels} \PYG{o}{=} \PYG{n}{classifier}\PYG{o}{.}\PYG{n}{classes\PYGZus{}}
+    
+    \PYG{n}{feature\PYGZus{}names} \PYG{o}{=} \PYG{n}{vectorizer}\PYG{o}{.}\PYG{n}{get\PYGZus{}feature\PYGZus{}names}\PYG{p}{()}
+    
+    \PYG{n}{top\PYGZus{}n\PYGZus{}class\PYGZus{}1} \PYG{o}{=} \PYG{n+nb}{sorted}\PYG{p}{(}\PYG{n+nb}{zip}\PYG{p}{(}\PYG{n}{classifier}\PYG{o}{.}\PYG{n}{coef\PYGZus{}}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n}{feature\PYGZus{}names}\PYG{p}{))[:}\PYG{n}{n}\PYG{p}{]}
+    \PYG{n}{top\PYGZus{}n\PYGZus{}class\PYGZus{}2} \PYG{o}{=} \PYG{n+nb}{sorted}\PYG{p}{(}\PYG{n+nb}{zip}\PYG{p}{(}\PYG{n}{classifier}\PYG{o}{.}\PYG{n}{coef\PYGZus{}}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{],} \PYG{n}{feature\PYGZus{}names}\PYG{p}{))[}\PYG{o}{\PYGZhy{}}\PYG{n}{n}\PYG{p}{:]}
+    
+    \PYG{k}{return} \PYG{p}{\PYGZob{}}\PYG{n}{class\PYGZus{}labels}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]:} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{DataFrame}\PYG{p}{(\PYGZob{}}\PYG{l+s+s2}{\PYGZdq{}Log Probability\PYGZdq{}}\PYG{p}{:} \PYG{p}{[}\PYG{n}{tup}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{k}{for} \PYG{n}{tup} \PYG{o+ow}{in} \PYG{n}{top\PYGZus{}n\PYGZus{}class\PYGZus{}1}\PYG{p}{],} 
+                                           \PYG{l+s+s2}{\PYGZdq{}Feature\PYGZdq{}}\PYG{p}{:} \PYG{p}{[}\PYG{n}{tup}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{k}{for} \PYG{n}{tup} \PYG{o+ow}{in} \PYG{n}{top\PYGZus{}n\PYGZus{}class\PYGZus{}1}\PYG{p}{]\PYGZcb{}),} 
+            \PYG{n}{class\PYGZus{}labels}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]:} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{DataFrame}\PYG{p}{(\PYGZob{}}\PYG{l+s+s2}{\PYGZdq{}Log Probability\PYGZdq{}}\PYG{p}{:} \PYG{p}{[}\PYG{n}{tup}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]} \PYG{k}{for} \PYG{n}{tup} \PYG{o+ow}{in} \PYG{n+nb}{reversed}\PYG{p}{(}\PYG{n}{top\PYGZus{}n\PYGZus{}class\PYGZus{}2}\PYG{p}{)],}
+                                           \PYG{l+s+s2}{\PYGZdq{}Feature\PYGZdq{}}\PYG{p}{:} \PYG{p}{[}\PYG{n}{tup}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]} \PYG{k}{for} \PYG{n}{tup} \PYG{o+ow}{in} \PYG{n+nb}{reversed}\PYG{p}{(}\PYG{n}{top\PYGZus{}n\PYGZus{}class\PYGZus{}2}\PYG{p}{)]\PYGZcb{})\PYGZcb{}}
+
+
+\PYG{c+c1}{\PYGZsh{} In[29]:}
+
+
+\PYG{n}{most\PYGZus{}informative\PYGZus{}features\PYGZus{}all} \PYG{o}{=} \PYG{n}{most\PYGZus{}informative\PYGZus{}features}\PYG{p}{(}\PYG{n}{sentiment\PYGZus{}pipeline}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} In[30]:}
+
+
+\PYG{n}{most\PYGZus{}informative\PYGZus{}features\PYGZus{}non\PYGZus{}subtweet} \PYG{o}{=} \PYG{n}{most\PYGZus{}informative\PYGZus{}features\PYGZus{}all}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}non\PYGZhy{}subtweet\PYGZdq{}}\PYG{p}{]}
+
+
+\PYG{c+c1}{\PYGZsh{} In[31]:}
+
+
+\PYG{n}{most\PYGZus{}informative\PYGZus{}features\PYGZus{}subtweet} \PYG{o}{=} \PYG{n}{most\PYGZus{}informative\PYGZus{}features\PYGZus{}all}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}subtweet\PYGZdq{}}\PYG{p}{]}
+
+
+\PYG{c+c1}{\PYGZsh{} In[32]:}
+
+
+\PYG{n}{final\PYGZus{}features} \PYG{o}{=} \PYG{n}{most\PYGZus{}informative\PYGZus{}features\PYGZus{}non\PYGZus{}subtweet}\PYG{o}{.}\PYG{n}{join}\PYG{p}{(}\PYG{n}{most\PYGZus{}informative\PYGZus{}features\PYGZus{}subtweet}\PYG{p}{,} 
+                                                             \PYG{n}{lsuffix}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{} (Non\PYGZhy{}subtweet)\PYGZdq{}}\PYG{p}{,} 
+                                                             \PYG{n}{rsuffix}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{} (Subtweet)\PYGZdq{}}\PYG{p}{)}
+\PYG{n}{final\PYGZus{}features}\PYG{o}{.}\PYG{n}{to\PYGZus{}csv}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}../data/other\PYGZus{}data/most\PYGZus{}informative\PYGZus{}features.csv\PYGZdq{}}\PYG{p}{)}
+\PYG{n}{final\PYGZus{}features}\PYG{o}{.}\PYG{n}{head}\PYG{p}{(}\PYG{l+m+mi}{25}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Define function for visualizing confusion matrices}
+
+\PYG{c+c1}{\PYGZsh{} In[33]:}
+
+
+\PYG{k}{def} \PYG{n+nf}{plot\PYGZus{}confusion\PYGZus{}matrix}\PYG{p}{(}\PYG{n}{cm}\PYG{p}{,} \PYG{n}{classes}\PYG{o}{=}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}non\PYGZhy{}subtweet\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}subtweet\PYGZdq{}}\PYG{p}{],} 
+                          \PYG{n}{title}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}Confusion Matrix\PYGZdq{}}\PYG{p}{,} \PYG{n}{cmap}\PYG{o}{=}\PYG{n}{plt}\PYG{o}{.}\PYG{n}{cm}\PYG{o}{.}\PYG{n}{Purples}\PYG{p}{):}
+    
+    \PYG{n}{cm\PYGZus{}normalized} \PYG{o}{=} \PYG{n}{cm}\PYG{o}{.}\PYG{n}{astype}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}float\PYGZdq{}}\PYG{p}{)} \PYG{o}{/} \PYG{n}{cm}\PYG{o}{.}\PYG{n}{sum}\PYG{p}{(}\PYG{n}{axis}\PYG{o}{=}\PYG{l+m+mi}{1}\PYG{p}{)[:,} \PYG{n}{np}\PYG{o}{.}\PYG{n}{newaxis}\PYG{p}{]}
+
+    \PYG{n}{plt}\PYG{o}{.}\PYG{n}{imshow}\PYG{p}{(}\PYG{n}{cm}\PYG{p}{,} \PYG{n}{interpolation}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}nearest\PYGZdq{}}\PYG{p}{,} \PYG{n}{cmap}\PYG{o}{=}\PYG{n}{cmap}\PYG{p}{)}
+    \PYG{n}{plt}\PYG{o}{.}\PYG{n}{colorbar}\PYG{p}{()}
+    
+    \PYG{n}{plt}\PYG{o}{.}\PYG{n}{title}\PYG{p}{(}\PYG{n}{title}\PYG{p}{,} \PYG{n}{size}\PYG{o}{=}\PYG{l+m+mi}{18}\PYG{p}{)}
+    
+    \PYG{n}{tick\PYGZus{}marks} \PYG{o}{=} \PYG{n}{np}\PYG{o}{.}\PYG{n}{arange}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{classes}\PYG{p}{))}
+    \PYG{n}{plt}\PYG{o}{.}\PYG{n}{xticks}\PYG{p}{(}\PYG{n}{tick\PYGZus{}marks}\PYG{p}{,} \PYG{n}{classes}\PYG{p}{,} \PYG{n}{rotation}\PYG{o}{=}\PYG{l+m+mi}{45}\PYG{p}{,} \PYG{n}{fontsize}\PYG{o}{=}\PYG{l+m+mi}{14}\PYG{p}{)}
+    \PYG{n}{plt}\PYG{o}{.}\PYG{n}{yticks}\PYG{p}{(}\PYG{n}{tick\PYGZus{}marks}\PYG{p}{,} \PYG{n}{classes}\PYG{p}{,} \PYG{n}{fontsize}\PYG{o}{=}\PYG{l+m+mi}{14}\PYG{p}{)}
+
+    \PYG{n}{thresh} \PYG{o}{=} \PYG{n}{cm}\PYG{o}{.}\PYG{n}{max}\PYG{p}{()} \PYG{o}{/} \PYG{l+m+mf}{2.}
+    \PYG{k}{for} \PYG{n}{i}\PYG{p}{,} \PYG{n}{j} \PYG{o+ow}{in} \PYG{n}{itertools}\PYG{o}{.}\PYG{n}{product}\PYG{p}{(}\PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{cm}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]),} \PYG{n+nb}{range}\PYG{p}{(}\PYG{n}{cm}\PYG{o}{.}\PYG{n}{shape}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{])):}
+        \PYG{n}{plt}\PYG{o}{.}\PYG{n}{text}\PYG{p}{(}\PYG{n}{j}\PYG{p}{,} \PYG{n}{i}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}\PYGZob{}\PYGZcb{} (\PYGZob{}:.0\PYGZpc{}\PYGZcb{})\PYGZdq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n}{cm}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,} \PYG{n}{j}\PYG{p}{],} \PYG{n}{cm\PYGZus{}normalized}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,} \PYG{n}{j}\PYG{p}{]),}
+                \PYG{n}{horizontalalignment}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}center\PYGZdq{}}\PYG{p}{,} \PYG{n}{size}\PYG{o}{=}\PYG{l+m+mi}{16}\PYG{p}{,}
+                \PYG{n}{color}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}white\PYGZdq{}} \PYG{k}{if} \PYG{n}{cm}\PYG{p}{[}\PYG{n}{i}\PYG{p}{,} \PYG{n}{j}\PYG{p}{]} \PYG{o}{\PYGZgt{}} \PYG{n}{thresh} \PYG{k}{else} \PYG{l+s+s2}{\PYGZdq{}black\PYGZdq{}}\PYG{p}{)}
+        
+    \PYG{n}{plt}\PYG{o}{.}\PYG{n}{tight\PYGZus{}layout}\PYG{p}{()}
+    
+    \PYG{n}{plt}\PYG{o}{.}\PYG{n}{ylabel}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}True label\PYGZdq{}}\PYG{p}{,} \PYG{n}{fontsize}\PYG{o}{=}\PYG{l+m+mi}{14}\PYG{p}{)}
+    \PYG{n}{plt}\PYG{o}{.}\PYG{n}{xlabel}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Predicted Label\PYGZdq{}}\PYG{p}{,} \PYG{n}{fontsize}\PYG{o}{=}\PYG{l+m+mi}{14}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Show the matrices}
+
+\PYG{c+c1}{\PYGZsh{} In[34]:}
+
+
+\PYG{n}{np}\PYG{o}{.}\PYG{n}{set\PYGZus{}printoptions}\PYG{p}{(}\PYG{n}{precision}\PYG{o}{=}\PYG{l+m+mi}{2}\PYG{p}{)}
+
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{figure}\PYG{p}{(}\PYG{n}{figsize}\PYG{o}{=}\PYG{p}{(}\PYG{l+m+mi}{6}\PYG{p}{,} \PYG{l+m+mi}{6}\PYG{p}{))}
+\PYG{n}{plot\PYGZus{}confusion\PYGZus{}matrix}\PYG{p}{(}\PYG{n}{cnf\PYGZus{}matrix\PYGZus{}test}\PYG{p}{,} \PYG{n}{title}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}Test Data Confusion Matrix\PYGZdq{}}\PYG{p}{)}
+
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{figure}\PYG{p}{(}\PYG{n}{figsize}\PYG{o}{=}\PYG{p}{(}\PYG{l+m+mi}{6}\PYG{p}{,} \PYG{l+m+mi}{6}\PYG{p}{))}
+\PYG{n}{plot\PYGZus{}confusion\PYGZus{}matrix}\PYG{p}{(}\PYG{n}{cnf\PYGZus{}matrix\PYGZus{}train}\PYG{p}{,} \PYG{n}{title}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}Train Data Confusion Matrix\PYGZdq{}}\PYG{p}{)}
+
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{show}\PYG{p}{()}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Update matplotlib style}
+
+\PYG{c+c1}{\PYGZsh{} In[35]:}
+
+
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{style}\PYG{o}{.}\PYG{n}{use}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}fivethirtyeight\PYGZdq{}}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Save the classifier for another time}
+
+\PYG{c+c1}{\PYGZsh{} In[36]:}
+
+
+\PYG{n}{joblib}\PYG{o}{.}\PYG{n}{dump}\PYG{p}{(}\PYG{n}{sentiment\PYGZus{}pipeline}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}../data/other\PYGZus{}data/subtweets\PYGZus{}classifier.pkl\PYGZdq{}}\PYG{p}{);}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Print tests for the classifier}
+
+\PYG{c+c1}{\PYGZsh{} In[37]:}
+
+
+\PYG{k}{def} \PYG{n+nf}{process\PYGZus{}tweets\PYGZus{}for\PYGZus{}testing}\PYG{p}{(}\PYG{n}{filenames}\PYG{p}{):}
+    \PYG{n}{dataframes} \PYG{o}{=} \PYG{p}{\PYGZob{}\PYGZcb{}}
+    \PYG{k}{for} \PYG{n}{filename} \PYG{o+ow}{in} \PYG{n}{filenames}\PYG{p}{:}
+        \PYG{n}{username} \PYG{o}{=} \PYG{n}{splitext}\PYG{p}{(}\PYG{n}{basename}\PYG{p}{(}\PYG{n}{filename}\PYG{p}{))[}\PYG{l+m+mi}{0}\PYG{p}{][:}\PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{7}\PYG{p}{]}
+        \PYG{n}{dataframes}\PYG{p}{[}\PYG{n}{username}\PYG{p}{]} \PYG{o}{=} \PYG{p}{\PYGZob{}\PYGZcb{}}
+        
+        \PYG{n}{user\PYGZus{}df} \PYG{o}{=} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{read\PYGZus{}csv}\PYG{p}{(}\PYG{n}{filename}\PYG{p}{)}\PYG{o}{.}\PYG{n}{dropna}\PYG{p}{()}
+        \PYG{n}{user\PYGZus{}df}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Text\PYGZdq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{user\PYGZus{}df}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Text\PYGZdq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{str}\PYG{o}{.}\PYG{n}{replace}\PYG{p}{(}\PYG{n}{hashtags\PYGZus{}pattern}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}➊\PYGZdq{}}\PYG{p}{)}
+        \PYG{n}{user\PYGZus{}df}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Text\PYGZdq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{user\PYGZus{}df}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Text\PYGZdq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{str}\PYG{o}{.}\PYG{n}{replace}\PYG{p}{(}\PYG{n}{urls\PYGZus{}pattern}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}➋\PYGZdq{}}\PYG{p}{)}
+        \PYG{n}{user\PYGZus{}df}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Text\PYGZdq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{user\PYGZus{}df}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Text\PYGZdq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{str}\PYG{o}{.}\PYG{n}{replace}\PYG{p}{(}\PYG{n}{at\PYGZus{}mentions\PYGZus{}pattern}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}➌\PYGZdq{}}\PYG{p}{)}
+        \PYG{n}{user\PYGZus{}df}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Text\PYGZdq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{user\PYGZus{}df}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Text\PYGZdq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{str}\PYG{o}{.}\PYG{n}{replace}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+se}{\PYGZbs{}u2018}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}\PYGZsq{}\PYGZdq{}}\PYG{p}{)}
+        \PYG{n}{user\PYGZus{}df}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Text\PYGZdq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{user\PYGZus{}df}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Text\PYGZdq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{str}\PYG{o}{.}\PYG{n}{replace}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+se}{\PYGZbs{}u2019}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}\PYGZsq{}\PYGZdq{}}\PYG{p}{)}
+        \PYG{n}{user\PYGZus{}df}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Text\PYGZdq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{user\PYGZus{}df}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Text\PYGZdq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{str}\PYG{o}{.}\PYG{n}{replace}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+se}{\PYGZbs{}u201c}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+se}{\PYGZbs{}\PYGZdq{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+        \PYG{n}{user\PYGZus{}df}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Text\PYGZdq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{user\PYGZus{}df}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Text\PYGZdq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{str}\PYG{o}{.}\PYG{n}{replace}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+se}{\PYGZbs{}u201d}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+se}{\PYGZbs{}\PYGZdq{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+        \PYG{n}{user\PYGZus{}df}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Text\PYGZdq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{user\PYGZus{}df}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Text\PYGZdq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{str}\PYG{o}{.}\PYG{n}{replace}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}\PYGZam{}quot;\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+se}{\PYGZbs{}\PYGZdq{}}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+        \PYG{n}{user\PYGZus{}df}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Text\PYGZdq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{user\PYGZus{}df}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Text\PYGZdq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{str}\PYG{o}{.}\PYG{n}{replace}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}\PYGZam{}amp;\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}\PYGZam{}\PYGZdq{}}\PYG{p}{)}
+        \PYG{n}{user\PYGZus{}df}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Text\PYGZdq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{user\PYGZus{}df}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Text\PYGZdq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{str}\PYG{o}{.}\PYG{n}{replace}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}\PYGZam{}gt;\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}\PYGZgt{}\PYGZdq{}}\PYG{p}{)}
+        \PYG{n}{user\PYGZus{}df}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Text\PYGZdq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{user\PYGZus{}df}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Text\PYGZdq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{str}\PYG{o}{.}\PYG{n}{replace}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}\PYGZam{}lt;\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}\PYGZlt{}\PYGZdq{}}\PYG{p}{)}
+        
+        \PYG{n}{predictions} \PYG{o}{=} \PYG{n}{sentiment\PYGZus{}pipeline}\PYG{o}{.}\PYG{n}{predict\PYGZus{}proba}\PYG{p}{(}\PYG{n}{user\PYGZus{}df}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Text\PYGZdq{}}\PYG{p}{])[:,} \PYG{l+m+mi}{1}\PYG{p}{]}\PYG{o}{.}\PYG{n}{tolist}\PYG{p}{()}
+        \PYG{n}{user\PYGZus{}df}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}SubtweetProbability\PYGZdq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{predictions}
+
+        \PYG{n}{dataframes}\PYG{p}{[}\PYG{n}{username}\PYG{p}{][}\PYG{l+s+s2}{\PYGZdq{}all\PYGZdq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{user\PYGZus{}df}
+        
+        \PYG{n}{scores} \PYG{o}{=} \PYG{n}{user\PYGZus{}df}\PYG{p}{[[}\PYG{l+s+s2}{\PYGZdq{}SubtweetProbability\PYGZdq{}}\PYG{p}{]]}\PYG{o}{.}\PYG{n}{rename}\PYG{p}{(}\PYG{n}{columns}\PYG{o}{=}\PYG{p}{\PYGZob{}}\PYG{l+s+s2}{\PYGZdq{}SubtweetProbability\PYGZdq{}}\PYG{p}{:} \PYG{n}{username}\PYG{p}{\PYGZcb{})}
+        
+        \PYG{n}{dataframes}\PYG{p}{[}\PYG{n}{username}\PYG{p}{][}\PYG{l+s+s2}{\PYGZdq{}scores\PYGZdq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{scores}
+        \PYG{n}{dataframes}\PYG{p}{[}\PYG{n}{username}\PYG{p}{][}\PYG{l+s+s2}{\PYGZdq{}stats\PYGZdq{}}\PYG{p}{]} \PYG{o}{=} \PYG{n}{scores}\PYG{o}{.}\PYG{n}{describe}\PYG{p}{()}
+        
+    \PYG{k}{return} \PYG{n}{dataframes}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Load the CSV files}
+
+\PYG{c+c1}{\PYGZsh{} In[38]:}
+
+
+\PYG{n}{filenames} \PYG{o}{=} \PYG{n}{glob}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}../data/data\PYGZus{}for\PYGZus{}testing/friends\PYGZus{}data/*.csv\PYGZdq{}}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} In[39]:}
+
+
+\PYG{n}{dataframes} \PYG{o}{=} \PYG{n}{process\PYGZus{}tweets\PYGZus{}for\PYGZus{}testing}\PYG{p}{(}\PYG{n}{filenames}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Show a random table}
+
+\PYG{c+c1}{\PYGZsh{} In[40]:}
+
+
+\PYG{n}{chosen\PYGZus{}username} \PYG{o}{=} \PYG{n}{choice}\PYG{p}{(}\PYG{n+nb}{list}\PYG{p}{(}\PYG{n}{dataframes}\PYG{o}{.}\PYG{n}{keys}\PYG{p}{()))}
+\PYG{n}{dataframes}\PYG{p}{[}\PYG{n}{chosen\PYGZus{}username}\PYG{p}{][}\PYG{l+s+s2}{\PYGZdq{}all\PYGZdq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{sort\PYGZus{}values}\PYG{p}{(}\PYG{n}{by}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}SubtweetProbability\PYGZdq{}}\PYG{p}{,} \PYG{n}{ascending}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{)}\PYG{o}{.}\PYG{n}{head}\PYG{p}{(}\PYG{l+m+mi}{5}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Prepare statistics on tweets}
+
+\PYG{c+c1}{\PYGZsh{} In[41]:}
+
+
+\PYG{n}{tests\PYGZus{}df} \PYG{o}{=} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{concat}\PYG{p}{([}\PYG{n}{df\PYGZus{}dict}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}scores\PYGZdq{}}\PYG{p}{]} \PYG{k}{for} \PYG{n}{df\PYGZus{}dict} \PYG{o+ow}{in} \PYG{n}{dataframes}\PYG{o}{.}\PYG{n}{values}\PYG{p}{()],} \PYG{n}{ignore\PYGZus{}index}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{)}
+
+
+\PYG{c+c1}{\PYGZsh{} In[42]:}
+
+
+\PYG{n}{tests\PYGZus{}df}\PYG{o}{.}\PYG{n}{describe}\PYG{p}{()}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Plot a histogram with three random users}
+
+\PYG{c+c1}{\PYGZsh{} In[43]:}
+
+
+\PYG{n}{random\PYGZus{}choices} \PYG{o}{=} \PYG{n}{sample}\PYG{p}{(}\PYG{n+nb}{list}\PYG{p}{(}\PYG{n}{dataframes}\PYG{o}{.}\PYG{n}{values}\PYG{p}{()),} \PYG{l+m+mi}{3}\PYG{p}{)}
+\PYG{n}{scores} \PYG{o}{=} \PYG{p}{[}\PYG{n}{df\PYGZus{}dict}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}scores\PYGZdq{}}\PYG{p}{][}\PYG{n}{df\PYGZus{}dict}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}scores\PYGZdq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{columns}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]]}\PYG{o}{.}\PYG{n}{tolist}\PYG{p}{()} 
+          \PYG{k}{for} \PYG{n}{df\PYGZus{}dict} \PYG{o+ow}{in} \PYG{n}{random\PYGZus{}choices}\PYG{p}{]}
+
+\PYG{n}{fig} \PYG{o}{=} \PYG{n}{plt}\PYG{o}{.}\PYG{n}{figure}\PYG{p}{(}\PYG{n}{figsize}\PYG{o}{=}\PYG{p}{(}\PYG{l+m+mi}{16}\PYG{p}{,} \PYG{l+m+mi}{9}\PYG{p}{))}
+\PYG{n}{ax} \PYG{o}{=} \PYG{n}{fig}\PYG{o}{.}\PYG{n}{add\PYGZus{}subplot}\PYG{p}{(}\PYG{l+m+mi}{111}\PYG{p}{)}
+
+\PYG{n}{n}\PYG{p}{,} \PYG{n}{bins}\PYG{p}{,} \PYG{n}{patches} \PYG{o}{=} \PYG{n}{ax}\PYG{o}{.}\PYG{n}{hist}\PYG{p}{(}\PYG{n}{scores}\PYG{p}{,} 
+                           \PYG{n}{bins}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}scott\PYGZdq{}}\PYG{p}{,}
+                           \PYG{n}{color}\PYG{o}{=}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}\PYGZsh{}256EFF\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}\PYGZsh{}46237A\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}\PYGZsh{}3DDC97\PYGZdq{}}\PYG{p}{],}
+                           \PYG{n}{density}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{,} 
+                           \PYG{n}{label}\PYG{o}{=}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}User 1\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}User 2\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}User 3\PYGZdq{}}\PYG{p}{],}
+                           \PYG{n}{alpha}\PYG{o}{=}\PYG{l+m+mf}{0.75}\PYG{p}{)}
+
+\PYG{n}{stats} \PYG{o}{=} \PYG{p}{[}\PYG{n}{df\PYGZus{}dict}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}stats\PYGZdq{}}\PYG{p}{][}\PYG{n}{df\PYGZus{}dict}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}stats\PYGZdq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{columns}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]]}\PYG{o}{.}\PYG{n}{tolist}\PYG{p}{()} 
+         \PYG{k}{for} \PYG{n}{df\PYGZus{}dict} \PYG{o+ow}{in} \PYG{n}{random\PYGZus{}choices}\PYG{p}{]}
+
+\PYG{n}{line\PYGZus{}1} \PYG{o}{=} \PYG{n}{scipy}\PYG{o}{.}\PYG{n}{stats}\PYG{o}{.}\PYG{n}{norm}\PYG{o}{.}\PYG{n}{pdf}\PYG{p}{(}\PYG{n}{bins}\PYG{p}{,} \PYG{n}{stats}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{][}\PYG{l+m+mi}{1}\PYG{p}{],} \PYG{n}{stats}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{][}\PYG{l+m+mi}{2}\PYG{p}{])}
+\PYG{n}{ax}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{bins}\PYG{p}{,} \PYG{n}{line\PYGZus{}1}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}\PYGZhy{}\PYGZhy{}\PYGZdq{}}\PYG{p}{,} \PYG{n}{color}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}\PYGZsh{}256EFF\PYGZdq{}}\PYG{p}{,} \PYG{n}{linewidth}\PYG{o}{=}\PYG{l+m+mi}{2}\PYG{p}{)}
+
+\PYG{n}{line\PYGZus{}2} \PYG{o}{=} \PYG{n}{scipy}\PYG{o}{.}\PYG{n}{stats}\PYG{o}{.}\PYG{n}{norm}\PYG{o}{.}\PYG{n}{pdf}\PYG{p}{(}\PYG{n}{bins}\PYG{p}{,} \PYG{n}{stats}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{][}\PYG{l+m+mi}{1}\PYG{p}{],} \PYG{n}{stats}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{][}\PYG{l+m+mi}{2}\PYG{p}{])}
+\PYG{n}{ax}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{bins}\PYG{p}{,} \PYG{n}{line\PYGZus{}2}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}\PYGZhy{}\PYGZhy{}\PYGZdq{}}\PYG{p}{,} \PYG{n}{color}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}\PYGZsh{}46237A\PYGZdq{}}\PYG{p}{,} \PYG{n}{linewidth}\PYG{o}{=}\PYG{l+m+mi}{2}\PYG{p}{)}
+
+\PYG{n}{line\PYGZus{}3} \PYG{o}{=} \PYG{n}{scipy}\PYG{o}{.}\PYG{n}{stats}\PYG{o}{.}\PYG{n}{norm}\PYG{o}{.}\PYG{n}{pdf}\PYG{p}{(}\PYG{n}{bins}\PYG{p}{,} \PYG{n}{stats}\PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{][}\PYG{l+m+mi}{1}\PYG{p}{],} \PYG{n}{stats}\PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{][}\PYG{l+m+mi}{2}\PYG{p}{])}
+\PYG{n}{ax}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{bins}\PYG{p}{,} \PYG{n}{line\PYGZus{}3}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}\PYGZhy{}\PYGZhy{}\PYGZdq{}}\PYG{p}{,} \PYG{n}{color}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}\PYGZsh{}3DDC97\PYGZdq{}}\PYG{p}{,} \PYG{n}{linewidth}\PYG{o}{=}\PYG{l+m+mi}{2}\PYG{p}{)}
+
+\PYG{n}{ax}\PYG{o}{.}\PYG{n}{set\PYGZus{}xticks}\PYG{p}{([}\PYG{n+nb}{float}\PYG{p}{(}\PYG{n}{x}\PYG{o}{/}\PYG{l+m+mi}{10}\PYG{p}{)} \PYG{k}{for} \PYG{n}{x} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{11}\PYG{p}{)],} \PYG{n}{minor}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{)}
+\PYG{n}{ax}\PYG{o}{.}\PYG{n}{set\PYGZus{}title}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Distribution of Subtweet Probabilities In User Accounts\PYGZdq{}}\PYG{p}{,} \PYG{n}{fontsize}\PYG{o}{=}\PYG{l+m+mi}{18}\PYG{p}{)}
+\PYG{n}{ax}\PYG{o}{.}\PYG{n}{set\PYGZus{}xlabel}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Probability That Tweet is a Subtweet\PYGZdq{}}\PYG{p}{,} \PYG{n}{fontsize}\PYG{o}{=}\PYG{l+m+mi}{18}\PYG{p}{)}
+\PYG{n}{ax}\PYG{o}{.}\PYG{n}{set\PYGZus{}ylabel}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Percent of Tweets with That Probability\PYGZdq{}}\PYG{p}{,} \PYG{n}{fontsize}\PYG{o}{=}\PYG{l+m+mi}{18}\PYG{p}{)}
+
+\PYG{n}{ax}\PYG{o}{.}\PYG{n}{legend}\PYG{p}{()}
+
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{show}\PYG{p}{()}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Plot a histogram with all of them}
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} First, get some statistics}
+
+\PYG{c+c1}{\PYGZsh{} In[44]:}
+
+
+\PYG{n}{new\PYGZus{}tests\PYGZus{}df} \PYG{o}{=} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{concat}\PYG{p}{([}\PYG{n}{df\PYGZus{}dict}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}scores\PYGZdq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{rename}\PYG{p}{(}\PYG{n}{columns}\PYG{o}{=}\PYG{p}{\PYGZob{}}\PYG{n}{df\PYGZus{}dict}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}scores\PYGZdq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{columns}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]:}\PYG{l+s+s2}{\PYGZdq{}SubtweetProbability\PYGZdq{}}\PYG{p}{\PYGZcb{})}
+                          \PYG{k}{for} \PYG{n}{df\PYGZus{}dict} \PYG{o+ow}{in} \PYG{n}{dataframes}\PYG{o}{.}\PYG{n}{values}\PYG{p}{()],} \PYG{n}{ignore\PYGZus{}index}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{)}
+
+\PYG{n}{new\PYGZus{}tests\PYGZus{}df\PYGZus{}stats} \PYG{o}{=} \PYG{n}{new\PYGZus{}tests\PYGZus{}df}\PYG{o}{.}\PYG{n}{describe}\PYG{p}{()}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Then view them}
+
+\PYG{c+c1}{\PYGZsh{} In[45]:}
+
+
+\PYG{n}{new\PYGZus{}tests\PYGZus{}df\PYGZus{}stats}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Now plot}
+
+\PYG{c+c1}{\PYGZsh{} In[46]:}
+
+
+\PYG{n}{fig} \PYG{o}{=} \PYG{n}{plt}\PYG{o}{.}\PYG{n}{figure}\PYG{p}{(}\PYG{n}{figsize}\PYG{o}{=}\PYG{p}{(}\PYG{l+m+mi}{16}\PYG{p}{,} \PYG{l+m+mi}{9}\PYG{p}{))}
+\PYG{n}{ax} \PYG{o}{=} \PYG{n}{fig}\PYG{o}{.}\PYG{n}{add\PYGZus{}subplot}\PYG{p}{(}\PYG{l+m+mi}{111}\PYG{p}{)}
+
+\PYG{n}{n}\PYG{p}{,} \PYG{n}{bins}\PYG{p}{,} \PYG{n}{patches} \PYG{o}{=} \PYG{n}{ax}\PYG{o}{.}\PYG{n}{hist}\PYG{p}{(}\PYG{n}{new\PYGZus{}tests\PYGZus{}df}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}SubtweetProbability\PYGZdq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{tolist}\PYG{p}{(),} 
+                           \PYG{n}{bins}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}scott\PYGZdq{}}\PYG{p}{,}
+                           \PYG{n}{color}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}\PYGZsh{}983B59\PYGZdq{}}\PYG{p}{,}
+                           \PYG{n}{edgecolor}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}black\PYGZdq{}}\PYG{p}{,} 
+                           \PYG{n}{density}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{,} 
+                           \PYG{n}{alpha}\PYG{o}{=}\PYG{l+m+mf}{0.75}\PYG{p}{)}
+
+\PYG{n}{line} \PYG{o}{=} \PYG{n}{scipy}\PYG{o}{.}\PYG{n}{stats}\PYG{o}{.}\PYG{n}{norm}\PYG{o}{.}\PYG{n}{pdf}\PYG{p}{(}\PYG{n}{bins}\PYG{p}{,} \PYG{n}{new\PYGZus{}tests\PYGZus{}df\PYGZus{}stats}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}SubtweetProbability\PYGZdq{}}\PYG{p}{][}\PYG{l+m+mi}{1}\PYG{p}{],} 
+                              \PYG{n}{new\PYGZus{}tests\PYGZus{}df\PYGZus{}stats}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}SubtweetProbability\PYGZdq{}}\PYG{p}{][}\PYG{l+m+mi}{2}\PYG{p}{])}
+
+\PYG{n}{ax}\PYG{o}{.}\PYG{n}{plot}\PYG{p}{(}\PYG{n}{bins}\PYG{p}{,} \PYG{n}{line}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}\PYGZhy{}\PYGZhy{}\PYGZdq{}}\PYG{p}{,} \PYG{n}{color}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}\PYGZsh{}983B59\PYGZdq{}}\PYG{p}{,} \PYG{n}{linewidth}\PYG{o}{=}\PYG{l+m+mi}{2}\PYG{p}{)}
+
+
+\PYG{n}{ax}\PYG{o}{.}\PYG{n}{set\PYGZus{}xticks}\PYG{p}{([}\PYG{n+nb}{float}\PYG{p}{(}\PYG{n}{x}\PYG{o}{/}\PYG{l+m+mi}{10}\PYG{p}{)} \PYG{k}{for} \PYG{n}{x} \PYG{o+ow}{in} \PYG{n+nb}{range}\PYG{p}{(}\PYG{l+m+mi}{11}\PYG{p}{)],} \PYG{n}{minor}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{)}
+\PYG{n}{ax}\PYG{o}{.}\PYG{n}{set\PYGZus{}title}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Distribution of Subtweet Probabilities In All User Accounts\PYGZdq{}}\PYG{p}{,} \PYG{n}{fontsize}\PYG{o}{=}\PYG{l+m+mi}{18}\PYG{p}{)}
+\PYG{n}{ax}\PYG{o}{.}\PYG{n}{set\PYGZus{}xlabel}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Probability That Tweet is a Subtweet\PYGZdq{}}\PYG{p}{,} \PYG{n}{fontsize}\PYG{o}{=}\PYG{l+m+mi}{18}\PYG{p}{)}
+\PYG{n}{ax}\PYG{o}{.}\PYG{n}{set\PYGZus{}ylabel}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Percent of Tweets with That Probability\PYGZdq{}}\PYG{p}{,} \PYG{n}{fontsize}\PYG{o}{=}\PYG{l+m+mi}{18}\PYG{p}{)}
+
+\PYG{n}{ax}\PYG{o}{.}\PYG{n}{legend}\PYG{p}{()}
+
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{show}\PYG{p}{()}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Statisitics on training data}
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Remove mentions of usernames for these statistics}
+
+\PYG{c+c1}{\PYGZsh{} In[47]:}
+
+
+\PYG{n}{training\PYGZus{}data} \PYG{o}{=} \PYG{p}{[(}\PYG{n}{tweet}\PYG{p}{[}\PYG{l+m+mi}{0}\PYG{p}{]}
+                  \PYG{o}{.}\PYG{n}{replace}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}➊\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}}\PYG{p}{)}
+                  \PYG{o}{.}\PYG{n}{replace}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}➋\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}}\PYG{p}{)}
+                  \PYG{o}{.}\PYG{n}{replace}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}➌\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}\PYGZdq{}}\PYG{p}{))} \PYG{k}{for} \PYG{n}{tweet} \PYG{o+ow}{in} \PYG{n}{training\PYGZus{}data}\PYG{p}{]}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Lengths}
+
+\PYG{c+c1}{\PYGZsh{} In[48]:}
+
+
+\PYG{n}{length\PYGZus{}data} \PYG{o}{=} \PYG{p}{[}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{tweet}\PYG{p}{)} \PYG{k}{for} \PYG{n}{tweet} \PYG{o+ow}{in} \PYG{n}{training\PYGZus{}data}\PYG{p}{]}
+
+
+\PYG{c+c1}{\PYGZsh{} In[49]:}
+
+
+\PYG{n}{length\PYGZus{}data\PYGZus{}for\PYGZus{}stats} \PYG{o}{=} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{DataFrame}\PYG{p}{(\PYGZob{}}\PYG{l+s+s2}{\PYGZdq{}Length\PYGZdq{}}\PYG{p}{:} \PYG{n}{length\PYGZus{}data}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}Tweet\PYGZdq{}}\PYG{p}{:} \PYG{n}{training\PYGZus{}data}\PYG{p}{\PYGZcb{})}
+
+
+\PYG{c+c1}{\PYGZsh{} In[50]:}
+
+
+\PYG{c+c1}{\PYGZsh{} length\PYGZus{}data\PYGZus{}for\PYGZus{}stats = length\PYGZus{}data\PYGZus{}for\PYGZus{}stats[length\PYGZus{}data\PYGZus{}for\PYGZus{}stats[\PYGZdq{}Length\PYGZdq{}] \PYGZlt{}= 280]  }
+
+
+\PYG{c+c1}{\PYGZsh{} In[51]:}
+
+
+\PYG{c+c1}{\PYGZsh{} length\PYGZus{}data\PYGZus{}for\PYGZus{}stats = length\PYGZus{}data\PYGZus{}for\PYGZus{}stats[length\PYGZus{}data\PYGZus{}for\PYGZus{}stats[\PYGZdq{}Length\PYGZdq{}] \PYGZgt{}= 5]}
+
+
+\PYG{c+c1}{\PYGZsh{} In[52]:}
+
+
+\PYG{n}{length\PYGZus{}data} \PYG{o}{=} \PYG{n}{length\PYGZus{}data\PYGZus{}for\PYGZus{}stats}\PYG{o}{.}\PYG{n}{Length}\PYG{o}{.}\PYG{n}{tolist}\PYG{p}{()}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Top 5 longest tweets}
+
+\PYG{c+c1}{\PYGZsh{} In[53]:}
+
+
+\PYG{n}{length\PYGZus{}data\PYGZus{}for\PYGZus{}stats}\PYG{o}{.}\PYG{n}{sort\PYGZus{}values}\PYG{p}{(}\PYG{n}{by}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}Length\PYGZdq{}}\PYG{p}{,} \PYG{n}{ascending}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{)}\PYG{o}{.}\PYG{n}{head}\PYG{p}{()}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Top 5 shortest tweets}
+
+\PYG{c+c1}{\PYGZsh{} In[54]:}
+
+
+\PYG{n}{length\PYGZus{}data\PYGZus{}for\PYGZus{}stats}\PYG{o}{.}\PYG{n}{sort\PYGZus{}values}\PYG{p}{(}\PYG{n}{by}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}Length\PYGZdq{}}\PYG{p}{,} \PYG{n}{ascending}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{)}\PYG{o}{.}\PYG{n}{head}\PYG{p}{()}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Tweet length statistics}
+
+\PYG{c+c1}{\PYGZsh{} In[55]:}
+
+
+\PYG{n}{length\PYGZus{}data\PYGZus{}for\PYGZus{}stats}\PYG{o}{.}\PYG{n}{describe}\PYG{p}{()}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Punctuation}
+
+\PYG{c+c1}{\PYGZsh{} In[56]:}
+
+
+\PYG{n}{punctuation\PYGZus{}data} \PYG{o}{=} \PYG{p}{[}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n+nb}{set}\PYG{p}{(}\PYG{n}{punctuation}\PYG{p}{)}\PYG{o}{.}\PYG{n}{intersection}\PYG{p}{(}\PYG{n+nb}{set}\PYG{p}{(}\PYG{n}{tweet}\PYG{p}{)))} \PYG{k}{for} \PYG{n}{tweet} \PYG{o+ow}{in} \PYG{n}{training\PYGZus{}data}\PYG{p}{]}
+
+
+\PYG{c+c1}{\PYGZsh{} In[57]:}
+
+
+\PYG{n}{punctuation\PYGZus{}data\PYGZus{}for\PYGZus{}stats} \PYG{o}{=} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{DataFrame}\PYG{p}{(\PYGZob{}}\PYG{l+s+s2}{\PYGZdq{}Punctuation\PYGZdq{}}\PYG{p}{:} \PYG{n}{punctuation\PYGZus{}data}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}Tweet\PYGZdq{}}\PYG{p}{:} \PYG{n}{training\PYGZus{}data}\PYG{p}{\PYGZcb{})}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Top 5 most punctuated tweets}
+
+\PYG{c+c1}{\PYGZsh{} In[58]:}
+
+
+\PYG{n}{punctuation\PYGZus{}data\PYGZus{}for\PYGZus{}stats}\PYG{o}{.}\PYG{n}{sort\PYGZus{}values}\PYG{p}{(}\PYG{n}{by}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}Punctuation\PYGZdq{}}\PYG{p}{,} \PYG{n}{ascending}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{)}\PYG{o}{.}\PYG{n}{head}\PYG{p}{()}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Tweets punctuation statistics}
+
+\PYG{c+c1}{\PYGZsh{} In[59]:}
+
+
+\PYG{n}{punctuation\PYGZus{}data\PYGZus{}for\PYGZus{}stats}\PYG{o}{.}\PYG{n}{describe}\PYG{p}{()}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Stop words}
+
+\PYG{c+c1}{\PYGZsh{} In[60]:}
+
+
+\PYG{n}{stop\PYGZus{}words\PYGZus{}data} \PYG{o}{=} \PYG{p}{[}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n+nb}{set}\PYG{p}{(}\PYG{n}{stopwords}\PYG{o}{.}\PYG{n}{words}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}english\PYGZdq{}}\PYG{p}{))}\PYG{o}{.}\PYG{n}{intersection}\PYG{p}{(}\PYG{n+nb}{set}\PYG{p}{(}\PYG{n}{tweet}\PYG{o}{.}\PYG{n}{lower}\PYG{p}{())))} 
+                   \PYG{k}{for} \PYG{n}{tweet} \PYG{o+ow}{in} \PYG{n}{training\PYGZus{}data}\PYG{p}{]}
+
+
+\PYG{c+c1}{\PYGZsh{} In[61]:}
+
+
+\PYG{n}{stop\PYGZus{}words\PYGZus{}data\PYGZus{}for\PYGZus{}stats} \PYG{o}{=} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{DataFrame}\PYG{p}{(\PYGZob{}}\PYG{l+s+s2}{\PYGZdq{}Stop words\PYGZdq{}}\PYG{p}{:} \PYG{n}{stop\PYGZus{}words\PYGZus{}data}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}Tweet\PYGZdq{}}\PYG{p}{:} \PYG{n}{training\PYGZus{}data}\PYG{p}{\PYGZcb{})}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Top 5 tweets with most stop words}
+
+\PYG{c+c1}{\PYGZsh{} In[62]:}
+
+
+\PYG{n}{stop\PYGZus{}words\PYGZus{}data\PYGZus{}for\PYGZus{}stats}\PYG{o}{.}\PYG{n}{sort\PYGZus{}values}\PYG{p}{(}\PYG{n}{by}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}Stop words\PYGZdq{}}\PYG{p}{,} \PYG{n}{ascending}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{)}\PYG{o}{.}\PYG{n}{head}\PYG{p}{()}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Top 5 tweets with fewest stop words}
+
+\PYG{c+c1}{\PYGZsh{} In[63]:}
+
+
+\PYG{n}{stop\PYGZus{}words\PYGZus{}data\PYGZus{}for\PYGZus{}stats}\PYG{o}{.}\PYG{n}{sort\PYGZus{}values}\PYG{p}{(}\PYG{n}{by}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}Stop words\PYGZdq{}}\PYG{p}{,} \PYG{n}{ascending}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{)}\PYG{o}{.}\PYG{n}{head}\PYG{p}{()}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Tweets stop words statistics}
+
+\PYG{c+c1}{\PYGZsh{} In[64]:}
+
+
+\PYG{n}{stop\PYGZus{}words\PYGZus{}data\PYGZus{}for\PYGZus{}stats}\PYG{o}{.}\PYG{n}{describe}\PYG{p}{()}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Unique words}
+
+\PYG{c+c1}{\PYGZsh{} In[65]:}
+
+
+\PYG{n}{unique\PYGZus{}words\PYGZus{}data} \PYG{o}{=} \PYG{p}{[}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n+nb}{set}\PYG{p}{(}\PYG{n}{tokenizer}\PYG{o}{.}\PYG{n}{tokenize}\PYG{p}{(}\PYG{n}{tweet}\PYG{p}{)))} \PYG{k}{for} \PYG{n}{tweet} \PYG{o+ow}{in} \PYG{n}{training\PYGZus{}data}\PYG{p}{]}
+
+
+\PYG{c+c1}{\PYGZsh{} In[66]:}
+
+
+\PYG{n}{unique\PYGZus{}words\PYGZus{}data\PYGZus{}for\PYGZus{}stats} \PYG{o}{=} \PYG{n}{pd}\PYG{o}{.}\PYG{n}{DataFrame}\PYG{p}{(\PYGZob{}}\PYG{l+s+s2}{\PYGZdq{}Unique words\PYGZdq{}}\PYG{p}{:} \PYG{n}{unique\PYGZus{}words\PYGZus{}data}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}Tweet\PYGZdq{}}\PYG{p}{:} \PYG{n}{training\PYGZus{}data}\PYG{p}{\PYGZcb{})}
+
+
+\PYG{c+c1}{\PYGZsh{} In[67]:}
+
+
+\PYG{c+c1}{\PYGZsh{} unique\PYGZus{}words\PYGZus{}data\PYGZus{}for\PYGZus{}stats = unique\PYGZus{}words\PYGZus{}data\PYGZus{}for\PYGZus{}stats[unique\PYGZus{}words\PYGZus{}data\PYGZus{}for\PYGZus{}stats[\PYGZdq{}Unique words\PYGZdq{}] \PYGZgt{}= 2]}
+
+
+\PYG{c+c1}{\PYGZsh{} In[68]:}
+
+
+\PYG{n}{unique\PYGZus{}words\PYGZus{}data} \PYG{o}{=} \PYG{n}{unique\PYGZus{}words\PYGZus{}data\PYGZus{}for\PYGZus{}stats}\PYG{p}{[}\PYG{l+s+s2}{\PYGZdq{}Unique words\PYGZdq{}}\PYG{p}{]}\PYG{o}{.}\PYG{n}{tolist}\PYG{p}{()}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Top 5 tweets with most unique words}
+
+\PYG{c+c1}{\PYGZsh{} In[69]:}
+
+
+\PYG{n}{unique\PYGZus{}words\PYGZus{}data\PYGZus{}for\PYGZus{}stats}\PYG{o}{.}\PYG{n}{sort\PYGZus{}values}\PYG{p}{(}\PYG{n}{by}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}Unique words\PYGZdq{}}\PYG{p}{,} \PYG{n}{ascending}\PYG{o}{=}\PYG{n+nb+bp}{False}\PYG{p}{)}\PYG{o}{.}\PYG{n}{head}\PYG{p}{()}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Top 5 tweets with fewest unique words}
+
+\PYG{c+c1}{\PYGZsh{} In[70]:}
+
+
+\PYG{n}{unique\PYGZus{}words\PYGZus{}data\PYGZus{}for\PYGZus{}stats}\PYG{o}{.}\PYG{n}{sort\PYGZus{}values}\PYG{p}{(}\PYG{n}{by}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}Unique words\PYGZdq{}}\PYG{p}{,} \PYG{n}{ascending}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{)}\PYG{o}{.}\PYG{n}{head}\PYG{p}{()}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Tweets unique words statistics}
+
+\PYG{c+c1}{\PYGZsh{} In[71]:}
+
+
+\PYG{n}{unique\PYGZus{}words\PYGZus{}data\PYGZus{}for\PYGZus{}stats}\PYG{o}{.}\PYG{n}{describe}\PYG{p}{()}
+
+
+\PYG{c+c1}{\PYGZsh{} \PYGZsh{}\PYGZsh{}\PYGZsh{}\PYGZsh{} Plot them}
+
+\PYG{c+c1}{\PYGZsh{} In[72]:}
+
+
+\PYG{n}{length\PYGZus{}mean} \PYG{o}{=} \PYG{n}{length\PYGZus{}data\PYGZus{}for\PYGZus{}stats}\PYG{o}{.}\PYG{n}{describe}\PYG{p}{()}\PYG{o}{.}\PYG{n}{Length}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}
+\PYG{n}{length\PYGZus{}std} \PYG{o}{=} \PYG{n}{length\PYGZus{}data\PYGZus{}for\PYGZus{}stats}\PYG{o}{.}\PYG{n}{describe}\PYG{p}{()}\PYG{o}{.}\PYG{n}{Length}\PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{]}
+
+\PYG{n}{fig} \PYG{o}{=} \PYG{n}{plt}\PYG{o}{.}\PYG{n}{figure}\PYG{p}{(}\PYG{n}{figsize}\PYG{o}{=}\PYG{p}{(}\PYG{l+m+mi}{16}\PYG{p}{,} \PYG{l+m+mi}{9}\PYG{p}{))}
+\PYG{n}{ax} \PYG{o}{=} \PYG{n}{fig}\PYG{o}{.}\PYG{n}{add\PYGZus{}subplot}\PYG{p}{(}\PYG{l+m+mi}{111}\PYG{p}{)}
+
+\PYG{n}{n}\PYG{p}{,} \PYG{n}{bins}\PYG{p}{,} \PYG{n}{patches} \PYG{o}{=} \PYG{n}{ax}\PYG{o}{.}\PYG{n}{hist}\PYG{p}{(}\PYG{n}{length\PYGZus{}data}\PYG{p}{,} 
+                           \PYG{n}{bins}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}scott\PYGZdq{}}\PYG{p}{,} 
+                           \PYG{n}{edgecolor}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}black\PYGZdq{}}\PYG{p}{,} 
+                           \PYG{c+c1}{\PYGZsh{} density=True, }
+                           \PYG{n}{color}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}\PYGZsh{}12355b\PYGZdq{}}\PYG{p}{,} 
+                           \PYG{n}{alpha}\PYG{o}{=}\PYG{l+m+mf}{0.5}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} length\PYGZus{}line = scipy.stats.norm.pdf(bins, length\PYGZus{}mean, length\PYGZus{}std)}
+\PYG{c+c1}{\PYGZsh{} ax.plot(bins, length\PYGZus{}line, \PYGZdq{}\PYGZhy{}\PYGZhy{}\PYGZdq{}, linewidth=3, color=\PYGZdq{}\PYGZsh{}415d7b\PYGZdq{})}
+
+\PYG{n}{ax}\PYG{o}{.}\PYG{n}{set\PYGZus{}title}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Training Dataset Distribution of Tweet Lengths\PYGZdq{}}\PYG{p}{,} \PYG{n}{fontsize}\PYG{o}{=}\PYG{l+m+mi}{18}\PYG{p}{)}
+\PYG{n}{ax}\PYG{o}{.}\PYG{n}{set\PYGZus{}xlabel}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Tweet Length\PYGZdq{}}\PYG{p}{,} \PYG{n}{fontsize}\PYG{o}{=}\PYG{l+m+mi}{18}\PYG{p}{);}
+\PYG{n}{ax}\PYG{o}{.}\PYG{n}{set\PYGZus{}ylabel}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Number of Tweets with That Length\PYGZdq{}}\PYG{p}{,} \PYG{n}{fontsize}\PYG{o}{=}\PYG{l+m+mi}{18}\PYG{p}{);}
+
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{show}\PYG{p}{()}
+
+
+\PYG{c+c1}{\PYGZsh{} In[73]:}
+
+
+\PYG{n}{punctuation\PYGZus{}mean} \PYG{o}{=} \PYG{n}{punctuation\PYGZus{}data\PYGZus{}for\PYGZus{}stats}\PYG{o}{.}\PYG{n}{describe}\PYG{p}{()}\PYG{o}{.}\PYG{n}{Punctuation}\PYG{p}{[}\PYG{l+m+mi}{1}\PYG{p}{]}
+\PYG{n}{punctuation\PYGZus{}std} \PYG{o}{=} \PYG{n}{punctuation\PYGZus{}data\PYGZus{}for\PYGZus{}stats}\PYG{o}{.}\PYG{n}{describe}\PYG{p}{()}\PYG{o}{.}\PYG{n}{Punctuation}\PYG{p}{[}\PYG{l+m+mi}{2}\PYG{p}{]}
+
+\PYG{n}{fig} \PYG{o}{=} \PYG{n}{plt}\PYG{o}{.}\PYG{n}{figure}\PYG{p}{(}\PYG{n}{figsize}\PYG{o}{=}\PYG{p}{(}\PYG{l+m+mi}{16}\PYG{p}{,} \PYG{l+m+mi}{9}\PYG{p}{))}
+\PYG{n}{ax} \PYG{o}{=} \PYG{n}{fig}\PYG{o}{.}\PYG{n}{add\PYGZus{}subplot}\PYG{p}{(}\PYG{l+m+mi}{111}\PYG{p}{)}
+
+\PYG{n}{n}\PYG{p}{,} \PYG{n}{bins}\PYG{p}{,} \PYG{n}{patches} \PYG{o}{=} \PYG{n}{ax}\PYG{o}{.}\PYG{n}{hist}\PYG{p}{(}\PYG{n}{punctuation\PYGZus{}data}\PYG{p}{,} 
+                           \PYG{n}{bins}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}scott\PYGZdq{}}\PYG{p}{,}
+                           \PYG{n}{edgecolor}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}black\PYGZdq{}}\PYG{p}{,} 
+                           \PYG{c+c1}{\PYGZsh{} density=True, }
+                           \PYG{n}{color}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}\PYGZsh{}420039\PYGZdq{}}\PYG{p}{,}
+                           \PYG{n}{alpha}\PYG{o}{=}\PYG{l+m+mf}{0.5}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} punctution\PYGZus{}line = scipy.stats.norm.pdf(bins, punctuation\PYGZus{}mean, punctuation\PYGZus{}std)}
+\PYG{c+c1}{\PYGZsh{} ax.plot(bins, punctution\PYGZus{}line, \PYGZdq{}\PYGZhy{}\PYGZhy{}\PYGZdq{}, linewidth=3, color=\PYGZdq{}\PYGZsh{}673260\PYGZdq{})}
+
+\PYG{n}{ax}\PYG{o}{.}\PYG{n}{set\PYGZus{}title}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Training Dataset Distribution of Punctuation\PYGZdq{}}\PYG{p}{,} \PYG{n}{fontsize}\PYG{o}{=}\PYG{l+m+mi}{18}\PYG{p}{)}
+\PYG{n}{ax}\PYG{o}{.}\PYG{n}{set\PYGZus{}xlabel}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Punctuating Characters in Tweet\PYGZdq{}}\PYG{p}{,} \PYG{n}{fontsize}\PYG{o}{=}\PYG{l+m+mi}{18}\PYG{p}{)}
+\PYG{n}{ax}\PYG{o}{.}\PYG{n}{set\PYGZus{}ylabel}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Number of Tweets with That Number of Punctuating Characters\PYGZdq{}}\PYG{p}{,} \PYG{n}{fontsize}\PYG{o}{=}\PYG{l+m+mi}{18}\PYG{p}{)}
+
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{show}\PYG{p}{()}
+
+
+\PYG{c+c1}{\PYGZsh{} In[74]:}
+
+
+\PYG{n}{stop\PYGZus{}words\PYGZus{}mean} \PYG{o}{=} \PYG{n}{stop\PYGZus{}words\PYGZus{}data\PYGZus{}for\PYGZus{}stats}\PYG{o}{.}\PYG{n}{describe}\PYG{p}{()[}\PYG{l+s+s2}{\PYGZdq{}Stop words\PYGZdq{}}\PYG{p}{][}\PYG{l+m+mi}{1}\PYG{p}{]}
+\PYG{n}{stop\PYGZus{}words\PYGZus{}std} \PYG{o}{=} \PYG{n}{stop\PYGZus{}words\PYGZus{}data\PYGZus{}for\PYGZus{}stats}\PYG{o}{.}\PYG{n}{describe}\PYG{p}{()[}\PYG{l+s+s2}{\PYGZdq{}Stop words\PYGZdq{}}\PYG{p}{][}\PYG{l+m+mi}{2}\PYG{p}{]}
+
+\PYG{n}{fig} \PYG{o}{=} \PYG{n}{plt}\PYG{o}{.}\PYG{n}{figure}\PYG{p}{(}\PYG{n}{figsize}\PYG{o}{=}\PYG{p}{(}\PYG{l+m+mi}{16}\PYG{p}{,} \PYG{l+m+mi}{9}\PYG{p}{))}
+\PYG{n}{ax} \PYG{o}{=} \PYG{n}{fig}\PYG{o}{.}\PYG{n}{add\PYGZus{}subplot}\PYG{p}{(}\PYG{l+m+mi}{111}\PYG{p}{)}
+
+\PYG{n}{n}\PYG{p}{,} \PYG{n}{bins}\PYG{p}{,} \PYG{n}{patches} \PYG{o}{=} \PYG{n}{ax}\PYG{o}{.}\PYG{n}{hist}\PYG{p}{(}\PYG{n}{stop\PYGZus{}words\PYGZus{}data}\PYG{p}{,} 
+                           \PYG{n}{bins}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}scott\PYGZdq{}}\PYG{p}{,} 
+                           \PYG{n}{edgecolor}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}black\PYGZdq{}}\PYG{p}{,} 
+                           \PYG{c+c1}{\PYGZsh{} density=True, }
+                           \PYG{n}{color}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}\PYGZsh{}698f3f\PYGZdq{}}\PYG{p}{,}
+                           \PYG{n}{alpha}\PYG{o}{=}\PYG{l+m+mf}{0.5}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} stop\PYGZus{}words\PYGZus{}line = scipy.stats.norm.pdf(bins, stop\PYGZus{}words\PYGZus{}mean, stop\PYGZus{}words\PYGZus{}std)}
+\PYG{c+c1}{\PYGZsh{} ax.plot(bins, stop\PYGZus{}words\PYGZus{}line, \PYGZdq{}\PYGZhy{}\PYGZhy{}\PYGZdq{}, linewidth=3, color=\PYGZdq{}\PYGZsh{}87a565\PYGZdq{})}
+
+\PYG{n}{ax}\PYG{o}{.}\PYG{n}{set\PYGZus{}title}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Training Dataset Distribution of Stop Words\PYGZdq{}}\PYG{p}{,} \PYG{n}{fontsize}\PYG{o}{=}\PYG{l+m+mi}{18}\PYG{p}{)}
+\PYG{n}{ax}\PYG{o}{.}\PYG{n}{set\PYGZus{}xlabel}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Stop Words in Tweet\PYGZdq{}}\PYG{p}{,} \PYG{n}{fontsize}\PYG{o}{=}\PYG{l+m+mi}{18}\PYG{p}{)}
+\PYG{n}{ax}\PYG{o}{.}\PYG{n}{set\PYGZus{}ylabel}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Number of Tweets with That Number of Stop Words\PYGZdq{}}\PYG{p}{,} \PYG{n}{fontsize}\PYG{o}{=}\PYG{l+m+mi}{18}\PYG{p}{)}
+
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{show}\PYG{p}{()}
+
+
+\PYG{c+c1}{\PYGZsh{} In[75]:}
+
+
+\PYG{n}{unique\PYGZus{}words\PYGZus{}mean} \PYG{o}{=} \PYG{n}{unique\PYGZus{}words\PYGZus{}data\PYGZus{}for\PYGZus{}stats}\PYG{o}{.}\PYG{n}{describe}\PYG{p}{()[}\PYG{l+s+s2}{\PYGZdq{}Unique words\PYGZdq{}}\PYG{p}{][}\PYG{l+m+mi}{1}\PYG{p}{]}
+\PYG{n}{unique\PYGZus{}words\PYGZus{}std} \PYG{o}{=} \PYG{n}{unique\PYGZus{}words\PYGZus{}data\PYGZus{}for\PYGZus{}stats}\PYG{o}{.}\PYG{n}{describe}\PYG{p}{()[}\PYG{l+s+s2}{\PYGZdq{}Unique words\PYGZdq{}}\PYG{p}{][}\PYG{l+m+mi}{2}\PYG{p}{]}
+
+\PYG{n}{fig} \PYG{o}{=} \PYG{n}{plt}\PYG{o}{.}\PYG{n}{figure}\PYG{p}{(}\PYG{n}{figsize}\PYG{o}{=}\PYG{p}{(}\PYG{l+m+mi}{16}\PYG{p}{,} \PYG{l+m+mi}{9}\PYG{p}{))}
+\PYG{n}{ax} \PYG{o}{=} \PYG{n}{fig}\PYG{o}{.}\PYG{n}{add\PYGZus{}subplot}\PYG{p}{(}\PYG{l+m+mi}{111}\PYG{p}{)}
+
+\PYG{n}{n}\PYG{p}{,} \PYG{n}{bins}\PYG{p}{,} \PYG{n}{patches} \PYG{o}{=} \PYG{n}{ax}\PYG{o}{.}\PYG{n}{hist}\PYG{p}{(}\PYG{n}{unique\PYGZus{}words\PYGZus{}data}\PYG{p}{,} 
+                           \PYG{n}{bins}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}scott\PYGZdq{}}\PYG{p}{,} 
+                           \PYG{n}{edgecolor}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}black\PYGZdq{}}\PYG{p}{,} 
+                           \PYG{c+c1}{\PYGZsh{} density=True, }
+                           \PYG{n}{color}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}\PYGZsh{}ca2e55\PYGZdq{}}\PYG{p}{,}
+                           \PYG{n}{alpha}\PYG{o}{=}\PYG{l+m+mf}{0.5}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} unique\PYGZus{}words\PYGZus{}line = scipy.stats.norm.pdf(bins, unique\PYGZus{}words\PYGZus{}mean, unique\PYGZus{}words\PYGZus{}std)}
+\PYG{c+c1}{\PYGZsh{} ax.plot(bins, unique\PYGZus{}words\PYGZus{}line, \PYGZdq{}\PYGZhy{}\PYGZhy{}\PYGZdq{}, linewidth=3, color=\PYGZdq{}\PYGZsh{}d45776\PYGZdq{})}
+
+\PYG{n}{ax}\PYG{o}{.}\PYG{n}{set\PYGZus{}title}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Training Dataset Distribution of Unique Words\PYGZdq{}}\PYG{p}{,} \PYG{n}{fontsize}\PYG{o}{=}\PYG{l+m+mi}{18}\PYG{p}{)}
+\PYG{n}{ax}\PYG{o}{.}\PYG{n}{set\PYGZus{}xlabel}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Unique Words in Tweet\PYGZdq{}}\PYG{p}{,} \PYG{n}{fontsize}\PYG{o}{=}\PYG{l+m+mi}{18}\PYG{p}{)}
+\PYG{n}{ax}\PYG{o}{.}\PYG{n}{set\PYGZus{}ylabel}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Number of Tweets with That Number of Unique Words\PYGZdq{}}\PYG{p}{,} \PYG{n}{fontsize}\PYG{o}{=}\PYG{l+m+mi}{18}\PYG{p}{)}
+
+\PYG{n}{plt}\PYG{o}{.}\PYG{n}{show}\PYG{p}{()}
+\end{Verbatim}

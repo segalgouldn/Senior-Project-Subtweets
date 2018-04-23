@@ -1,13 +1,10 @@
 
-# coding: utf-8
+### Script for running a Twitter bot that interacts with subtweets
 
-# ### Script for running a Twitter bot that interacts with subtweets
-
-# #### Import some libraries
-
-# In[1]:
+#### Import some libraries
 
 
+```python
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.feature_extraction import text
@@ -30,95 +27,84 @@ import tweepy
 import nltk
 import json
 import re
+```
+
+#### Prepare the probability threshold for interacting with a potential subtweet and the duration for which the bot should run
 
 
-# #### Prepare the probability threshold for interacting with a potential subtweet and the duration for which the bot should run
-
-# In[2]:
-
-
+```python
 THRESHOLD = 0.75 # 75% positives and higher, only
 DURATION = 60*15 # 15 minutes
+```
+
+#### Set up regular expressions for genericizing extra features
 
 
-# #### Set up regular expressions for genericizing extra features
-
-# In[3]:
-
-
+```python
 hashtags_pattern = re.compile(r'(\#[a-zA-Z0-9]+)')
+```
 
 
-# In[4]:
-
-
+```python
 urls_pattern = re.compile(r'(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?\xab\xbb\u201c\u201d\u2018\u2019]))')
+```
 
 
-# In[5]:
-
-
+```python
 at_mentions_pattern = re.compile(r'(?<=^|(?<=[^a-zA-Z0-9-\.]))@([A-Za-z0-9_]+)')
+```
+
+#### Load the classifier pipeline which was previously saved
 
 
-# #### Load the classifier pipeline which was previously saved
-
-# In[6]:
-
-
+```python
 sentiment_pipeline = joblib.load("../data/other_data/subtweets_classifier.pkl")
+```
+
+#### Load the Twitter API credentials
 
 
-# #### Load the Twitter API credentials
-
-# In[7]:
-
-
+```python
 consumer_key, consumer_secret, access_token, access_token_secret = open("../../credentials.txt").read().split("\n")
+```
+
+#### Connect to the API
 
 
-# #### Connect to the API
-
-# In[8]:
-
-
+```python
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(access_token, access_token_secret)
 api = tweepy.API(auth, retry_delay=1, timeout=120, # 2 minutes
                  compression=True,
                  wait_on_rate_limit=True, wait_on_rate_limit_notify=True)
+```
+
+#### Create lists to fill with tweets while the bot is streaming
 
 
-# #### Create lists to fill with tweets while the bot is streaming
-
-# In[9]:
-
-
+```python
 subtweets_live_list = []
 non_subtweets_live_list = []
+```
+
+#### Use pyenchant to check if words are English
 
 
-# #### Use pyenchant to check if words are English
-
-# In[10]:
-
-
+```python
 english_dict = enchant.Dict("en_US")
+```
+
+#### Use NLTK for tokenizing
 
 
-# #### Use NLTK for tokenizing
-
-# In[11]:
-
-
+```python
 tokenizer = nltk.casual.TweetTokenizer(preserve_case=False, reduce_len=True)
+```
+
+#### Create a custom StreamListener class for use with Tweepy
 
 
-# #### Create a custom StreamListener class for use with Tweepy
-
-# In[12]:
-
-
+```python
 class StreamListener(tweepy.StreamListener):
     def on_status(self, status):
         choices = ["retweet", "like", "retweet and like", "reply"]
@@ -229,13 +215,12 @@ class StreamListener(tweepy.StreamListener):
             non_subtweets_df.to_csv("../data/data_from_testing/live_downloaded_data/non_subtweets_live_data.csv")
             
             return row
+```
+
+#### Create a function for downloading IDs if users I follow who also follow me
 
 
-# #### Create a function for downloading IDs if users I follow who also follow me
-
-# In[13]:
-
-
+```python
 def get_mutuals():
     my_followers = [str(user_id) for ids_list in 
                     tweepy.Cursor(api.followers_ids, 
@@ -259,13 +244,12 @@ def get_mutuals():
         json.dump(my_mutuals, outfile, sort_keys=True, indent=4)
     
     return my_mutuals
+```
+
+#### Create a function for downloading IDs of users who follow my mutuals who are also followed by my mutuals
 
 
-# #### Create a function for downloading IDs of users who follow my mutuals who are also followed by my mutuals
-
-# In[14]:
-
-
+```python
 def get_mutuals_and_mutuals_mutuals_ids(mutuals_threshold=250):
     my_mutuals = get_mutuals()
     my_mutuals_mutuals = my_mutuals[:]
@@ -315,42 +299,61 @@ def get_mutuals_and_mutuals_mutuals_ids(mutuals_threshold=250):
     with open("../data/other_data/NoahSegalGould_Mutuals_and_Mutuals_Mutuals_ids.json", "w") as outfile:
         json.dump(my_mutuals_mutuals, outfile, indent=4)
     return my_mutuals_mutuals
+```
 
 
-# In[15]:
-
-
+```python
 # %%time
 # my_mutuals_mutuals = get_mutuals_and_mutuals_mutuals_ids()
+```
+
+#### Load the IDs JSON
 
 
-# #### Load the IDs JSON
-
-# In[16]:
-
-
+```python
 my_mutuals_mutuals = json.load(open("../data/other_data/NoahSegalGould_Mutuals_and_Mutuals_Mutuals_ids.json"))
+```
 
 
-# In[17]:
-
-
+```python
 print("Total number of my mutuals and my mutuals' mutuals: {}".format(len(my_mutuals_mutuals)))
+```
+
+    Total number of my mutuals and my mutuals' mutuals: 4218
 
 
-# #### Begin streaming
-
-# In[18]:
+#### Begin streaming
 
 
+```python
 stream_listener = StreamListener()
 stream = tweepy.Stream(auth=api.auth, listener=stream_listener, tweet_mode="extended")
+```
 
 
-# In[19]:
-
-
+```python
+%%time
+# stream.filter(locations=[-73.920176, 42.009637, -73.899739, 42.033421], 
+# stall_warnings=True, languages=["en"], async=True)
 stream.filter(follow=my_mutuals_mutuals, stall_warnings=True, languages=["en"], async=True)
 print("Streaming has started.")
 sleep(DURATION)
 stream.disconnect()
+```
+
+    Streaming has started.
+    Retweet!
+    Subtweet from @fka_zigs (Probability of 75.831%):
+    Time: 2018-04-23 02:28:26
+    Tweet: my mom thinks everyone on the internet is a catfish
+    Total tweets acquired: 872
+    
+    Retweet!
+    Subtweet from @JillMurphy0421 (Probability of 77.362%):
+    Time: 2018-04-23 02:29:35
+    Tweet: get you a roommate who wallows in mutual lonesome with you like mine does
+    Total tweets acquired: 951
+    
+    CPU times: user 22.1 s, sys: 3.57 s, total: 25.7 s
+    Wall time: 15min
+

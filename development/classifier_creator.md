@@ -15,19 +15,19 @@
 
 
 ```python
-from sklearn.feature_extraction import text
-from sklearn.feature_extraction.text import TfidfVectorizer
-from sklearn.naive_bayes import MultinomialNB
-from sklearn.pipeline import Pipeline
-from sklearn.model_selection import KFold
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.feature_extraction import text
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.model_selection import KFold
+from sklearn.pipeline import Pipeline
 from sklearn.externals import joblib
-from nltk.corpus import stopwords
-from pprint import pprint
-from random import choice, sample
-from glob import glob
 from os.path import basename, splitext
+from random import choice, sample
+from nltk.corpus import stopwords
 from string import punctuation
+from pprint import pprint
+from glob import glob
 
 import matplotlib.pyplot as plt
 import pandas as pd
@@ -135,7 +135,7 @@ print(choice(subtweets_data))
 ```
 
     Subtweets dataset example:
-    This is a pivotal moment to see if I am an adult or still a petty teenager and I'm leaning towards adult
+    This little girls to weird for me pure retard
 
 
 
@@ -145,7 +145,11 @@ print(choice(non_subtweets_data))
 ```
 
     Non-subtweets dataset example:
-    This is DeRozan's best game in a while.
+    TESTED: "The Golf Infomercial" Wedge Test
+    
+    Do golf infomercial wedges really work?
+    
+    VIEW RESULTS: ➋ ➋
 
 
 #### Find the length of the smaller dataset
@@ -258,6 +262,8 @@ def confusion_matrices(training_data, num_folds=10):
         
         print(("Test Data Null Accuracy: {:.4f}\n"
                .format(max(pd.value_counts(pd.Series(class_test)))/float(len(class_test)))))
+        print(("Test Data Accuracy: {:.4f}\n"
+               .format(accuracy_score(class_test, predictions_test))))
         print("="*53)
         
         print("Train Data Iteration {}:".format(i+1))
@@ -268,6 +274,8 @@ def confusion_matrices(training_data, num_folds=10):
         
         print(("Train Data Null Accuracy: {:.4f}\n"
                .format(max(pd.value_counts(pd.Series(class_train)))/float(len(class_train)))))
+        print(("Train Data Accuracy: {:.4f}\n"
+               .format(accuracy_score(class_train, predictions_train))))
         print("="*53)
         
     def reports_mean(reports):
@@ -320,6 +328,8 @@ cnf_matrix_train = cnf_matrices["Train"]
     
     Test Data Null Accuracy: 0.5057
     
+    Test Data Accuracy: 0.7015
+    
     =====================================================
     Train Data Iteration 1:
                   precision    recall  f1-score   support
@@ -330,6 +340,8 @@ cnf_matrix_train = cnf_matrices["Train"]
      avg / total     0.9857    0.9857    0.9857     14106
     
     Train Data Null Accuracy: 0.5006
+    
+    Train Data Accuracy: 0.9857
     
     =====================================================
     Test Data Iteration 2:
@@ -342,6 +354,8 @@ cnf_matrix_train = cnf_matrices["Train"]
     
     Test Data Null Accuracy: 0.5032
     
+    Test Data Accuracy: 0.6747
+    
     =====================================================
     Train Data Iteration 2:
                   precision    recall  f1-score   support
@@ -352,6 +366,8 @@ cnf_matrix_train = cnf_matrices["Train"]
      avg / total     0.9848    0.9848    0.9848     14106
     
     Train Data Null Accuracy: 0.5004
+    
+    Train Data Accuracy: 0.9848
     
     =====================================================
     Test Data Iteration 3:
@@ -364,6 +380,8 @@ cnf_matrix_train = cnf_matrices["Train"]
     
     Test Data Null Accuracy: 0.5096
     
+    Test Data Accuracy: 0.7034
+    
     =====================================================
     Train Data Iteration 3:
                   precision    recall  f1-score   support
@@ -374,6 +392,8 @@ cnf_matrix_train = cnf_matrices["Train"]
      avg / total     0.9849    0.9849    0.9849     14106
     
     Train Data Null Accuracy: 0.5011
+    
+    Train Data Accuracy: 0.9849
     
     =====================================================
     Test Data Iteration 4:
@@ -386,6 +406,8 @@ cnf_matrix_train = cnf_matrices["Train"]
     
     Test Data Null Accuracy: 0.5108
     
+    Test Data Accuracy: 0.6945
+    
     =====================================================
     Train Data Iteration 4:
                   precision    recall  f1-score   support
@@ -396,6 +418,8 @@ cnf_matrix_train = cnf_matrices["Train"]
      avg / total     0.9856    0.9855    0.9855     14106
     
     Train Data Null Accuracy: 0.5012
+    
+    Train Data Accuracy: 0.9855
     
     =====================================================
     Test Data Iteration 5:
@@ -408,6 +432,8 @@ cnf_matrix_train = cnf_matrices["Train"]
     
     Test Data Null Accuracy: 0.5029
     
+    Test Data Accuracy: 0.6943
+    
     =====================================================
     Train Data Iteration 5:
                   precision    recall  f1-score   support
@@ -418,6 +444,8 @@ cnf_matrix_train = cnf_matrices["Train"]
      avg / total     0.9850    0.9850    0.9850     14107
     
     Train Data Null Accuracy: 0.5003
+    
+    Train Data Accuracy: 0.9850
     
     =====================================================
     Test Data Iteration 6:
@@ -430,6 +458,8 @@ cnf_matrix_train = cnf_matrices["Train"]
     
     Test Data Null Accuracy: 0.5163
     
+    Test Data Accuracy: 0.6873
+    
     =====================================================
     Train Data Iteration 6:
                   precision    recall  f1-score   support
@@ -440,6 +470,8 @@ cnf_matrix_train = cnf_matrices["Train"]
      avg / total     0.9860    0.9860    0.9860     14107
     
     Train Data Null Accuracy: 0.5018
+    
+    Train Data Accuracy: 0.9860
     
     =====================================================
     Test Data Iteration 7:
@@ -452,6 +484,8 @@ cnf_matrix_train = cnf_matrices["Train"]
     
     Test Data Null Accuracy: 0.5207
     
+    Test Data Accuracy: 0.6930
+    
     =====================================================
     Train Data Iteration 7:
                   precision    recall  f1-score   support
@@ -462,6 +496,8 @@ cnf_matrix_train = cnf_matrices["Train"]
      avg / total     0.9855    0.9855    0.9855     14107
     
     Train Data Null Accuracy: 0.5023
+    
+    Train Data Accuracy: 0.9855
     
     =====================================================
     Test Data Iteration 8:
@@ -474,6 +510,8 @@ cnf_matrix_train = cnf_matrices["Train"]
     
     Test Data Null Accuracy: 0.5182
     
+    Test Data Accuracy: 0.6943
+    
     =====================================================
     Train Data Iteration 8:
                   precision    recall  f1-score   support
@@ -484,6 +522,8 @@ cnf_matrix_train = cnf_matrices["Train"]
      avg / total     0.9852    0.9852    0.9852     14107
     
     Train Data Null Accuracy: 0.5020
+    
+    Train Data Accuracy: 0.9852
     
     =====================================================
     Test Data Iteration 9:
@@ -496,6 +536,8 @@ cnf_matrix_train = cnf_matrices["Train"]
     
     Test Data Null Accuracy: 0.5290
     
+    Test Data Accuracy: 0.6867
+    
     =====================================================
     Train Data Iteration 9:
                   precision    recall  f1-score   support
@@ -506,6 +548,8 @@ cnf_matrix_train = cnf_matrices["Train"]
      avg / total     0.9860    0.9859    0.9859     14107
     
     Train Data Null Accuracy: 0.5032
+    
+    Train Data Accuracy: 0.9859
     
     =====================================================
     Test Data Iteration 10:
@@ -518,6 +562,8 @@ cnf_matrix_train = cnf_matrices["Train"]
     
     Test Data Null Accuracy: 0.5175
     
+    Test Data Accuracy: 0.7090
+    
     =====================================================
     Train Data Iteration 10:
                   precision    recall  f1-score   support
@@ -528,6 +574,8 @@ cnf_matrix_train = cnf_matrices["Train"]
      avg / total     0.9859    0.9859    0.9859     14107
     
     Train Data Null Accuracy: 0.5019
+    
+    Train Data Accuracy: 0.9859
     
     =====================================================
     Test Data Averages Across All Folds:
@@ -548,8 +596,8 @@ cnf_matrix_train = cnf_matrices["Train"]
      avg / total     0.9855    0.9854    0.9854      14106
     
     =====================================================
-    CPU times: user 1min 8s, sys: 1.59 s, total: 1min 9s
-    Wall time: 1min 13s
+    CPU times: user 1min 8s, sys: 1.76 s, total: 1min 10s
+    Wall time: 1min 12s
 
 
 #### See the most informative features
@@ -580,8 +628,8 @@ def most_informative_features(pipeline, n=10000):
 most_informative_features_all = most_informative_features(sentiment_pipeline)
 ```
 
-    CPU times: user 1.3 s, sys: 27.8 ms, total: 1.33 s
-    Wall time: 1.32 s
+    CPU times: user 1.34 s, sys: 39.3 ms, total: 1.38 s
+    Wall time: 1.38 s
 
 
 
@@ -846,11 +894,11 @@ plt.show()
 ```
 
 
-![png](output_52_0.png)
+![png](classifier_creator_files/classifier_creator_52_0.png)
 
 
 
-![png](output_52_1.png)
+![png](classifier_creator_files/classifier_creator_52_1.png)
 
 
 #### Update matplotlib style
@@ -916,8 +964,8 @@ filenames = glob("../data/data_for_testing/friends_data/*.csv")
 dataframes = process_tweets_for_testing(filenames)
 ```
 
-    CPU times: user 8.76 s, sys: 122 ms, total: 8.88 s
-    Wall time: 9.07 s
+    CPU times: user 9.09 s, sys: 153 ms, total: 9.24 s
+    Wall time: 9.52 s
 
 
 #### Show a random table
@@ -947,49 +995,49 @@ dataframes[chosen_username]["all"].sort_values(by="SubtweetProbability", ascendi
   </thead>
   <tbody>
     <tr>
-      <th>462</th>
-      <td>ppl saying zionist shit on the internet really fucks w my high</td>
-      <td>2017-07-17 02:27:07</td>
-      <td>11</td>
+      <th>2092</th>
+      <td>I hate when people overuse emojis</td>
+      <td>2015-06-26 13:01:35</td>
       <td>0</td>
-      <td>886834632125288448</td>
-      <td>0.8244</td>
-    </tr>
-    <tr>
-      <th>15</th>
-      <td>i hate seeing shitty straight people yelling at their kids in public like why did you breed</td>
-      <td>2018-03-21 12:49:00</td>
-      <td>24</td>
-      <td>3</td>
-      <td>976500935437496320</td>
-      <td>0.8140</td>
-    </tr>
-    <tr>
-      <th>392</th>
-      <td>some1 replied to my tweet about cis ppl making xcuses 4 not dating trans ppl w "bc they have a fucking cock"</td>
-      <td>2017-08-01 19:08:46</td>
-      <td>10</td>
       <td>0</td>
-      <td>892522524361322496</td>
-      <td>0.8044</td>
+      <td>614478624197091328</td>
+      <td>0.8579</td>
     </tr>
     <tr>
-      <th>563</th>
-      <td>cw my shit mental health: u know shit is f'd up when ur lookin @ a meme abt dying of old age and yr like "this meme is actually optimistic"</td>
-      <td>2017-06-20 22:12:12</td>
-      <td>2</td>
+      <th>2137</th>
+      <td>Also you don't need to resort to social media 24/7 to complain about your very privileged life ¯\_(ツ)_/¯</td>
+      <td>2015-06-15 17:24:46</td>
       <td>1</td>
-      <td>877348396029358080</td>
-      <td>0.7965</td>
+      <td>0</td>
+      <td>610558590278070272</td>
+      <td>0.8443</td>
     </tr>
     <tr>
-      <th>477</th>
-      <td>I FUCKING LOVE QUEER PEOPLE</td>
-      <td>2017-07-09 21:20:04</td>
-      <td>19</td>
+      <th>2151</th>
+      <td>When I try to be supportive and caring I get ignored and then I'm told I'm not being supportive or caring ¯\_(ツ)_/¯</td>
+      <td>2015-06-13 08:44:07</td>
+      <td>0</td>
+      <td>0</td>
+      <td>609702789896372224</td>
+      <td>0.8366</td>
+    </tr>
+    <tr>
+      <th>2134</th>
+      <td>What he doesn't know (unless he stalks my twitter which I know he does) is that I have fake accounts following all his social media</td>
+      <td>2015-06-15 17:26:41</td>
+      <td>0</td>
+      <td>0</td>
+      <td>610559074820861953</td>
+      <td>0.8177</td>
+    </tr>
+    <tr>
+      <th>1510</th>
+      <td>If you don't have tweet notifications turned on for me are we really friends</td>
+      <td>2016-07-14 14:21:21</td>
       <td>1</td>
-      <td>884220643226644480</td>
-      <td>0.7938</td>
+      <td>0</td>
+      <td>753655639465922560</td>
+      <td>0.8076</td>
     </tr>
   </tbody>
 </table>
@@ -1218,7 +1266,7 @@ plt.show()
 ```
 
 
-![png](output_68_0.png)
+![png](classifier_creator_files/classifier_creator_68_0.png)
 
 
 #### Plot a histogram with all of them
@@ -1324,7 +1372,7 @@ plt.show()
 
 
 
-![png](output_74_1.png)
+![png](classifier_creator_files/classifier_creator_74_1.png)
 
 
 #### Statisitics on training data
@@ -2037,7 +2085,7 @@ plt.show()
 ```
 
 
-![png](output_118_0.png)
+![png](classifier_creator_files/classifier_creator_118_0.png)
 
 
 
@@ -2066,7 +2114,7 @@ plt.show()
 ```
 
 
-![png](output_119_0.png)
+![png](classifier_creator_files/classifier_creator_119_0.png)
 
 
 
@@ -2095,7 +2143,7 @@ plt.show()
 ```
 
 
-![png](output_120_0.png)
+![png](classifier_creator_files/classifier_creator_120_0.png)
 
 
 
@@ -2124,5 +2172,5 @@ plt.show()
 ```
 
 
-![png](output_121_0.png)
+![png](classifier_creator_files/classifier_creator_121_0.png)
 

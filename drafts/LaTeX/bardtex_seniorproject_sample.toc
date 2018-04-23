@@ -25,4 +25,4 @@
 \contentsline {section}{\numberline {4.2}Summary of Project Achievements}{11}{section.4.2}
 \contentsline {section}{\numberline {4.3}Future Work \& Considerations}{11}{section.4.3}
 \contentsline {chapter}{Bibliography}{13}{chapter*.5}
-\contentsline {chapter}{\numberline {A}Classifier Creator iPython Notebook}{15}{Appendix.1.A}
+\contentsline {chapter}{\numberline {A}Classifier Creator Program}{15}{Appendix.1.A}
