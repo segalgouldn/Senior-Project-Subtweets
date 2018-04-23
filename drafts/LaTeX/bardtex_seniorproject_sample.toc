@@ -20,10 +20,10 @@
 \contentsline {section}{\numberline {3.2}Confusion Matrices}{9}{section.3.2}
 \contentsline {section}{\numberline {3.3}Most Informative Features}{9}{section.3.3}
 \contentsline {section}{\numberline {3.4}Statistical Analysis}{9}{section.3.4}
+\contentsline {section}{\numberline {3.5}The Twitter Bot}{9}{section.3.5}
 \contentsline {chapter}{\numberline {4}Conclusion}{11}{chapter.4}
-\contentsline {section}{\numberline {4.1}The Twitter Bot}{11}{section.4.1}
-\contentsline {section}{\numberline {4.2}Summary of Project Achievements}{11}{section.4.2}
-\contentsline {section}{\numberline {4.3}Future Work \& Considerations}{11}{section.4.3}
+\contentsline {section}{\numberline {4.1}Summary of Project Achievements}{11}{section.4.1}
+\contentsline {section}{\numberline {4.2}Future Work \& Considerations}{11}{section.4.2}
 \contentsline {chapter}{Bibliography}{13}{chapter*.5}
 \contentsline {chapter}{\numberline {A}Program for Acquiring Subtweets for Training}{15}{Appendix.1.A}
 \contentsline {chapter}{\numberline {B}Program for Acquiring Non-Subtweets for Training}{19}{Appendix.1.B}
