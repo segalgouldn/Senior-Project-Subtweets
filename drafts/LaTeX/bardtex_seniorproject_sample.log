@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  22 APR 2018 23:12
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  22 APR 2018 23:35
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -297,35 +297,52 @@ Package: appendix 2009/09/02 v1.2b extra appendix facilities
 \c@@ppsavesec=\count116
 \c@@ppsaveapp=\count117
 )
-(./bardtex.sty
-BardT\kern -.1667em\lower .5ex\hbox {E}\kern -.125emX\spacefactor \@m {}\ Style
- file "bardtex" v. 1.1 released June 2016
+(/usr/local/texlive/2017/texmf-dist/tex/latex/pdfpages/pdfpages.sty
+Package: pdfpages 2017/01/14 v0.5h Insert pages of external PDF documents (AM)
+
 (/usr/local/texlive/2017/texmf-dist/tex/latex/base/ifthen.sty
 Package: ifthen 2014/09/29 v1.1c Standard LaTeX ifthen package (DPC)
 )
-\c@ffigure=\count118
-\titlefontsize=\skip50
-\namefontsize=\skip51
-\advfontsize=\skip52
-\progdatefontsize=\skip53
-\boxfontsize=\skip54
-\boxheadingfontsize=\skip55
-\c@countroman=\count119
-\postertopwidthfact=\skip56
-
 (/usr/local/texlive/2017/texmf-dist/tex/latex/tools/calc.sty
 Package: calc 2014/10/28 v4.3 Infix arithmetic (KKT,FJ)
-\calc@Acount=\count120
-\calc@Bcount=\count121
+\calc@Acount=\count118
+\calc@Bcount=\count119
 \calc@Adimen=\dimen119
 \calc@Bdimen=\dimen120
-\calc@Askip=\skip57
-\calc@Bskip=\skip58
+\calc@Askip=\skip50
+\calc@Bskip=\skip51
 LaTeX Info: Redefining \setlength on input line 80.
 LaTeX Info: Redefining \addtolength on input line 81.
-\calc@Ccount=\count122
-\calc@Cskip=\skip59
+\calc@Ccount=\count120
+\calc@Cskip=\skip52
 )
+(/usr/local/texlive/2017/texmf-dist/tex/latex/eso-pic/eso-pic.sty
+Package: eso-pic 2015/07/21 v2.0g eso-pic (RN)
+)
+\AM@pagewidth=\dimen121
+\AM@pageheight=\dimen122
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/pdfpages/pppdftex.def
+File: pppdftex.def 2017/01/14 v0.5h Pdfpages driver for pdfTeX (AM)
+)
+\AM@pagebox=\box28
+\AM@global@opts=\toks31
+\AM@toc@title=\toks32
+\c@AM@survey=\count121
+\AM@templatesizebox=\box29
+)
+(./bardtex.sty
+BardT\kern -.1667em\lower .5ex\hbox {E}\kern -.125emX\spacefactor \@m {}\ Style
+ file "bardtex" v. 1.1 released June 2016
+\c@ffigure=\count122
+\titlefontsize=\skip53
+\namefontsize=\skip54
+\advfontsize=\skip55
+\progdatefontsize=\skip56
+\boxfontsize=\skip57
+\boxheadingfontsize=\skip58
+\c@countroman=\count123
+\postertopwidthfact=\skip59
 \smallsize=\skip60
 \bigsize=\skip61
 \ssize=\skip62
@@ -335,59 +352,58 @@ LaTeX Info: Redefining \addtolength on input line 81.
 \prospinfofontsize=\skip66
 \prosptextfontsize=\skip67
 \prospheadfontsize=\skip68
-)
-(/usr/local/texlive/2017/texmf-dist/tex/latex/geometry/geometry.sty
+) (/usr/local/texlive/2017/texmf-dist/tex/latex/geometry/geometry.sty
 Package: geometry 2010/09/12 v5.6 Page Geometry
-\Gm@cnth=\count123
-\Gm@cntv=\count124
-\c@Gm@tempcnt=\count125
-\Gm@bindingoffset=\dimen121
-\Gm@wd@mp=\dimen122
-\Gm@odd@mp=\dimen123
-\Gm@even@mp=\dimen124
-\Gm@layoutwidth=\dimen125
-\Gm@layoutheight=\dimen126
-\Gm@layouthoffset=\dimen127
-\Gm@layoutvoffset=\dimen128
-\Gm@dimlist=\toks31
+\Gm@cnth=\count124
+\Gm@cntv=\count125
+\c@Gm@tempcnt=\count126
+\Gm@bindingoffset=\dimen123
+\Gm@wd@mp=\dimen124
+\Gm@odd@mp=\dimen125
+\Gm@even@mp=\dimen126
+\Gm@layoutwidth=\dimen127
+\Gm@layoutheight=\dimen128
+\Gm@layouthoffset=\dimen129
+\Gm@layoutvoffset=\dimen130
+\Gm@dimlist=\toks33
 )
-\w@dth=\dimen129
-\c@theorem=\count126
-\c@exercise=\count127
-\c@problemm=\count128
-\c@exercisee=\count129
+\w@dth=\dimen131
+\c@theorem=\count127
+\c@exercise=\count128
+\c@problemm=\count129
+\c@exercisee=\count130
 
 (./bardtex_seniorproject_sample.aux)
 \openout1 = `bardtex_seniorproject_sample.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 14.
-LaTeX Font Info:    ... okay on input line 14.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 16.
+LaTeX Font Info:    ... okay on input line 16.
 
 (/usr/local/texlive/2017/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count130
-\scratchdimen=\dimen130
-\scratchbox=\box28
-\nofMPsegments=\count131
-\nofMParguments=\count132
-\everyMPshowfont=\toks32
-\MPscratchCnt=\count133
-\MPscratchDim=\dimen131
-\MPnumerator=\count134
-\makeMPintoPDFobject=\count135
-\everyMPtoPDFconversion=\toks33
+\scratchcounter=\count131
+\scratchdimen=\dimen132
+\scratchbox=\box30
+\nofMPsegments=\count132
+\nofMParguments=\count133
+\everyMPshowfont=\toks34
+\MPscratchCnt=\count134
+\MPscratchDim=\dimen133
+\MPnumerator=\count135
+\makeMPintoPDFobject=\count136
+\everyMPtoPDFconversion=\toks35
 ) (/usr/local/texlive/2017/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
 
@@ -405,8 +421,8 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-\AtBeginShipoutBox=\box29
-Package hyperref Info: Link coloring OFF on input line 14.
+\AtBeginShipoutBox=\box31
+Package hyperref Info: Link coloring OFF on input line 16.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
@@ -414,17 +430,25 @@ Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
 (/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
 Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
-\c@section@level=\count136
+\c@section@level=\count137
 )
-LaTeX Info: Redefining \ref on input line 14.
-LaTeX Info: Redefining \pageref on input line 14.
-LaTeX Info: Redefining \nameref on input line 14.
+LaTeX Info: Redefining \ref on input line 16.
+LaTeX Info: Redefining \pageref on input line 16.
+LaTeX Info: Redefining \nameref on input line 16.
 
 (./bardtex_seniorproject_sample.out) (./bardtex_seniorproject_sample.out)
 \@outlinefile=\write3
 \openout3 = `bardtex_seniorproject_sample.out'.
 
 
+(/usr/local/texlive/2017/texmf-dist/tex/latex/oberdiek/pdflscape.sty
+Package: pdflscape 2016/05/14 v0.11 Display of landscape pages in PDF (HO)
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/graphics/lscape.sty
+Package: lscape 2000/10/22 v3.01 Landscape Pages (DPC)
+)
+Package pdflscape Info: Auto-detected driver: pdftex on input line 81.
+)
 *geometry* driver: auto-detecting
 *geometry* detected driver: pdftex
 *geometry* verbose mode - [ preamble ] result:
@@ -511,13 +535,13 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 ]
  3.
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 116.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 118.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/base/omscmr.fd
 File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 116.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 118.
 
 Underfull \vbox (badness 3884) has occurred while \output is active []
 
@@ -530,77 +554,701 @@ Underfull \vbox (badness 3884) has occurred while \output is active []
 
 ]
 
-Package rkeyval Warning: Missing comma on input line 151.
-
-
-Package rkeyval Warning: Missing comma on input line 156.
+Package rkeyval Warning: Missing comma on input line 153.
 
 
 Package rkeyval Warning: Missing comma on input line 158.
 
 
-Package rkeyval Warning: Missing comma on input line 163.
+Package rkeyval Warning: Missing comma on input line 160.
 
 
 Package rkeyval Warning: Missing comma on input line 165.
 
 
-Underfull \hbox (badness 5203) in paragraph at lines 166--166
+Package rkeyval Warning: Missing comma on input line 167.
+
+
+Underfull \hbox (badness 5203) in paragraph at lines 168--168
 \OT1/cmr/m/it/10.95 mar-ket-ing \OT1/cmr/m/n/10.95 (2016), avail-able at []$\OT
 1/cmtt/m/n/10.95 https : / / www . ibm . com / blogs / business-[]analytics /
  []
 
 
-Overfull \hbox (5.67543pt too wide) in paragraph at lines 166--166
+Overfull \hbox (5.67543pt too wide) in paragraph at lines 168--168
 \OT1/cmtt/m/n/10.95 how-[]to-[]use-[]twitter-[]activity-[]to-[]measure-[]the-[]
 effectiveness-[]of-[]your-[]marketing/$[]\OT1/cmr/m/n/10.95 . 
  []
 
 
-Package rkeyval Warning: Missing comma on input line 174.
+Package rkeyval Warning: Missing comma on input line 176.
 
 
-Underfull \hbox (badness 2671) in paragraph at lines 185--185
+Underfull \hbox (badness 2671) in paragraph at lines 187--187
 []\OT1/cmr/m/n/10.95 Twitter Inc., \OT1/cmr/m/it/10.95 Hate-ful con-duct pol-ic
 y\OT1/cmr/m/n/10.95 , avail-able at []$\OT1/cmtt/m/n/10.95 https : / / help . t
 witter . com / en /
  []
 
 [13]
-Underfull \hbox (badness 10000) in paragraph at lines 274--274
+Underfull \hbox (badness 10000) in paragraph at lines 276--276
 []\OT1/cmr/m/n/10.95 Ibrahim Naji, \OT1/cmr/m/it/10.95 Twit-ter Sen-ti-ment Ana
 l-y-sis Train-ing Cor-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 274--274
+Underfull \hbox (badness 10000) in paragraph at lines 276--276
 \OT1/cmr/m/it/10.95 pus (Dataset) \OT1/cmr/m/n/10.95 (2013), avail-able at []$\
 OT1/cmtt/m/n/10.95 http : / / thinknook . com /
  []
 
 [14]
 Appendix A.
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 285.
-[15
+<../classifier_creator.pdf, id=304, 614.295pt x 794.97pt>
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf>
+Package pdftex.def Info: ../classifier_creator.pdf used on input line 283.
+(pdftex.def)             Requested size: 614.29349pt x 794.96806pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+ <use ../classifier_creator.pdf>
+Package pdftex.def Info: ../classifier_creator.pdf used on input line 283.
+(pdftex.def)             Requested size: 614.29349pt x 794.96806pt.
+
+<../classifier_creator.pdf, id=307, page=1, 614.295pt x 794.97pt>
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 1>
+Package pdftex.def Info: ../classifier_creator.pdf, page1 used on input line 28
+3.
+(pdftex.def)             Requested size: 614.29349pt x 794.96806pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 1>
+Package pdftex.def Info: ../classifier_creator.pdf, page1 used on input line 28
+3.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+ [15
 
 ]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 285.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 1>
+Package pdftex.def Info: ../classifier_creator.pdf, page1 used on input line 28
+3.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 1>
+Package pdftex.def Info: ../classifier_creator.pdf, page1 used on input line 28
+3.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 1>
+Package pdftex.def Info: ../classifier_creator.pdf, page1 used on input line 28
+3.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+ [16 <../classifier_creator.pdf
+
+pdfTeX warning: /Library/TeX/texbin/pdflatex (file ../classifier_creator.pdf): 
+PDF inclusion: invalid other resource which is no dict (key 'ProcSets', type <a
+rray>); ignored.
+>] <../classifier_creator.pdf, id=760, page=2, 614.295pt x 794.97pt>
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 2>
+Package pdftex.def Info: ../classifier_creator.pdf, page2 used on input line 28
+3.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 2>
+Package pdftex.def Info: ../classifier_creator.pdf, page2 used on input line 28
+3.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 2>
+Package pdftex.def Info: ../classifier_creator.pdf, page2 used on input line 28
+3.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+ [17 <../classifier_creator.pdf
+
+pdfTeX warning: /Library/TeX/texbin/pdflatex (file ../classifier_creator.pdf): 
+PDF inclusion: invalid other resource which is no dict (key 'ProcSets', type <a
+rray>); ignored.
+>] <../classifier_creator.pdf, id=772, page=3, 614.295pt x 794.97pt>
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 3>
+Package pdftex.def Info: ../classifier_creator.pdf, page3 used on input line 28
+3.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 3>
+Package pdftex.def Info: ../classifier_creator.pdf, page3 used on input line 28
+3.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 3>
+Package pdftex.def Info: ../classifier_creator.pdf, page3 used on input line 28
+3.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+ [18 <../classifier_creator.pdf
+
+pdfTeX warning: /Library/TeX/texbin/pdflatex (file ../classifier_creator.pdf): 
+PDF inclusion: invalid other resource which is no dict (key 'ProcSets', type <a
+rray>); ignored.
+>] <../classifier_creator.pdf, id=777, page=4, 614.295pt x 794.97pt>
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 4>
+Package pdftex.def Info: ../classifier_creator.pdf, page4 used on input line 28
+3.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 4>
+Package pdftex.def Info: ../classifier_creator.pdf, page4 used on input line 28
+3.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 4>
+Package pdftex.def Info: ../classifier_creator.pdf, page4 used on input line 28
+3.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+ [19 <../classifier_creator.pdf
+
+pdfTeX warning: /Library/TeX/texbin/pdflatex (file ../classifier_creator.pdf): 
+PDF inclusion: invalid other resource which is no dict (key 'ProcSets', type <a
+rray>); ignored.
+>] <../classifier_creator.pdf, id=782, page=5, 614.295pt x 794.97pt>
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 5>
+Package pdftex.def Info: ../classifier_creator.pdf, page5 used on input line 28
+3.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 5>
+Package pdftex.def Info: ../classifier_creator.pdf, page5 used on input line 28
+3.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 5>
+Package pdftex.def Info: ../classifier_creator.pdf, page5 used on input line 28
+3.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+ [20 <../classifier_creator.pdf
+
+pdfTeX warning: /Library/TeX/texbin/pdflatex (file ../classifier_creator.pdf): 
+PDF inclusion: invalid other resource which is no dict (key 'ProcSets', type <a
+rray>); ignored.
+>] <../classifier_creator.pdf, id=787, page=6, 614.295pt x 794.97pt>
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 6>
+Package pdftex.def Info: ../classifier_creator.pdf, page6 used on input line 28
+3.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 6>
+Package pdftex.def Info: ../classifier_creator.pdf, page6 used on input line 28
+3.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 6>
+Package pdftex.def Info: ../classifier_creator.pdf, page6 used on input line 28
+3.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+ [21 <../classifier_creator.pdf
+
+pdfTeX warning: /Library/TeX/texbin/pdflatex (file ../classifier_creator.pdf): 
+PDF inclusion: invalid other resource which is no dict (key 'ProcSets', type <a
+rray>); ignored.
+>] <../classifier_creator.pdf, id=793, page=7, 614.295pt x 794.97pt>
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 7>
+Package pdftex.def Info: ../classifier_creator.pdf, page7 used on input line 28
+3.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 7>
+Package pdftex.def Info: ../classifier_creator.pdf, page7 used on input line 28
+3.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 7>
+Package pdftex.def Info: ../classifier_creator.pdf, page7 used on input line 28
+3.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+ [22 <../classifier_creator.pdf
+
+pdfTeX warning: /Library/TeX/texbin/pdflatex (file ../classifier_creator.pdf): 
+PDF inclusion: invalid other resource which is no dict (key 'ProcSets', type <a
+rray>); ignored.
+>] <../classifier_creator.pdf, id=798, page=8, 614.295pt x 794.97pt>
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 8>
+Package pdftex.def Info: ../classifier_creator.pdf, page8 used on input line 28
+3.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 8>
+Package pdftex.def Info: ../classifier_creator.pdf, page8 used on input line 28
+3.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 8>
+Package pdftex.def Info: ../classifier_creator.pdf, page8 used on input line 28
+3.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+ [23 <../classifier_creator.pdf
+
+pdfTeX warning: /Library/TeX/texbin/pdflatex (file ../classifier_creator.pdf): 
+PDF inclusion: invalid other resource which is no dict (key 'ProcSets', type <a
+rray>); ignored.
+>] <../classifier_creator.pdf, id=803, page=9, 614.295pt x 794.97pt>
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 9>
+Package pdftex.def Info: ../classifier_creator.pdf, page9 used on input line 28
+3.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 9>
+Package pdftex.def Info: ../classifier_creator.pdf, page9 used on input line 28
+3.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 9>
+Package pdftex.def Info: ../classifier_creator.pdf, page9 used on input line 28
+3.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+ [24 <../classifier_creator.pdf
+
+pdfTeX warning: /Library/TeX/texbin/pdflatex (file ../classifier_creator.pdf): 
+PDF inclusion: invalid other resource which is no dict (key 'ProcSets', type <a
+rray>); ignored.
+>] <../classifier_creator.pdf, id=816, page=10, 614.295pt x 794.97pt>
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 10>
+Package pdftex.def Info: ../classifier_creator.pdf, page10 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 10>
+Package pdftex.def Info: ../classifier_creator.pdf, page10 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 10>
+Package pdftex.def Info: ../classifier_creator.pdf, page10 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+ [25 <../classifier_creator.pdf
+
+pdfTeX warning: /Library/TeX/texbin/pdflatex (file ../classifier_creator.pdf): 
+PDF inclusion: invalid other resource which is no dict (key 'ProcSets', type <a
+rray>); ignored.
+>] <../classifier_creator.pdf, id=821, page=11, 614.295pt x 794.97pt>
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 11>
+Package pdftex.def Info: ../classifier_creator.pdf, page11 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 11>
+Package pdftex.def Info: ../classifier_creator.pdf, page11 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 11>
+Package pdftex.def Info: ../classifier_creator.pdf, page11 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+ [26 <../classifier_creator.pdf
+
+pdfTeX warning: /Library/TeX/texbin/pdflatex (file ../classifier_creator.pdf): 
+PDF inclusion: invalid other resource which is no dict (key 'ProcSets', type <a
+rray>); ignored.
+>] <../classifier_creator.pdf, id=830, page=12, 614.295pt x 794.97pt>
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 12>
+Package pdftex.def Info: ../classifier_creator.pdf, page12 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 12>
+Package pdftex.def Info: ../classifier_creator.pdf, page12 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 12>
+Package pdftex.def Info: ../classifier_creator.pdf, page12 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+ [27 <../classifier_creator.pdf
+
+pdfTeX warning: /Library/TeX/texbin/pdflatex (file ../classifier_creator.pdf): 
+PDF inclusion: invalid other resource which is no dict (key 'ProcSets', type <a
+rray>); ignored.
+>] <../classifier_creator.pdf, id=836, page=13, 614.295pt x 794.97pt>
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 13>
+Package pdftex.def Info: ../classifier_creator.pdf, page13 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 13>
+Package pdftex.def Info: ../classifier_creator.pdf, page13 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 13>
+Package pdftex.def Info: ../classifier_creator.pdf, page13 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+ [28 <../classifier_creator.pdf
+
+pdfTeX warning: /Library/TeX/texbin/pdflatex (file ../classifier_creator.pdf): 
+PDF inclusion: invalid other resource which is no dict (key 'ProcSets', type <a
+rray>); ignored.
+>] <../classifier_creator.pdf, id=851, page=14, 614.295pt x 794.97pt>
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 14>
+Package pdftex.def Info: ../classifier_creator.pdf, page14 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 14>
+Package pdftex.def Info: ../classifier_creator.pdf, page14 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 14>
+Package pdftex.def Info: ../classifier_creator.pdf, page14 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+ [29 <../classifier_creator.pdf
+
+pdfTeX warning: /Library/TeX/texbin/pdflatex (file ../classifier_creator.pdf): 
+PDF inclusion: invalid other resource which is no dict (key 'ProcSets', type <a
+rray>); ignored.
+>] <../classifier_creator.pdf, id=856, page=15, 614.295pt x 794.97pt>
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 15>
+Package pdftex.def Info: ../classifier_creator.pdf, page15 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 15>
+Package pdftex.def Info: ../classifier_creator.pdf, page15 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 15>
+Package pdftex.def Info: ../classifier_creator.pdf, page15 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+ [30 <../classifier_creator.pdf
+
+pdfTeX warning: /Library/TeX/texbin/pdflatex (file ../classifier_creator.pdf): 
+PDF inclusion: invalid other resource which is no dict (key 'ProcSets', type <a
+rray>); ignored.
+>] <../classifier_creator.pdf, id=862, page=16, 614.295pt x 794.97pt>
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 16>
+Package pdftex.def Info: ../classifier_creator.pdf, page16 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 16>
+Package pdftex.def Info: ../classifier_creator.pdf, page16 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 16>
+Package pdftex.def Info: ../classifier_creator.pdf, page16 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+ [31 <../classifier_creator.pdf
+
+pdfTeX warning: /Library/TeX/texbin/pdflatex (file ../classifier_creator.pdf): 
+PDF inclusion: invalid other resource which is no dict (key 'ProcSets', type <a
+rray>); ignored.
+>] <../classifier_creator.pdf, id=868, page=17, 614.295pt x 794.97pt>
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 17>
+Package pdftex.def Info: ../classifier_creator.pdf, page17 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 17>
+Package pdftex.def Info: ../classifier_creator.pdf, page17 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 17>
+Package pdftex.def Info: ../classifier_creator.pdf, page17 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+ [32 <../classifier_creator.pdf
+
+pdfTeX warning: /Library/TeX/texbin/pdflatex (file ../classifier_creator.pdf): 
+PDF inclusion: invalid other resource which is no dict (key 'ProcSets', type <a
+rray>); ignored.
+>] <../classifier_creator.pdf, id=873, page=18, 614.295pt x 794.97pt>
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 18>
+Package pdftex.def Info: ../classifier_creator.pdf, page18 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 18>
+Package pdftex.def Info: ../classifier_creator.pdf, page18 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 18>
+Package pdftex.def Info: ../classifier_creator.pdf, page18 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+ [33 <../classifier_creator.pdf
+
+pdfTeX warning: /Library/TeX/texbin/pdflatex (file ../classifier_creator.pdf): 
+PDF inclusion: invalid other resource which is no dict (key 'ProcSets', type <a
+rray>); ignored.
+>] <../classifier_creator.pdf, id=879, page=19, 614.295pt x 794.97pt>
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 19>
+Package pdftex.def Info: ../classifier_creator.pdf, page19 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 19>
+Package pdftex.def Info: ../classifier_creator.pdf, page19 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 19>
+Package pdftex.def Info: ../classifier_creator.pdf, page19 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+ [34 <../classifier_creator.pdf
+
+pdfTeX warning: /Library/TeX/texbin/pdflatex (file ../classifier_creator.pdf): 
+PDF inclusion: invalid other resource which is no dict (key 'ProcSets', type <a
+rray>); ignored.
+>] <../classifier_creator.pdf, id=884, page=20, 614.295pt x 794.97pt>
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 20>
+Package pdftex.def Info: ../classifier_creator.pdf, page20 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 20>
+Package pdftex.def Info: ../classifier_creator.pdf, page20 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 20>
+Package pdftex.def Info: ../classifier_creator.pdf, page20 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+ [35 <../classifier_creator.pdf
+
+pdfTeX warning: /Library/TeX/texbin/pdflatex (file ../classifier_creator.pdf): 
+PDF inclusion: invalid other resource which is no dict (key 'ProcSets', type <a
+rray>); ignored.
+>] <../classifier_creator.pdf, id=897, page=21, 614.295pt x 794.97pt>
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 21>
+Package pdftex.def Info: ../classifier_creator.pdf, page21 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 21>
+Package pdftex.def Info: ../classifier_creator.pdf, page21 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 21>
+Package pdftex.def Info: ../classifier_creator.pdf, page21 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+ [36 <../classifier_creator.pdf
+
+pdfTeX warning: /Library/TeX/texbin/pdflatex (file ../classifier_creator.pdf): 
+PDF inclusion: invalid other resource which is no dict (key 'ProcSets', type <a
+rray>); ignored.
+>] <../classifier_creator.pdf, id=909, page=22, 614.295pt x 794.97pt>
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 22>
+Package pdftex.def Info: ../classifier_creator.pdf, page22 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 22>
+Package pdftex.def Info: ../classifier_creator.pdf, page22 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 22>
+Package pdftex.def Info: ../classifier_creator.pdf, page22 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+ [37 <../classifier_creator.pdf
+
+pdfTeX warning: /Library/TeX/texbin/pdflatex (file ../classifier_creator.pdf): 
+PDF inclusion: invalid other resource which is no dict (key 'ProcSets', type <a
+rray>); ignored.
+>] <../classifier_creator.pdf, id=915, page=23, 614.295pt x 794.97pt>
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 23>
+Package pdftex.def Info: ../classifier_creator.pdf, page23 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 23>
+Package pdftex.def Info: ../classifier_creator.pdf, page23 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 23>
+Package pdftex.def Info: ../classifier_creator.pdf, page23 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+ [38 <../classifier_creator.pdf
+
+pdfTeX warning: /Library/TeX/texbin/pdflatex (file ../classifier_creator.pdf): 
+PDF inclusion: invalid other resource which is no dict (key 'ProcSets', type <a
+rray>); ignored.
+>] <../classifier_creator.pdf, id=921, page=24, 614.295pt x 794.97pt>
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 24>
+Package pdftex.def Info: ../classifier_creator.pdf, page24 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 24>
+Package pdftex.def Info: ../classifier_creator.pdf, page24 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 24>
+Package pdftex.def Info: ../classifier_creator.pdf, page24 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+ [39 <../classifier_creator.pdf
+
+pdfTeX warning: /Library/TeX/texbin/pdflatex (file ../classifier_creator.pdf): 
+PDF inclusion: invalid other resource which is no dict (key 'ProcSets', type <a
+rray>); ignored.
+>] <../classifier_creator.pdf, id=928, page=25, 614.295pt x 794.97pt>
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 25>
+Package pdftex.def Info: ../classifier_creator.pdf, page25 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 25>
+Package pdftex.def Info: ../classifier_creator.pdf, page25 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+File: ../classifier_creator.pdf Graphic file (type pdf)
+
+<use ../classifier_creator.pdf, page 25>
+Package pdftex.def Info: ../classifier_creator.pdf, page25 used on input line 2
+83.
+(pdftex.def)             Requested size: 614.58406pt x 795.3441pt.
+ [40 <../classifier_creator.pdf
+
+pdfTeX warning: /Library/TeX/texbin/pdflatex (file ../classifier_creator.pdf): 
+PDF inclusion: invalid other resource which is no dict (key 'ProcSets', type <a
+rray>); ignored.
+>]
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 287.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 287.
  (./bardtex_seniorproject_sample.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 285.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 285.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 287.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 287.
 Package rerunfilecheck Info: File `bardtex_seniorproject_sample.out' has not ch
 anged.
 (rerunfilecheck)             Checksum: D8189C71C23E57F88721A005720B84A9;1786.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 285.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 287.
  ) 
 Here is how much of TeX's memory you used:
- 8789 strings out of 492995
- 119281 string characters out of 6132704
- 275301 words of memory out of 5000000
- 12159 multiletter control sequences out of 15000+600000
+ 9515 strings out of 492995
+ 132372 string characters out of 6132704
+ 288328 words of memory out of 5000000
+ 12839 multiletter control sequences out of 15000+600000
  10659 words of font info for 40 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 28i,6n,28p,1356b,675s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 40i,18n,46p,1356b,675s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb><
 /usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></u
@@ -609,10 +1257,10 @@ sr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr
 local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/l
 ocal/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/lo
 cal/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on bardtex_seniorproject_sample.pdf (25 pages, 159358 bytes).
+Output written on bardtex_seniorproject_sample.pdf (50 pages, 790536 bytes).
 PDF statistics:
- 357 PDF objects out of 1000 (max. 8388607)
- 318 compressed objects within 4 object streams
- 81 named destinations out of 1000 (max. 500000)
- 225 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 988 PDF objects out of 1000 (max. 8388607)
+ 513 compressed objects within 6 object streams
+ 106 named destinations out of 1000 (max. 500000)
+ 365 words of extra memory for PDF output out of 10000 (max. 10000000)
 
