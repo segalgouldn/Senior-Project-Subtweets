@@ -114,6 +114,7 @@ class StreamListener(tweepy.StreamListener):
         created_at = status.created_at
         retweeted = status.retweeted
         in_reply_to = status.in_reply_to_status_id_str
+        same_user = status.in_reply_to_status_id_str == status.id_str
         
         # The text and media of the tweet vary based on if it's extended or not
         if "extended_tweet" in status._json:
@@ -140,6 +141,10 @@ class StreamListener(tweepy.StreamListener):
                 .replace("&gt;", ">")
                 .replace("&lt;", "<"))
         
+        includes_subtweet = any(["subtweet" in text, 
+                                 "Subtweet" in text,
+                                 "SUBTWEET" in text])
+        
         tokens = tokenizer.tokenize(text)
         
         english_tokens = [english_dict.check(token) for token in tokens]
@@ -163,6 +168,7 @@ class StreamListener(tweepy.StreamListener):
         # Only treat it as a subtweet if all conditions are met
         if all([positive_probability >= THRESHOLD, 
                 "RT " != text[:3], is_mostly_english,
+                not same_user, not includes_subtweet,
                 not retweeted, not in_reply_to, not has_media]):
             
             decision = choice(choices)
@@ -342,18 +348,6 @@ stream.disconnect()
 ```
 
     Streaming has started.
-    Retweet!
-    Subtweet from @fka_zigs (Probability of 75.831%):
-    Time: 2018-04-23 02:28:26
-    Tweet: my mom thinks everyone on the internet is a catfish
-    Total tweets acquired: 872
-    
-    Retweet!
-    Subtweet from @JillMurphy0421 (Probability of 77.362%):
-    Time: 2018-04-23 02:29:35
-    Tweet: get you a roommate who wallows in mutual lonesome with you like mine does
-    Total tweets acquired: 951
-    
-    CPU times: user 22.1 s, sys: 3.57 s, total: 25.7 s
+    CPU times: user 20.8 s, sys: 3.2 s, total: 24 s
     Wall time: 15min
 
