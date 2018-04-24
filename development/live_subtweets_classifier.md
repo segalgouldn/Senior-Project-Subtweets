@@ -34,7 +34,7 @@ import re
 
 ```python
 THRESHOLD = 0.75 # 75% positives and higher, only
-DURATION = 60*15 # 15 minutes
+DURATION = 60*10 # 10 minutes
 ```
 
 #### Set up regular expressions for genericizing extra features
@@ -65,7 +65,8 @@ sentiment_pipeline = joblib.load("../data/other_data/subtweets_classifier.pkl")
 
 
 ```python
-consumer_key, consumer_secret, access_token, access_token_secret = open("../../credentials.txt").read().split("\n")
+consumer_key, consumer_secret, access_token, access_token_secret = (open("../../credentials.txt")
+                                                                    .read().split("\n"))
 ```
 
 #### Connect to the API
@@ -114,7 +115,6 @@ class StreamListener(tweepy.StreamListener):
         created_at = status.created_at
         retweeted = status.retweeted
         in_reply_to = status.in_reply_to_status_id_str
-        same_user = status.in_reply_to_status_id_str == status.id_str
         
         # The text and media of the tweet vary based on if it's extended or not
         if "extended_tweet" in status._json:
@@ -148,7 +148,7 @@ class StreamListener(tweepy.StreamListener):
         tokens = tokenizer.tokenize(text)
         
         english_tokens = [english_dict.check(token) for token in tokens]
-        percent_english_words = sum(english_tokens)/len(english_tokens)
+        percent_english_words = sum(english_tokens)/float(len(english_tokens))
         
         # Make sure the tweet is mostly english
         is_mostly_english = False
@@ -167,8 +167,7 @@ class StreamListener(tweepy.StreamListener):
         
         # Only treat it as a subtweet if all conditions are met
         if all([positive_probability >= THRESHOLD, 
-                "RT " != text[:3], is_mostly_english,
-                not same_user, not includes_subtweet,
+                "RT " != text[:3], is_mostly_english, not includes_subtweet,
                 not retweeted, not in_reply_to, not has_media]):
             
             decision = choice(choices)
