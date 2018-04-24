@@ -1,0 +1,119 @@
+% \bib, bibdiv, biblist are defined by the amsrefs package.
+\begin{bibdiv}
+\begin{biblist}
+
+\bib{twitter_stats}{article}{
+author={Inc., Twitter},
+title={Twitter turns six},
+date={2012},
+eprint={https://blog.twitter.com/official/en_us/a/2012/twitter-turns-six.html},
+}
+
+\bib{first_tweet}{article}{
+author={Dorsey, Jack},
+title={inviting coworkers},
+date={2006},
+eprint={https://twitter.com/jack/status/29},
+}
+
+\bib{first_subtweet}{article}{
+author={Rae, Chelsea},
+title={I hate when i see people...},
+date={2009},
+eprint={https://twitter.com/Chelsea_x_Rae/status/6261479092},
+}
+
+\bib{urban_dictionary}{article}{
+author={Dictionary, Urban},
+title={Subtweet},
+date={2010},
+eprint={https://www.urbandictionary.com/define.php?term=subtweet},
+}
+
+\bib{subtweets_communications}{article}{
+author={Edwards, Autumn},
+author={Harris, Christina~J},
+title={To tweet or ‘subtweet’?: Impacts of social networking post
+directness and valence on interpersonal impressions},
+date={2016},
+journal={Computers in Human Behavior},
+volume={63},
+pages={304\ndash 310},
+}
+
+\bib{the_atlantic}{article}{
+author={Madrigal, Alexis~C.},
+title={Behind the machine's back: How social media users avoid getting
+turned into big data},
+date={2014},
+eprint={https://www.theatlantic.com/technology/archive/2014/04/behind-the-machines-back-how-social-media-users-avoid-getting-turned-into-big-data/360416/},
+}
+
+\bib{the_washington_post}{article}{
+author={Dewey, Caitlin},
+title={Study confirms what you always knew: People who subtweet are
+terrible},
+date={2016},
+eprint={https://www.washingtonpost.com/news/the-intersect/wp/2016/06/06/study-confirms-what-you-always-knew-people-who-subtweet-are-terrible/},
+}
+
+\bib{slate}{article}{
+author={Hassler, Chelsea},
+title={Subtweeting looks terrible on you. (you know who you are.)},
+date={2016},
+eprint={http://www.slate.com/blogs/future_tense/2016/07/15/subtweeting_looks_terrible_on_you_yes_you.html},
+}
+
+\bib{hateful_conduct}{article}{
+author={Twitter},
+title={Hateful conduct policy},
+date={2018},
+eprint={https://help.twitter.com/en/rules-and-policies/hateful-conduct-policy},
+}
+
+\bib{sentiment_analysis_markets}{article}{
+author={Nassirtoussi, Arman~Khadjeh},
+author={Aghabozorgi, Saeed},
+author={Wah, Teh~Ying},
+author={Ngo, David Chek~Ling},
+title={Text mining for market prediction: A systematic review},
+date={2014},
+journal={Expert Systems with Applications},
+volume={41},
+number={16},
+pages={7653\ndash 7670},
+}
+
+\bib{sentiment_analysis_terrorism}{article}{
+author={Burnap, Pete},
+author={Williams, Matthew~L},
+author={Sloan, Luke},
+author={Rana, Omer},
+author={Housley, William},
+author={Edwards, Adam},
+author={Knight, Vincent},
+author={Procter, Rob},
+author={Voss, Alex},
+title={Tweeting the terror: modelling the social media reaction to the
+woolwich terrorist attack},
+date={2014},
+journal={Social Network Analysis and Mining},
+volume={4},
+number={1},
+pages={206},
+}
+
+\bib{sentiment_analysis_irony}{article}{
+author={Reyes, Antonio},
+author={Rosso, Paolo},
+title={On the difficulty of automatically detecting irony: beyond a
+simple case of negation},
+date={2014},
+journal={Knowledge and Information Systems},
+volume={40},
+number={3},
+pages={595\ndash 614},
+}
+
+\end{biblist}
+\end{bibdiv}

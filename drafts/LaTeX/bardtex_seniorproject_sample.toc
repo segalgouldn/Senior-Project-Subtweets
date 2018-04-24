@@ -4,13 +4,13 @@
 \contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}
 \contentsline {section}{\numberline {1.1}Background}{1}{section.1.1}
 \contentsline {section}{\numberline {1.2}Motivation}{2}{section.1.2}
-\contentsline {section}{\numberline {1.3}Changes in Data Acquisition}{4}{section.1.3}
-\contentsline {section}{\numberline {1.4}Sentiment Analysis}{4}{section.1.4}
-\contentsline {section}{\numberline {1.5}The Twitter API}{4}{section.1.5}
-\contentsline {section}{\numberline {1.6}Regular Expressions, N-Grams, \& Tokenization}{4}{section.1.6}
-\contentsline {section}{\numberline {1.7}TF \& TF-IDF}{4}{section.1.7}
-\contentsline {section}{\numberline {1.8}Naive Bayes}{5}{section.1.8}
-\contentsline {section}{\numberline {1.9}Statistical Considerations}{5}{section.1.9}
+\contentsline {section}{\numberline {1.3}Literature Review}{4}{section.1.3}
+\contentsline {section}{\numberline {1.4}Changes in Data Acquisition}{4}{section.1.4}
+\contentsline {section}{\numberline {1.5}The Twitter API}{5}{section.1.5}
+\contentsline {section}{\numberline {1.6}Regular Expressions, N-Grams, \& Tokenization}{5}{section.1.6}
+\contentsline {section}{\numberline {1.7}TF \& TF-IDF}{5}{section.1.7}
+\contentsline {section}{\numberline {1.8}Naive Bayes}{6}{section.1.8}
+\contentsline {section}{\numberline {1.9}Statistical Considerations}{6}{section.1.9}
 \contentsline {chapter}{\numberline {2}Implementation}{7}{chapter.2}
 \contentsline {section}{\numberline {2.1}Searching for Tweets Using the Twitter API}{7}{section.2.1}
 \contentsline {section}{\numberline {2.2}Cleaning the Data}{7}{section.2.2}
@@ -20,7 +20,7 @@
 \contentsline {section}{\numberline {3.2}Confusion Matrices}{9}{section.3.2}
 \contentsline {section}{\numberline {3.3}Most Informative Features}{9}{section.3.3}
 \contentsline {section}{\numberline {3.4}Statistical Analysis}{9}{section.3.4}
-\contentsline {section}{\numberline {3.5}The Twitter Bot}{9}{section.3.5}
+\contentsline {section}{\numberline {3.5}The Twitter Bot}{10}{section.3.5}
 \contentsline {chapter}{\numberline {4}Conclusion}{11}{chapter.4}
 \contentsline {section}{\numberline {4.1}Summary of Project Achievements}{11}{section.4.1}
 \contentsline {section}{\numberline {4.2}Future Work \& Considerations}{11}{section.4.2}

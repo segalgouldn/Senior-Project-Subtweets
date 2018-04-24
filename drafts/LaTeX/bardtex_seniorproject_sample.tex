@@ -1,13 +1,12 @@
 \documentclass[11pt, twoside, reqno]{book}
 \usepackage{amssymb, amsthm, amsmath, amsfonts}
 \usepackage{graphicx}
-\usepackage{amsrefs}
+\usepackage[citation-order]{amsrefs}
 \usepackage{color}
 \usepackage{hyperref}
 \usepackage{verbatim}
 \usepackage[title]{appendix}
 \usepackage{pdfpages}
-
 \usepackage{bardtex}
 
 \styleoption{seniorproject}
@@ -21,7 +20,7 @@
 
 \abstr
 
-The Oxford English Dictionary states that ``subtweet" is defined as ``(on the social media application Twitter) a post that refers to a particular user without directly mentioning them, typically as a form of furtive mockery or criticism." Following the rapid growth and adoption of social networking websites like Twitter, sentiment analysis has garnered much research interest in recent years. To computationally identify and categorize opinions expressed in text, sentiment analysis of figurative language such as irony and sarcasm has garnered even more recent interest. In this project, I will treat the identification of subtweets as a figurative language sentiment analysis problem and apply a novel approach for data collection and labeling, as well as Naive Bayes text classification. By identifying subtweets as they are posted online in real time, I will create a Twitter bot which archives and interacts with them. In addition to the paper, this project will be made available online with its source code and all data collected during its completion.
+The Oxford English Dictionary states that ``subtweet" is defined as ``(on the social media application Twitter) a post that refers to a particular user without directly mentioning them, typically as a form of furtive mockery or criticism." Following the rapid growth and adoption of social networking websites like Twitter, sentiment analysis has garnered much research interest in recent years. To computationally identify and categorize opinions expressed in text, sentiment analysis of figurative language such as irony and sarcasm has garnered even more recent interest. In this project, I will treat the identification of subtweets as a sentiment analysis problem and utilize a novel approach for data collection and labeling, as well as Naive Bayes text classification. By identifying subtweets as they are posted online in real time, I will create a Twitter bot which archives and interacts with them. In addition to the paper, this project will be made available online with its source code and all data collected during its completion.
 
 \tableofcontents
 
@@ -41,7 +40,7 @@ Thank you professors Sven Anderson, Keith O'Hara, and Rebecca Thomas for making 
 \section{Background}
 \label{background}
 
-The news and social networking service Twitter had over 140 million active users who sent 340 million text-based Tweets to the platform every day by March of 2012 \cite{twitter_stats}. Since Twitter-founder Jack Dorsey sent the first Tweet in March of 2006 \cite{first_tweet} social scientists, advertisers, and computer scientists have applied machine learning techniques to understand the patterns and structures of the conversations held on the platform. One such technique is sentiment analysis, which seeks to ascertain the opinions of bodies of text. Sentiment analysis techniques are often treated as classification problems which seek to place text into categories such as \textbf{positive}, \textbf{negative}, and \textbf{neutral}.
+The news and social networking service Twitter had over 140 million active users who sent 340 million text-based Tweets to the platform every day by March of 2012  \cite{twitter_stats}. Since Twitter-founder Jack Dorsey sent the first Tweet in March of 2006  \cite{first_tweet} social scientists, advertisers, and computer scientists have applied machine learning techniques to understand the patterns and structures of the conversations held on the platform. One such technique is sentiment analysis, which seeks to ascertain the opinions of bodies of text. Sentiment analysis techniques are often treated as classification problems which seek to place text into categories such as \textbf{positive}, \textbf{negative}, and \textbf{neutral}.
 
 On Twitter, the most common way to publicly communicate with another user is to compose a tweet and place an ``@" before the username of that user somewhere in the tweet (e.g. "How are you doing, @NoahSegalGould?"). Through this method, public discussions on Twitter maintain a kind of accountability: even if one were to miss the notification that they were mentioned in a tweet, one's own dashboard keeps a running list of their most recent mentions. 
 
@@ -58,38 +57,56 @@ By my Junior year, my friends and I used Twitter on a daily basis. In my free ti
 
 My peers introduced me to subtweeting, and I started to pay closer attention to tweets that followed the typical patterns of distanced criticism that subtweets were known for. Because some format seemed to exist which was popularly applied to produce the optimal subtweet, I pitched the concept of subtweet classification to my senior project adviser, Professor Sven Anderson, and I started work on this project in the Fall.
 
-I was initially motivated to complete a senior project on this topic because I wanted to create something useful to my peers and also challenge their notions of public and private interactions on social networking applications like Twitter. Individuals I knew personally would take to the platform to complain indirectly about one another through their subtweets. Friends and I shared evenings debating on if a particular mutual friend's complaints were actually subtweets, and I wondered if that guess-work could be done by a program. I also wanted to challenge the hypocrisy of utilizing a service which presents itself as a public forum to speak in distinctly private ways. Toward this end, I decided the project would be in pursuit of the following goals: it would provide a framework for collecting examples of subtweets, train a classification algorithm using those examples, and finally utilize that classifier in real time to make tweets which were intended to be unseen by specific parties easily accessible to all parties. In presenting covertly hurtful content as obviously hurtful in a public fashion, perhaps I could promote a particular awareness that tweets posted by public accounts were indeed publicly accessible, and that Twitter's End User License Agreement (EULA) allowed for this kind of monitoring.
+I was initially motivated to complete a senior project on this topic because I wanted to create something useful to my peers and also challenge their notions of public and private interactions on social networking applications like Twitter. Individuals I knew personally would take to the platform to complain indirectly about one another through their subtweets. Friends and I shared evenings debating on if a particular mutual friend's complaints were actually subtweets, and I wondered if that guess-work could be done by a program. I also wanted to challenge the hypocrisy of utilizing a service which presents itself as a public forum to speak in distinctly private ways. Toward this end, I decided the project would be in pursuit of the following goals: it would provide a framework for collecting examples of subtweets, train a classification algorithm using those examples, and finally utilize that classifier in real time to make tweets which were intended to be unseen by specific parties easily accessible to all parties. In presenting covertly hurtful content as obviously hurtful in a public fashion, perhaps I could promote a particular awareness that tweets posted by public accounts were indeed publicly accessible, and that Twitter's End User License Agreement (EULA) allowed for this kind of monitoring. 
+
+\section{Literature Review}
+\label{literature_review}
+
+Instead of focus groups, opinion polls, and conduct surveys, sentiment analysis and opinion mining programs are increasingly applied to social networking websites to analyze the sentiments and opinions of users toward topics and products. For the Twitter social networking platform, sentiment analysis allows administrators to enforce their hateful conduct policies \cite{hateful_conduct} which specifically prohibit violent threats and some types of degrading content. Sentiment analysis has been utilized for prediction of financial markets \cite{sentiment_analysis_markets} as well as reactions to terrorist attacks \cite{sentiment_analysis_terrorism}, and sentiment analysis with a specific focus on figurative language such as irony has also attracted recent research interest \cite{sentiment_analysis_irony}. In an attempt to mock, subtweets often exhibit figurative language such as irony and hyperbole.
+
+``Subtweet" was coined in December of 2009 by Twitter user Chelsea Rae \cite{first_subtweet} and was entered into Urban Dictionary the following August \cite{urban_dictionary}. In ``To tweet or ‘subtweet’?: Impacts of social networking post directness and valence on interpersonal impressions" \cite{subtweets_communications}, Edwards and Harris sought to analyze student participants' perceptions of known subtweets. In the news, too, subtweets have garnered attention in \textit{The Atlantic} \cite{the_atlantic}, \textit{The Washington Post} \cite{the_washington_post}, and \textit{Slate} \cite{slate}. Despite this recent interest, little to no research exists on applying sentiment analysis to subtweets.
 
 \section{Changes in Data Acquisition}
 \label{changes_in_data}
 
-\section{Sentiment Analysis}
-\label{sentiment_analysis}
+The novel approach I developed for creating a ground truth dataset relied on a particular phenomenon in which Twitter users were already calling-out the subtweets of their peers. The format I noticed followed that a user would post a subtweet which was easily recognized by a peer, and that peer would then reply to that tweet in order to complain that the original user was subtweeting or to ask if the tweet was indeed a subtweet. Initially, the Python script I wrote to utilize the Twitter API's search functionality via the Tweepy library specifically searched for replies to tweets which contained some form of the string ``subtweet" and then utilized the API's status object to access the tweet to which it was replying. Both the alleged subtweet and the tweet containing the accusation were saved to a comma-separated values (CSV) file. I ran the script every day for over two months.
 
-Sentiment analysis and opinion mining are typically used synonymously. Both terms were apparently coined in 2003, respectively in "Sentiment Analysis: Capturing Favorability Using Natural Language Processing"\cite{sentiment_origin} and "Mining the Peanut Gallery: Opinion Extraction and Semantic Classification of Product Reviews"\cite{opinion_origin}. In a commercial context, sentiment analysis and opinion mining are useful tools for anyone looking to sell a product. With the vast social networks available, these methods are becoming widespread. Instead of focus groups, opinion polls, and conduct surveys, sentiment analysis and opinion mining programs are increasingly applied to social networking websites to analyze the sentiments and opinions of users toward topics and products. 
-
-For various purposes, there exist numerous sentiment analysis and opinion mining methods. SemEval, which started as Senseval in 1998, holds evaluations in the form of competitions in which several tasks and subtasks are assigned. In 2015, SemEval tasks 10 \cite{SEMEVAL201510} and 11 \cite{SEMEVAL201511} focused respectively on sentiment analysis of figurative language on Twitter and sentiment analysis of Tweets in general. In 2016's task 4 \cite{SEMEVAL20164}, the focus was on sentiment analysis on Tweets, and again in 2017's task 4 \cite{SEMEVAL20174} it was the same with the added challenge of working with Arabic-only Tweets. The subtasks assigned within a particular task are used as problems to which anyone can send a submission as a solution. 
+Initially, I trained the classifier using a dataset which was half comprised of these alleged subtweets and half comprised of tweets randomly selected from a dataset provided by Alec Go \cite{go_dataset}. That was a mistake. I had failed to make the training data representative of actual subtweets and non-subtweets. To rectify this, I revised the alleged subtweets downloading script and created one that had the opposite effect: it downloaded tweets with replies which specifically did \textbf{not} contain the string ``subtweet." In both the script which downloaded subtweets and the script which downloaded non-subtweets, I knew my assumptions about these interactions would not hold true in every case. They were intended as generalizations which would make acquiring a ground truth dataset for use in performing binary classification significantly easier and less time-consuming than finding and labeling subtweets and non-subtweets by hand.
 
 \section{The Twitter API}
 \label{twitter_api}
 
+[Explain how it is accessed and its limitations.]
+
 \section{Regular Expressions, N-Grams, \& Tokenization}
 \label{regular_expressions_etc}
+
+[Explain the use for regular expressions in identifying hashtags, URLs, and mentions.]
+
+[Explain N-Grams and how they help a classifier.]
+
+[Explain tokenization and specifically NLTK's TweetTokenizer.]
 
 \section{TF \& TF-IDF}
 \label{tf_tf_idf}
 
 TF-IDF, or term frequency-inverse document frequency, is a statistical representation of how important a single word is for each document in a collection of documents.
 
+[Explain vectorization and provide examples.]
+
 \section{Naive Bayes}
 \label{naive_bayes}
 
 Naive Bayes classifiers are probabilistic supervised learning models which make the "naive" assumption of independence between pairs of features being classified. Sentiment analysis is popularly performed through Naive Bayes.
 
+[Explain some probability, the independence assumption, and the multinomial distribution. Give examples.]
+
 \section{Statistical Considerations}
 \label{statistical_considerations}
 
 In tasks pertaining to text classification, like sentiment analysis, precision refers to the number of correctly labeled items which were labeled as belonging to the positive class and in fact did belong to that class (true positives) divided by the total number of elements which were labeled as belonging to the positive class including ones which were labeled positively either correctly or incorrectly. Recall, then, refers to the true positives divided by the total number of elements that actually belong to the positive class.
+
+[Explain F1, Precision, Recall, Accuracy, and Null Accuracy.]
 
 \chapter{Implementation}
 \label{implementation}
@@ -97,11 +114,17 @@ In tasks pertaining to text classification, like sentiment analysis, precision r
 \section{Searching for Tweets Using the Twitter API}
 \label{searching_with_api}
 
+[Show code and explain how searching works with Tweepy.]
+
 \section{Cleaning the Data}
 \label{cleaning_data}
 
+[Show code and explain how text cleaning genericizes certain features and ignores tweets lacking enough English words.]
+
 \section{Training the Classifier \& K-Folds Cross-Validation}
 \label{training_and_k_folds}
+
+[Explain how pipelines are trained and how K-Folds splits the dataset.]
 
 \chapter{Results}
 \label{results}
@@ -109,19 +132,29 @@ In tasks pertaining to text classification, like sentiment analysis, precision r
 \section{Distributions \& Datasets}
 \label{distributions_and_datasets}
 
+[Explain the tables and figures.]
+
 \section{Confusion Matrices}
 \label{confusion_matrices}
 
-A confusion matrix is a table which visualizes the performance of an algorithm. In this case, I implemented a Naive Bayes classifier from Scikit Learn on my dataset and included in my results is a confusion matrix of the performance:
+A confusion matrix is a table which visualizes the performance of an algorithm. In this case, I implemented a Naive Bayes classifier from Scikit Learn on my dataset and included in my results is a confusion matrix of the performance...
+
+[Explain how to read a confusion matrix and show the test and training figures.]
 
 \section{Most Informative Features}
 \label{most_informative_features}
 
+[Explain how to read the most informative features for each class (or just the "subtweet" class) and show the table.]
+
 \section{Statistical Analysis}
 \label{statistical_analysis}
 
+[Show the scores from K-Folds.]
+
 \section{The Twitter Bot}
 \label{the_twitter_bot}
+
+[Explain how the Twitter bot works and show code as well as examples of interactions.]
 
 \chapter{Conclusion}
 \label{conclusion}
@@ -129,138 +162,136 @@ A confusion matrix is a table which visualizes the performance of an algorithm. 
 \section{Summary of Project Achievements}
 \label{summary}
 
+[Ground truth data, classifier, cleaning, Twitter bot.]
+
 \section{Future Work \& Considerations}
 \label{future_work_and_considerations}
+
+[Test other classification algorithms. Utilize more training data.]
 
 \begin{bibliog}
 
 \bib{twitter_stats}{article}{
-author = {Twitter Inc.},
-title = {Twitter turns six},
-eprint = {https://blog.twitter.com/official/en_us/a/2012/twitter-turns-six.html}
-date = {2012}
+	author={Inc., Twitter},
+	title={Twitter turns six},
+	date={2012},
+	eprint={https://blog.twitter.com/official/en_us/a/2012/twitter-turns-six.html},
 }
 
 \bib{first_tweet}{article}{
-author = {Dorsey, Jack}
-title = {inviting coworkers},
-eprint = {https://twitter.com/jack/status/29}
-date = {2006}
+	author={Dorsey, Jack},
+	title={inviting coworkers},
+	date={2006},
+	eprint={https://twitter.com/jack/status/29},
 }
 
-\bib{twitter_ibm}{article}{
-author = {Alexander, Forsyth}
-title = {How to use Twitter activity to measure the effectiveness of your marketing},
-eprint = {https://www.ibm.com/blogs/business-analytics/how-to-use-twitter-activity-to-measure-the-effectiveness-of-your-marketing/}
-date = {2016}
+\bib{hateful_conduct}{article}{
+	author={Twitter},
+	title={Hateful conduct policy},
+	date={2018},
+	eprint={https://help.twitter.com/en/rules-and-policies/hateful-conduct-policy},
 }
 
-\bib{politics_sentiment_analysis}{article}{
-author = {Wang, Hao},
-author = {Can, Dogan},
-author = {Kazemzadeh, Abe},
-author = {Bar, Fran\c{c}ois},
-author = {Narayanan, Shrikanth}
-title = {A System for Real-time Twitter Sentiment Analysis of 2012 U.S. Presidential Election Cycle},
-journal = {Proceedings of the ACL 2012 System Demonstrations},
-volume = {ACL '12},
-date = {2012},
-pages = {115--120}
+\bib{sentiment_analysis_markets}{article}{
+	author={Nassirtoussi, Arman~Khadjeh},
+	author={Aghabozorgi, Saeed},
+	author={Wah, Teh~Ying},
+	author={Ngo, David Chek~Ling},
+	title={Text mining for market prediction: A systematic review},
+	date={2014},
+	journal={Expert Systems with Applications},
+	volume={41},
+	number={16},
+	pages={7653\ndash 7670},
 }
 
-\bib{hateful_conduct_policy}{article}{
-author = {Twitter Inc.},
-title = {Hateful conduct policy},
-eprint = {https://help.twitter.com/en/rules-and-policies/hateful-conduct-policy}
+\bib{sentiment_analysis_terrorism}{article}{
+	author={Burnap, Pete},
+	author={Williams, Matthew~L},
+	author={Sloan, Luke},
+	author={Rana, Omer},
+	author={Housley, William},
+	author={Edwards, Adam},
+	author={Knight, Vincent},
+	author={Procter, Rob},
+	author={Voss, Alex},
+	title={Tweeting the terror: modelling the social media reaction to the
+		woolwich terrorist attack},
+	date={2014},
+	journal={Social Network Analysis and Mining},
+	volume={4},
+	number={1},
+	pages={206},
 }
 
-\bib{sentiment_origin}{article}{
-author = {Nasukawa, Tetsuya},
-author = {Yi, Jeonghee},
-title = {Sentiment Analysis: Capturing Favorability Using Natural Language Processing},
-journal = {Proceedings of the 2nd International Conference on Knowledge Capture},
-eprint = {http://doi.acm.org/10.1145/945645.945658},
-volume = {K-CAP '03},
-pages = {70--77},
-date = {2003}
+\bib{sentiment_analysis_irony}{article}{
+	author={Reyes, Antonio},
+	author={Rosso, Paolo},
+	title={On the difficulty of automatically detecting irony: beyond a
+		simple case of negation},
+	date={2014},
+	journal={Knowledge and Information Systems},
+	volume={40},
+	number={3},
+	pages={595\ndash 614},
 }
 
-\bib{opinion_origin}{article}{
-author = {Dave, Kushal},
-author = {Lawrence, Steve},
-author = {Pennock, David M.},
-title = {Mining the Peanut Gallery: Opinion Extraction and Semantic Classification of Product Reviews},
-journal = {Proceedings of the 12th International Conference on World Wide Web},
-eprint = {http://doi.acm.org/10.1145/775152.775226},
-volume = {WWW '03},
-pages = {519--528},
-date = {2003}
+\bib{first_subtweet}{article}{
+	author={Rae, Chelsea},
+	title={I hate when i see people...},
+	date={2009},
+	eprint={https://twitter.com/Chelsea_x_Rae/status/6261479092},
 }
 
-\bib{SEMEVAL201510}{article}{
-title = {SemEval-2015 Task 10: Sentiment Analysis in Twitter},
-author = {Rosenthal, Sara},
-author = {Nakov, Preslav},
-author = {Kiritchenko, Svetlana},
-author = {Mohammad, Saif},
-author = {Ritter, Alan},
-author = {Stoyanov, Veselin},
-journal = {SemEval@ NAACL-HLT},
-pages={451--463},
-date={2015}
+\bib{urban_dictionary}{article}{
+	author={Dictionary, Urban},
+	title={Subtweet},
+	date={2010},
+	eprint={https://www.urbandictionary.com/define.php?term=subtweet},
 }
 
-\bib{SEMEVAL201511}{article}{
-title = {SemEval-2015 Task 11: Sentiment Analysis of Figurative Language in Twitter},
-author = {Ghosh, Aniruddha},
-author = {Li, Guofu},
-author = {Veale, Tony},
-author = {Rosso, Paolo},
-author = {Shutova, Ekaterina},
-author = {Barnden, John},
-author = {Reyes, Antonio},
-journal = {Proceedings of the 9th International Workshop on Semantic Evaluation (SemEval 2015)},
-pages={470--478},
-date={2015}
+\bib{subtweets_communications}{article}{
+	author={Edwards, Autumn},
+	author={Harris, Christina~J},
+	title={To tweet or ‘subtweet’?: Impacts of social networking post
+		directness and valence on interpersonal impressions},
+	date={2016},
+	journal={Computers in Human Behavior},
+	volume={63},
+	pages={304\ndash 310},
 }
 
-\bib{SEMEVAL20164}{article}{
-title = {SemEval-2016 Task 4: Sentiment Analysis in Twitter},
-author = {Nakov, Preslav},
-author = {Ritter, Alan},
-author = {Rosenthal, Sara},
-author = {Sebastiani, Fabrizio},
-author = {Stoyanov, Veselin},
-journal = {SemEval@ NAACL-HLT},
-pages = {1--18},
-date = {2016}
+\bib{the_atlantic}{article}{
+	author={Madrigal, Alexis~C.},
+	title={Behind the machine's back: How social media users avoid getting
+		turned into big data},
+	date={2014},
+	eprint={https://goo.gl/h36jxx},
 }
 
-\bib{SEMEVAL20174}{article}{
-title = {SemEval-2017 Task 4: Sentiment Analysis in Twitter},
-author = {Rosenthal, Sara},
-author = {Farra, Noura},
-author = {Nakov, Preslav},
-journal = {Proceedings of the 11th International Workshop on Semantic Evaluation (SemEval-2017)},
-pages = {502--518},
-date = {2017}
+\bib{the_washington_post}{article}{
+	author={Dewey, Caitlin},
+	title={Study confirms what you always knew: People who subtweet are
+		terrible},
+	date={2016},
+	eprint={https://www.washingtonpost.com/news/the-intersect/wp/2016/06/06/study-confirms-what-you-always-knew-people-who-subtweet-are-terrible/},
 }
 
-\bib{GODATASET}{article}{
-title = {Twitter Sentiment Classification using Distant Supervision},
-author = {Go, Alec},
-author = {Bhayani, Richa},
-author = {Huang, Lei},
-journal = {CS224N Project Report, Stanford},
-pages = {12},
-date = {2009}
+\bib{slate}{article}{
+	author={Hassler, Chelsea},
+	title={Subtweeting looks terrible on you. (you know who you are.)},
+	date={2016},
+	eprint={http://www.slate.com/blogs/future_tense/2016/07/15/subtweeting_looks_terrible_on_you_yes_you.html},
 }
 
-\bib{NAJIDATASET}{article}{
-title = {Twitter Sentiment Analysis Training Corpus (Dataset)},
-author = {Naji, Ibrahim},
-eprint = {http://thinknook.com/twitter-sentiment-analysis-training-corpus-dataset-2012-09-22/},
-date={2013}
+\bib{go_dataset}{article}{
+	title = {Twitter Sentiment Classification using Distant Supervision},
+	author = {Go, Alec},
+	author = {Bhayani, Richa},
+	author = {Huang, Lei},
+	journal = {CS224N Project Report, Stanford},
+	pages = {12},
+	date = {2009}
 }
 
 \end{bibliog}

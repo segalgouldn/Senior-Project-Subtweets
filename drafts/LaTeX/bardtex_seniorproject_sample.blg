@@ -1,0 +1,49 @@
+This is BibTeX, Version 0.99d (TeX Live 2017)
+Capacity: max_strings=100000, hash_size=100000, hash_prime=85009
+The top-level auxiliary file: bardtex_seniorproject_sample.aux
+The style file: amsrn.bst
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Reallocated singl_function (elt_size=4) to 100 items from 50.
+Database file #1: bibliography.bib
+You've used 12 entries,
+            1497 wiz_defined-function locations,
+            467 strings with 4693 characters,
+and the built_in function-call counts, 7960 in all, are:
+= -- 270
+> -- 643
+< -- 4
++ -- 83
+- -- 594
+* -- 704
+:= -- 1460
+add.period$ -- 0
+call.type$ -- 12
+change.case$ -- 61
+chr.to.int$ -- 12
+cite$ -- 12
+duplicate$ -- 609
+empty$ -- 305
+format.name$ -- 50
+if$ -- 886
+int.to.chr$ -- 0
+int.to.str$ -- 0
+missing$ -- 284
+newline$ -- 114
+num.names$ -- 24
+pop$ -- 660
+preamble$ -- 1
+purify$ -- 49
+quote$ -- 0
+skip$ -- 120
+stack$ -- 0
+substring$ -- 100
+swap$ -- 387
+text.length$ -- 72
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 96
+warning$ -- 0
+while$ -- 103
+width$ -- 0
+write$ -- 245
