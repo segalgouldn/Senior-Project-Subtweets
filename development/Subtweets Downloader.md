@@ -13,7 +13,8 @@ import json
 
 
 ```python
-consumer_key, consumer_secret, access_token, access_token_secret = open("../../credentials.txt").read().split("\n")
+consumer_key, consumer_secret, access_token, access_token_secret = (open("../../credentials.txt")
+                                                                    .read().split("\n"))
 ```
 
 #### Authenticate the connection to the API using the credentials
@@ -46,23 +47,30 @@ def first_tweet(tweet_status_object):
 
 
 ```python
-def get_subtweets(max_tweets=10000000, query=("subtweet AND @ since:2018-03-01 exclude:retweets filter:replies")):
+def get_subtweets(max_tweets=10000000, 
+                  query=("subtweet AND @ since:2018-03-01 exclude:retweets filter:replies")):
     subtweets_ids_list = []
     subtweets_list = []
     i = 0
-    for potential_subtweet_reply in tweepy.Cursor(api.search, lang="en", tweet_mode="extended", q=query).items(max_tweets):
+    for potential_subtweet_reply in tweepy.Cursor(api.search, lang="en", 
+                                                  tweet_mode="extended", q=query).items(max_tweets):
         i += 1
-        # print("\tTweet #{0} may be a reply to a subtweet: {1}".format(i, potential_subtweet_reply.full_text.replace("\n", " ")))
         potential_subtweet_original = first_tweet(potential_subtweet_reply)
-        if not potential_subtweet_original.in_reply_to_status_id_str and potential_subtweet_original.user.lang == "en":
-            if potential_subtweet_original.id_str in subtweets_ids_list or "subtweet" in potential_subtweet_original.full_text or "Subtweet" in potential_subtweet_original.full_text or "SUBTWEET" in potential_subtweet_original.full_text:
+        if (not potential_subtweet_original.in_reply_to_status_id_str 
+            and potential_subtweet_original.user.lang == "en"):
+            if (potential_subtweet_original.id_str in subtweets_ids_list 
+                or "subtweet" in potential_subtweet_original.full_text 
+                or "Subtweet" in potential_subtweet_original.full_text 
+                or "SUBTWEET" in potential_subtweet_original.full_text):
                 continue
             else:
                 subtweets_ids_list.append(potential_subtweet_original.id_str)
-                subtweets_list.append({"tweet_data": potential_subtweet_original._json, "reply": potential_subtweet_reply._json})
+                subtweets_list.append({"tweet_data": potential_subtweet_original._json, 
+                                       "reply": potential_subtweet_reply._json})
                 with open("../data/other_data/subtweets.json", "w") as outfile:
                     json.dump(subtweets_list, outfile, indent=4)
-                print("Tweet #{0} was a reply to a subtweet: {1}\n".format(i, potential_subtweet_original.full_text.replace("\n", " ")))
+                print(("Tweet #{0} was a reply to a subtweet: {1}\n"
+                       .format(i, potential_subtweet_original.full_text.replace("\n", " "))))
     return subtweets_list
 ```
 
