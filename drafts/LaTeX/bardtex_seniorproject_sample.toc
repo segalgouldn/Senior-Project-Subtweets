@@ -25,7 +25,7 @@
 \contentsline {section}{\numberline {4.1}Summary of Project Achievements}{11}{section.4.1}
 \contentsline {section}{\numberline {4.2}Future Work \& Considerations}{11}{section.4.2}
 \contentsline {chapter}{Bibliography}{13}{chapter*.5}
-\contentsline {chapter}{\numberline {A}Program for Acquiring Subtweets for Training}{15}{Appendix.1.A}
-\contentsline {chapter}{\numberline {B}Program for Acquiring Non-Subtweets for Training}{19}{Appendix.1.B}
-\contentsline {chapter}{\numberline {C}Program for Training and Testing the Classifier}{23}{Appendix.1.C}
-\contentsline {chapter}{\numberline {D}Program for Classifying Tweets in Real Time}{47}{Appendix.1.D}
+\contentsline {chapter}{\numberline {A}subtweets\_downloader.ipynb}{15}{Appendix.1.A}
+\contentsline {chapter}{\numberline {B}non\_subtweets\_downloader.ipynb}{19}{Appendix.1.B}
+\contentsline {chapter}{\numberline {C}classifier\_creator.ipynb}{23}{Appendix.1.C}
+\contentsline {chapter}{\numberline {D}live\_subtweets\_classifier.ipynb}{47}{Appendix.1.D}
