@@ -85,12 +85,12 @@ pd.options.display.float_format = "{:.4f}".format
 ```
 
 #### Load the two data files
-#### Only use tweets with at least 50% English words
+#### Only use tweets with at least 75% English words
 #### Also, make the mentions of usernames, URLs, and hashtags generic
 
 
 ```python
-def load_data(filename, threshold=0.5):
+def load_data(filename, threshold=0.33):
     data = [(hashtags_pattern.sub("➊", 
              urls_pattern.sub("➋", 
              at_mentions_pattern.sub("➌", 
@@ -104,7 +104,9 @@ def load_data(filename, threshold=0.5):
              .replace("&gt;", ">")
              .replace("&lt;", "<")) 
             for t in json.load(open(filename)) 
-            if t["tweet_data"]["user"]["lang"] == "en" 
+            if t["tweet_data"]["lang"] == "en" 
+            and t["reply"]["lang"] == "en" 
+            and t["tweet_data"]["user"]["lang"] == "en" 
             and t["reply"]["user"]["lang"] == "en"]
     new_data = []
     for tweet in data:
@@ -126,6 +128,18 @@ subtweets_data = load_data("../data/other_data/subtweets.json")
 non_subtweets_data = load_data("../data/other_data/non_subtweets.json")
 ```
 
+#### Remove tweets which are present in both datasets
+
+
+```python
+subtweets_data = [tweet for tweet in subtweets_data if tweet not in non_subtweets_data]
+```
+
+
+```python
+non_subtweets_data = [tweet for tweet in non_subtweets_data if tweet not in subtweets_data]
+```
+
 #### Show examples
 
 
@@ -135,7 +149,7 @@ print(choice(subtweets_data))
 ```
 
     Subtweets dataset example:
-    I haven't bawled at work since I was in public accounting so THANKS EVERYONE.
+    people distancing themselves from me always seem to make me feel sad
 
 
 
@@ -145,7 +159,17 @@ print(choice(non_subtweets_data))
 ```
 
     Non-subtweets dataset example:
-    Next up for discussion, this nightmare ➋
+    It is, evidently, ➊.
+    
+    Yes, I have siblings. Three, actually.
+    
+    No, they're not on twitter.
+    
+    No, I'm not posting a photo.
+    
+    No, I'm not wishing them a "Happy National Siblings Day."
+    
+    What a silly concept.
 
 
 #### Find the length of the smaller dataset
@@ -159,12 +183,12 @@ smallest_length = len(min([subtweets_data, non_subtweets_data], key=len))
 
 
 ```python
-subtweets_data = subtweets_data[:smallest_length]
+subtweets_data = sample(subtweets_data, smallest_length)
 ```
 
 
 ```python
-non_subtweets_data = non_subtweets_data[:smallest_length]
+non_subtweets_data = sample(non_subtweets_data, smallest_length)
 ```
 
 
@@ -172,7 +196,7 @@ non_subtweets_data = non_subtweets_data[:smallest_length]
 print("Smallest dataset length: {}".format(len(subtweets_data)))
 ```
 
-    Smallest dataset length: 7837
+    Smallest dataset length: 11202
 
 
 #### Prepare data for training
@@ -238,10 +262,7 @@ def confusion_matrices(training_data, num_folds=10):
     test_reports = []
     train_reports = []
     
-    test_nulls = []
     test_accuracies = []
-    
-    train_nulls = []
     train_accuracies = []
     for i, (train_index, test_index) in enumerate(kf.split(text_training_data)):
 
@@ -261,10 +282,7 @@ def confusion_matrices(training_data, num_folds=10):
         test_report = classification_report(class_test, predictions_test, digits=4)
         test_reports.append(test_report)
         print(test_report)
-        
-        test_null = max(pd.value_counts(pd.Series(class_test)))/float(len(class_test))
-        test_nulls.append(test_null)
-        print("Test Data Null Accuracy: {:.4f}\n".format(test_null))
+                
         test_accuracy = accuracy_score(class_test, predictions_test)
         test_accuracies.append(test_accuracy)
         print("Test Data Accuracy: {:.4f}\n".format(test_accuracy))
@@ -275,10 +293,7 @@ def confusion_matrices(training_data, num_folds=10):
         train_report = classification_report(class_train, predictions_train, digits=4)
         train_reports.append(train_report)
         print(train_report)
-        
-        train_null = max(pd.value_counts(pd.Series(class_train)))/float(len(class_train))
-        train_nulls.append(train_null)
-        print("Train Data Null Accuracy: {:.4f}\n".format(train_null))
+                
         train_accuracy = accuracy_score(class_train, predictions_train)
         train_accuracies.append(train_accuracy)
         print("Train Data Accuracy: {:.4f}\n".format(train_accuracy))
@@ -315,12 +330,6 @@ def confusion_matrices(training_data, num_folds=10):
     print("Train Data Averages Across All Folds:")
     reports_mean(train_reports)
     
-    print("Average Test Data Null Accuracy: {:.4f}\n".format(sum(test_nulls)/float(len(test_nulls))))
-    print("Average Test Data Accuracy: {:.4f}\n".format(sum(test_accuracies)/float(len(test_accuracies))))
-    
-    print("Average Train Data Null Accuracy: {:.4f}\n".format(sum(train_nulls)/float(len(train_nulls))))
-    print("Average Train Data Accuracy: {:.4f}\n".format(sum(train_accuracies)/float(len(train_accuracies))))
-    
     return {"Test": cnf_matrix_test, "Train": cnf_matrix_train}
 ```
 
@@ -332,37 +341,246 @@ cnf_matrix_test = cnf_matrices["Test"]
 cnf_matrix_train = cnf_matrices["Train"]
 ```
 
-    OUTPUT HAS BEEN TRUNCATED FOR PRINTING
+    Test Data Iteration 1:
+                  precision    recall  f1-score   support
+    
+    non-subtweet     0.7080    0.6811    0.6943      1082
+        subtweet     0.7125    0.7377    0.7249      1159
+    
+     avg / total     0.7103    0.7104    0.7101      2241
+    
+    Test Data Accuracy: 0.7104
+    
+    =====================================================
+    Train Data Iteration 1:
+                  precision    recall  f1-score   support
+    
+    non-subtweet     0.9846    0.9796    0.9821     10120
+        subtweet     0.9796    0.9846    0.9821     10043
+    
+     avg / total     0.9821    0.9821    0.9821     20163
+    
+    Train Data Accuracy: 0.9821
+    
+    =====================================================
+    Test Data Iteration 2:
+                  precision    recall  f1-score   support
+    
+    non-subtweet     0.7146    0.6637    0.6882      1109
+        subtweet     0.6920    0.7403    0.7153      1132
+    
+     avg / total     0.7032    0.7024    0.7019      2241
+    
+    Test Data Accuracy: 0.7024
+    
+    =====================================================
+    Train Data Iteration 2:
+                  precision    recall  f1-score   support
+    
+    non-subtweet     0.9851    0.9785    0.9818     10093
+        subtweet     0.9786    0.9852    0.9819     10070
+    
+     avg / total     0.9819    0.9818    0.9818     20163
+    
+    Train Data Accuracy: 0.9818
+    
+    =====================================================
+    Test Data Iteration 3:
+                  precision    recall  f1-score   support
+    
+    non-subtweet     0.7344    0.6472    0.6880      1145
+        subtweet     0.6721    0.7555    0.7113      1096
+    
+     avg / total     0.7039    0.7001    0.6994      2241
+    
+    Test Data Accuracy: 0.7001
+    
+    =====================================================
+    Train Data Iteration 3:
+                  precision    recall  f1-score   support
+    
+    non-subtweet     0.9875    0.9760    0.9817     10057
+        subtweet     0.9764    0.9877    0.9820     10106
+    
+     avg / total     0.9820    0.9819    0.9819     20163
+    
+    Train Data Accuracy: 0.9819
+    
+    =====================================================
+    Test Data Iteration 4:
+                  precision    recall  f1-score   support
+    
+    non-subtweet     0.6923    0.6615    0.6766      1102
+        subtweet     0.6860    0.7155    0.7005      1139
+    
+     avg / total     0.6891    0.6890    0.6887      2241
+    
+    Test Data Accuracy: 0.6890
+    
+    =====================================================
+    Train Data Iteration 4:
+                  precision    recall  f1-score   support
+    
+    non-subtweet     0.9850    0.9800    0.9825     10100
+        subtweet     0.9800    0.9850    0.9825     10063
+    
+     avg / total     0.9825    0.9825    0.9825     20163
+    
+    Train Data Accuracy: 0.9825
+    
+    =====================================================
+    Test Data Iteration 5:
+                  precision    recall  f1-score   support
+    
+    non-subtweet     0.7011    0.6389    0.6686      1105
+        subtweet     0.6764    0.7348    0.7044      1135
+    
+     avg / total     0.6886    0.6875    0.6867      2240
+    
+    Test Data Accuracy: 0.6875
+    
+    =====================================================
+    Train Data Iteration 5:
+                  precision    recall  f1-score   support
+    
+    non-subtweet     0.9846    0.9778    0.9812     10097
+        subtweet     0.9779    0.9847    0.9813     10067
+    
+     avg / total     0.9813    0.9813    0.9813     20164
+    
+    Train Data Accuracy: 0.9813
+    
+    =====================================================
+    Test Data Iteration 6:
+                  precision    recall  f1-score   support
+    
+    non-subtweet     0.7237    0.6364    0.6772      1144
+        subtweet     0.6629    0.7464    0.7021      1096
+    
+     avg / total     0.6939    0.6902    0.6894      2240
+    
+    Test Data Accuracy: 0.6902
+    
+    =====================================================
+    Train Data Iteration 6:
+                  precision    recall  f1-score   support
+    
+    non-subtweet     0.9884    0.9748    0.9816     10058
+        subtweet     0.9753    0.9886    0.9819     10106
+    
+     avg / total     0.9818    0.9817    0.9817     20164
+    
+    Train Data Accuracy: 0.9817
+    
+    =====================================================
+    Test Data Iteration 7:
+                  precision    recall  f1-score   support
+    
+    non-subtweet     0.7192    0.6364    0.6753      1147
+        subtweet     0.6596    0.7392    0.6972      1093
+    
+     avg / total     0.6901    0.6866    0.6860      2240
+    
+    Test Data Accuracy: 0.6866
+    
+    =====================================================
+    Train Data Iteration 7:
+                  precision    recall  f1-score   support
+    
+    non-subtweet     0.9869    0.9757    0.9813     10055
+        subtweet     0.9761    0.9871    0.9816     10109
+    
+     avg / total     0.9815    0.9815    0.9815     20164
+    
+    Train Data Accuracy: 0.9815
+    
+    =====================================================
+    Test Data Iteration 8:
+                  precision    recall  f1-score   support
+    
+    non-subtweet     0.6976    0.6384    0.6667      1095
+        subtweet     0.6801    0.7354    0.7067      1145
+    
+     avg / total     0.6887    0.6879    0.6871      2240
+    
+    Test Data Accuracy: 0.6879
+    
+    =====================================================
+    Train Data Iteration 8:
+                  precision    recall  f1-score   support
+    
+    non-subtweet     0.9846    0.9790    0.9818     10107
+        subtweet     0.9790    0.9846    0.9818     10057
+    
+     avg / total     0.9818    0.9818    0.9818     20164
+    
+    Train Data Accuracy: 0.9818
+    
+    =====================================================
+    Test Data Iteration 9:
+                  precision    recall  f1-score   support
+    
+    non-subtweet     0.7237    0.6292    0.6732      1149
+        subtweet     0.6567    0.7470    0.6990      1091
+    
+     avg / total     0.6911    0.6866    0.6857      2240
+    
+    Test Data Accuracy: 0.6866
+    
+    =====================================================
+    Train Data Iteration 9:
+                  precision    recall  f1-score   support
+    
+    non-subtweet     0.9876    0.9748    0.9812     10053
+        subtweet     0.9753    0.9878    0.9815     10111
+    
+     avg / total     0.9814    0.9814    0.9814     20164
+    
+    Train Data Accuracy: 0.9814
+    
+    =====================================================
+    Test Data Iteration 10:
+                  precision    recall  f1-score   support
+    
+    non-subtweet     0.7279    0.6664    0.6958      1124
+        subtweet     0.6903    0.7491    0.7185      1116
+    
+     avg / total     0.7092    0.7076    0.7071      2240
+    
+    Test Data Accuracy: 0.7076
+    
+    =====================================================
+    Train Data Iteration 10:
+                  precision    recall  f1-score   support
+    
+    non-subtweet     0.9871    0.9764    0.9817     10078
+        subtweet     0.9767    0.9872    0.9819     10086
+    
+     avg / total     0.9819    0.9818    0.9818     20164
+    
+    Train Data Accuracy: 0.9818
     
     =====================================================
     Test Data Averages Across All Folds:
                   precision    recall  f1-score   support
     
-    non-subtweet     0.7125    0.6506    0.6798      783
-        subtweet     0.6785    0.7376    0.7065      783
+    non-subtweet     0.7142    0.6499    0.6804      1120
+        subtweet     0.6789    0.7401    0.7080      1120
     
-     avg / total     0.6960    0.6939    0.6933      1567
+     avg / total     0.6968    0.6948    0.6942      2240
     
     =====================================================
     Train Data Averages Across All Folds:
                   precision    recall  f1-score   support
     
-    non-subtweet     0.9889    0.9819    0.9854      7053
-        subtweet     0.9820    0.9890    0.9855      7053
+    non-subtweet     0.9861    0.9773    0.9817      10081
+        subtweet     0.9775    0.9862    0.9819      10081
     
-     avg / total     0.9855    0.9854    0.9854      14106
+     avg / total     0.9818    0.9818    0.9818      20163
     
     =====================================================
-    Average Test Data Null Accuracy: 0.5134
-    
-    Average Test Data Accuracy: 0.6939
-    
-    Average Train Data Null Accuracy: 0.5015
-    
-    Average Train Data Accuracy: 0.9854
-    
-    CPU times: user 1min 2s, sys: 1.13 s, total: 1min 4s
-    Wall time: 1min 5s
+    CPU times: user 1min 43s, sys: 2.82 s, total: 1min 45s
+    Wall time: 1min 54s
 
 
 #### See the most informative features
@@ -393,8 +611,8 @@ def most_informative_features(pipeline, n=10000):
 most_informative_features_all = most_informative_features(sentiment_pipeline)
 ```
 
-    CPU times: user 1.42 s, sys: 28 ms, total: 1.44 s
-    Wall time: 1.51 s
+    CPU times: user 2.34 s, sys: 59.5 ms, total: 2.4 s
+    Wall time: 2.59 s
 
 
 
@@ -435,177 +653,177 @@ final_features.head(25)
     <tr>
       <th>0</th>
       <td>! ! &amp;</td>
-      <td>-12.6618</td>
+      <td>-12.9695</td>
       <td>.</td>
-      <td>-7.5300</td>
+      <td>-7.5149</td>
     </tr>
     <tr>
       <th>1</th>
-      <td>! ! (</td>
-      <td>-12.6618</td>
+      <td>! ! )</td>
+      <td>-12.9695</td>
       <td>,</td>
-      <td>-7.9193</td>
+      <td>-7.8807</td>
     </tr>
     <tr>
       <th>2</th>
-      <td>! ! )</td>
-      <td>-12.6618</td>
+      <td>! ! -</td>
+      <td>-12.9695</td>
       <td>"</td>
-      <td>-8.0928</td>
+      <td>-8.0400</td>
     </tr>
     <tr>
       <th>3</th>
-      <td>! ! .</td>
-      <td>-12.6618</td>
+      <td>! ! /</td>
+      <td>-12.9695</td>
       <td>people</td>
-      <td>-8.3903</td>
+      <td>-8.3247</td>
     </tr>
     <tr>
       <th>4</th>
-      <td>! ! 100</td>
-      <td>-12.6618</td>
+      <td>! ! 0.125</td>
+      <td>-12.9695</td>
       <td>?</td>
-      <td>-8.4594</td>
+      <td>-8.3881</td>
     </tr>
     <tr>
       <th>5</th>
-      <td>! ! 15</td>
-      <td>-12.6618</td>
-      <td>don't</td>
-      <td>-8.5588</td>
+      <td>! ! 11</td>
+      <td>-12.9695</td>
+      <td>like</td>
+      <td>-8.5629</td>
     </tr>
     <tr>
       <th>6</th>
       <td>! ! 3</td>
-      <td>-12.6618</td>
-      <td>like</td>
-      <td>-8.5889</td>
+      <td>-12.9695</td>
+      <td>don't</td>
+      <td>-8.5688</td>
     </tr>
     <tr>
       <th>7</th>
       <td>! ! 5</td>
-      <td>-12.6618</td>
+      <td>-12.9695</td>
       <td>just</td>
-      <td>-8.6754</td>
+      <td>-8.6124</td>
     </tr>
     <tr>
       <th>8</th>
-      <td>! ! 8am</td>
-      <td>-12.6618</td>
+      <td>! ! 5/10</td>
+      <td>-12.9695</td>
       <td>i'm</td>
-      <td>-8.6969</td>
+      <td>-8.7010</td>
     </tr>
     <tr>
       <th>9</th>
-      <td>! ! :)</td>
-      <td>-12.6618</td>
+      <td>! ! 6</td>
+      <td>-12.9695</td>
       <td>!</td>
-      <td>-8.9031</td>
+      <td>-8.7257</td>
     </tr>
     <tr>
       <th>10</th>
-      <td>! ! ;)</td>
-      <td>-12.6618</td>
+      <td>! ! 8am</td>
+      <td>-12.9695</td>
       <td>it's</td>
-      <td>-8.9727</td>
+      <td>-8.9523</td>
     </tr>
     <tr>
       <th>11</th>
-      <td>! ! absolutely</td>
-      <td>-12.6618</td>
-      <td>...</td>
-      <td>-9.0431</td>
+      <td>! ! ;)</td>
+      <td>-12.9695</td>
+      <td>:</td>
+      <td>-8.9657</td>
     </tr>
     <tr>
       <th>12</th>
-      <td>! ! amazing</td>
-      <td>-12.6618</td>
-      <td>you're</td>
-      <td>-9.0488</td>
+      <td>! ! absolutely</td>
+      <td>-12.9695</td>
+      <td>...</td>
+      <td>-8.9887</td>
     </tr>
     <tr>
       <th>13</th>
-      <td>! ! ask</td>
-      <td>-12.6618</td>
-      <td>:</td>
-      <td>-9.0704</td>
+      <td>! ! agree</td>
+      <td>-12.9695</td>
+      <td>know</td>
+      <td>-9.0082</td>
     </tr>
     <tr>
       <th>14</th>
-      <td>! ! awesome</td>
-      <td>-12.6618</td>
-      <td>know</td>
-      <td>-9.0928</td>
+      <td>! ! amazing</td>
+      <td>-12.9695</td>
+      <td>you're</td>
+      <td>-9.0621</td>
     </tr>
     <tr>
       <th>15</th>
-      <td>! ! big</td>
-      <td>-12.6618</td>
+      <td>! ! approved</td>
+      <td>-12.9695</td>
       <td>twitter</td>
-      <td>-9.1443</td>
+      <td>-9.1132</td>
     </tr>
     <tr>
       <th>16</th>
-      <td>! ! bite</td>
-      <td>-12.6618</td>
+      <td>! ! aug</td>
+      <td>-12.9695</td>
       <td>friends</td>
-      <td>-9.1650</td>
+      <td>-9.2205</td>
     </tr>
     <tr>
       <th>17</th>
-      <td>! ! close</td>
-      <td>-12.6618</td>
+      <td>! ! awesome</td>
+      <td>-12.9695</td>
       <td>time</td>
-      <td>-9.2879</td>
+      <td>-9.2925</td>
     </tr>
     <tr>
       <th>18</th>
-      <td>! ! collection</td>
-      <td>-12.6618</td>
-      <td>want</td>
-      <td>-9.2923</td>
+      <td>! ! bambam</td>
+      <td>-12.9695</td>
+      <td>u</td>
+      <td>-9.2998</td>
     </tr>
     <tr>
       <th>19</th>
-      <td>! ! come</td>
-      <td>-12.6618</td>
-      <td>u</td>
-      <td>-9.3004</td>
+      <td>! ! best</td>
+      <td>-12.9695</td>
+      <td>really</td>
+      <td>-9.3144</td>
     </tr>
     <tr>
       <th>20</th>
-      <td>! ! don't</td>
-      <td>-12.6618</td>
-      <td>really</td>
-      <td>-9.3518</td>
+      <td>! ! big</td>
+      <td>-12.9695</td>
+      <td>think</td>
+      <td>-9.3482</td>
     </tr>
     <tr>
       <th>21</th>
-      <td>! ! enter</td>
-      <td>-12.6618</td>
-      <td>shit</td>
-      <td>-9.3699</td>
+      <td>! ! bobwhite</td>
+      <td>-12.9695</td>
+      <td>want</td>
+      <td>-9.3521</td>
     </tr>
     <tr>
       <th>22</th>
-      <td>! ! epic</td>
-      <td>-12.6618</td>
-      <td>good</td>
-      <td>-9.4017</td>
+      <td>! ! breaking</td>
+      <td>-12.9695</td>
+      <td>😂</td>
+      <td>-9.3539</td>
     </tr>
     <tr>
       <th>23</th>
-      <td>! ! extremely</td>
-      <td>-12.6618</td>
-      <td>think</td>
-      <td>-9.4155</td>
+      <td>! ! bring</td>
+      <td>-12.9695</td>
+      <td>*</td>
+      <td>-9.3577</td>
     </tr>
     <tr>
       <th>24</th>
-      <td>! ! family</td>
-      <td>-12.6618</td>
-      <td>make</td>
-      <td>-9.4225</td>
+      <td>! ! c'mon</td>
+      <td>-12.9695</td>
+      <td>good</td>
+      <td>-9.3581</td>
     </tr>
   </tbody>
 </table>
@@ -659,11 +877,11 @@ plt.show()
 ```
 
 
-![png](output_52_0.png)
+![png](output_55_0.png)
 
 
 
-![png](output_52_1.png)
+![png](output_55_1.png)
 
 
 #### Update matplotlib style
@@ -729,8 +947,8 @@ filenames = glob("../data/data_for_testing/friends_data/*.csv")
 dataframes = process_tweets_for_testing(filenames)
 ```
 
-    CPU times: user 9.54 s, sys: 145 ms, total: 9.68 s
-    Wall time: 10.4 s
+    CPU times: user 9.33 s, sys: 156 ms, total: 9.49 s
+    Wall time: 9.82 s
 
 
 #### Show a random table
@@ -760,49 +978,49 @@ dataframes[chosen_username]["all"].sort_values(by="SubtweetProbability", ascendi
   </thead>
   <tbody>
     <tr>
-      <th>462</th>
-      <td>ppl saying zionist shit on the internet really fucks w my high</td>
-      <td>2017-07-17 02:27:07</td>
-      <td>11</td>
+      <th>66</th>
+      <td>tfw you are on twitter to wryly complain about the insomnia that was largely caused by being on twitter</td>
+      <td>2018-01-12 03:29:13</td>
+      <td>7</td>
+      <td>1</td>
+      <td>951732786557341698</td>
+      <td>0.8513</td>
+    </tr>
+    <tr>
+      <th>481</th>
+      <td>Twitter contrived to have people pretend to "like" you and now it reveals how many people could've pretended to like you but chose not to.</td>
+      <td>2015-11-11 15:56:31</td>
       <td>0</td>
-      <td>886834632125288448</td>
-      <td>0.8244</td>
-    </tr>
-    <tr>
-      <th>15</th>
-      <td>i hate seeing shitty straight people yelling at their kids in public like why did you breed</td>
-      <td>2018-03-21 12:49:00</td>
-      <td>24</td>
-      <td>3</td>
-      <td>976500935437496320</td>
-      <td>0.8140</td>
-    </tr>
-    <tr>
-      <th>392</th>
-      <td>some1 replied to my tweet about cis ppl making xcuses 4 not dating trans ppl w "bc they have a fucking cock"</td>
-      <td>2017-08-01 19:08:46</td>
-      <td>10</td>
       <td>0</td>
-      <td>892522524361322496</td>
-      <td>0.8044</td>
+      <td>664547274110967808</td>
+      <td>0.8360</td>
     </tr>
     <tr>
-      <th>563</th>
-      <td>cw my shit mental health: u know shit is f'd up when ur lookin @ a meme abt dying of old age and yr like "this meme is actually optimistic"</td>
-      <td>2017-06-20 22:12:12</td>
+      <th>270</th>
+      <td>It's cool that we get to do cool stuff like this (and that we can make "cool" mean whatever we friggin please)➋</td>
+      <td>2016-09-05 14:33:54</td>
       <td>2</td>
-      <td>1</td>
-      <td>877348396029358080</td>
-      <td>0.7965</td>
+      <td>0</td>
+      <td>772865356922810368</td>
+      <td>0.8048</td>
     </tr>
     <tr>
-      <th>477</th>
-      <td>I FUCKING LOVE QUEER PEOPLE</td>
-      <td>2017-07-09 21:20:04</td>
-      <td>19</td>
-      <td>1</td>
-      <td>884220643226644480</td>
-      <td>0.7938</td>
+      <th>163</th>
+      <td>"What if Iago isn't a devilish mastermind, but just, like, a shitty dude? Like a petty, shitty dude?"- my bathetic pedagogy in a nutshell</td>
+      <td>2017-04-20 12:02:04</td>
+      <td>18</td>
+      <td>3</td>
+      <td>855089189423120384</td>
+      <td>0.7860</td>
+    </tr>
+    <tr>
+      <th>43</th>
+      <td>Deep down I am very dumb and immature and it is very very exhausting to pretend otherwise all day gang</td>
+      <td>2018-02-19 21:48:33</td>
+      <td>24</td>
+      <td>2</td>
+      <td>965780184283668480</td>
+      <td>0.7843</td>
     </tr>
   </tbody>
 </table>
@@ -877,122 +1095,122 @@ test_df_stats
     </tr>
     <tr>
       <th>mean</th>
-      <td>0.4996</td>
-      <td>0.5086</td>
-      <td>0.5438</td>
-      <td>0.5270</td>
-      <td>0.5187</td>
-      <td>0.4976</td>
-      <td>0.4388</td>
-      <td>0.5408</td>
-      <td>0.5107</td>
-      <td>0.4496</td>
-      <td>0.5375</td>
-      <td>0.5037</td>
-      <td>0.5399</td>
-      <td>0.5355</td>
+      <td>0.5130</td>
+      <td>0.5162</td>
+      <td>0.5523</td>
+      <td>0.5267</td>
+      <td>0.5218</td>
+      <td>0.5008</td>
+      <td>0.4447</td>
+      <td>0.5427</td>
+      <td>0.5207</td>
+      <td>0.4458</td>
+      <td>0.5396</td>
+      <td>0.5078</td>
+      <td>0.5458</td>
+      <td>0.5427</td>
     </tr>
     <tr>
       <th>std</th>
-      <td>0.1059</td>
-      <td>0.1150</td>
-      <td>0.1136</td>
-      <td>0.1086</td>
-      <td>0.1023</td>
-      <td>0.1106</td>
-      <td>0.0981</td>
-      <td>0.1152</td>
-      <td>0.1089</td>
-      <td>0.0981</td>
-      <td>0.1168</td>
-      <td>0.1129</td>
-      <td>0.1131</td>
-      <td>0.1029</td>
+      <td>0.1112</td>
+      <td>0.1177</td>
+      <td>0.1180</td>
+      <td>0.1148</td>
+      <td>0.1095</td>
+      <td>0.1172</td>
+      <td>0.1012</td>
+      <td>0.1230</td>
+      <td>0.1130</td>
+      <td>0.1027</td>
+      <td>0.1220</td>
+      <td>0.1188</td>
+      <td>0.1216</td>
+      <td>0.1098</td>
     </tr>
     <tr>
       <th>min</th>
-      <td>0.1981</td>
-      <td>0.0953</td>
-      <td>0.1266</td>
-      <td>0.1626</td>
-      <td>0.1522</td>
-      <td>0.0566</td>
-      <td>0.1497</td>
-      <td>0.1983</td>
-      <td>0.1506</td>
-      <td>0.1353</td>
-      <td>0.0750</td>
-      <td>0.0618</td>
-      <td>0.1781</td>
-      <td>0.1077</td>
+      <td>0.1886</td>
+      <td>0.0941</td>
+      <td>0.1360</td>
+      <td>0.1435</td>
+      <td>0.1375</td>
+      <td>0.0440</td>
+      <td>0.1518</td>
+      <td>0.1681</td>
+      <td>0.1153</td>
+      <td>0.1234</td>
+      <td>0.0684</td>
+      <td>0.0467</td>
+      <td>0.1654</td>
+      <td>0.0807</td>
     </tr>
     <tr>
       <th>25%</th>
-      <td>0.4291</td>
-      <td>0.4304</td>
-      <td>0.4669</td>
-      <td>0.4538</td>
-      <td>0.4492</td>
-      <td>0.4260</td>
-      <td>0.3733</td>
-      <td>0.4700</td>
-      <td>0.4368</td>
-      <td>0.3896</td>
-      <td>0.4645</td>
-      <td>0.4279</td>
-      <td>0.4677</td>
-      <td>0.4708</td>
+      <td>0.4355</td>
+      <td>0.4319</td>
+      <td>0.4731</td>
+      <td>0.4526</td>
+      <td>0.4481</td>
+      <td>0.4257</td>
+      <td>0.3777</td>
+      <td>0.4644</td>
+      <td>0.4454</td>
+      <td>0.3770</td>
+      <td>0.4619</td>
+      <td>0.4310</td>
+      <td>0.4668</td>
+      <td>0.4770</td>
     </tr>
     <tr>
       <th>50%</th>
-      <td>0.4971</td>
-      <td>0.5037</td>
-      <td>0.5417</td>
-      <td>0.5217</td>
-      <td>0.5180</td>
-      <td>0.4981</td>
-      <td>0.4379</td>
-      <td>0.5327</td>
-      <td>0.5061</td>
-      <td>0.4596</td>
-      <td>0.5351</td>
-      <td>0.4986</td>
-      <td>0.5410</td>
-      <td>0.5335</td>
+      <td>0.5174</td>
+      <td>0.5141</td>
+      <td>0.5508</td>
+      <td>0.5235</td>
+      <td>0.5239</td>
+      <td>0.5002</td>
+      <td>0.4497</td>
+      <td>0.5353</td>
+      <td>0.5186</td>
+      <td>0.4562</td>
+      <td>0.5374</td>
+      <td>0.5024</td>
+      <td>0.5471</td>
+      <td>0.5421</td>
     </tr>
     <tr>
       <th>75%</th>
-      <td>0.5670</td>
+      <td>0.5917</td>
+      <td>0.5926</td>
+      <td>0.6352</td>
+      <td>0.6013</td>
+      <td>0.5926</td>
+      <td>0.5749</td>
+      <td>0.5062</td>
+      <td>0.6247</td>
+      <td>0.5903</td>
+      <td>0.5037</td>
+      <td>0.6192</td>
       <td>0.5847</td>
-      <td>0.6213</td>
-      <td>0.5982</td>
-      <td>0.5843</td>
-      <td>0.5669</td>
-      <td>0.5016</td>
-      <td>0.6190</td>
-      <td>0.5811</td>
-      <td>0.5117</td>
-      <td>0.6138</td>
-      <td>0.5782</td>
-      <td>0.6189</td>
-      <td>0.6028</td>
+      <td>0.6300</td>
+      <td>0.6123</td>
     </tr>
     <tr>
       <th>max</th>
-      <td>0.8457</td>
-      <td>0.8579</td>
-      <td>0.8497</td>
-      <td>0.8749</td>
-      <td>0.8674</td>
-      <td>0.8766</td>
-      <td>0.8157</td>
-      <td>0.8498</td>
-      <td>0.8972</td>
-      <td>0.7563</td>
-      <td>0.8447</td>
-      <td>0.9091</td>
-      <td>0.8244</td>
-      <td>0.8674</td>
+      <td>0.8513</td>
+      <td>0.8828</td>
+      <td>0.8769</td>
+      <td>0.9016</td>
+      <td>0.9263</td>
+      <td>0.8808</td>
+      <td>0.8095</td>
+      <td>0.8645</td>
+      <td>0.8827</td>
+      <td>0.7802</td>
+      <td>0.8743</td>
+      <td>0.8720</td>
+      <td>0.8449</td>
+      <td>0.8576</td>
     </tr>
   </tbody>
 </table>
@@ -1041,7 +1259,7 @@ plt.show()
 ```
 
 
-![png](output_70_0.png)
+![png](output_73_0.png)
 
 
 #### Plot a histogram with all of them
@@ -1081,31 +1299,31 @@ new_tests_df_stats
     </tr>
     <tr>
       <th>mean</th>
-      <td>0.5133</td>
+      <td>0.5182</td>
     </tr>
     <tr>
       <th>std</th>
-      <td>0.1115</td>
+      <td>0.1171</td>
     </tr>
     <tr>
       <th>min</th>
-      <td>0.0566</td>
+      <td>0.0440</td>
     </tr>
     <tr>
       <th>25%</th>
-      <td>0.4385</td>
+      <td>0.4405</td>
     </tr>
     <tr>
       <th>50%</th>
-      <td>0.5093</td>
+      <td>0.5147</td>
     </tr>
     <tr>
       <th>75%</th>
-      <td>0.5860</td>
+      <td>0.5939</td>
     </tr>
     <tr>
       <th>max</th>
-      <td>0.9091</td>
+      <td>0.9263</td>
     </tr>
   </tbody>
 </table>
@@ -1147,7 +1365,7 @@ plt.show()
 
 
 
-![png](output_76_1.png)
+![png](output_79_1.png)
 
 
 #### Statisitics on training data
@@ -1211,29 +1429,29 @@ length_data_for_stats.sort_values(by="Length", ascending=False).head()
   </thead>
   <tbody>
     <tr>
-      <th>8887</th>
-      <td>281</td>
-      <td>This Tweet does not endorse the use of Nazi Symbols in any form! I think the image which has been published on social media and MSM is a day or two old. It conjures up strong emotions for many people, My question is simple what meaning do you think is being conveyed by the image?</td>
+      <th>16877</th>
+      <td>293</td>
+      <td>That's what gets me WHY low Brow him ?? Why By all that's right he should be impeachedhe is still involves himself in business foreignCabinet heads are just as slimy with using planes etc his disregard for bills Pres o put in 4 protecting us!!</td>
     </tr>
     <tr>
-      <th>2198</th>
-      <td>281</td>
-      <td>I need to learn how to do this. I ask "how can I help" a lot because I genuinely want to make things better for friends , but this *can* put a burden back upon those who are suffering. Sometimes it may be best to just have exuberant and fearless compassion the same way a pet does</td>
+      <th>12086</th>
+      <td>293</td>
+      <td>Again.. you worship a xenophobic God and a Bible that promotes hate as long as you don't ignore all those parts.. a God that sends people to burn in Hell forever for not believing in him....you don't get to call those talking with you haters!</td>
     </tr>
     <tr>
-      <th>1531</th>
+      <th>12591</th>
       <td>281</td>
-      <td>hi! I'm not normally v personal like this and I probably won't be at least for a v long time but I thought I'd share this \nwhile I was scrolling on Twitter today I had like a sudden impulse to just dump all my thoughts about what id been reading and seeing and so far it actually-</td>
+      <td>Guys, I'm gonna be completely transparent with you. I've enjoyed the weeks The Flash was off the air. Mainly because this season.... This season 4 curse. It feels almost just like Arrow S4 years ago. But instead of Olicity shippers, these new hardcore "fans" accusing urs truly of</td>
     </tr>
     <tr>
-      <th>10533</th>
+      <th>17346</th>
       <td>281</td>
-      <td>Some people are undecided about testing on animals. Understandable. There's so much propaganda and secrecy about it. Here's a quick test though, &amp; you're answer should tell you. What would you do if some man came to your house &amp; squirted disinfectant in your beautiful dog's eyes?</td>
+      <td>If it turns out Joy Reid is falsely denying authorship of these horribly bigoted articles &amp; fabricated a tale about nefarious hackers invading the Wayback Archives to add these passages to her real articles, what should happen? What will happen? Do any liberals care if it's true?</td>
     </tr>
     <tr>
-      <th>10521</th>
+      <th>20810</th>
       <td>281</td>
-      <td>Enthralled by Raja Shiv Chhatrapati, a well mounted magnum opus on life of the Maratha warrior at Red Fort. Vividly brought out his philosophies, struggles, inspiration from mother Jijayee &amp; penchant for gender equality through well conceived music, dance &amp; dialogues. A must see!</td>
+      <td>Same treatment Dolph, Ye, and Gucci got, imprisonment or "rehabilitation" and stripping that person of their essence psychologically which changes their effect on culture and what they say which leads to a shell of obedience it's deeper than that but in essence that's not Rahmeek</td>
     </tr>
   </tbody>
 </table>
@@ -1263,29 +1481,29 @@ length_data_for_stats.sort_values(by="Length", ascending=True).head()
   </thead>
   <tbody>
     <tr>
-      <th>7699</th>
-      <td>1</td>
-      <td>A</td>
+      <th>1894</th>
+      <td>4</td>
+      <td>Rude</td>
     </tr>
     <tr>
-      <th>3473</th>
-      <td>2</td>
-      <td>no</td>
+      <th>2045</th>
+      <td>4</td>
+      <td>Ugly</td>
     </tr>
     <tr>
-      <th>5896</th>
-      <td>2</td>
-      <td>uh</td>
+      <th>4801</th>
+      <td>4</td>
+      <td>Fake</td>
     </tr>
     <tr>
-      <th>6676</th>
-      <td>2</td>
-      <td>i-</td>
+      <th>8630</th>
+      <td>4</td>
+      <td>Lame</td>
     </tr>
     <tr>
-      <th>2038</th>
-      <td>2</td>
-      <td>Ha</td>
+      <th>11973</th>
+      <td>4</td>
+      <td>fear</td>
     </tr>
   </tbody>
 </table>
@@ -1315,35 +1533,35 @@ length_data_for_stats.describe()
   <tbody>
     <tr>
       <th>count</th>
-      <td>15674.0000</td>
+      <td>22404.0000</td>
     </tr>
     <tr>
       <th>mean</th>
-      <td>106.8089</td>
+      <td>103.3253</td>
     </tr>
     <tr>
       <th>std</th>
-      <td>73.8680</td>
+      <td>72.8493</td>
     </tr>
     <tr>
       <th>min</th>
-      <td>1.0000</td>
+      <td>4.0000</td>
     </tr>
     <tr>
       <th>25%</th>
-      <td>48.0000</td>
+      <td>46.0000</td>
     </tr>
     <tr>
       <th>50%</th>
-      <td>87.0000</td>
+      <td>83.0000</td>
     </tr>
     <tr>
       <th>75%</th>
-      <td>150.0000</td>
+      <td>144.0000</td>
     </tr>
     <tr>
       <th>max</th>
-      <td>281.0000</td>
+      <td>293.0000</td>
     </tr>
   </tbody>
 </table>
@@ -1385,29 +1603,29 @@ punctuation_data_for_stats.sort_values(by="Punctuation", ascending=False).head()
   </thead>
   <tbody>
     <tr>
-      <th>8957</th>
+      <th>4170</th>
+      <td>13</td>
+      <td>IF U WERE KILLED TOMORROW, I WOULDNT GO 2 UR FUNERAL CUZ ID B N JAIL 4 KILLIN DA PERSON THAT KILLED U!\n......__________________ \n...../_==o;;;;;;;;______[]\n.....), —-.(_(__) / \n....// (..) ), —--" \n...//___// \n..//___// \nWE TRUE HOMIES WE RIDE TOGETHER WE DIE TOGETHER</td>
+    </tr>
+    <tr>
+      <th>15008</th>
       <td>11</td>
       <td>Going to go ahead and crown myself the absolute emperor of finding things on menus that sound interesting, deciding I would like to try them, then being told "I'm sorry sir, that's actually not available..."\n\n[ then why the @#$% is it ON YOUR MENUUUUUUUU-- ]</td>
     </tr>
     <tr>
-      <th>6725</th>
-      <td>9</td>
-      <td>4-yo: DADDEEEEEE!? LET'S PLAY!\nMe: Ok, baby. \n4yo: you play w/ her. put a dress on her DADDEEEEEE. \nMe: Ok. *puts doll in dollhouse*\n4yo: SHE DOESN'T GO THERE!!</td>
+      <th>20984</th>
+      <td>10</td>
+      <td>Hooray—for those of you who've been asking when FLASHBACK will be available for pre-order on *ebook* the answer is finally: NOW! Alas, pre-ordering won't make it come out sooner than 11/6 (still writing it, guys). BUT, it does make me super happy, so… 😉\n</td>
     </tr>
     <tr>
-      <th>11718</th>
-      <td>9</td>
-      <td>Self-employed people: have you ever turned to social media to call out a client who is many weeks/months delinquent on a payment? \n(Obviously, you're probably burning a bridge with that move, but if they don't pay...)</td>
+      <th>14929</th>
+      <td>10</td>
+      <td>USA's share of global GDP was about 50% after WW2, today it is about 15%. It will further decline this century (although its economy &amp; GDP/capita will continue to grow in absolute terms).\n\nHow will America react to this loss of "relative power"? By all indications, rather badly.</td>
     </tr>
     <tr>
-      <th>13365</th>
-      <td>9</td>
-      <td>Billboard Hot 100: (-3) Tell Me You Love Me,  [19 weeks]. *peak: *</td>
-    </tr>
-    <tr>
-      <th>11845</th>
-      <td>9</td>
-      <td>Tucker Carlson Tonight &amp; TFW you're asking about America\nbut you're scolded it's really about Israel ...\n \nTucker: "What is the American national security interest ... in Syria?"\n\nSen. Wicker(R): "Well, if you care about Israel ..." \n\nThat was the exact question &amp; answer\nShocking</td>
+      <th>13069</th>
+      <td>10</td>
+      <td>I created an equation to find the largest meaningful number in the observable universe.\n\nVolume Quantitative Infinity [vQ(inf)]= (4/3)(pi)ct^3\n\nI'll explain it in a thread. (1/?)</td>
     </tr>
   </tbody>
 </table>
@@ -1437,15 +1655,15 @@ punctuation_data_for_stats.describe()
   <tbody>
     <tr>
       <th>count</th>
-      <td>15674.0000</td>
+      <td>22404.0000</td>
     </tr>
     <tr>
       <th>mean</th>
-      <td>1.9168</td>
+      <td>1.8818</td>
     </tr>
     <tr>
       <th>std</th>
-      <td>1.5787</td>
+      <td>1.5584</td>
     </tr>
     <tr>
       <th>min</th>
@@ -1465,7 +1683,7 @@ punctuation_data_for_stats.describe()
     </tr>
     <tr>
       <th>max</th>
-      <td>11.0000</td>
+      <td>13.0000</td>
     </tr>
   </tbody>
 </table>
@@ -1510,27 +1728,27 @@ stop_words_data_for_stats.sort_values(by="Stop words", ascending=False).head()
     <tr>
       <th>0</th>
       <td>8</td>
-      <td>I don't yet have adequate words to do so, but someday I wanna write about the beautiful dance which happens in Google docs between a writer &amp; a good editor working simultaneously towards a deadline. When it's working, it's a beautiful dance—though no one really sees it.</td>
+      <td>Ended up going 3-2, proudest moment was taking two rounds against one of the better players in the community who plays Twintelle. \nHe beat the shit out of me in casuals, but I think I surprised him with that last match. \nI probably should start playing this game 😂</td>
     </tr>
     <tr>
-      <th>9063</th>
+      <th>12678</th>
       <td>8</td>
-      <td>Honestly yea i fucked up but all of you are trash asf and your opinions mean nothing to me because mother fucker i can fix shit but yall are to close minded to see.</td>
+      <td>A Fascist Canadian dictator, who lied just to get in power and is now trying hard to remain forever by silencing all criticism😡👏, will he succeed?🤔: Trudeau's Increasingly Dictatorial Attitude Shows The Danger Of Centralized Power  via</td>
     </tr>
     <tr>
-      <th>9035</th>
+      <th>12646</th>
       <td>8</td>
-      <td>The role of DAG Rod Rosenstein will be an Oscar winner in the future film about the Trump presidency. I'd like the story of the first few months to be told through the eyes of the bewildered Sean Spicer.</td>
+      <td>My media tab is filled with so many gifs it's giving me anxiety</td>
     </tr>
     <tr>
-      <th>9038</th>
+      <th>12650</th>
       <td>8</td>
-      <td>Done watching 'Hacksaw Ridge'. If there's one thing I learned from that movie, it is simply, Have Faith in God.</td>
+      <td>Everything is coming together and I'm so excited 😍❤️</td>
     </tr>
     <tr>
-      <th>9039</th>
+      <th>12651</th>
       <td>8</td>
-      <td>I feel people who can't celebrate or at the very least respect Cardi B's success have never watched the grind from the ground up. They can't understand that her work ethic has gotten her where she is now. You don't have to stand for what's she's about but she's worked for it</td>
+      <td>unbelievable, kim shin yeong my favorite model</td>
     </tr>
   </tbody>
 </table>
@@ -1560,29 +1778,29 @@ stop_words_data_for_stats.sort_values(by="Stop words", ascending=True).head()
   </thead>
   <tbody>
     <tr>
-      <th>3632</th>
+      <th>22249</th>
       <td>0</td>
-      <td>...</td>
+      <td>When ?</td>
     </tr>
     <tr>
-      <th>8290</th>
+      <th>2140</th>
       <td>0</td>
-      <td>24</td>
+      <td>Fuck...</td>
     </tr>
     <tr>
-      <th>11925</th>
+      <th>21625</th>
       <td>0</td>
-      <td>FUCK</td>
+      <td>well.....</td>
     </tr>
     <tr>
-      <th>10940</th>
+      <th>5759</th>
       <td>0</td>
-      <td>78 ... !</td>
+      <td>We been knew</td>
     </tr>
     <tr>
-      <th>1796</th>
+      <th>3222</th>
       <td>0</td>
-      <td>fuck u</td>
+      <td>fuck</td>
     </tr>
   </tbody>
 </table>
@@ -1612,15 +1830,15 @@ stop_words_data_for_stats.describe()
   <tbody>
     <tr>
       <th>count</th>
-      <td>15674.0000</td>
+      <td>22404.0000</td>
     </tr>
     <tr>
       <th>mean</th>
-      <td>7.1515</td>
+      <td>7.1113</td>
     </tr>
     <tr>
       <th>std</th>
-      <td>1.3116</td>
+      <td>1.3291</td>
     </tr>
     <tr>
       <th>min</th>
@@ -1692,29 +1910,29 @@ unique_words_data_for_stats.sort_values(by="Unique words", ascending=False).head
   </thead>
   <tbody>
     <tr>
-      <th>13936</th>
+      <th>13473</th>
       <td>GIVE AWAY!\n\nThe rules are really easy, all you have to do is :\n1. Must be following me (i check) \n2. RT and fav this tweet\n3. tag your mutuals/anyone\n4. only 1 winner! \n5. i ship worldwide;) \n\nit ends in 8th May 2018 or when this tweet hit 2k RT and like!\n\nGood luck! ❤</td>
       <td>59</td>
     </tr>
     <tr>
-      <th>4881</th>
-      <td>got into a tepid back nd forth w/ a uknowwhoAJ+columnist bc i said they steal their "hot takes" from blk twitter &amp; alike. wallahi my bdeshi ass did not sign up 4 this app to be called asinine by a 30yrold pakistani whos whole politics is Post Colonial Memes for Oriental Minded T-</td>
-      <td>57</td>
+      <th>8660</th>
+      <td>I'm starting to get a couple questions about it since May is coming up so I might as well let you guys know: there will not be a MIAMAFV 2 this year (at least not that exact event).\n\nWho knows what's to come in the future, but right now I've got to take care of other stuff first.</td>
+      <td>59</td>
     </tr>
     <tr>
-      <th>7013</th>
+      <th>7329</th>
       <td>Crazy how wrong u can be about someone. A girl I graduated w/ was always doing drugs&amp; got pregnant at 16. I assumed she'd end up being a loser but it turn out she now has 4 beautiful kids&amp; is making over $4,500/month just off of child support payments from the 3 different dads</td>
       <td>57</td>
     </tr>
     <tr>
-      <th>4992</th>
-      <td>Got into an argument w/ someone I went to HS w/ &amp; I would js like to repeat again tht I cannot wait to stunt on all the ppl who were bitches to me in HS @ our reunion. Catch me rollin up w/ my sexy ass gf, a nice car, a bomb body &amp; the career of my dreams as a big fuck u to them</td>
-      <td>55</td>
+      <th>1177</th>
+      <td>got into a tepid back nd forth w/ a uknowwhoAJ+columnist bc i said they steal their "hot takes" from blk twitter &amp; alike. wallahi my bdeshi ass did not sign up 4 this app to be called asinine by a 30yrold pakistani whos whole politics is Post Colonial Memes for Oriental Minded T-</td>
+      <td>57</td>
     </tr>
     <tr>
-      <th>11542</th>
-      <td>Thought I'd bring this back...  and no, I'm not talking about myself here. I wish just once I'd be so bored with my life that I'd find the time to bash people/celebs I don't like.. I mean if I despise someone THAT much, why still watch his/her every move? 🤦‍♀️</td>
-      <td>55</td>
+      <th>16213</th>
+      <td>If you live in Arizona, tell me everything good about it... Please and thank you 😁👌🏽\n\nAlso does anybody know any wavy ass barbershops or dope tattoo artists or ppl who are just nice kuz we wanna make friends out here tbh. I want a basic "how to" of AZ so teach me shit.</td>
+      <td>57</td>
     </tr>
   </tbody>
 </table>
@@ -1744,28 +1962,28 @@ unique_words_data_for_stats.sort_values(by="Unique words", ascending=True).head(
   </thead>
   <tbody>
     <tr>
-      <th>6106</th>
-      <td>Annoying</td>
+      <th>1758</th>
+      <td>CORNY</td>
       <td>1</td>
     </tr>
     <tr>
-      <th>2525</th>
-      <td>Bitch</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>12087</th>
-      <td>Chandler</td>
-      <td>1</td>
-    </tr>
-    <tr>
-      <th>14559</th>
+      <th>18453</th>
       <td>Yes yes yes yes yes yes</td>
       <td>1</td>
     </tr>
     <tr>
-      <th>14442</th>
-      <td>Hello\n</td>
+      <th>14582</th>
+      <td>Same same</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>8990</th>
+      <td>cool</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>22125</th>
+      <td>help</td>
       <td>1</td>
     </tr>
   </tbody>
@@ -1796,15 +2014,15 @@ unique_words_data_for_stats.describe()
   <tbody>
     <tr>
       <th>count</th>
-      <td>15674.0000</td>
+      <td>22404.0000</td>
     </tr>
     <tr>
       <th>mean</th>
-      <td>19.2412</td>
+      <td>18.7121</td>
     </tr>
     <tr>
       <th>std</th>
-      <td>11.9298</td>
+      <td>11.8161</td>
     </tr>
     <tr>
       <th>min</th>
@@ -1812,15 +2030,15 @@ unique_words_data_for_stats.describe()
     </tr>
     <tr>
       <th>25%</th>
-      <td>10.0000</td>
+      <td>9.0000</td>
     </tr>
     <tr>
       <th>50%</th>
-      <td>17.0000</td>
+      <td>16.0000</td>
     </tr>
     <tr>
       <th>75%</th>
-      <td>27.0000</td>
+      <td>26.0000</td>
     </tr>
     <tr>
       <th>max</th>
@@ -1860,7 +2078,7 @@ plt.show()
 ```
 
 
-![png](output_120_0.png)
+![png](output_123_0.png)
 
 
 
@@ -1889,7 +2107,7 @@ plt.show()
 ```
 
 
-![png](output_121_0.png)
+![png](output_124_0.png)
 
 
 
@@ -1918,7 +2136,7 @@ plt.show()
 ```
 
 
-![png](output_122_0.png)
+![png](output_125_0.png)
 
 
 
@@ -1947,5 +2165,5 @@ plt.show()
 ```
 
 
-![png](output_123_0.png)
+![png](output_126_0.png)
 
