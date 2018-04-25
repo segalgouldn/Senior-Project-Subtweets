@@ -37,8 +37,8 @@ import re
 # In[2]:
 
 
-THRESHOLD = 0.75 # 75% positives and higher, only
-DURATION = 60*15 # 15 minutes
+THRESHOLD = 0.70 # 70% positives and higher, only
+DURATION = 60*60*24*7 # 1 week
 
 
 # #### Set up regular expressions for genericizing extra features
@@ -74,7 +74,8 @@ sentiment_pipeline = joblib.load("../data/other_data/subtweets_classifier.pkl")
 # In[7]:
 
 
-consumer_key, consumer_secret, access_token, access_token_secret = open("../../credentials.txt").read().split("\n")
+consumer_key, consumer_secret, access_token, access_token_secret = (open("../../credentials.txt")
+                                                                    .read().split("\n"))
 
 
 # #### Connect to the API
@@ -154,10 +155,14 @@ class StreamListener(tweepy.StreamListener):
                 .replace("&gt;", ">")
                 .replace("&lt;", "<"))
         
+        includes_subtweet = any(["subtweet" in text, 
+                                 "Subtweet" in text,
+                                 "SUBTWEET" in text])
+        
         tokens = tokenizer.tokenize(text)
         
         english_tokens = [english_dict.check(token) for token in tokens]
-        percent_english_words = sum(english_tokens)/len(english_tokens)
+        percent_english_words = sum(english_tokens)/float(len(english_tokens))
         
         # Make sure the tweet is mostly english
         is_mostly_english = False
@@ -176,52 +181,55 @@ class StreamListener(tweepy.StreamListener):
         
         # Only treat it as a subtweet if all conditions are met
         if all([positive_probability >= THRESHOLD, 
-                "RT " != text[:3], is_mostly_english,
+                "RT " != text[:3], "@" not in text[:2], 
+                is_mostly_english, not includes_subtweet,
                 not retweeted, not in_reply_to, not has_media]):
-            
-            decision = choice(choices)
-            if decision == "retweet":
-                api.update_status(("Is this a subtweet? {:.3%} \n" + 
-                                   "https://twitter.com/{}/status/{}").format(positive_probability, 
-                                                                              screen_name, 
-                                                                              id_str))
-                print("Retweet!")
-            
-            elif decision == "like":
-                api.create_favorite(id_str)
-                print("Like!")
-            
-            elif decision == "retweet and like":
-                api.update_status(("Is this a subtweet? {:.3%} \n" + 
-                                   "https://twitter.com/{}/status/{}").format(positive_probability, 
-                                                                              screen_name, 
-                                                                              id_str))
-                api.create_favorite(id_str)
-                print("Retweet and like!")
-            
-            elif decision == "reply":
-                api.update_status("@{} Is this a subtweet? {:.3%}".format(screen_name, 
-                                                                          positive_probability), 
-                                  id_str)
-                print("Reply!")
-            
-            subtweets_live_list.append(row)
-            subtweets_df = pd.DataFrame(subtweets_live_list).sort_values(by="subtweet_probability", 
-                                                                         ascending=False)
-            
-            subtweets_df.to_csv("../data/data_from_testing/live_downloaded_data/subtweets_live_data.csv")
-            
-            print(("Subtweet from @{0} (Probability of {1:.3%}):\n" + 
-                   "Time: {2}\n" + 
-                   "Tweet: {3}\n" +
-                   "Total tweets acquired: {4}\n").format(print_list[0], 
-                                                          print_list[1], 
-                                                          print_list[2],
-                                                          print_list[3],
-                                                          (len(subtweets_live_list) 
-                                                           + len(non_subtweets_live_list))))
-            
-            return row
+            try:
+                decision = choice(choices)
+                if decision == "retweet":
+                    api.update_status(("Is this a subtweet? {:.3%} \n" + 
+                                       "https://twitter.com/{}/status/{}").format(positive_probability, 
+                                                                                  screen_name, 
+                                                                                  id_str))
+                    print("Retweet!")
+
+                elif decision == "like":
+                    api.create_favorite(id_str)
+                    print("Like!")
+
+                elif decision == "retweet and like":
+                    api.update_status(("Is this a subtweet? {:.3%} \n" + 
+                                       "https://twitter.com/{}/status/{}").format(positive_probability, 
+                                                                                  screen_name, 
+                                                                                  id_str))
+                    api.create_favorite(id_str)
+                    print("Retweet and like!")
+
+                elif decision == "reply":
+                    api.update_status("@{} Is this a subtweet? {:.3%}".format(screen_name, 
+                                                                              positive_probability), 
+                                      id_str)
+                    print("Reply!")
+
+                subtweets_live_list.append(row)
+                subtweets_df = pd.DataFrame(subtweets_live_list).sort_values(by="subtweet_probability", 
+                                                                             ascending=False)
+
+                subtweets_df.to_csv("../data/data_from_testing/live_downloaded_data/subtweets_live_data.csv")
+
+                print(("Subtweet from @{0} (Probability of {1:.3%}):\n" + 
+                       "Time: {2}\n" + 
+                       "Tweet: {3}\n" +
+                       "Total tweets acquired: {4}\n").format(print_list[0], 
+                                                              print_list[1], 
+                                                              print_list[2],
+                                                              print_list[3],
+                                                              (len(subtweets_live_list) 
+                                                               + len(non_subtweets_live_list))))
+
+                return row
+            except:
+                print("Unable to interact with tweet!")
         else:
             non_subtweets_live_list.append(row)
             non_subtweets_df = pd.DataFrame(non_subtweets_live_list).sort_values(by="subtweet_probability", 
