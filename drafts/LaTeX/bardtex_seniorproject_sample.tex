@@ -51,7 +51,7 @@ All users do not necessarily possess the same exact definition of ``subtweet." I
 \section{Motivation}
 \label{motivation_and_prior_work}
 
-The inspiration for this project came from interests I garnered taking courses within Bard College's Computer Science department as well as its Experimental Humanities concentration. The very first course I attended at Bard College was Professor Keith O'Hara's \textit{Object-Oriented Programming with Robots}. It served as my first introduction to computer programming, and for my final project I created \textit{Fuzzfeed}: a Twitter bot which generated fake \textit{Buzzfeed} article titles. The following academic year, I wrote programs in Professor Collin Jennings' \textit{Signs and Symbols: Patter Recognition in Literature and Code} and Professor Rune Olsen's \textit{Cybergraphics} which analyzed and visualized topic models of poetry on Twitter. The first time I implemented sentiment analysis on my own was in Professor Gretta Tritch-Roman's \textit{Mapping the 19th Century City}, for which I sought to analyze 1860s New York City newspapers for their sentiments toward immigration. Natural language processing struck me as entertaining and fruitful, so I chose to pursue it further.
+The inspiration for this project came from interests I garnered taking courses within Bard College's Computer Science department as well as its Experimental Humanities concentration. The very first course I attended at Bard College was Professor Keith O'Hara's \textit{Object-Oriented Programming with Robots}. It served as my first introduction to computer programming, and for my final project I created \textit{Fuzzfeed}: a Twitter bot which generated fake \textit{Buzzfeed} article titles. The following academic year, I wrote programs in Professor Collin Jennings' \textit{Signs and Symbols: Patter Recognition in Literature and Code} and Professor Rune Olsen's \textit{Cybergraphics} which analyzed and visualized topic models of poetry on Twitter. The first time I implemented sentiment analysis on my own was in Professor Gretta Tritch-Roman's \textit{Mapping the 19th Century City}, for which I sought to analyze 1860s New York City newspapers for their sentiments toward immigration. Most recently, I utilized K-Means clustering and topic modeling on tweets written by members of US congress in Professor Anderson's \textit{Introduction to Artificial Intelligence} course.
 
 By my Junior year, my friends and I used Twitter on a daily basis. In my free time, I made Twitter bots that utilized Markov chains to generate text based on corpora of their tweets. Data collection became a passion of mine as I learned to appreciate the utility and acknowledge the deliberate limitations of web-based APIs. I taught myself web-scraping and utilized Python's \textit{BeautifulSoup} library to programmatically acquire text from Bard College's official online course catalog as well as Twitter's web interface. These skills for programmatically interacting with the world wide web became useful resources during the completion of this project.
 
@@ -62,6 +62,8 @@ I was initially motivated to complete a senior project on this topic because I w
 \section{Literature Review}
 \label{literature_review}
 
+Long before Twitter, psychologist Gordon Allport wrote about ``antilocution" in \textit{The Nature of Prejudice} \cite{antilocution}. For Allport, antilocution was the first of several degrees of apathy which measure prejudice in a society and represented the kind of remarks which target a person, group, or community in a public or private setting but do not address the targeted individual directly. Different from both hate speech and subtweeting, antilocution necessitates that an in-group ostracize an unaware out-group through its biases. 
+
 ``Subtweet" was coined in December of 2009 by Twitter user Chelsea Rae \cite{first_subtweet} and was entered into Urban Dictionary the following August \cite{urban_dictionary}. In ``To tweet or ‘subtweet’?: Impacts of social networking post directness and valence on interpersonal impressions" \cite{subtweets_communications}, Edwards and Harris sought to analyze student participants' perceptions of known subtweeters. In the news, too, subtweets have garnered attention in \textit{The Atlantic} \cite{the_atlantic}, \textit{The Washington Post} \cite{the_washington_post}, and \textit{Slate} \cite{slate}. In news media, subtweets garner attention for their prevalence among government officials as well. Following President Donald Trump's inauguration, The Washington Post compiled its ``A running list of all the possible subtweets of President Trump from government Twitter accounts," \cite{the_washington_post_trump} cementing subtweets as particularly newsworthy.
 
 Instead of focus groups, opinion polls, and conduct surveys, sentiment analysis and opinion mining programs are increasingly applied to social networking websites to analyze the sentiments and opinions of users toward topics and products. For the Twitter social networking platform, sentiment analysis allows administrators to enforce their hateful conduct policies \cite{hateful_conduct} which specifically prohibit violent threats and some types of degrading content. 
@@ -70,7 +72,7 @@ Sentiment analysis on social networking services such as Twitter has garnered at
 
 The most germane research available focuses on sentiment analysis of figurative language. Determining sentiment based on features of text which are distinctly separate from their literal interpretations presents difficulties for human readers as well as computer programs. In \textit{SemEval}, the International Workshop on Semantic Evaluation, analysis of figurative language on Twitter has been a core task for their competition since 2015 \cite{semeval_2015} and returns this year with a specific focus on ironic tweets \cite{semeval_2018}. In this year's description for ``Task 3: Irony detection in English tweets," Van Hee et al. touch upon online harassment as a potential point of significance for sentiment analysis of ironic tweets. 
 
-[Maybe talk about "antilocution" and different ways of performing sentiment analyis]
+Using a machine-learning approach to perform sentiment analysis, syntactic and linguistic features are typically utilized in probabilistic (e.g. Naive Bayes and Maximum Entropy) and linear (e.g. Support Vector Machines and Neural Networks) classification algorithms. The probabilistic approach is sometimes called \textit{generative} because such models generate the probabilities of sampling particular terms \cite{sentiment_survey}. Linear classification utilizes the vectorized feature space of words, sentences, or documents to find a separating hyperplane between multiple classes. Of these approaches, Naive Bayes stands out as particularly simple and common. A \textbf{bag of words} model typically ignores word positions and then Bayes Theorem is utilized to predict the probability that a given feature set (e.g. words, sentences, etc.) belongs to a particular label (i.e. a category or class). The naive assumption maintains that all features are treated as conditionally independent (i.e. that the presence or omission of a particular feature does not change the likelihood of encountering other features), and although this is frequently violated, Naive Bayes often performs well anyway \cite{naive_bayes_optimality}. For cases in which the classifier encounters a feature absent from the features which were used to train it, a so-called \textbf{zero probability} appears. Because the probability of encountering the feature is $0$, \textbf{additive smoothing} is often utilized to appropriately weight new features so the probability of an entire feature-set fitting into a specific class is not $0$.
 
 \section{Changes in Data Acquisition}
 \label{changes_in_data}
@@ -206,6 +208,12 @@ A confusion matrix is a table which visualizes the performance of an algorithm. 
 	eprint={https://twitter.com/en/tos}
 }
 
+\bib{antilocution}{article}{
+	title={The nature of prejudice},
+	author={Allport, Gordon W},
+	date={1954}
+}
+
 \bib{first_subtweet}{article}{
 	author={Rae, Chelsea},
 	title={I hate when i see people...},
@@ -316,6 +324,28 @@ A confusion matrix is a table which visualizes the performance of an algorithm. 
 	title={Semeval-2018 Task 3: Irony detection in English Tweets},
 	date={2018},
 	journal={Proceedings of the 12th International Workshop on Semantic Evaluation (SemEval-2018)}
+}
+
+\bib{sentiment_survey}{article}{
+	title={Sentiment analysis algorithms and applications: A survey},
+	author={Medhat, Walaa},
+	author={Hassan, Ahmed},
+	author={Korashy, Hoda},
+	journal={Ain Shams Engineering Journal},
+	volume={5},
+	number={4},
+	pages={1093\ndash1113},
+	date={2014},
+}
+
+\bib{naive_bayes_optimality}{article}{
+	title={The optimality of naive Bayes},
+	author={Zhang, Harry},
+	journal={AA},
+	volume={1},
+	number={2},
+	pages={3},
+	date={2004}
 }
 
 \bib{go_dataset}{article}{

@@ -5,11 +5,11 @@
 \contentsline {section}{\numberline {1.1}Background}{1}{section.1.1}
 \contentsline {section}{\numberline {1.2}Motivation}{2}{section.1.2}
 \contentsline {section}{\numberline {1.3}Literature Review}{4}{section.1.3}
-\contentsline {section}{\numberline {1.4}Changes in Data Acquisition}{5}{section.1.4}
-\contentsline {section}{\numberline {1.5}The Twitter API}{6}{section.1.5}
-\contentsline {section}{\numberline {1.6}Regular Expressions, N-Grams, \& Tokenization}{6}{section.1.6}
-\contentsline {section}{\numberline {1.7}TF \& TF-IDF}{6}{section.1.7}
-\contentsline {section}{\numberline {1.8}Naive Bayes}{6}{section.1.8}
+\contentsline {section}{\numberline {1.4}Changes in Data Acquisition}{6}{section.1.4}
+\contentsline {section}{\numberline {1.5}The Twitter API}{7}{section.1.5}
+\contentsline {section}{\numberline {1.6}Regular Expressions, N-Grams, \& Tokenization}{7}{section.1.6}
+\contentsline {section}{\numberline {1.7}TF \& TF-IDF}{7}{section.1.7}
+\contentsline {section}{\numberline {1.8}Naive Bayes}{7}{section.1.8}
 \contentsline {section}{\numberline {1.9}Statistical Considerations}{7}{section.1.9}
 \contentsline {chapter}{\numberline {2}Implementation}{9}{chapter.2}
 \contentsline {section}{\numberline {2.1}Searching for Tweets Using the Twitter API}{9}{section.2.1}
