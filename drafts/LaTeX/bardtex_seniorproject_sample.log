@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  26 APR 2018 00:29
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  26 APR 2018 15:30
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -167,6 +167,14 @@ Package: mathscinet 2002/04/17 v1.05
 \bib@dbfile=\read1
 \alpha@suffix=\count103
 \series@index=\count104
+LaTeX Info: Redefining \ycite on input line 3006.
+LaTeX Info: Redefining \ycites on input line 3009.
+LaTeX Info: Redefining \ocite on input line 3023.
+LaTeX Info: Redefining \ocites on input line 3026.
+LaTeX Info: Redefining \citeauthor on input line 3042.
+LaTeX Info: Redefining \citeauthory on input line 3045.
+LaTeX Info: Redefining \fullcite on input line 3048.
+LaTeX Info: Redefining \fullocite on input line 3054.
 )
 (/usr/local/texlive/2017/texmf-dist/tex/latex/graphics/color.sty
 Package: color 2016/07/10 v1.1e Standard LaTeX Color (DPC)
@@ -536,53 +544,96 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [5]
-[6] [7] [8]
- 2.
-[9
+[6]
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
-] [10
+ [7]
+[8] [9] [10
+
+]
+ 2.
+[11] [12
 
 ]
  3.
 
 Underfull \vbox (badness 1968) has occurred while \output is active []
 
- [11]
-[12]
+ [13]
+[14]
  4.
-[13
+[15
 
-] [14
+] [16
 
 ]
+
+Package amsrefs Warning: Duplicate biblabel stem `Twitter' detected.
+(amsrefs)                This usually means the order of the bibitems
+(amsrefs)                is incompatible with the style of labels
+(amsrefs)                you are using on input line 211.
+
 Missing character: There is no â in font cmti10!
 Missing character: There is no € in font cmti10!
 Missing character: There is no ˜ in font cmti10!
 Missing character: There is no â in font cmti10!
 Missing character: There is no € in font cmti10!
 Missing character: There is no ™ in font cmti10!
- [15]
+
+Package amsrefs Warning: Duplicate biblabel stem `Twitter' detected.
+(amsrefs)                This usually means the order of the bibitems
+(amsrefs)                is incompatible with the style of labels
+(amsrefs)                you are using on input line 276.
+
+
+Underfull \hbox (badness 5431) in paragraph at lines 276--276
+[]\OT1/cmr/m/n/10.95 Twitter. 2018. \OT1/cmr/m/it/10.95 Hate-ful con-duct pol-i
+cy\OT1/cmr/m/n/10.95 , avail-able at []$\OT1/cmtt/m/n/10.95 https : / / help . 
+twitter . com / en /
+ []
+
+[17]
 Missing character: There is no Ã in font cmr10!
 Missing character: There is no © in font cmr10!
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 363.
- [16]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 363.
+
+
+Package amsrefs Warning: Duplicate biblabel stem `Twitter' detected.
+(amsrefs)                This usually means the order of the bibitems
+(amsrefs)                is incompatible with the style of labels
+(amsrefs)                you are using on input line 375.
+
+
+Package amsrefs Warning: Duplicate biblabel stem `Twitter' detected.
+(amsrefs)                This usually means the order of the bibitems
+(amsrefs)                is incompatible with the style of labels
+(amsrefs)                you are using on input line 390.
+
+
+Underfull \hbox (badness 2547) in paragraph at lines 390--390
+[]\OT1/cmr/m/n/10.95 Twitter. 2018. \OT1/cmr/m/it/10.95 Tweet ob-jects\OT1/cmr/
+m/n/10.95 , avail-able at []$\OT1/cmtt/m/n/10.95 https : / / developer . twitte
+r . com / en / docs /
+ []
+
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 394.
+[18]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 394.
  (./bardtex_seniorproject_sample.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 363.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 363.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 394.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 394.
 Package rerunfilecheck Info: File `bardtex_seniorproject_sample.out' has not ch
 anged.
-(rerunfilecheck)             Checksum: 23A44DD4F922A4DD6C0DBEDF35971859;1879.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 363.
+(rerunfilecheck)             Checksum: 67F27A03603A4AA3BB327F7D2B65E9B9;1906.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 394.
  ) 
 Here is how much of TeX's memory you used:
- 9413 strings out of 492995
- 129479 string characters out of 6132704
- 288383 words of memory out of 5000000
- 12754 multiletter control sequences out of 15000+600000
+ 9488 strings out of 492995
+ 130968 string characters out of 6132704
+ 288950 words of memory out of 5000000
+ 12819 multiletter control sequences out of 15000+600000
  10659 words of font info for 40 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 28i,7n,28p,1674b,675s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 28i,7n,28p,1674b,679s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb>
 </usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></
@@ -592,10 +643,10 @@ local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/loc
 al/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsl10.pfb></usr/loca
 l/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local
 /texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on bardtex_seniorproject_sample.pdf (26 pages, 173549 bytes).
+Output written on bardtex_seniorproject_sample.pdf (28 pages, 178864 bytes).
 PDF statistics:
- 395 PDF objects out of 1000 (max. 8388607)
- 354 compressed objects within 4 object streams
- 95 named destinations out of 1000 (max. 500000)
+ 425 PDF objects out of 1000 (max. 8388607)
+ 382 compressed objects within 4 object streams
+ 105 named destinations out of 1000 (max. 500000)
  233 words of extra memory for PDF output out of 10000 (max. 10000000)
 

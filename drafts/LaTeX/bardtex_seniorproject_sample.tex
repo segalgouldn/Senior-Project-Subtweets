@@ -1,7 +1,7 @@
 \documentclass[11pt, twoside, reqno]{book}
 \usepackage{amssymb, amsthm, amsmath, amsfonts}
 \usepackage{graphicx}
-\usepackage[citation-order]{amsrefs}
+\usepackage[author-year]{amsrefs}
 \usepackage{color}
 \usepackage{hyperref}
 \usepackage{verbatim}
@@ -84,16 +84,18 @@ Initially, I trained the classifier using a dataset which was half comprised of 
 \section{The Twitter API}
 \label{twitter_api}
 
-[Explain how it is accessed and its limitations.]
+Twitter provides a free Application Programming Interface (API) to registered users and has done so since September of 2006 \cite{twitter_api_start}. The API allows developers to programmatically access and influence tweets individually or through real time search filters, and also read and write direct messages \cite{twitter_api_docs}. The creation of a Twitter application which utilizes the API requires creation and email verification of an account, and developers are also required to agree to the terms of service \cite{twitter_tos}. Creation of an application provides developers with authentication tokens which can then be used to access the API.
 
-\section{Regular Expressions, N-Grams, \& Tokenization}
+To make creation of Twitter applications easier, Tweepy \cite{tweepy_python} is an open source library for the Python programming language which provides methods and classes used to interact with the API and its status objects \cite{tweepy_status_object}. A Twitter status object is a dictionary of key, value pairs which contains text, media, and user information associated with particular tweets (i.e. statuses). There are rate limits for both reading and writing to the API which must be kept in mind when programming for it.
+
+\section{Text Cleaning: Regular Expressions, N-Grams, Tokenization, \& Stop Words}
 \label{regular_expressions_etc}
 
-[Explain the use for regular expressions in identifying hashtags, URLs, and mentions.]
+For text classification through machine learning, it is popular to modify the ground truth dataset to make features which are not pertinent to the classification problem as \textbf{generic} as possible. For classification of subtweets, I specifically wanted the classifier to treat URLs and mentions of usernames generically. In other words, it would keep track of the existence of those features but specifically would not encounter the text contained within them. There exists no syntactic or linguistic significance in the format of a URL or the name a user chooses to associate with themselves. For this kind of substring searching, I utilized pattern matching through regular expressions to replace every occurence of URLs and mentions with special tokens not already in the dataset. 
 
-[Explain N-Grams and how they help a classifier.]
+Instead of training the classifier on entire strings, \textbf{tokenization} is necessary in order to extract individual features from the text. The Natural Language Toolkit (NLTK) provides a tweet tokenizer to achieve this. For some string, the tokenizer splits apart words, usernames, URLs, hashtags, and punctuating characters as individual tokens. An \textbf{n-gram} is a contiguous sequence of $n$ items from a piece of text. For example, given a string such as "This is a test," the bigrams ($n=2$) for this string would be "This is," "is a," and "a test." Because specific sequences of words can connote that an entire string forms a subtweet, n-grams can be utilized to train a classifier after tokenization within the bag of words model, which ignores token positions.
 
-[Explain tokenization and specifically NLTK's TweetTokenizer.]
+Often, tokens are entirely ignored in 
 
 \section{TF \& TF-IDF}
 \label{tf_tf_idf}
@@ -222,7 +224,7 @@ A confusion matrix is a table which visualizes the performance of an algorithm. 
 }
 
 \bib{urban_dictionary}{article}{
-	author={Dictionary, Urban},
+	author={Urban Dictionary},
 	title={Subtweet},
 	date={2010},
 	eprint={https://www.urbandictionary.com/define.php?term=subtweet},
@@ -356,6 +358,35 @@ A confusion matrix is a table which visualizes the performance of an algorithm. 
 	journal = {CS224N Project Report, Stanford},
 	pages = {12},
 	date = {2009}
+}
+
+\bib{twitter_api_start}{article}{
+	author={Stone, Biz},
+	title={Introducing the Twitter API},
+	date={2006},
+	eprint={https://blog.twitter.com/official/en_us/a/2006/introducing-the-twitter-api.html},
+}
+
+\bib{twitter_api_docs}{article}{
+	author={Twitter},
+	title={Twitter API Docs},
+	date={2018},
+	eprint={https://developer.twitter.com/en/docs},
+}
+
+\bib{tweepy_python}{article}{
+	title={tweepy Documentation},
+	author={Roesslein, Joshua},
+	eprint={http://tweepy. readthedocs.io/en/v3},
+	volume={5},
+	date={2009}
+}
+
+\bib{tweepy_status_object}{article}{
+	author={Twitter},
+	title={Tweet objects},
+	date={2018},
+	eprint={https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/tweet-object},
 }
 
 \end{bibliog}
