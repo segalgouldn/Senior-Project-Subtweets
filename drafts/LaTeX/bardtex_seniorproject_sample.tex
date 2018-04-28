@@ -20,7 +20,7 @@
 
 \abstr
 
-The purpose of this project is to identify subtweets. The Oxford English Dictionary defines ``subtweet" as a ``[Twitter post] that refers to a particular user without directly mentioning them, typically as a form of furtive mockery or criticism." This paper details a process for gathering a labeled ground truth dataset, training a classifier, and creating a Twitter bot which interacts with subtweets in real time. The Naive Bayes classifier trained in this project classifies tweets as subtweets and non-subtweets with an average $F_{1}$ score of 69\%. 
+The purpose of this project is to identify subtweets. The Oxford English Dictionary defines ``subtweet" as a ``[Twitter post] that refers to a particular user without directly mentioning them, typically as a form of furtive mockery or criticism." This paper details a process for gathering a labeled ground truth dataset, training a classifier, and creating a Twitter bot which interacts with subtweets in real time. The Naive Bayes classifier trained in this project classifies tweets as subtweets and non-subtweets with an average $F_{1}$ score of 71\%. 
 
 \tableofcontents
 
@@ -80,56 +80,79 @@ To make creation of Twitter applications easier, Tweepy \cite{tweepy_python} is 
 \section{Text Cleaning}
 \label{text_cleaning}
 
-Cleaning text data is essential when using machine learning on it. Changes are made to preserve the characteristics of the text which are pertinent to the goal of the analysis and to leave out the ones which are not. Because we will be using Naive Bayes, we must keep in mind which features in each tweet ought to influence the probabilities of entire feature-sets.
+Text cleaning is the process by which text is modified prior to any kind of processing. Changes are made to preserve the characteristics of the text which are relevant to the goal of the analysis and to leave out the ones which are irrelevant. Because we will be using Naive Bayes, we must keep in mind which features in each tweet (e.g. URLs and user names) ought to influence the probabilities that an entire feature-set (i.e. that whole tweet) suits a particular class.
 
 \subsection{Regular Expressions}
 \label{regular_expressions}
 
-For text classification through machine learning, it is popular to modify the ground truth dataset to make features which are not pertinent to the classification problem as \textbf{generic} as possible. For classification of subtweets, the classifier will treat URLs and mentions of usernames generically. In other words, it will keep track of the existence of those features but specifically will not encounter the text contained within them. In identification of subtweets, there exists no syntactic or linguistic significance in the format of a URL or the name a user chooses to associate with themselves. For this kind of substring searching, pattern matching through regular expressions was used to replace every occurence of URLs and mentions with special tokens not already in the dataset. 
+For text classification through machine learning, it is popular to modify the ground truth dataset to make features which are not important to the classification problem as \textbf{generic} as possible. For classification of subtweets, the classifier will treat URLs, mentions of usernames, and English first names generically. In other words, it will keep track of the existence of those features but specifically will not encounter the text contained within them. In identification of subtweets, there exists no syntactic or linguistic significance in the format of a URL or the name a user chooses to associate with themselves or another. However, the existence of those features within the tweet remains important. For this kind of substring searching, pattern matching through regular expressions was used to replace every occurence of URLs, usernames, and first names with special tokens which were not already in the dataset. The top 100 most common English names for both men and women over the last century were acquired from the United States Department of Social Security.
 
-\subsection{Tokenization \& N-Grams}
+\subsection{Tokenization}
 \label{tokenization}
 
-Instead of training the classifier on entire strings, \textbf{tokenization} is necessary in order to extract individual features from the text. The Natural Language Toolkit (NLTK) provides a tweet tokenizer to achieve this. For some string, the tokenizer splits apart words, usernames, URLs, hashtags, and punctuating characters as individual tokens. An \textbf{n-gram} is a contiguous sequence of $n$ items from a piece of text. For example, given a string such as ``This is a test," the bigrams ($n=2$) for this string are ``This is," ``is a," and ``a test." Because specific sequences of words can connote that an entire string forms a subtweet, n-grams were utilized to train a classifier after tokenization within the bag of words model, which ignores token positions.
+Instead of training the classifier on entire strings, \textbf{tokenization} is necessary in order to extract individual features from the text. The Natural Language Toolkit (NLTK) provides a tweet tokenizer to achieve this. For some string, the tokenizer splits apart words, usernames, URLs, hashtags, and punctuating characters as individual tokens. NLTK's tweet tokenizer also appropriately distinguishes between punctuating characters and emoticons composed of punctuating characters.
+
+\subsection{N-Grams}
+\label{n_grams}
+
+An \textbf{n-gram} is a contiguous sequence of $n$ tokens in a piece of text. For example, given a string such as ``This is a test," the bigrams ($n=2$) for this string are ``This is," ``is a," and ``a test." Instead of training the classifier using unigrams ($n=1$) exclusively, we train it using unigrams, bigrams, and trigrams ($n=3$). Thus, when the probability that some specific token within a tweet belongs to a specific class is calculated, its neighbors are also considered in combination with it. N-grams enable the classifier to treat particular groupings of tokens with some size $n$ as importantly as it treats the individual tokens, thus identifying particular word groupings most associated with the classes.
 
 \subsection{Stop Words}
 \label{stop_words}
 
+A list of stop words typically contains the most common words in a language. For English text, the list is often composed of words such as ``the," ``it," and ``of." Tokens matching stop words are ignored during classifier training because they are too common to help the classifier distinguish subtweets from non-subtweets. 
+
 \section{TF \& TF-IDF}
 \label{tf_tf_idf}
 
-TF-IDF, or term frequency-inverse document frequency, is a statistical representation of how important a single word is for each document in a collection of documents.
+The probabilities calculated for Naive Bayes are not best found using raw token counts within individual documents. Instead, TF and TF-IDF are popularly used in order to vectorize the tokens for use in training the classifier. 
 
-[Explain vectorization and provide examples.]
+Term frequency (TF) is a simple method for vectorizing text in which all terms (i.e. tokens, features, words, etc.) in the corpus are featured in a vector for each document, and the frequency of each term is reflected in the number representing the corresponding term. Unfortunately, TF falls short when the corpus of documents contains terms which appear frequently but do not necessarily help inform the classifier on terms that are best associated with a particular class. TF-IDF, or term frequency-inverse document frequency, is the product of the TF for a specific term and the inverse document frequency (IDF) for that same term. The TF is equal to the ratio between the number of occurrences of a term in a document, and the total number of words in that document. IDF, then, is the logarithm of the ratio between the number of documents in the corpus, and the number of documents which contain that term. Taking the logarithm means the value will be higher for rarer terms. Thus, the product of TF and IDF assigns weights which appropriately value terms which are frequent within a document but rare in the entire corpus of documents.
 
 \section{Naive Bayes}
 \label{naive_bayes}
 
-Naive Bayes classifiers are probabilistic supervised learning models which make the "naive" assumption of independence between pairs of features being classified. Sentiment analysis is popularly performed through Naive Bayes.
+Naive Bayes classifiers are probabilistic supervised learning models which make the "naive" assumption of independence between groups of features being classified. Sentiment analysis is popularly performed through Naive Bayes. 
 
 [Explain some probability, the independence assumption, and the multinomial distribution. Give examples.]
 
 \section{Statistical Considerations}
 \label{statistical_considerations}
 
-In tasks pertaining to text classification, like sentiment analysis, precision refers to the number of correctly labeled items which were labeled as belonging to the positive class and in fact did belong to that class (true positives) divided by the total number of elements which were labeled as belonging to the positive class including ones which were labeled positively either correctly or incorrectly. Recall, then, refers to the true positives divided by the total number of elements that actually belong to the positive class.
+In the binary classification of subtweets and non-subtweets, we consider true positives (TP) to be true subtweets which were correctly labeled as predicted subtweets, false positives (FP) to be true non-subtweets which were incorrectly labeled as predicted subtweets, true negatives (TN) to be true non-subtweets which were correctly labeled as predicted non-subtweets, and false negatives (FN) to be true subtweets which were incorrectly labeled as predicted non-subtweets. As such, there are two ways for the classifier to be wrong: it can produce false negatives and false positives.
 
 \subsection{Precision}
 \label{precision}
 
+Precision refers to the ratio between the true positives, and the true positives and false positives. It is also known as the positive predictive value.
+
+\[P=\frac{TP}{TP+FP}\] 
+
 \subsection{Recall}
 \label{recall}
+
+Recall, then, refers to the ratio between the number of true positives, and the true positives and false negatives. It is also known as the sensitivity.
+
+\[R=\frac{TP}{TP+FN}\] 
 
 \subsection{Accuracy}
 \label{accuracy}
 
+The accuracy is the ratio between the true positives and the true negatives, and the true positives, true negatives, false positives, and false negatives. Accuracy alone is a particularly bad quantifier of how well a classifier performs when working with data which is class-imbalanced (i.e. there are not equal numbers of items in each class). In our ground truth dataset, the classes are balanced so accuracy is fine.
+
+\[A=\frac{TP+TN}{TP+TN+FP+FN}\] 
+
 \subsection{F1 Score}
 \label{f1_score}
+
+The $F_{1}$ score is a weighted average of the precision and recall. Thus, it takes both false positives and false negatives into account.
+
+\[F1=\frac{2*(P*R)}{P+R}\] 
 
 \subsection{Null Accuracy}
 \label{null_accuracy}
 
-[Explain F1, Precision, Recall, Accuracy, and Null Accuracy.]
+The null accuracy is just the accuracy which is obtained by always predicting the most frequent class. Because there are two classes and the tweets within the ground truth dataset equally compose both, the null accuracy will always be 50\%.
 
 \section{Review of Literature}
 \label{review_of_literature}
@@ -146,9 +169,9 @@ Although the OED's definition states that a subtweet ``...refers to a particular
 
 Sentiment analysis on social networking services such as Twitter has garnered attention within seemingly distinct fields of interest. In ``Text mining for market prediction: A systematic review," Nassirtoussi et al. surveyed varied methods for text-mining social media for sentiment analysis of financial markets and approached that problem with both behavioral and economic considerations in mind \cite{sentiment_analysis_markets}. Following a terrorist event in Woolwich, London in 2013, Burnap et al. analyzed the immediate Twitter response following the attack to inform statistics on how long it takes for responses from official sources to disseminate during crises \cite{sentiment_analysis_terrorism}. Prior research of these kinds utilizes sentiment analysis techniques on tweets, but no known research exists which specifically performs any sentiment analysis on subtweets. 
 
-The most germane research available focuses on sentiment analysis of figurative language. Determining sentiment based on features of text which are distinctly separate from their literal interpretations presents difficulties for human readers as well as computer programs. In \textit{SemEval}, the International Workshop on Semantic Evaluation, analysis of figurative language on Twitter has been a core task for their competition since 2015 \cite{semeval_2015} and returns this year with a specific focus on ironic tweets \cite{semeval_2018}. In this year's description for ``Task 3: Irony detection in English tweets," Van Hee et al. touch upon online harassment as a potential point of significance for sentiment analysis of ironic tweets. 
+Long before Twitter, psychologist Gordon Allport wrote about ``antilocution" in \textit{The Nature of Prejudice} \cite{antilocution}. For Allport, antilocution was the first of several degrees of apathy which measure prejudice in a society and represented the kind of remarks which target a person, group, or community in a public or private setting but do not address the targeted individual directly. Different from both hate speech and subtweeting, antilocution necessitates that an in-group ostracize an unaware out-group through its biases.
 
-Long before Twitter, psychologist Gordon Allport wrote about ``antilocution" in \textit{The Nature of Prejudice} \cite{antilocution}. For Allport, antilocution was the first of several degrees of apathy which measure prejudice in a society and represented the kind of remarks which target a person, group, or community in a public or private setting but do not address the targeted individual directly. Different from both hate speech and subtweeting, antilocution necessitates that an in-group ostracize an unaware out-group through its biases. 
+The most germane research available focuses on sentiment analysis of figurative language. Determining sentiment based on features of text which are distinctly separate from their literal interpretations presents difficulties for human readers as well as computer programs. In \textit{SemEval}, the International Workshop on Semantic Evaluation, analysis of figurative language on Twitter has been a core task for their competition since 2015 \cite{semeval_2015} and returns this year with a specific focus on ironic tweets \cite{semeval_2018}. In this year's description for ``Task 3: Irony detection in English tweets," Van Hee et al. touch upon online harassment as a potential point of significance for sentiment analysis of ironic tweets.  
 
 We pursue sentiment analysis of subtweets in order to challenge the hypocrisy of utilizing a service which presents itself as a public forum to speak in distinctly private ways. Toward this end, these are our goals: this project will provide a framework for collecting examples of subtweets, train a classification algorithm using those examples, and finally utilize that classifier in real time to make tweets which were intended to be unseen by specific parties easily accessible to all parties. In presenting covertly hurtful content as obviously hurtful in a public fashion, perhaps it will promote a particular awareness that tweets posted by public accounts are indeed publicly accessible, and that Twitter's Terms of Service \cite{twitter_tos} allows for this kind of monitoring. 
 

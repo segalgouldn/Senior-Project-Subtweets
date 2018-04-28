@@ -37,7 +37,7 @@ import re
 # In[2]:
 
 
-THRESHOLD = 0.70 # 70% positives and higher, only
+THRESHOLD = 0.75 # 75% positives and higher, only
 DURATION = 60*60*24*7 # 1 week
 
 
@@ -46,19 +46,20 @@ DURATION = 60*60*24*7 # 1 week
 # In[3]:
 
 
-hashtags_pattern = re.compile(r'(\#[a-zA-Z0-9]+)')
+urls_pattern = re.compile(r'(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?\xab\xbb\u201c\u201d\u2018\u2019]))')
 
 
 # In[4]:
 
 
-urls_pattern = re.compile(r'(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?\xab\xbb\u201c\u201d\u2018\u2019]))')
+at_mentions_pattern = re.compile(r'(?<=^|(?<=[^a-zA-Z0-9-\.]))@([A-Za-z0-9_]+)')
 
 
 # In[5]:
 
 
-at_mentions_pattern = re.compile(r'(?<=^|(?<=[^a-zA-Z0-9-\.]))@([A-Za-z0-9_]+)')
+names = open("../data/other_data/first_names.txt").read().split("\n")
+names_pattern = re.compile(r'\b(?:{})\b'.format('|'.join(names)))
 
 
 # #### Load the classifier pipeline which was previously saved
@@ -130,21 +131,19 @@ class StreamListener(tweepy.StreamListener):
         retweeted = status.retweeted
         in_reply_to = status.in_reply_to_status_id_str
         
-        # The text and media of the tweet vary based on if it's extended or not
+        # The text of the tweet vary based on if it's extended or not
         if "extended_tweet" in status._json:
             if "full_text" in status._json["extended_tweet"]:
                 text = status._json["extended_tweet"]["full_text"]
-                has_media = "media" in status._json["extended_tweet"]["entities"]
             else:
                 pass # Something else?
         elif "text" in status._json:
             text = status._json["text"]
-            has_media = "media" in status._json["entities"]
         
         # Genericize extra features and clean up the text
-        text = (hashtags_pattern.sub("➊", 
-                urls_pattern.sub("➋", 
-                at_mentions_pattern.sub("➌",
+        text = (urls_pattern.sub("➊", 
+                at_mentions_pattern.sub("➋", 
+                names_pattern.sub("➌",
                 text)))
                 .replace("\u2018", "'")
                 .replace("\u2019", "'")
@@ -155,19 +154,15 @@ class StreamListener(tweepy.StreamListener):
                 .replace("&gt;", ">")
                 .replace("&lt;", "<"))
         
-        includes_subtweet = any(["subtweet" in text, 
-                                 "Subtweet" in text,
-                                 "SUBTWEET" in text])
-        
         tokens = tokenizer.tokenize(text)
         
         english_tokens = [english_dict.check(token) for token in tokens]
         percent_english_words = sum(english_tokens)/float(len(english_tokens))
         
         # Make sure the tweet is mostly english
-        is_mostly_english = False
-        if percent_english_words >= 0.5:
-            is_mostly_english = True
+        is_english = False
+        if percent_english_words >= 0.1:
+            is_english = True
         
         # Calculate the probability using the pipeline
         positive_probability = sentiment_pipeline.predict_proba([text]).tolist()[0][1]
@@ -180,10 +175,9 @@ class StreamListener(tweepy.StreamListener):
         print_list = pd.DataFrame([row]).values.tolist()[0]
         
         # Only treat it as a subtweet if all conditions are met
-        if all([positive_probability >= THRESHOLD, 
-                "RT " != text[:3], "@" not in text[:2], 
-                is_mostly_english, not includes_subtweet,
-                not retweeted, not in_reply_to, not has_media]):
+        if all([positive_probability >= THRESHOLD,
+                "RT" != text[:2],
+                is_english, not retweeted, not in_reply_to]):
             try:
                 decision = choice(choices)
                 if decision == "retweet":
@@ -358,7 +352,11 @@ stream = tweepy.Stream(auth=api.auth, listener=stream_listener, tweet_mode="exte
 # In[19]:
 
 
+# %%time
+# stream.filter(locations=[-73.920176, 42.009637, -73.899739, 42.033421], 
+# stall_warnings=True, languages=["en"], async=True)
 stream.filter(follow=my_mutuals_mutuals, stall_warnings=True, languages=["en"], async=True)
 print("Streaming has started.")
 sleep(DURATION)
 stream.disconnect()
+
