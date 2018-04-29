@@ -1,6 +1,7 @@
 \documentclass[11pt, twoside, reqno]{book}
 \usepackage{amssymb, amsthm, amsmath, amsfonts}
 \usepackage{graphicx}
+\usepackage{float}
 \graphicspath{ {images/} }
 \usepackage[author-year]{amsrefs}
 \usepackage{color}
@@ -91,7 +92,7 @@ For text classification through machine learning, it is popular to modify the gr
 \subsection{Tokenization}
 \label{tokenization}
 
-Instead of training the classifier on entire strings, \textbf{tokenization} is necessary in order to extract individual features from the text. The Natural Language Toolkit (NLTK) provides a tweet tokenizer to achieve this. For some string, the tokenizer splits apart words, usernames, URLs, hashtags, and punctuating characters as individual tokens. NLTK's tweet tokenizer also appropriately distinguishes between punctuating characters and emoticons composed of punctuating characters.
+Instead of training the classifier on entire strings, \textbf{tokenization} is necessary in order to extract individual features from the text. The Natural Language Toolkit \cite{nltk} provides a tweet tokenizer to achieve this. For some string, the tokenizer splits apart words, usernames, URLs, hashtags, and punctuating characters as individual tokens. NLTK's tweet tokenizer also appropriately distinguishes between punctuating characters and emoticons composed of punctuating characters.
 
 \subsection{N-Grams}
 \label{n_grams}
@@ -220,24 +221,62 @@ Using a machine-learning approach to perform sentiment analysis, syntactic and l
 \chapter{Implementation}
 \label{implementation}
 
-Given access to the Twitter API, the programs developed for this project can download a ground truth dataset of \textbf{true subtweets} and \textbf{true non-subtweets}, clean the data and select its features, train a Naive Bayes classifier using that dataset, and interact with \textbf{predicted subtweets} in real time. The following sections are sequentially ordered and contain brief explanations of the process at each step.
+Given access to the Twitter API, the programs developed for this project can download a ground truth dataset of \textbf{true subtweets} and \textbf{true non-subtweets}, clean the data and select its features, train and test a Naive Bayes classifier using that dataset, and interact with \textbf{predicted subtweets} in real time. The following sections are sequentially ordered and contain brief explanations of the process at each step.
 
 \section{Searching for Tweets Using the Twitter API}
 \label{searching_with_api}
 
 The first step in this process is to acquire data for the ground truth dataset. After loading our API credentials we use the following code to acquire tweets with replies which \textbf{do} and \textbf{do not} call them out as subtweets:
 
-[Show code and explain how searching works with Tweepy.]
+\includegraphics[width=\textwidth]{get_subtweets}
+
+Tweet status objects downloaded through the Twitter API contain pairs of keys and values just like Python dictionaries. For a tweet which was in reply to another tweet, one of these keys keeps track of the ID of that tweet. For acquisition of both subtweets and non-subtweets, this function can be modified to accept different queries. Respectively, these are the queries which were utilized in acquiring so-called subtweet-accusations (i.e. these replies typically claim the tweet to which they reply was a subtweet) and non-subtweet-accusations (i.e. these replies are essentially normal replies to normal tweets):
+
+\begin{verbatim}
+"subtweet AND @ since:2018-03-01 exclude:retweets filter:replies"
+"-subtweet AND @ since:2018-03-01 exclude:retweets filter:replies"
+\end{verbatim}
+
+\noindent
+The only difference between the two is that the former searches for tweets which contain the string and the latter searches for tweets which exclude it. Both access the API as far back as it will allow (typically one week for free API users) and exclude retweets while specifically searching for tweets which were in reply to other tweets. The function also keeps track of the IDs of alleged subtweets to prevent repeats from situations in which multiple users called a tweet a subtweet, and confirms that the alleged subtweeter's primary language was English. Unfortunately, tweet status objects representing replies to tweets do not contain the object data of the tweet to which they reply. In order to obtain this object, we utilize the following function:
+
+\vskip 0.2in
+\includegraphics[width=\textwidth]{first_tweet}
+
+\noindent
+This code essentially goes up a chain of recursively finding the original tweet to which a reply was made until the API can no longer find another reply tweet object with an \verb|in_reply_to_status_id_str| attribute, indicating that the tweet is an original \textbf{true subtweet} or \textbf{true non-subtweet}. The two versions of this program for acquiring \textbf{true subtweets} and \textbf{true non-subtweets} ran for three weeks between March and April of 2018, acquiring over 30,000 tweets which compose our ground truth dataset.
 
 \section{Cleaning the Data}
 \label{cleaning_data}
 
-[Show code and explain how text cleaning genericizes certain features and ignores tweets lacking enough English words.]
+Although \textbf{true subtweets} and \textbf{true non-subtweets} are identified using characteristics of the Twitter API's tweet status objects, we utilize Naive Bayes exclusively for text classification on the unicode text contained within each alleged subtweet and non-subtweet status object. We ignore the accusatory replies to these tweets. Consider the following:
 
-\section{Training the Classifier}
-\label{training_and_k_folds}
+\includegraphics[width=\textwidth]{load_data}
 
-[Explain how pipelines are trained and how K-Folds splits the dataset.]
+The function genericizes URLs, mentions of user names, and mentions of English first names. Using regular expressions for pattern matching, these substrings are replaced with special identifiers. The tweets are also cleaned to make HTML characters and unicode characters more consistent. The list comprehension intentionally excludes \textbf{non-English} tweets and those which were \textbf{not} posted by accounts which list their primary language as English. NLTK's tweet tokenizer is utilized at the end to check for tweets which contain at least 10\% English tokens. This language detection is performed on each token in the tweet using the pyEnchant library \cite{pyenchant} which primarily serves as a spell-checker. The resulting dataset of either \textbf{true subtweets} or \textbf{true non-subtweets} is returned as a list.
+
+\section{Naive Bayes}
+\label{training_naive_bayes}
+
+After text cleaning, we remove tweets which are present in both the dataset of \textbf{true subtweets} and \textbf{true non-subtweet}s. With the duplicates gone, we sample the larger dataset to create one which contains as many tweets as the smaller of the two. Thus, both the \textbf{true subtweets} and \textbf{true non-subtweets} compose the entire final ground truth dataset equally. We utilize Scikit Learn's API for machine learning \cite{scikit} to create a pipeline. In Scikit, pipelines make managing machine learning algorithms easy by consolidating their parts into one object. Our pipeline contains a vectorizer and a classifier:
+
+\vskip 0.2in
+\includegraphics[width=\textwidth]{pipeline}
+
+We change the default arguments for Scikit's TF-IDF vectorizer to use NLTK's tweet tokenizer, and specify that we want to calculate our TF-IDF vectors using unigrams, bigrams, and trigrams. Then, we set the vectorizer to use Scikit's default English language stop words. The Multinomial Naive Bayes Classifier we implement using Scikit includes \textbf{Laplace smoothing} ($\alpha=1$) by default.
+
+\section{K-Folds Cross-Validation}
+\label{k_folds_code}
+
+Scikit also has a convenient K-Folds method which we utilize to perform cross-validation on our classifier. Prior to this step, the ground truth dataset was compiled into a list of tuples, each of which contains the tweet and the associated label (i.e. subtweet or non-subtweet). The goal of K-Folds Cross-Validation is to acquire statistics on the classifier while treating $k$ different parts of the ground truth dataset as the test set, ultimately averaging those statistics to understand the overall performance of the classifier. Consider the following Python code:
+
+\vskip 0.2in
+\includegraphics[width=\textwidth]{k_folds_code}
+
+In each iteration of the 10 folds, the program splits apart a training set and a test set. The classifier is trained on the training set and the classifier's predictions for the test set in that fold are used to add toward a confusion matrix which will visualize the performance of the classifier. For the test set in each fold, precision, recall, and $F_{1}$ are calculated.
+
+\section{Creating the Twitter Bot}
+\label{creating_twitter_bot}
 
 \chapter{Results}
 \label{results}
@@ -291,19 +330,29 @@ A confusion matrix is a table which visualizes the performance of an algorithm. 
 [Test other classification algorithms. Utilize more training data.]
 
 \begin{bibliog}
-
-\bib{twitter_stats}{article}{
-	author={Twitter},
-	title={Twitter turns six},
-	date={2012},
-	eprint={https://blog.twitter.com/official/en_us/a/2012/twitter-turns-six.html},
+	
+\bib{go_dataset}{article}{
+	title = {Twitter Sentiment Classification using Distant Supervision},
+	author = {Go, Alec},
+	author = {Bhayani, Richa},
+	author = {Huang, Lei},
+	journal = {CS224N Project Report, Stanford},
+	pages = {12},
+	date = {2009}
 }
 
-\bib{first_tweet}{article}{
-	author={Dorsey, Jack},
-	title={inviting coworkers},
+\bib{twitter_api_start}{article}{
+	author={Stone, Biz},
+	title={Introducing the Twitter API},
 	date={2006},
-	eprint={https://twitter.com/jack/status/29},
+	eprint={https://blog.twitter.com/official/en_us/a/2006/introducing-the-twitter-api.html},
+}
+
+\bib{twitter_api_docs}{article}{
+	author={Twitter},
+	title={Twitter API Docs},
+	date={2018},
+	eprint={https://developer.twitter.com/en/docs},
 }
 
 \bib{twitter_tos}{article}{
@@ -313,11 +362,49 @@ A confusion matrix is a table which visualizes the performance of an algorithm. 
 	eprint={https://twitter.com/en/tos}
 }
 
-\bib{antilocution}{article}{
-	title={The nature of prejudice},
-	author={Allport, Gordon W},
-	date={1954}
+\bib{tweepy_python}{article}{
+	title={tweepy Documentation},
+	author={Roesslein, Joshua},
+	eprint={http://docs.tweepy.org/en/v3.5.0/},
+	volume={5},
+	date={2009}
 }
+
+\bib{tweepy_status_object}{article}{
+	author={Twitter},
+	title={Tweet objects},
+	date={2018},
+	eprint={https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/tweet-object},
+}
+
+\bib{nltk}{article}{
+	title={NLTK: the natural language toolkit},
+	author={Bird, Steven},
+	author={Loper, Edward},
+	journal={Proceedings of the ACL 2004 on Interactive poster and demonstration sessions},
+	pages={31},
+	date={2004}
+}
+
+\bib{naive_bayes_optimality}{article}{
+	title={The optimality of naive Bayes},
+	author={Zhang, Harry},
+	journal={AA},
+	volume={1},
+	number={2},
+	pages={3},
+	date={2004}
+}
+
+\bib{k_folds}{article}{
+	author={Borovicka, Tomas},
+	author={Jirina Jr, Marcel},
+	author={Kordik, Pavel},
+	author={Jirina, Marcel},
+	title={Selecting representative data sets},
+	date={2012}
+}
+
 
 \bib{first_subtweet}{article}{
 	author={Rae, Chelsea},
@@ -371,11 +458,18 @@ A confusion matrix is a table which visualizes the performance of an algorithm. 
 	eprint={https://goo.gl/hFh81R},
 }
 
-\bib{hateful_conduct}{article}{
+\bib{twitter_stats}{article}{
 	author={Twitter},
-	title={Hateful conduct policy},
-	date={2018},
-	eprint={https://help.twitter.com/en/rules-and-policies/hateful-conduct-policy},
+	title={Twitter turns six},
+	date={2012},
+	eprint={https://blog.twitter.com/official/en_us/a/2012/twitter-turns-six.html},
+}
+
+\bib{first_tweet}{article}{
+	author={Dorsey, Jack},
+	title={inviting coworkers},
+	date={2006},
+	eprint={https://twitter.com/jack/status/29},
 }
 
 \bib{sentiment_analysis_markets}{article}{
@@ -407,6 +501,12 @@ A confusion matrix is a table which visualizes the performance of an algorithm. 
 	volume={4},
 	number={1},
 	pages={206},
+}
+
+\bib{antilocution}{article}{
+	title={The nature of prejudice},
+	author={Allport, Gordon W},
+	date={1954}
 }
 
 \bib{semeval_2015}{article}{
@@ -443,62 +543,29 @@ A confusion matrix is a table which visualizes the performance of an algorithm. 
 	date={2014},
 }
 
-\bib{naive_bayes_optimality}{article}{
-	title={The optimality of naive Bayes},
-	author={Zhang, Harry},
-	journal={AA},
-	volume={1},
-	number={2},
-	pages={3},
-	date={2004}
+\bib{pyenchant}{article}{
+	title={PyEnchant: a spellchecking library for Python},
+	author={Kelly, Ryan},
+	date={2016}
 }
 
-\bib{go_dataset}{article}{
-	title = {Twitter Sentiment Classification using Distant Supervision},
-	author = {Go, Alec},
-	author = {Bhayani, Richa},
-	author = {Huang, Lei},
-	journal = {CS224N Project Report, Stanford},
-	pages = {12},
-	date = {2009}
-}
-
-\bib{twitter_api_start}{article}{
-	author={Stone, Biz},
-	title={Introducing the Twitter API},
-	date={2006},
-	eprint={https://blog.twitter.com/official/en_us/a/2006/introducing-the-twitter-api.html},
-}
-
-\bib{twitter_api_docs}{article}{
-	author={Twitter},
-	title={Twitter API Docs},
-	date={2018},
-	eprint={https://developer.twitter.com/en/docs},
-}
-
-\bib{tweepy_python}{article}{
-	title={tweepy Documentation},
-	author={Roesslein, Joshua},
-	eprint={http://docs.tweepy.org/en/v3.5.0/},
-	volume={5},
-	date={2009}
-}
-
-\bib{tweepy_status_object}{article}{
-	author={Twitter},
-	title={Tweet objects},
-	date={2018},
-	eprint={https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/tweet-object},
-}
-
-\bib{k_folds}{article}{
-	author={Borovicka, Tomas},
-	author={Jirina Jr, Marcel},
-	author={Kordik, Pavel},
-	author={Jirina, Marcel},
-	title={Selecting representative data sets},
-	date={2012}
+\bib{scikit}{article}{
+	title={Scikit-learn: Machine learning in Python},
+	author={Pedregosa, Fabian},
+	author={Varoquaux, Ga{\"e}l},
+	author={Gramfort, Alexandre},
+	author={Michel, Vincent}, 
+	author={Thirion, Bertrand},
+	author={Grisel, Olivier},
+	author={Blondel, Mathieu}, 
+	author={Prettenhofer, Peter},
+	author={Weiss, Ron},
+	author={Dubourg, Vincent},
+	journal={Journal of machine learning research},
+	volume={12},
+	number={Oct},
+	pages={2825--2830},
+	date={2011}
 }
 
 \end{bibliog}
