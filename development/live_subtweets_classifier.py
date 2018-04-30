@@ -37,7 +37,7 @@ import re
 # In[2]:
 
 
-THRESHOLD = 0.75 # 75% positives and higher, only
+THRESHOLD = 0.80 # 80% positives and higher, only
 DURATION = 60*60*24*7 # 1 week
 
 
@@ -113,7 +113,7 @@ english_dict = enchant.Dict("en_US")
 # In[11]:
 
 
-tokenizer = nltk.casual.TweetTokenizer(preserve_case=False, reduce_len=True)
+tokenizer = nltk.casual.TweetTokenizer()
 
 
 # #### Create a custom StreamListener class for use with Tweepy

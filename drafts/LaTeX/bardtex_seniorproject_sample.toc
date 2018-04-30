@@ -8,7 +8,7 @@
 \contentsline {section}{\numberline {1.4}Feature Extraction \& Selection}{3}{section.1.4}
 \contentsline {subsection}{\numberline {1.4.1}Regular Expressions}{4}{subsection.1.4.1}
 \contentsline {subsection}{\numberline {1.4.2}Tokenization}{4}{subsection.1.4.2}
-\contentsline {subsection}{\numberline {1.4.3}N-Grams}{5}{subsection.1.4.3}
+\contentsline {subsection}{\numberline {1.4.3}N-Grams}{4}{subsection.1.4.3}
 \contentsline {subsection}{\numberline {1.4.4}Stop Words}{5}{subsection.1.4.4}
 \contentsline {section}{\numberline {1.5}TF \& TF-IDF}{5}{section.1.5}
 \contentsline {section}{\numberline {1.6}Naive Bayes}{6}{section.1.6}
@@ -22,19 +22,18 @@
 \contentsline {section}{\numberline {1.9}Review of Literature}{10}{section.1.9}
 \contentsline {chapter}{\numberline {2}Implementation}{15}{chapter.2}
 \contentsline {section}{\numberline {2.1}Searching for Tweets Using the Twitter API}{15}{section.2.1}
-\contentsline {section}{\numberline {2.2}Cleaning the Data}{17}{section.2.2}
-\contentsline {section}{\numberline {2.3}Naive Bayes}{18}{section.2.3}
-\contentsline {section}{\numberline {2.4}K-Folds Cross-Validation}{19}{section.2.4}
-\contentsline {section}{\numberline {2.5}Creating the Twitter Bot}{20}{section.2.5}
-\contentsline {chapter}{\numberline {3}Results}{21}{chapter.3}
-\contentsline {section}{\numberline {3.1}Ground Truth Dataset}{21}{section.3.1}
-\contentsline {section}{\numberline {3.2}Confusion Matrices}{21}{section.3.2}
-\contentsline {section}{\numberline {3.3}Statistical Analyses}{21}{section.3.3}
-\contentsline {section}{\numberline {3.4}Application of the Classifier on Tweets from Known Subtweeters}{21}{section.3.4}
-\contentsline {section}{\numberline {3.5}Most Informative Features}{21}{section.3.5}
-\contentsline {section}{\numberline {3.6}The Twitter Bot}{22}{section.3.6}
-\contentsline {section}{\numberline {3.7}Discussion}{22}{section.3.7}
-\contentsline {chapter}{\numberline {4}Conclusion}{23}{chapter.4}
-\contentsline {section}{\numberline {4.1}Summary of Project Achievements}{23}{section.4.1}
-\contentsline {section}{\numberline {4.2}Future Work \& Considerations}{23}{section.4.2}
-\contentsline {chapter}{Bibliography}{25}{chapter*.5}
+\contentsline {section}{\numberline {2.2}Cleaning and Preparing the Data}{17}{section.2.2}
+\contentsline {section}{\numberline {2.3}Training \& Testing Naive Bayes}{19}{section.2.3}
+\contentsline {section}{\numberline {2.4}Creating the Twitter Bot}{20}{section.2.4}
+\contentsline {chapter}{\numberline {3}Results}{23}{chapter.3}
+\contentsline {section}{\numberline {3.1}Ground Truth Dataset}{23}{section.3.1}
+\contentsline {section}{\numberline {3.2}Confusion Matrices}{27}{section.3.2}
+\contentsline {section}{\numberline {3.3}Statistical Analyses}{28}{section.3.3}
+\contentsline {section}{\numberline {3.4}Application of the Classifier on Tweets from Known Subtweeters}{28}{section.3.4}
+\contentsline {section}{\numberline {3.5}Most Informative Features}{29}{section.3.5}
+\contentsline {section}{\numberline {3.6}The Twitter Bot}{30}{section.3.6}
+\contentsline {section}{\numberline {3.7}Discussion}{30}{section.3.7}
+\contentsline {chapter}{\numberline {4}Conclusion}{31}{chapter.4}
+\contentsline {section}{\numberline {4.1}Summary of Project Achievements}{31}{section.4.1}
+\contentsline {section}{\numberline {4.2}Future Work \& Considerations}{31}{section.4.2}
+\contentsline {chapter}{Bibliography}{33}{chapter*.13}

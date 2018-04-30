@@ -22,19 +22,18 @@
 \BOOKMARK [1][-]{section.1.9}{Review of Literature}{chapter.1}% 22
 \BOOKMARK [0][-]{chapter.2}{Implementation}{}% 23
 \BOOKMARK [1][-]{section.2.1}{Searching for Tweets Using the Twitter API}{chapter.2}% 24
-\BOOKMARK [1][-]{section.2.2}{Cleaning the Data}{chapter.2}% 25
-\BOOKMARK [1][-]{section.2.3}{Naive Bayes}{chapter.2}% 26
-\BOOKMARK [1][-]{section.2.4}{K-Folds Cross-Validation}{chapter.2}% 27
-\BOOKMARK [1][-]{section.2.5}{Creating the Twitter Bot}{chapter.2}% 28
-\BOOKMARK [0][-]{chapter.3}{Results}{}% 29
-\BOOKMARK [1][-]{section.3.1}{Ground Truth Dataset}{chapter.3}% 30
-\BOOKMARK [1][-]{section.3.2}{Confusion Matrices}{chapter.3}% 31
-\BOOKMARK [1][-]{section.3.3}{Statistical Analyses}{chapter.3}% 32
-\BOOKMARK [1][-]{section.3.4}{Application of the Classifier on Tweets from Known Subtweeters}{chapter.3}% 33
-\BOOKMARK [1][-]{section.3.5}{Most Informative Features}{chapter.3}% 34
-\BOOKMARK [1][-]{section.3.6}{The Twitter Bot}{chapter.3}% 35
-\BOOKMARK [1][-]{section.3.7}{Discussion}{chapter.3}% 36
-\BOOKMARK [0][-]{chapter.4}{Conclusion}{}% 37
-\BOOKMARK [1][-]{section.4.1}{Summary of Project Achievements}{chapter.4}% 38
-\BOOKMARK [1][-]{section.4.2}{Future Work \046 Considerations}{chapter.4}% 39
-\BOOKMARK [0][-]{chapter*.5}{Bibliography}{}% 40
+\BOOKMARK [1][-]{section.2.2}{Cleaning and Preparing the Data}{chapter.2}% 25
+\BOOKMARK [1][-]{section.2.3}{Training \046 Testing Naive Bayes}{chapter.2}% 26
+\BOOKMARK [1][-]{section.2.4}{Creating the Twitter Bot}{chapter.2}% 27
+\BOOKMARK [0][-]{chapter.3}{Results}{}% 28
+\BOOKMARK [1][-]{section.3.1}{Ground Truth Dataset}{chapter.3}% 29
+\BOOKMARK [1][-]{section.3.2}{Confusion Matrices}{chapter.3}% 30
+\BOOKMARK [1][-]{section.3.3}{Statistical Analyses}{chapter.3}% 31
+\BOOKMARK [1][-]{section.3.4}{Application of the Classifier on Tweets from Known Subtweeters}{chapter.3}% 32
+\BOOKMARK [1][-]{section.3.5}{Most Informative Features}{chapter.3}% 33
+\BOOKMARK [1][-]{section.3.6}{The Twitter Bot}{chapter.3}% 34
+\BOOKMARK [1][-]{section.3.7}{Discussion}{chapter.3}% 35
+\BOOKMARK [0][-]{chapter.4}{Conclusion}{}% 36
+\BOOKMARK [1][-]{section.4.1}{Summary of Project Achievements}{chapter.4}% 37
+\BOOKMARK [1][-]{section.4.2}{Future Work \046 Considerations}{chapter.4}% 38
+\BOOKMARK [0][-]{chapter*.13}{Bibliography}{}% 39

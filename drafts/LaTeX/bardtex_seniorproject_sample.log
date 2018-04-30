@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  29 APR 2018 02:17
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  29 APR 2018 23:46
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -137,14 +137,76 @@ Package: ltxcmds 2016/05/16 v1.23 LaTeX kernel commands for general use (HO)
 \Gin@req@height=\dimen112
 \Gin@req@width=\dimen113
 )
+(/usr/local/texlive/2017/texmf-dist/tex/latex/caption/caption.sty
+Package: caption 2016/02/21 v3.3-144 Customizing captions (AR)
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/caption/caption3.sty
+Package: caption3 2016/05/22 v1.7-166 caption3 kernel (AR)
+Package caption3 Info: TeX engine: e-TeX on input line 67.
+\captionmargin=\dimen114
+\captionmargin@=\dimen115
+\captionwidth=\dimen116
+\caption@tempdima=\dimen117
+\caption@indent=\dimen118
+\caption@parindent=\dimen119
+\caption@hangindent=\dimen120
+)
+\c@ContinuedFloat=\count101
+)
 (/usr/local/texlive/2017/texmf-dist/tex/latex/float/float.sty
 Package: float 2001/11/08 v1.3d Float enhancements (AL)
-\c@float@type=\count101
+\c@float@type=\count102
 \float@exts=\toks27
 \float@box=\box28
 \@float@everytoks=\toks28
 \@floatcapt=\box29
 )
+(./pythonhighlight.sty
+Package: pythonhighlight 2011/09/19 python code highlighting; provided by Olivi
+er Verdier <olivier.verdier@gmail.com>
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/listings/listings.sty
+\lst@mode=\count103
+\lst@gtempboxa=\box30
+\lst@token=\toks29
+\lst@length=\count104
+\lst@currlwidth=\dimen121
+\lst@column=\count105
+\lst@pos=\count106
+\lst@lostspace=\dimen122
+\lst@width=\dimen123
+\lst@newlines=\count107
+\lst@lineno=\count108
+\lst@maxwidth=\dimen124
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/listings/lstmisc.sty
+File: lstmisc.sty 2015/06/04 1.6 (Carsten Heinz)
+\c@lstnumber=\count109
+\lst@skipnumbers=\count110
+\lst@framebox=\box31
+)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/listings/listings.cfg
+File: listings.cfg 2015/06/04 1.6 listings configuration
+))
+Package: listings 2015/06/04 1.6 (Carsten Heinz)
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/xcolor/xcolor.sty
+Package: xcolor 2016/05/11 v2.12 LaTeX color extensions (UK)
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/graphics-cfg/color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package xcolor Info: Driver file: pdftex.def on input line 225.
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1348.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1352.
+Package xcolor Info: Model `RGB' extended on input line 1364.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1366.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1367.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1368.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1369.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1370.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1371.
+))
 (/usr/local/texlive/2017/texmf-dist/tex/latex/amsrefs/amsrefs.sty
 Package: amsrefs 2013/03/07 v2.14
 
@@ -160,8 +222,8 @@ Package: ifoption 2002/03/04 v1.02
 )
 (/usr/local/texlive/2017/texmf-dist/tex/latex/amsrefs/rkeyval.sty
 Package: rkeyval 2004/05/05 v1.08
-\@temptokenb=\toks29
-\rsk@toks=\toks30
+\@temptokenb=\toks30
+\rsk@toks=\toks31
 )
 (/usr/local/texlive/2017/texmf-dist/tex/latex/amsrefs/textcmds.sty
 Package: textcmds 2012/08/02 v2.00
@@ -169,12 +231,12 @@ Package: textcmds 2012/08/02 v2.00
 (/usr/local/texlive/2017/texmf-dist/tex/latex/amsrefs/mathscinet.sty
 Package: mathscinet 2002/04/17 v1.05
 )
-\c@bib=\count102
-\@maxlabelwidth=\dimen114
-\c@bib@env=\count103
+\c@bib=\count111
+\@maxlabelwidth=\dimen125
+\c@bib@env=\count112
 \bib@dbfile=\read1
-\alpha@suffix=\count104
-\series@index=\count105
+\alpha@suffix=\count113
+\series@index=\count114
 LaTeX Info: Redefining \ycite on input line 3006.
 LaTeX Info: Redefining \ycites on input line 3009.
 LaTeX Info: Redefining \ocite on input line 3023.
@@ -183,14 +245,6 @@ LaTeX Info: Redefining \citeauthor on input line 3042.
 LaTeX Info: Redefining \citeauthory on input line 3045.
 LaTeX Info: Redefining \fullcite on input line 3048.
 LaTeX Info: Redefining \fullocite on input line 3054.
-)
-(/usr/local/texlive/2017/texmf-dist/tex/latex/graphics/color.sty
-Package: color 2016/07/10 v1.1e Standard LaTeX Color (DPC)
-
-(/usr/local/texlive/2017/texmf-dist/tex/latex/graphics-cfg/color.cfg
-File: color.cfg 2016/01/02 v1.6 sample color configuration
-)
-Package color Info: Driver file: pdftex.def on input line 147.
 )
 (/usr/local/texlive/2017/texmf-dist/tex/latex/hyperref/hyperref.sty
 Package: hyperref 2017/03/14 v6.85a Hypertext links for LaTeX
@@ -248,14 +302,14 @@ Package: auxhook 2016/05/16 v1.4 Hooks for auxiliary files (HO)
 (/usr/local/texlive/2017/texmf-dist/tex/latex/oberdiek/kvoptions.sty
 Package: kvoptions 2016/05/16 v3.12 Key value format for package options (HO)
 )
-\@linkdim=\dimen115
-\Hy@linkcounter=\count106
-\Hy@pagecounter=\count107
+\@linkdim=\dimen126
+\Hy@linkcounter=\count115
+\Hy@pagecounter=\count116
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/hyperref/pd1enc.def
 File: pd1enc.def 2017/03/14 v6.85a Hyperref: PDFDocEncoding definition (HO)
 )
-\Hy@SavedSpaceFactor=\count108
+\Hy@SavedSpaceFactor=\count117
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/latexconfig/hyperref.cfg
 File: hyperref.cfg 2002/06/06 v1.2 hyperref configuration of TeXLive
@@ -267,12 +321,12 @@ Package hyperref Info: Plain pages OFF on input line 4513.
 Package hyperref Info: Backreferencing OFF on input line 4518.
 Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
 Package hyperref Info: Bookmarks ON on input line 4751.
-\c@Hy@tempcnt=\count109
+\c@Hy@tempcnt=\count118
 LaTeX Info: Redefining \url on input line 5104.
-\XeTeXLinkMargin=\dimen116
-\Fld@menulength=\count110
-\Field@Width=\dimen117
-\Fld@charsize=\dimen118
+\XeTeXLinkMargin=\dimen127
+\Fld@menulength=\count119
+\Field@Width=\dimen128
+\Fld@charsize=\dimen129
 Package hyperref Info: Hyper figures OFF on input line 6358.
 Package hyperref Info: Link nesting OFF on input line 6363.
 Package hyperref Info: Hyper index ON on input line 6366.
@@ -282,17 +336,17 @@ Package hyperref Info: Link coloring with OCG OFF on input line 6383.
 Package hyperref Info: PDF/A mode OFF on input line 6388.
 LaTeX Info: Redefining \ref on input line 6428.
 LaTeX Info: Redefining \pageref on input line 6432.
-\Hy@abspage=\count111
-\c@Item=\count112
-\c@Hfootnote=\count113
+\Hy@abspage=\count120
+\c@Item=\count121
+\c@Hfootnote=\count122
 )
 
 Package hyperref Message: Driver (autodetected): hpdftex.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/hyperref/hpdftex.def
 File: hpdftex.def 2017/03/14 v6.85a Hyperref driver for pdfTeX
-\Fld@listcount=\count114
-\c@bookmark@seq@number=\count115
+\Fld@listcount=\count123
+\c@bookmark@seq@number=\count124
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/oberdiek/rerunfilecheck.sty
 Package: rerunfilecheck 2016/05/16 v1.8 Rerun checks for auxiliary files (HO)
@@ -303,15 +357,15 @@ Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
 )
 (/usr/local/texlive/2017/texmf-dist/tex/latex/tools/verbatim.sty
 Package: verbatim 2014/10/28 v1.5q LaTeX2e package for verbatim enhancements
-\every@verbatim=\toks31
-\verbatim@line=\toks32
+\every@verbatim=\toks32
+\verbatim@line=\toks33
 \verbatim@in@stream=\read2
 )
 (/usr/local/texlive/2017/texmf-dist/tex/latex/appendix/appendix.sty
 Package: appendix 2009/09/02 v1.2b extra appendix facilities
-\c@@pps=\count116
-\c@@ppsavesec=\count117
-\c@@ppsaveapp=\count118
+\c@@pps=\count125
+\c@@ppsavesec=\count126
+\c@@ppsaveapp=\count127
 )
 (/usr/local/texlive/2017/texmf-dist/tex/latex/pdfpages/pdfpages.sty
 Package: pdfpages 2017/01/14 v0.5h Insert pages of external PDF documents (AM)
@@ -321,43 +375,43 @@ Package: ifthen 2014/09/29 v1.1c Standard LaTeX ifthen package (DPC)
 )
 (/usr/local/texlive/2017/texmf-dist/tex/latex/tools/calc.sty
 Package: calc 2014/10/28 v4.3 Infix arithmetic (KKT,FJ)
-\calc@Acount=\count119
-\calc@Bcount=\count120
-\calc@Adimen=\dimen119
-\calc@Bdimen=\dimen120
+\calc@Acount=\count128
+\calc@Bcount=\count129
+\calc@Adimen=\dimen130
+\calc@Bdimen=\dimen131
 \calc@Askip=\skip50
 \calc@Bskip=\skip51
 LaTeX Info: Redefining \setlength on input line 80.
 LaTeX Info: Redefining \addtolength on input line 81.
-\calc@Ccount=\count121
+\calc@Ccount=\count130
 \calc@Cskip=\skip52
 )
 (/usr/local/texlive/2017/texmf-dist/tex/latex/eso-pic/eso-pic.sty
 Package: eso-pic 2015/07/21 v2.0g eso-pic (RN)
 )
-\AM@pagewidth=\dimen121
-\AM@pageheight=\dimen122
+\AM@pagewidth=\dimen132
+\AM@pageheight=\dimen133
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/pdfpages/pppdftex.def
 File: pppdftex.def 2017/01/14 v0.5h Pdfpages driver for pdfTeX (AM)
 )
-\AM@pagebox=\box30
-\AM@global@opts=\toks33
-\AM@toc@title=\toks34
-\c@AM@survey=\count122
-\AM@templatesizebox=\box31
+\AM@pagebox=\box32
+\AM@global@opts=\toks34
+\AM@toc@title=\toks35
+\c@AM@survey=\count131
+\AM@templatesizebox=\box33
 )
 (./bardtex.sty
 BardT\kern -.1667em\lower .5ex\hbox {E}\kern -.125emX\spacefactor \@m {}\ Style
  file "bardtex" v. 1.1 released June 2016
-\c@ffigure=\count123
+\c@ffigure=\count132
 \titlefontsize=\skip53
 \namefontsize=\skip54
 \advfontsize=\skip55
 \progdatefontsize=\skip56
 \boxfontsize=\skip57
 \boxheadingfontsize=\skip58
-\c@countroman=\count124
+\c@countroman=\count133
 \postertopwidthfact=\skip59
 \smallsize=\skip60
 \bigsize=\skip61
@@ -370,56 +424,56 @@ BardT\kern -.1667em\lower .5ex\hbox {E}\kern -.125emX\spacefactor \@m {}\ Style
 \prospheadfontsize=\skip68
 ) (/usr/local/texlive/2017/texmf-dist/tex/latex/geometry/geometry.sty
 Package: geometry 2010/09/12 v5.6 Page Geometry
-\Gm@cnth=\count125
-\Gm@cntv=\count126
-\c@Gm@tempcnt=\count127
-\Gm@bindingoffset=\dimen123
-\Gm@wd@mp=\dimen124
-\Gm@odd@mp=\dimen125
-\Gm@even@mp=\dimen126
-\Gm@layoutwidth=\dimen127
-\Gm@layoutheight=\dimen128
-\Gm@layouthoffset=\dimen129
-\Gm@layoutvoffset=\dimen130
-\Gm@dimlist=\toks35
+\Gm@cnth=\count134
+\Gm@cntv=\count135
+\c@Gm@tempcnt=\count136
+\Gm@bindingoffset=\dimen134
+\Gm@wd@mp=\dimen135
+\Gm@odd@mp=\dimen136
+\Gm@even@mp=\dimen137
+\Gm@layoutwidth=\dimen138
+\Gm@layoutheight=\dimen139
+\Gm@layouthoffset=\dimen140
+\Gm@layoutvoffset=\dimen141
+\Gm@dimlist=\toks36
 )
-\w@dth=\dimen131
-\c@theorem=\count128
-\c@exercise=\count129
-\c@problemm=\count130
-\c@exercisee=\count131
+\w@dth=\dimen142
+\c@theorem=\count137
+\c@exercise=\count138
+\c@problemm=\count139
+\c@exercisee=\count140
 
 (./bardtex_seniorproject_sample.aux)
 \openout1 = `bardtex_seniorproject_sample.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 17.
-LaTeX Font Info:    ... okay on input line 17.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 19.
+LaTeX Font Info:    ... okay on input line 19.
 
 (/usr/local/texlive/2017/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count132
-\scratchdimen=\dimen132
-\scratchbox=\box32
-\nofMPsegments=\count133
-\nofMParguments=\count134
-\everyMPshowfont=\toks36
-\MPscratchCnt=\count135
-\MPscratchDim=\dimen133
-\MPnumerator=\count136
-\makeMPintoPDFobject=\count137
-\everyMPtoPDFconversion=\toks37
+\scratchcounter=\count141
+\scratchdimen=\dimen143
+\scratchbox=\box34
+\nofMPsegments=\count142
+\nofMParguments=\count143
+\everyMPshowfont=\toks37
+\MPscratchCnt=\count144
+\MPscratchDim=\dimen144
+\MPnumerator=\count145
+\makeMPintoPDFobject=\count146
+\everyMPtoPDFconversion=\toks38
 ) (/usr/local/texlive/2017/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
 
@@ -437,8 +491,14 @@ G,.JBIG2,.JB2,.eps]
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 ))
-\AtBeginShipoutBox=\box33
-Package hyperref Info: Link coloring OFF on input line 17.
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: float package is loaded.
+Package caption Info: hyperref package is loaded.
+Package caption Info: listings package is loaded.
+Package caption Info: End \AtBeginDocument code.
+\c@lstlisting=\count147
+\AtBeginShipoutBox=\box35
+Package hyperref Info: Link coloring OFF on input line 19.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
@@ -446,11 +506,11 @@ Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
 (/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
 Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
-\c@section@level=\count138
+\c@section@level=\count148
 )
-LaTeX Info: Redefining \ref on input line 17.
-LaTeX Info: Redefining \pageref on input line 17.
-LaTeX Info: Redefining \nameref on input line 17.
+LaTeX Info: Redefining \ref on input line 19.
+LaTeX Info: Redefining \pageref on input line 19.
+LaTeX Info: Redefining \nameref on input line 19.
 
 (./bardtex_seniorproject_sample.out) (./bardtex_seniorproject_sample.out)
 \@outlinefile=\write3
@@ -506,11 +566,11 @@ Package pdflscape Info: Auto-detected driver: pdftex on input line 81.
 [2
 
 ]
-LaTeX Font Info:    Try loading font information for U+msa on input line 25.
+LaTeX Font Info:    Try loading font information for U+msa on input line 27.
  (/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 25.
+LaTeX Font Info:    Try loading font information for U+msb on input line 27.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -530,26 +590,25 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 ]
  1.
 
-Underfull \hbox (badness 4084) in paragraph at lines 57--57
-[]\OT1/cmr/m/n/10.95 Talk to him again about
+Overfull \hbox (18.69984pt too wide) in paragraph at lines 54--66
+ [] 
  []
 
 
-Underfull \hbox (badness 1038) in paragraph at lines 60--60
-[]\OT1/cmr/m/n/10.95 Thomas don't sub-tweet me
- []
+Underfull \vbox (badness 6741) has occurred while \output is active []
 
-[1
+ [1
 
-] [2] [3]
-Underfull \vbox (badness 10000) has occurred while \output is active []
+]
+[2] [3] [4] [5]
+Underfull \vbox (badness 7576) has occurred while \output is active []
 
- [4]
-[5] [6] [7] <images/k_folds.jpg, id=306, 313.17pt x 150.8034pt>
+ [6]
+[7] <images/k_folds.jpg, id=301, 313.17pt x 150.8034pt>
 File: images/k_folds.jpg Graphic file (type jpg)
 
 <use images/k_folds.jpg>
-Package pdftex.def Info: images/k_folds.jpg used on input line 155.
+Package pdftex.def Info: images/k_folds.jpg used on input line 157.
 (pdftex.def)             Requested size: 313.16922pt x 150.80302pt.
  [8 <./images/k_folds.jpg>]
 Underfull \vbox (badness 1609) has occurred while \output is active []
@@ -573,99 +632,157 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 
 ]
  2.
-<images/get_subtweets.jpg, id=375, 1766.6pt x 1011.78pt>
-File: images/get_subtweets.jpg Graphic file (type jpg)
-
-<use images/get_subtweets.jpg>
-Package pdftex.def Info: images/get_subtweets.jpg used on input line 231.
-(pdftex.def)             Requested size: 455.30124pt x 260.75626pt.
-
-Overfull \hbox (10.95003pt too wide) in paragraph at lines 231--232
-[][] 
- []
-
-
+(/usr/local/texlive/2017/texmf-dist/tex/latex/listings/lstlang1.sty
+File: lstlang1.sty 2015/06/04 1.6 listings language file
+)
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [15]
-[16 <./images/get_subtweets.jpg>]
-<images/first_tweet.jpg, id=386, 1766.6pt x 285.065pt>
-File: images/first_tweet.jpg Graphic file (type jpg)
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <8> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 234.
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 264.
 
-<use images/first_tweet.jpg>
-Package pdftex.def Info: images/first_tweet.jpg used on input line 244.
-(pdftex.def)             Requested size: 455.30124pt x 73.46704pt.
 
-Overfull \hbox (10.95003pt too wide) in paragraph at lines 244--245
-[][] 
- []
-
-<images/load_data.jpg, id=387, 1770.615pt x 1041.8925pt>
-File: images/load_data.jpg Graphic file (type jpg)
-
-<use images/load_data.jpg>
-Package pdftex.def Info: images/load_data.jpg used on input line 254.
-(pdftex.def)             Requested size: 455.30124pt x 267.91273pt.
-
-Overfull \hbox (10.95003pt too wide) in paragraph at lines 254--255
-[][] 
+(/usr/local/texlive/2017/texmf-dist/tex/latex/base/omscmr.fd
+File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
+)
+LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 264.
+ [16]
+Overfull \hbox (2.52802pt too wide) in paragraph at lines 289--291
+\OT1/cmr/m/n/10.95 made un-til the API can no longer find an-other tweet ob-jec
+t with an [][]\OT1/cmtt/m/n/10.95 in_reply_to_status_id_str
  []
 
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [17 <./images/first_tweet.jpg>]
-Underfull \vbox (badness 2932) has occurred while \output is active []
-
- [18 <./images/load_data.jpg>] <images/pipeline.jpg, id=400, 1762.585pt x 279.0
-425pt>
-File: images/pipeline.jpg Graphic file (type jpg)
-
-<use images/pipeline.jpg>
-Package pdftex.def Info: images/pipeline.jpg used on input line 264.
-(pdftex.def)             Requested size: 455.30124pt x 72.08096pt.
-
-Overfull \hbox (10.95003pt too wide) in paragraph at lines 264--265
-[][] 
- []
-
-<images/k_folds_code.jpg, id=401, 1766.6pt x 1011.78pt>
-File: images/k_folds_code.jpg Graphic file (type jpg)
-
-<use images/k_folds_code.jpg>
-Package pdftex.def Info: images/k_folds_code.jpg used on input line 274.
-(pdftex.def)             Requested size: 455.30124pt x 260.75626pt.
-
-Overfull \hbox (10.95003pt too wide) in paragraph at lines 274--275
-[][] 
- []
-
-
+ [17]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [19 <./images/pipeline.jpg>] [20 <./images/k_folds_code.jpg>]
+ [18]
+[19]
+Underfull \vbox (badness 1215) has occurred while \output is active []
+
+ [20]
+Underfull \vbox (badness 2529) has occurred while \output is active []
+
+ [21]
+[22]
  3.
 
-Underfull \vbox (badness 1968) has occurred while \output is active []
+Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [21
+ [23
 
 ]
-[22]
- 4.
-[23
+Underfull \hbox (badness 10000) in paragraph at lines 500--501
+[]\OT1/cmr/m/n/10.95 He's fol-lowed the pu-trid smell of
+ []
 
-] [24
+
+Underfull \hbox (badness 10000) in paragraph at lines 531--533
+[]\OT1/cmr/m/n/10.95 Rosie the Corpse Flower bloomed at
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 531--533
+\OT1/cmr/m/n/10.95 Tuc-son Botan-i-cal Gar-dens: See pix
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 531--533
+\OT1/cmr/m/n/10.95 allery here GENERIC[]URL #Tuc-son
+ []
+
+
+Overfull \hbox (6.69986pt too wide) in paragraph at lines 493--555
+ [] 
+ []
+
+<images/length_histogram.png, id=576, 1081.03876pt x 600.2425pt>
+File: images/length_histogram.png Graphic file (type png)
+
+<use images/length_histogram.png>
+Package pdftex.def Info: images/length_histogram.png used on input line 561.
+(pdftex.def)             Requested size: 455.30124pt x 252.7962pt.
+
+Underfull \vbox (badness 1205) has occurred while \output is active []
+
+ [24]
+<images/punctuation_histogram.png, id=582, 1081.03876pt x 605.26125pt>
+File: images/punctuation_histogram.png Graphic file (type png)
+
+<use images/punctuation_histogram.png>
+Package pdftex.def Info: images/punctuation_histogram.png used on input line 56
+8.
+(pdftex.def)             Requested size: 455.30124pt x 254.90988pt.
+
+<images/stop_words_histogram.png, id=583, 1090.0725pt x 600.2425pt>
+File: images/stop_words_histogram.png Graphic file (type png)
+
+<use images/stop_words_histogram.png>
+Package pdftex.def Info: images/stop_words_histogram.png used on input line 575
+.
+(pdftex.def)             Requested size: 455.30124pt x 250.70796pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [25 <./images/length_histogram.png> <./images/punctuation_histogram.png>]
+<images/unique_words_histogram.png, id=592, 1081.03876pt x 600.2425pt>
+File: images/unique_words_histogram.png Graphic file (type png)
+
+<use images/unique_words_histogram.png>
+Package pdftex.def Info: images/unique_words_histogram.png used on input line 5
+82.
+(pdftex.def)             Requested size: 455.30124pt x 252.7962pt.
+
+<images/confusion_matrix.png, id=593, 447.6725pt x 420.57124pt>
+File: images/confusion_matrix.png Graphic file (type png)
+
+<use images/confusion_matrix.png>
+Package pdftex.def Info: images/confusion_matrix.png used on input line 594.
+(pdftex.def)             Requested size: 328.50082pt x 308.6188pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [26 <./images/stop_words_histogram.png> <./images/unique_words_histogram.png>]
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [27 <./images/confusion_matrix.png>]
+<images/random_known_subtweeters.png, id=609, 1079.03125pt x 600.2425pt>
+File: images/random_known_subtweeters.png Graphic file (type png)
+
+<use images/random_known_subtweeters.png>
+Package pdftex.def Info: images/random_known_subtweeters.png used on input line
+ 635.
+(pdftex.def)             Requested size: 455.30124pt x 253.27248pt.
+
+<images/known_subtweeters.png, id=610, 1067.99pt x 600.2425pt>
+File: images/known_subtweeters.png Graphic file (type png)
+
+<use images/known_subtweeters.png>
+Package pdftex.def Info: images/known_subtweeters.png used on input line 647.
+(pdftex.def)             Requested size: 455.30124pt x 255.89194pt.
+ [28 <./images/random_known_subtweeters.png>]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [29 <./images/known_subtweeters.png>] [30]
+ 4.
+[31
+
+] [32
 
 ]
 
 Package amsrefs Warning: Duplicate biblabel stem `Twitter' detected.
 (amsrefs)                This usually means the order of the bibitems
 (amsrefs)                is incompatible with the style of labels
-(amsrefs)                you are using on input line 378.
+(amsrefs)                you are using on input line 758.
 
 
-Underfull \hbox (badness 2547) in paragraph at lines 378--378
+Underfull \hbox (badness 2547) in paragraph at lines 758--758
 []\OT1/cmr/m/n/10.95 Twitter. 2018. \OT1/cmr/m/it/10.95 Tweet ob-jects\OT1/cmr/
 m/n/10.95 , avail-able at []$\OT1/cmtt/m/n/10.95 https : / / developer . twitte
 r . com / en / docs /
@@ -681,30 +798,30 @@ Missing character: There is no ™ in font cmti10!
 Package amsrefs Warning: Duplicate biblabel stem `Twitter' detected.
 (amsrefs)                This usually means the order of the bibitems
 (amsrefs)                is incompatible with the style of labels
-(amsrefs)                you are using on input line 466.
+(amsrefs)                you are using on input line 846.
 
-[25]
+[33]
 Missing character: There is no Ã in font cmr10!
 Missing character: There is no © in font cmr10!
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 573.
- [26]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 573.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 953.
+ [34]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 953.
  (./bardtex_seniorproject_sample.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 573.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 573.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 953.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 953.
 Package rerunfilecheck Info: File `bardtex_seniorproject_sample.out' has not ch
 anged.
-(rerunfilecheck)             Checksum: 229BE23C5432C3B36A47F01089D58CC6;2560.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 573.
+(rerunfilecheck)             Checksum: B2DBC47771EBA41B998844879D5B6DB2;2526.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 953.
  ) 
 Here is how much of TeX's memory you used:
- 9643 strings out of 492995
- 133348 string characters out of 6132704
- 291316 words of memory out of 5000000
- 12932 multiletter control sequences out of 15000+600000
- 11925 words of font info for 44 fonts, out of 8000000 for 9000
+ 13137 strings out of 492995
+ 185994 string characters out of 6132704
+ 483155 words of memory out of 5000000
+ 16219 multiletter control sequences out of 15000+600000
+ 13961 words of font info for 54 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 28i,17n,28p,1430b,675s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 36i,17n,48p,1430b,1476s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
 ></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb>
 </usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></
@@ -712,16 +829,19 @@ usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></us
 r/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/
 local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/lo
 cal/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/loca
-l/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/t
-exlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsl10.pfb></usr/local/te
-xlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/tex
-live/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texl
-ive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/local/texli
-ve/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb>
-Output written on bardtex_seniorproject_sample.pdf (36 pages, 1160230 bytes).
+l/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/t
+exlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texl
+ive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsl10.pfb></usr/local/texli
+ve/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsltt10.pfb></usr/local/texl
+ive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texli
+ve/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texliv
+e/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/local/texlive
+/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/
+2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb>
+Output written on bardtex_seniorproject_sample.pdf (44 pages, 568794 bytes).
 PDF statistics:
- 554 PDF objects out of 1000 (max. 8388607)
- 492 compressed objects within 5 object streams
- 131 named destinations out of 1000 (max. 500000)
- 351 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 811 PDF objects out of 1000 (max. 8388607)
+ 726 compressed objects within 8 object streams
+ 303 named destinations out of 1000 (max. 500000)
+ 353 words of extra memory for PDF output out of 10000 (max. 10000000)
 
