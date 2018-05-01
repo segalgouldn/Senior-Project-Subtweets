@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  1 MAY 2018 04:53
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  1 MAY 2018 14:11
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -770,11 +770,27 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 \tf@toc=\write7
 \openout7 = `bardtex_seniorproject_sample.toc'.
 
- [6] [7
+ [6]
+(./bardtex_seniorproject_sample.lof
+Overfull \hbox (1.26453pt too wide) in paragraph at lines 8--8
+ [][] [][]\OT1/cmr/m/n/10.95 Histogram of Ground Truth En-glish Unique Words $(
+\OML/cmm/m/it/10.95 ^^V[] \OT1/cmr/m/n/10.95 = 16\OML/cmm/m/it/10.95 :\OT1/cmr/
+m/n/10.95 80\OML/cmm/m/it/10.95 ; ^^[[] \OT1/cmr/m/n/10.95 = 10\OML/cmm/m/it/10
+.95 :\OT1/cmr/m/n/10.95 95)\OML/cmm/m/it/10.95 ; \OT1/cmr/m/n/10.95 (\OML/cmm/m
+/it/10.95 ^^V[] \OT1/cmr/m/n/10.95 = 
+ []
+
+)
+\tf@lof=\write8
+\openout8 = `bardtex_seniorproject_sample.lof'.
+
+ [7
 
 ] [8
 
 ] [9] [10
+
+] [11] [12
 
 ]
  1.
@@ -825,7 +841,7 @@ d.
 LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <8> not available
 (Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 2.
 )
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 113.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 115.
 
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/base/ts1cmr.fd
@@ -865,19 +881,15 @@ ardtex_seniorproject_sample.out.pyg bardtex_seniorproject_sample.pyg)...execute
 d.
 
 
-(./bardtex_seniorproject_sample.out.pyg [11])
+(./bardtex_seniorproject_sample.out.pyg) [11] [12] [13] [14] [15]
+<images/k_folds.jpg, id=422, 313.17pt x 150.8034pt>
+File: images/k_folds.jpg Graphic file (type jpg)
+ <use images/k_folds.jpg>
+Package pdftex.def Info: images/k_folds.jpg used on input line 349.
+(pdftex.def)             Requested size: 313.16922pt x 150.80302pt.
+
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [12]
-Underfull \vbox (badness 7099) has occurred while \output is active []
-
- [13]
-[14] [15] <images/k_folds.jpg, id=384, 313.17pt x 150.8034pt>
-File: images/k_folds.jpg Graphic file (type jpg)
-
-<use images/k_folds.jpg>
-Package pdftex.def Info: images/k_folds.jpg used on input line 347.
-(pdftex.def)             Requested size: 313.16922pt x 150.80302pt.
  [16]
 \openout3 = `bardtex_seniorproject_sample.pyg'.
 
@@ -885,7 +897,8 @@ runsystem(pygmentize -l python -f latex -P commandprefix=PYG -F tokenmerge -o b
 ardtex_seniorproject_sample.out.pyg bardtex_seniorproject_sample.pyg)...execute
 d.
 
- (./bardtex_seniorproject_sample.out.pyg)
+
+(./bardtex_seniorproject_sample.out.pyg)
 \openout3 = `bardtex_seniorproject_sample.pyg'.
 
 runsystem(pygmentize -l python -f latex -P commandprefix=PYG -F tokenmerge -o b
@@ -928,27 +941,27 @@ d.
 (./bardtex_seniorproject_sample.out.pyg [19]) [20]
  3.
 
-Underfull \hbox (badness 10000) in paragraph at lines 493--494
+Underfull \hbox (badness 10000) in paragraph at lines 495--496
 []\OT1/cmr/m/n/10.95 He's fol-lowed the pu-trid smell of
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 524--526
+Underfull \hbox (badness 10000) in paragraph at lines 526--528
 []\OT1/cmr/m/n/10.95 Rosie the Corpse Flower bloomed at
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 524--526
+Underfull \hbox (badness 10000) in paragraph at lines 526--528
 \OT1/cmr/m/n/10.95 Tuc-son Botan-i-cal Gar-dens: See pix
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 524--526
+Underfull \hbox (badness 10000) in paragraph at lines 526--528
 \OT1/cmr/m/n/10.95 allery here GENERIC[]URL #Tuc-son
  []
 
 
-Overfull \hbox (6.69986pt too wide) in paragraph at lines 486--548
+Overfull \hbox (6.69986pt too wide) in paragraph at lines 488--550
  [] 
  []
 
@@ -961,18 +974,18 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [22]
-<images/tweet_lengths_histogram.png, id=425, 1081.03876pt x 600.2425pt>
+<images/tweet_lengths_histogram.png, id=461, 1081.03876pt x 600.2425pt>
 File: images/tweet_lengths_histogram.png Graphic file (type png)
 
 <use images/tweet_lengths_histogram.png>
 Package pdftex.def Info: images/tweet_lengths_histogram.png used on input line 
-562.
+563.
 (pdftex.def)             Requested size: 455.30124pt x 252.7962pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [23 <./images/tweet_lengths_histogram.png>]
-<images/tweet_punctuations_histogram.png, id=435, 1081.03876pt x 605.26125pt>
+<images/tweet_punctuations_histogram.png, id=470, 1081.03876pt x 605.26125pt>
 File: images/tweet_punctuations_histogram.png Graphic file (type png)
 
 <use images/tweet_punctuations_histogram.png>
@@ -980,74 +993,79 @@ Package pdftex.def Info: images/tweet_punctuations_histogram.png used on input
 line 573.
 (pdftex.def)             Requested size: 455.30124pt x 254.90988pt.
 
-<images/tweet_stop_words_histogram.png, id=438, 1081.03876pt x 600.2425pt>
+<images/tweet_stop_words_histogram.png, id=473, 1081.03876pt x 600.2425pt>
 File: images/tweet_stop_words_histogram.png Graphic file (type png)
 
 <use images/tweet_stop_words_histogram.png>
 Package pdftex.def Info: images/tweet_stop_words_histogram.png used on input li
-ne 584.
+ne 583.
 (pdftex.def)             Requested size: 455.30124pt x 252.7962pt.
 
-<images/tweet_unique_words_histogram.png, id=439, 1081.03876pt x 600.2425pt>
+<images/tweet_unique_words_histogram.png, id=474, 1081.03876pt x 600.2425pt>
 File: images/tweet_unique_words_histogram.png Graphic file (type png)
 
 <use images/tweet_unique_words_histogram.png>
 Package pdftex.def Info: images/tweet_unique_words_histogram.png used on input 
-line 593.
+line 592.
 (pdftex.def)             Requested size: 455.30124pt x 252.7962pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [24 <./images/tweet_punctuations_histogram.png>] [25 <./images/tweet_stop_word
 s_histogram.png> <./images/tweet_unique_words_histogram.png>]
-<images/confusion_matrix.png, id=455, 447.6725pt x 420.57124pt>
+<images/confusion_matrix.png, id=488, 447.6725pt x 420.57124pt>
 File: images/confusion_matrix.png Graphic file (type png)
 
 <use images/confusion_matrix.png>
-Package pdftex.def Info: images/confusion_matrix.png used on input line 610.
+Package pdftex.def Info: images/confusion_matrix.png used on input line 609.
 (pdftex.def)             Requested size: 219.00055pt x 205.748pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [26 <./images/confusion_matrix.png>]
-<images/all_known_subtweeters_histogram.png, id=464, 1079.03125pt x 600.2425pt>
+<images/all_known_subtweeters_histogram.png, id=495, 1079.03125pt x 600.2425pt>
 File: images/all_known_subtweeters_histogram.png Graphic file (type png)
 <use images/all_known_subtweeters_histogram.png>
 Package pdftex.def Info: images/all_known_subtweeters_histogram.png used on inp
-ut line 646.
+ut line 645.
 (pdftex.def)             Requested size: 455.30124pt x 253.27248pt.
  [27 <./images/all_known_subtweeters_histogram.png>]
-<images/three_known_subtweeters_histogram.png, id=473, 1079.03125pt x 600.2425p
+<images/three_known_subtweeters_histogram.png, id=502, 1079.03125pt x 600.2425p
 t>
 File: images/three_known_subtweeters_histogram.png Graphic file (type png)
  <use images/three_known_subtweeters_histogram.png>
 Package pdftex.def Info: images/three_known_subtweeters_histogram.png used on i
-nput line 657.
+nput line 656.
 (pdftex.def)             Requested size: 455.30124pt x 253.27248pt.
 
 Underfull \vbox (badness 1983) has occurred while \output is active []
 
  [28 <./images/three_known_subtweeters_histogram.png>]
-<images/quotes_example.png, id=482, 587.19376pt x 370.38374pt>
+<images/quotes_example.png, id=510, 587.19376pt x 370.38374pt>
 File: images/quotes_example.png Graphic file (type png)
 
 <use images/quotes_example.png>
-Package pdftex.def Info: images/quotes_example.png used on input line 707.
+Package pdftex.def Info: images/quotes_example.png used on input line 706.
 (pdftex.def)             Requested size: 328.50082pt x 207.20436pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [29]
-<images/reply_example.png, id=489, 629.35126pt x 429.605pt>
+<images/reply_example.png, id=515, 629.35126pt x 429.605pt>
 File: images/reply_example.png Graphic file (type png)
 
 <use images/reply_example.png>
-Package pdftex.def Info: images/reply_example.png used on input line 713.
+Package pdftex.def Info: images/reply_example.png used on input line 712.
 (pdftex.def)             Requested size: 328.50082pt x 224.2415pt.
  [30 <./images/quotes_example.png> <./images/reply_example.png>] [31] [32
 
 ]
  4.
+
+Underfull \hbox (badness 10000) in paragraph at lines 728--733
+
+ []
+
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
@@ -1057,10 +1075,10 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 Package amsrefs Warning: Duplicate biblabel stem `Twitter' detected.
 (amsrefs)                This usually means the order of the bibitems
 (amsrefs)                is incompatible with the style of labels
-(amsrefs)                you are using on input line 790.
+(amsrefs)                you are using on input line 789.
 
 
-Underfull \hbox (badness 2547) in paragraph at lines 790--790
+Underfull \hbox (badness 2547) in paragraph at lines 789--789
 []\OT1/cmr/m/n/10.95 Twitter. 2018. \OT1/cmr/m/it/10.95 Tweet ob-jects\OT1/cmr/
 m/n/10.95 , avail-able at []$\OT1/cmtt/m/n/10.95 https : / / developer . twitte
 r . com / en / docs /
@@ -1076,7 +1094,7 @@ Missing character: There is no ™ in font cmti10!
 Package amsrefs Warning: Duplicate biblabel stem `Twitter' detected.
 (amsrefs)                This usually means the order of the bibitems
 (amsrefs)                is incompatible with the style of labels
-(amsrefs)                you are using on input line 878.
+(amsrefs)                you are using on input line 877.
 
 [35
 
@@ -1088,17 +1106,17 @@ Missing character: There is no © in font cmr10!
 Package amsrefs Warning: Duplicate biblabel stem `Twitter' detected.
 (amsrefs)                This usually means the order of the bibitems
 (amsrefs)                is incompatible with the style of labels
-(amsrefs)                you are using on input line 1003.
+(amsrefs)                you are using on input line 1002.
 
 
-Underfull \hbox (badness 1990) in paragraph at lines 1003--1003
+Underfull \hbox (badness 1990) in paragraph at lines 1002--1002
 []\OT1/cmr/m/n/10.95 Twitter. 2018. \OT1/cmr/m/it/10.95 Rate Lim-it-ing\OT1/cmr
 /m/n/10.95 , avail-able at []$\OT1/cmtt/m/n/10.95 https : / / developer . twitt
 er . com / en / docs /
  []
 
 
-Underfull \hbox (badness 3735) in paragraph at lines 1010--1010
+Underfull \hbox (badness 3735) in paragraph at lines 1009--1009
 []\OT1/cmr/m/n/10.95 Noah Segal-Gould. 2018. \OT1/cmr/m/it/10.95 Senior-Project
 -Subtweets\OT1/cmr/m/n/10.95 , avail-able at []$\OT1/cmtt/m/n/10.95 https : / /
  github . com /
@@ -1193,49 +1211,37 @@ Underfull \vbox (badness 10000) has occurred while \output is active []
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [58]
-Overfull \hbox (30.95016pt too wide) in paragraph at lines 220--220
-\OT1/cmtt/m/n/8 subtweets_df[].[]to_csv([]"../data/data_from_testing/live_downl
-oaded_data/subtweets_live_data.csv"[])|  
- []
-
-
-Overfull \hbox (47.95041pt too wide) in paragraph at lines 239--239
-\OT1/cmtt/m/n/8 non_subtweets_df[].[]to_csv([]"../data/data_from_testing/live_d
-ownloaded_data/non_subtweets_live_data.csv"[])|  
- []
-
-
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [59]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [60])
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1033.
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1032.
 
 [61]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 1033.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1032.
  (./bardtex_seniorproject_sample.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1033.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1033.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1032.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1032.
 
 Package rerunfilecheck Info: File `bardtex_seniorproject_sample.out' has not ch
 anged.
-(rerunfilecheck)             Checksum: 2897B236B609AF772F0FB1F4A8994C2E;2633.
+(rerunfilecheck)             Checksum: A2B23731782DF06D1CF9EBAD38F84D81;2633.
 runsystem(rm bardtex_seniorproject_sample.pyg)...executed.
 
 runsystem(rm bardtex_seniorproject_sample.out.pyg)...executed.
 
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1033.
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1032.
  ) 
 Here is how much of TeX's memory you used:
- 15530 strings out of 492995
- 238758 string characters out of 6132704
- 447847 words of memory out of 5000000
- 18636 multiletter control sequences out of 15000+600000
- 14469 words of font info for 56 fonts, out of 8000000 for 9000
+ 15537 strings out of 492995
+ 238869 string characters out of 6132704
+ 448847 words of memory out of 5000000
+ 18637 multiletter control sequences out of 15000+600000
+ 14815 words of font info for 57 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 36i,17n,48p,1421b,679s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 36i,17n,48p,1432b,679s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2017/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc
 }</usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb>
 </usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmitt10.pfb>
@@ -1256,10 +1262,10 @@ ive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive
 texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2017/t
 exmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb></usr/local/texlive/2017/tex
 mf-dist/fonts/type1/public/cm-super/sfrm1095.pfb>
-Output written on bardtex_seniorproject_sample.pdf (71 pages, 1184835 bytes).
+Output written on bardtex_seniorproject_sample.pdf (73 pages, 1189543 bytes).
 PDF statistics:
- 791 PDF objects out of 1000 (max. 8388607)
- 675 compressed objects within 7 object streams
- 190 named destinations out of 1000 (max. 500000)
+ 821 PDF objects out of 1000 (max. 8388607)
+ 702 compressed objects within 8 object streams
+ 193 named destinations out of 1000 (max. 500000)
  355 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -1,6 +1,6 @@
 \BOOKMARK [0][-]{chapter*.1}{Abstract}{}% 1
-\BOOKMARK [0][-]{chapter*.3}{Dedication}{}% 2
-\BOOKMARK [0][-]{chapter*.4}{Acknowledgments}{}% 3
+\BOOKMARK [0][-]{chapter*.4}{Dedication}{}% 2
+\BOOKMARK [0][-]{chapter*.5}{Acknowledgments}{}% 3
 \BOOKMARK [0][-]{chapter.1}{Introduction}{}% 4
 \BOOKMARK [0][-]{chapter.2}{Methods}{}% 5
 \BOOKMARK [1][-]{section.2.1}{Gathering Tweets for the Ground Truth Dataset}{chapter.2}% 6
@@ -29,7 +29,7 @@
 \BOOKMARK [0][-]{chapter.4}{Conclusion}{}% 29
 \BOOKMARK [1][-]{section.4.1}{Summary of Project Achievements}{chapter.4}% 30
 \BOOKMARK [1][-]{section.4.2}{Future Work \046 Considerations}{chapter.4}% 31
-\BOOKMARK [0][-]{chapter*.24}{Bibliography}{}% 32
+\BOOKMARK [0][-]{chapter*.25}{Bibliography}{}% 32
 \BOOKMARK [0][-]{Appendix.1.A}{Acquiring Ground Truth Data}{}% 33
 \BOOKMARK [1][-]{section.1.A.1}{subtweets\137downloader.py}{Appendix.1.A}% 34
 \BOOKMARK [1][-]{section.1.A.2}{non\137subtweets\137downloader.py}{Appendix.1.A}% 35

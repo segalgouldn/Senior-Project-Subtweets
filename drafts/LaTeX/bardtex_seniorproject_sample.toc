@@ -1,6 +1,6 @@
 \contentsline {chapter}{Abstract}{iii}{chapter*.1}
-\contentsline {chapter}{Dedication}{vii}{chapter*.3}
-\contentsline {chapter}{Acknowledgments}{ix}{chapter*.4}
+\contentsline {chapter}{Dedication}{ix}{chapter*.4}
+\contentsline {chapter}{Acknowledgments}{xi}{chapter*.5}
 \contentsline {chapter}{\numberline {1}Introduction}{1}{chapter.1}
 \contentsline {chapter}{\numberline {2}Methods}{5}{chapter.2}
 \contentsline {section}{\numberline {2.1}Gathering Tweets for the Ground Truth Dataset}{5}{section.2.1}
@@ -9,19 +9,19 @@
 \contentsline {subsection}{\numberline {2.1.3}Changes in Data Acquisition}{8}{subsection.2.1.3}
 \contentsline {section}{\numberline {2.2}Language Analysis \& Naive Bayes}{9}{section.2.2}
 \contentsline {subsection}{\numberline {2.2.1}Resources for Language Analysis}{9}{subsection.2.2.1}
-\contentsline {subsubsection}{Regular Expressions}{9}{section*.5}
-\contentsline {subsubsection}{Tokenization}{9}{section*.6}
-\contentsline {subsubsection}{N-Grams}{10}{section*.7}
-\contentsline {subsubsection}{Stop Words}{10}{section*.8}
+\contentsline {paragraph}{2.2.1.1 Regular Expressions}{9}{section*.6}
+\contentsline {paragraph}{2.2.1.2 Tokenization}{9}{section*.7}
+\contentsline {paragraph}{2.2.1.3 N-Grams}{10}{section*.8}
+\contentsline {paragraph}{2.2.1.4 Stop Words}{10}{section*.9}
 \contentsline {subsection}{\numberline {2.2.2}Cleaning and Preparing the Data}{10}{subsection.2.2.2}
 \contentsline {subsection}{\numberline {2.2.3}TF \& TF-IDF}{12}{subsection.2.2.3}
-\contentsline {subsection}{\numberline {2.2.4}Naive Bayes}{13}{subsection.2.2.4}
-\contentsline {subsection}{\numberline {2.2.5}Statistical Considerations}{15}{subsection.2.2.5}
-\contentsline {subsubsection}{Precision}{15}{section*.9}
-\contentsline {subsubsection}{Recall}{15}{section*.10}
-\contentsline {subsubsection}{Accuracy}{15}{section*.11}
-\contentsline {subsubsection}{F1 Score}{16}{section*.12}
-\contentsline {subsubsection}{Null Accuracy}{16}{section*.13}
+\contentsline {subsection}{\numberline {2.2.4}Naive Bayes}{12}{subsection.2.2.4}
+\contentsline {subsection}{\numberline {2.2.5}Statistical Considerations}{14}{subsection.2.2.5}
+\contentsline {paragraph}{2.2.5.1 Precision}{15}{section*.10}
+\contentsline {paragraph}{2.2.5.2 Recall}{15}{section*.11}
+\contentsline {paragraph}{2.2.5.3 Accuracy}{15}{section*.12}
+\contentsline {paragraph}{2.2.5.4 F1 Score}{15}{section*.13}
+\contentsline {paragraph}{2.2.5.5 Null Accuracy}{16}{section*.14}
 \contentsline {subsection}{\numberline {2.2.6}K-Folds Cross-Validation}{16}{subsection.2.2.6}
 \contentsline {subsection}{\numberline {2.2.7}Training \& Testing Naive Bayes}{17}{subsection.2.2.7}
 \contentsline {section}{\numberline {2.3}Creating the Twitter Bot}{18}{section.2.3}
@@ -38,7 +38,7 @@
 \contentsline {chapter}{\numberline {4}Conclusion}{33}{chapter.4}
 \contentsline {section}{\numberline {4.1}Summary of Project Achievements}{33}{section.4.1}
 \contentsline {section}{\numberline {4.2}Future Work \& Considerations}{33}{section.4.2}
-\contentsline {chapter}{Bibliography}{35}{chapter*.24}
+\contentsline {chapter}{Bibliography}{35}{chapter*.25}
 \contentsline {chapter}{\numberline {A}Acquiring Ground Truth Data}{37}{Appendix.1.A}
 \contentsline {section}{\numberline {A.1}subtweets\_downloader.py}{37}{section.1.A.1}
 \contentsline {section}{\numberline {A.2}non\_subtweets\_downloader.py}{38}{section.1.A.2}

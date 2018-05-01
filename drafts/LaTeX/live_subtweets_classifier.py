@@ -217,7 +217,9 @@ class StreamListener(tweepy.StreamListener):
                 subtweets_df = pd.DataFrame(subtweets_live_list).sort_values(by="subtweet_probability",
                                                                              ascending=False)
 
-                subtweets_df.to_csv("../data/data_from_testing/live_downloaded_data/subtweets_live_data.csv")
+                (subtweets_df
+                .to_csv("../data/data_from_testing/live_downloaded_data"
+                        "/subtweets_live_data.csv"))
 
                 print(("Subtweet from @{0} (Probability of {1:.3%}):\n" +
                        "Time: {2}\n" +
@@ -236,7 +238,9 @@ class StreamListener(tweepy.StreamListener):
             non_subtweets_live_list.append(row)
             non_subtweets_df = pd.DataFrame(non_subtweets_live_list).sort_values(by="subtweet_probability",
                                                                                  ascending=False)
-            non_subtweets_df.to_csv("../data/data_from_testing/live_downloaded_data/non_subtweets_live_data.csv")
+            (non_subtweets_df
+            .to_csv("../data/data_from_testing/live_downloaded_data/"
+                    "non_subtweets_live_data.csv"))
 
             return row
 
