@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  29 APR 2018 23:46
+This is pdfTeX, Version 3.14159265-2.6-1.40.18 (TeX Live 2017) (preloaded format=pdflatex 2017.5.23)  1 MAY 2018 04:53
 entering extended mode
  \write18 enabled.
  %&-line parsing enabled.
@@ -422,58 +422,164 @@ BardT\kern -.1667em\lower .5ex\hbox {E}\kern -.125emX\spacefactor \@m {}\ Style
 \prospinfofontsize=\skip66
 \prosptextfontsize=\skip67
 \prospheadfontsize=\skip68
-) (/usr/local/texlive/2017/texmf-dist/tex/latex/geometry/geometry.sty
-Package: geometry 2010/09/12 v5.6 Page Geometry
-\Gm@cnth=\count134
-\Gm@cntv=\count135
-\c@Gm@tempcnt=\count136
-\Gm@bindingoffset=\dimen134
-\Gm@wd@mp=\dimen135
-\Gm@odd@mp=\dimen136
-\Gm@even@mp=\dimen137
-\Gm@layoutwidth=\dimen138
-\Gm@layoutheight=\dimen139
-\Gm@layouthoffset=\dimen140
-\Gm@layoutvoffset=\dimen141
-\Gm@dimlist=\toks36
+) (/usr/local/texlive/2017/texmf-dist/tex/latex/minted/minted.sty
+Package: minted 2016/10/31 v2.4.1 Yet another Pygments shim for LaTeX
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/fvextra/fvextra.sty
+Package: fvextra 2016/09/02 v1.2.1 fvextra - extensions and patches for fancyvr
+b
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/etoolbox/etoolbox.sty
+Package: etoolbox 2017/01/02 v2.4 e-TeX tools for LaTeX (JAW)
+\etb@tempcnta=\count134
 )
-\w@dth=\dimen142
-\c@theorem=\count137
-\c@exercise=\count138
-\c@problemm=\count139
-\c@exercisee=\count140
+(/usr/local/texlive/2017/texmf-dist/tex/latex/fancyvrb/fancyvrb.sty
+Package: fancyvrb 2008/02/07
+
+Style option: `fancyvrb' v2.7a, with DG/SPQR fixes, and firstline=lastline fix 
+<2008/02/07> (tvz)
+\FV@CodeLineNo=\count135
+\FV@InFile=\read3
+\FV@TabBox=\box34
+\c@FancyVerbLine=\count136
+\FV@StepNumber=\count137
+\FV@OutFile=\write3
+)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/upquote/upquote.sty
+Package: upquote 2012/04/19 v1.3 upright-quote and grave-accent glyphs in verba
+tim
+)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/lineno/lineno.sty
+Package: lineno 2005/11/02 line numbers on paragraphs v4.41
+\linenopenalty=\count138
+\output=\toks36
+\linenoprevgraf=\count139
+\linenumbersep=\dimen134
+\linenumberwidth=\dimen135
+\c@linenumber=\count140
+\c@pagewiselinenumber=\count141
+\c@LN@truepage=\count142
+\c@internallinenumber=\count143
+\c@internallinenumbers=\count144
+\quotelinenumbersep=\dimen136
+\bframerule=\dimen137
+\bframesep=\dimen138
+\bframebox=\box35
+LaTeX Info: Redefining \\ on input line 3056.
+)
+\c@FV@TrueTabGroupLevel=\count145
+\c@FV@TrueTabCounter=\count146
+\FV@TabBox@Group=\box36
+\FV@TmpLength=\skip69
+\c@FV@HighlightLinesStart=\count147
+\c@FV@HighlightLinesStop=\count148
+\FV@BreakIndent=\dimen139
+\FV@BreakSymbolSepLeft=\dimen140
+\FV@BreakSymbolSepRight=\dimen141
+\FV@BreakSymbolIndentLeft=\dimen142
+\FV@BreakSymbolIndentRight=\dimen143
+\c@FancyVerbLineBreakLast=\count149
+\FV@LineBox=\box37
+\FV@LineIndentBox=\box38
+)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/tools/shellesc.sty
+Package: shellesc 2016/06/07 v0.02a unified shell escape interface for LaTeX
+Package shellesc Info: Unrestricted shell escape enabled on input line 67.
+)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/ifplatform/ifplatform.sty
+Package: ifplatform 2010/10/22 v0.4 Testing for the operating system
+
+(/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/catchfile.sty
+Package: catchfile 2016/05/16 v1.7 Catch the contents of a file (HO)
+)
+runsystem(uname -s > "bardtex_seniorproject_sample.w18")...executed.
+
+
+(./bardtex_seniorproject_sample.w18)
+runsystem(rm -- "bardtex_seniorproject_sample.w18")...executed.
+
+)
+(/usr/local/texlive/2017/texmf-dist/tex/generic/xstring/xstring.sty
+(/usr/local/texlive/2017/texmf-dist/tex/generic/xstring/xstring.tex
+\@xs@message=\write4
+\integerpart=\count150
+\decimalpart=\count151
+)
+Package: xstring 2013/10/13  v1.7c  String manipulations (C Tellechea)
+)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/framed/framed.sty
+Package: framed 2011/10/22 v 0.96: framed or shaded text with page breaks
+\OuterFrameSep=\skip70
+\fb@frw=\dimen144
+\fb@frh=\dimen145
+\FrameRule=\dimen146
+\FrameSep=\dimen147
+)
+\minted@appexistsfile=\read4
+\minted@bgbox=\box39
+\minted@code=\write5
+\c@minted@FancyVerbLineTemp=\count152
+\c@minted@pygmentizecounter=\count153
+\@float@every@listing=\toks37
+\c@listing=\count154
+)
+(/usr/local/texlive/2017/texmf-dist/tex/latex/geometry/geometry.sty
+Package: geometry 2010/09/12 v5.6 Page Geometry
+\Gm@cnth=\count155
+\Gm@cntv=\count156
+\c@Gm@tempcnt=\count157
+\Gm@bindingoffset=\dimen148
+\Gm@wd@mp=\dimen149
+\Gm@odd@mp=\dimen150
+\Gm@even@mp=\dimen151
+\Gm@layoutwidth=\dimen152
+\Gm@layoutheight=\dimen153
+\Gm@layouthoffset=\dimen154
+\Gm@layoutvoffset=\dimen155
+\Gm@dimlist=\toks38
+)
+\w@dth=\dimen156
+\c@theorem=\count158
+\c@exercise=\count159
+\c@problemm=\count160
+\c@exercisee=\count161
+runsystem(which pygmentize && touch bardtex_seniorproject_sample.aex)...execute
+d.
+
+runsystem(rm bardtex_seniorproject_sample.aex)...executed.
+
 
 (./bardtex_seniorproject_sample.aux)
 \openout1 = `bardtex_seniorproject_sample.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
-LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 19.
-LaTeX Font Info:    ... okay on input line 19.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 20.
+LaTeX Font Info:    ... okay on input line 20.
 
 (/usr/local/texlive/2017/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count141
-\scratchdimen=\dimen143
-\scratchbox=\box34
-\nofMPsegments=\count142
-\nofMParguments=\count143
-\everyMPshowfont=\toks37
-\MPscratchCnt=\count144
-\MPscratchDim=\dimen144
-\MPnumerator=\count145
-\makeMPintoPDFobject=\count146
-\everyMPtoPDFconversion=\toks38
+\scratchcounter=\count162
+\scratchdimen=\dimen157
+\scratchbox=\box40
+\nofMPsegments=\count163
+\nofMParguments=\count164
+\everyMPshowfont=\toks39
+\MPscratchCnt=\count165
+\MPscratchDim=\dimen158
+\MPnumerator=\count166
+\makeMPintoPDFobject=\count167
+\everyMPtoPDFconversion=\toks40
 ) (/usr/local/texlive/2017/texmf-dist/tex/latex/oberdiek/epstopdf-base.sty
 Package: epstopdf-base 2016/05/15 v2.6 Base part for package epstopdf
 
@@ -496,9 +602,92 @@ Package caption Info: float package is loaded.
 Package caption Info: hyperref package is loaded.
 Package caption Info: listings package is loaded.
 Package caption Info: End \AtBeginDocument code.
-\c@lstlisting=\count147
-\AtBeginShipoutBox=\box35
-Package hyperref Info: Link coloring OFF on input line 19.
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/base/textcomp.sty
+Package: textcomp 2017/04/05 v2.0i Standard LaTeX package
+Package textcomp Info: Sub-encoding information:
+(textcomp)               5 = only ISO-Adobe without \textcurrency
+(textcomp)               4 = 5 + \texteuro
+(textcomp)               3 = 4 + \textohm
+(textcomp)               2 = 3 + \textestimated + \textcurrency
+(textcomp)               1 = TS1 - \textcircled - \t
+(textcomp)               0 = TS1 (full)
+(textcomp)             Font families with sub-encoding setting implement
+(textcomp)             only a restricted character set as indicated.
+(textcomp)             Family '?' is the default used for unknown fonts.
+(textcomp)             See the documentation for details.
+Package textcomp Info: Setting ? sub-encoding to TS1/1 on input line 79.
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/base/ts1enc.def
+File: ts1enc.def 2001/06/05 v3.0e (jk/car/fm) Standard LaTeX file
+)
+LaTeX Info: Redefining \oldstylenums on input line 334.
+Package textcomp Info: Setting cmr sub-encoding to TS1/0 on input line 349.
+Package textcomp Info: Setting cmss sub-encoding to TS1/0 on input line 350.
+Package textcomp Info: Setting cmtt sub-encoding to TS1/0 on input line 351.
+Package textcomp Info: Setting cmvtt sub-encoding to TS1/0 on input line 352.
+Package textcomp Info: Setting cmbr sub-encoding to TS1/0 on input line 353.
+Package textcomp Info: Setting cmtl sub-encoding to TS1/0 on input line 354.
+Package textcomp Info: Setting ccr sub-encoding to TS1/0 on input line 355.
+Package textcomp Info: Setting ptm sub-encoding to TS1/4 on input line 356.
+Package textcomp Info: Setting pcr sub-encoding to TS1/4 on input line 357.
+Package textcomp Info: Setting phv sub-encoding to TS1/4 on input line 358.
+Package textcomp Info: Setting ppl sub-encoding to TS1/3 on input line 359.
+Package textcomp Info: Setting pag sub-encoding to TS1/4 on input line 360.
+Package textcomp Info: Setting pbk sub-encoding to TS1/4 on input line 361.
+Package textcomp Info: Setting pnc sub-encoding to TS1/4 on input line 362.
+Package textcomp Info: Setting pzc sub-encoding to TS1/4 on input line 363.
+Package textcomp Info: Setting bch sub-encoding to TS1/4 on input line 364.
+Package textcomp Info: Setting put sub-encoding to TS1/5 on input line 365.
+Package textcomp Info: Setting uag sub-encoding to TS1/5 on input line 366.
+Package textcomp Info: Setting ugq sub-encoding to TS1/5 on input line 367.
+Package textcomp Info: Setting ul8 sub-encoding to TS1/4 on input line 368.
+Package textcomp Info: Setting ul9 sub-encoding to TS1/4 on input line 369.
+Package textcomp Info: Setting augie sub-encoding to TS1/5 on input line 370.
+Package textcomp Info: Setting dayrom sub-encoding to TS1/3 on input line 371.
+Package textcomp Info: Setting dayroms sub-encoding to TS1/3 on input line 372.
+
+Package textcomp Info: Setting pxr sub-encoding to TS1/0 on input line 373.
+Package textcomp Info: Setting pxss sub-encoding to TS1/0 on input line 374.
+Package textcomp Info: Setting pxtt sub-encoding to TS1/0 on input line 375.
+Package textcomp Info: Setting txr sub-encoding to TS1/0 on input line 376.
+Package textcomp Info: Setting txss sub-encoding to TS1/0 on input line 377.
+Package textcomp Info: Setting txtt sub-encoding to TS1/0 on input line 378.
+Package textcomp Info: Setting lmr sub-encoding to TS1/0 on input line 379.
+Package textcomp Info: Setting lmdh sub-encoding to TS1/0 on input line 380.
+Package textcomp Info: Setting lmss sub-encoding to TS1/0 on input line 381.
+Package textcomp Info: Setting lmssq sub-encoding to TS1/0 on input line 382.
+Package textcomp Info: Setting lmvtt sub-encoding to TS1/0 on input line 383.
+Package textcomp Info: Setting lmtt sub-encoding to TS1/0 on input line 384.
+Package textcomp Info: Setting qhv sub-encoding to TS1/0 on input line 385.
+Package textcomp Info: Setting qag sub-encoding to TS1/0 on input line 386.
+Package textcomp Info: Setting qbk sub-encoding to TS1/0 on input line 387.
+Package textcomp Info: Setting qcr sub-encoding to TS1/0 on input line 388.
+Package textcomp Info: Setting qcs sub-encoding to TS1/0 on input line 389.
+Package textcomp Info: Setting qpl sub-encoding to TS1/0 on input line 390.
+Package textcomp Info: Setting qtm sub-encoding to TS1/0 on input line 391.
+Package textcomp Info: Setting qzc sub-encoding to TS1/0 on input line 392.
+Package textcomp Info: Setting qhvc sub-encoding to TS1/0 on input line 393.
+Package textcomp Info: Setting futs sub-encoding to TS1/4 on input line 394.
+Package textcomp Info: Setting futx sub-encoding to TS1/4 on input line 395.
+Package textcomp Info: Setting futj sub-encoding to TS1/4 on input line 396.
+Package textcomp Info: Setting hlh sub-encoding to TS1/3 on input line 397.
+Package textcomp Info: Setting hls sub-encoding to TS1/3 on input line 398.
+Package textcomp Info: Setting hlst sub-encoding to TS1/3 on input line 399.
+Package textcomp Info: Setting hlct sub-encoding to TS1/5 on input line 400.
+Package textcomp Info: Setting hlx sub-encoding to TS1/5 on input line 401.
+Package textcomp Info: Setting hlce sub-encoding to TS1/5 on input line 402.
+Package textcomp Info: Setting hlcn sub-encoding to TS1/5 on input line 403.
+Package textcomp Info: Setting hlcw sub-encoding to TS1/5 on input line 404.
+Package textcomp Info: Setting hlcf sub-encoding to TS1/5 on input line 405.
+Package textcomp Info: Setting pplx sub-encoding to TS1/3 on input line 406.
+Package textcomp Info: Setting pplj sub-encoding to TS1/3 on input line 407.
+Package textcomp Info: Setting ptmx sub-encoding to TS1/4 on input line 408.
+Package textcomp Info: Setting ptmj sub-encoding to TS1/4 on input line 409.
+)
+\c@lstlisting=\count168
+\AtBeginShipoutBox=\box41
+Package hyperref Info: Link coloring OFF on input line 20.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/hyperref/nameref.sty
 Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
@@ -506,15 +695,15 @@ Package: nameref 2016/05/21 v2.44 Cross-referencing by name of section
 (/usr/local/texlive/2017/texmf-dist/tex/generic/oberdiek/gettitlestring.sty
 Package: gettitlestring 2016/05/16 v1.5 Cleanup title references (HO)
 )
-\c@section@level=\count148
+\c@section@level=\count169
 )
-LaTeX Info: Redefining \ref on input line 19.
-LaTeX Info: Redefining \pageref on input line 19.
-LaTeX Info: Redefining \nameref on input line 19.
+LaTeX Info: Redefining \ref on input line 20.
+LaTeX Info: Redefining \pageref on input line 20.
+LaTeX Info: Redefining \nameref on input line 20.
 
 (./bardtex_seniorproject_sample.out) (./bardtex_seniorproject_sample.out)
-\@outlinefile=\write3
-\openout3 = `bardtex_seniorproject_sample.out'.
+\@outlinefile=\write6
+\openout6 = `bardtex_seniorproject_sample.out'.
 
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/oberdiek/pdflscape.sty
@@ -566,11 +755,11 @@ Package pdflscape Info: Auto-detected driver: pdftex on input line 81.
 [2
 
 ]
-LaTeX Font Info:    Try loading font information for U+msa on input line 27.
+LaTeX Font Info:    Try loading font information for U+msa on input line 28.
  (/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 27.
+LaTeX Font Info:    Try loading font information for U+msb on input line 28.
 
 (/usr/local/texlive/2017/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -578,8 +767,8 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 ]
 (./bardtex_seniorproject_sample.toc [5])
-\tf@toc=\write4
-\openout4 = `bardtex_seniorproject_sample.toc'.
+\tf@toc=\write7
+\openout7 = `bardtex_seniorproject_sample.toc'.
 
  [6] [7
 
@@ -589,31 +778,6 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 
 ]
  1.
-
-Overfull \hbox (18.69984pt too wide) in paragraph at lines 54--66
- [] 
- []
-
-
-Underfull \vbox (badness 6741) has occurred while \output is active []
-
- [1
-
-]
-[2] [3] [4] [5]
-Underfull \vbox (badness 7576) has occurred while \output is active []
-
- [6]
-[7] <images/k_folds.jpg, id=301, 313.17pt x 150.8034pt>
-File: images/k_folds.jpg Graphic file (type jpg)
-
-<use images/k_folds.jpg>
-Package pdftex.def Info: images/k_folds.jpg used on input line 157.
-(pdftex.def)             Requested size: 313.16922pt x 150.80302pt.
- [8 <./images/k_folds.jpg>]
-Underfull \vbox (badness 1609) has occurred while \output is active []
-
- [9]
 Missing character: There is no â in font cmr10!
 Missing character: There is no € in font cmr10!
 Missing character: There is no ˜ in font cmr10!
@@ -621,168 +785,282 @@ Missing character: There is no â in font cmr10!
 Missing character: There is no € in font cmr10!
 Missing character: There is no ™ in font cmr10!
 
-[10]
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [11]
+ [1
+
+]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [2]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [3]
+[4]
+ 2.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [5
+
+]
+\openout3 = `bardtex_seniorproject_sample.pyg'.
+
+runsystem(pygmentize -S default -f latex -P commandprefix=PYG > bardtex_seniorp
+roject_sample.out.pyg)...executed.
+
+
+(./bardtex_seniorproject_sample.out.pyg)
+runsystem(pygmentize -S default -f latex -P commandprefix=PYGdefault > bardtex_
+seniorproject_sample.out.pyg)...executed.
+
+
+(./bardtex_seniorproject_sample.out.pyg)
+runsystem(pygmentize -l python -f latex -P commandprefix=PYG -F tokenmerge -o b
+ardtex_seniorproject_sample.out.pyg bardtex_seniorproject_sample.pyg)...execute
+d.
+
+
+(./bardtex_seniorproject_sample.out.pyg
+LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <8> not available
+(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 2.
+)
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 113.
+
+
+(/usr/local/texlive/2017/texmf-dist/tex/latex/base/ts1cmr.fd
+File: ts1cmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
+) [6]
+\openout3 = `bardtex_seniorproject_sample.pyg'.
+
+runsystem(pygmentize -l python -f latex -P commandprefix=PYG -F tokenmerge -o b
+ardtex_seniorproject_sample.out.pyg bardtex_seniorproject_sample.pyg)...execute
+d.
+
+
+(./bardtex_seniorproject_sample.out.pyg) [7]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [8]
+[9]
+\openout3 = `bardtex_seniorproject_sample.pyg'.
+
+runsystem(pygmentize -l python -f latex -P commandprefix=PYG -F tokenmerge -o b
+ardtex_seniorproject_sample.out.pyg bardtex_seniorproject_sample.pyg)...execute
+d.
+
+ (./bardtex_seniorproject_sample.out.pyg [10])
+\openout3 = `bardtex_seniorproject_sample.pyg'.
+
+runsystem(pygmentize -l python -f latex -P commandprefix=PYG -F tokenmerge -o b
+ardtex_seniorproject_sample.out.pyg bardtex_seniorproject_sample.pyg)...execute
+d.
+
+
+(./bardtex_seniorproject_sample.out.pyg)
+\openout3 = `bardtex_seniorproject_sample.pyg'.
+
+runsystem(pygmentize -l python -f latex -P commandprefix=PYG -F tokenmerge -o b
+ardtex_seniorproject_sample.out.pyg bardtex_seniorproject_sample.pyg)...execute
+d.
+
+
+(./bardtex_seniorproject_sample.out.pyg [11])
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
  [12]
-[13] [14
+Underfull \vbox (badness 7099) has occurred while \output is active []
 
-]
- 2.
-(/usr/local/texlive/2017/texmf-dist/tex/latex/listings/lstlang1.sty
-File: lstlang1.sty 2015/06/04 1.6 listings language file
-)
-Underfull \vbox (badness 10000) has occurred while \output is active []
+ [13]
+[14] [15] <images/k_folds.jpg, id=384, 313.17pt x 150.8034pt>
+File: images/k_folds.jpg Graphic file (type jpg)
 
- [15]
-LaTeX Font Info:    Font shape `OT1/cmtt/bx/n' in size <8> not available
-(Font)              Font shape `OT1/cmtt/m/n' tried instead on input line 234.
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 264.
-
-
-(/usr/local/texlive/2017/texmf-dist/tex/latex/base/omscmr.fd
-File: omscmr.fd 2014/09/29 v2.5h Standard LaTeX font definitions
-)
-LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <10.95> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 264.
+<use images/k_folds.jpg>
+Package pdftex.def Info: images/k_folds.jpg used on input line 347.
+(pdftex.def)             Requested size: 313.16922pt x 150.80302pt.
  [16]
-Overfull \hbox (2.52802pt too wide) in paragraph at lines 289--291
-\OT1/cmr/m/n/10.95 made un-til the API can no longer find an-other tweet ob-jec
-t with an [][]\OT1/cmtt/m/n/10.95 in_reply_to_status_id_str
- []
+\openout3 = `bardtex_seniorproject_sample.pyg'.
+
+runsystem(pygmentize -l python -f latex -P commandprefix=PYG -F tokenmerge -o b
+ardtex_seniorproject_sample.out.pyg bardtex_seniorproject_sample.pyg)...execute
+d.
+
+ (./bardtex_seniorproject_sample.out.pyg)
+\openout3 = `bardtex_seniorproject_sample.pyg'.
+
+runsystem(pygmentize -l python -f latex -P commandprefix=PYG -F tokenmerge -o b
+ardtex_seniorproject_sample.out.pyg bardtex_seniorproject_sample.pyg)...execute
+d.
 
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
+(./bardtex_seniorproject_sample.out.pyg [17 <./images/k_folds.jpg>])
+\openout3 = `bardtex_seniorproject_sample.pyg'.
 
- [17]
-Underfull \vbox (badness 10000) has occurred while \output is active []
+runsystem(pygmentize -l python -f latex -P commandprefix=PYG -F tokenmerge -o b
+ardtex_seniorproject_sample.out.pyg bardtex_seniorproject_sample.pyg)...execute
+d.
 
- [18]
-[19]
-Underfull \vbox (badness 1215) has occurred while \output is active []
 
- [20]
-Underfull \vbox (badness 2529) has occurred while \output is active []
+(./bardtex_seniorproject_sample.out.pyg [18])
+\openout3 = `bardtex_seniorproject_sample.pyg'.
 
- [21]
-[22]
+runsystem(pygmentize -l python -f latex -P commandprefix=PYG -F tokenmerge -o b
+ardtex_seniorproject_sample.out.pyg bardtex_seniorproject_sample.pyg)...execute
+d.
+
+
+(./bardtex_seniorproject_sample.out.pyg)
+\openout3 = `bardtex_seniorproject_sample.pyg'.
+
+runsystem(pygmentize -l python -f latex -P commandprefix=PYG -F tokenmerge -o b
+ardtex_seniorproject_sample.out.pyg bardtex_seniorproject_sample.pyg)...execute
+d.
+
+
+(./bardtex_seniorproject_sample.out.pyg)
+\openout3 = `bardtex_seniorproject_sample.pyg'.
+
+runsystem(pygmentize -l python -f latex -P commandprefix=PYG -F tokenmerge -o b
+ardtex_seniorproject_sample.out.pyg bardtex_seniorproject_sample.pyg)...execute
+d.
+
+
+(./bardtex_seniorproject_sample.out.pyg [19]) [20]
  3.
 
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [23
-
-]
-Underfull \hbox (badness 10000) in paragraph at lines 500--501
+Underfull \hbox (badness 10000) in paragraph at lines 493--494
 []\OT1/cmr/m/n/10.95 He's fol-lowed the pu-trid smell of
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 531--533
+Underfull \hbox (badness 10000) in paragraph at lines 524--526
 []\OT1/cmr/m/n/10.95 Rosie the Corpse Flower bloomed at
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 531--533
+Underfull \hbox (badness 10000) in paragraph at lines 524--526
 \OT1/cmr/m/n/10.95 Tuc-son Botan-i-cal Gar-dens: See pix
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 531--533
+Underfull \hbox (badness 10000) in paragraph at lines 524--526
 \OT1/cmr/m/n/10.95 allery here GENERIC[]URL #Tuc-son
  []
 
 
-Overfull \hbox (6.69986pt too wide) in paragraph at lines 493--555
+Overfull \hbox (6.69986pt too wide) in paragraph at lines 486--548
  [] 
  []
 
-<images/length_histogram.png, id=576, 1081.03876pt x 600.2425pt>
-File: images/length_histogram.png Graphic file (type png)
-
-<use images/length_histogram.png>
-Package pdftex.def Info: images/length_histogram.png used on input line 561.
-(pdftex.def)             Requested size: 455.30124pt x 252.7962pt.
-
-Underfull \vbox (badness 1205) has occurred while \output is active []
-
- [24]
-<images/punctuation_histogram.png, id=582, 1081.03876pt x 605.26125pt>
-File: images/punctuation_histogram.png Graphic file (type png)
-
-<use images/punctuation_histogram.png>
-Package pdftex.def Info: images/punctuation_histogram.png used on input line 56
-8.
-(pdftex.def)             Requested size: 455.30124pt x 254.90988pt.
-
-<images/stop_words_histogram.png, id=583, 1090.0725pt x 600.2425pt>
-File: images/stop_words_histogram.png Graphic file (type png)
-
-<use images/stop_words_histogram.png>
-Package pdftex.def Info: images/stop_words_histogram.png used on input line 575
-.
-(pdftex.def)             Requested size: 455.30124pt x 250.70796pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [25 <./images/length_histogram.png> <./images/punctuation_histogram.png>]
-<images/unique_words_histogram.png, id=592, 1081.03876pt x 600.2425pt>
-File: images/unique_words_histogram.png Graphic file (type png)
+ [21
 
-<use images/unique_words_histogram.png>
-Package pdftex.def Info: images/unique_words_histogram.png used on input line 5
-82.
+]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [22]
+<images/tweet_lengths_histogram.png, id=425, 1081.03876pt x 600.2425pt>
+File: images/tweet_lengths_histogram.png Graphic file (type png)
+
+<use images/tweet_lengths_histogram.png>
+Package pdftex.def Info: images/tweet_lengths_histogram.png used on input line 
+562.
 (pdftex.def)             Requested size: 455.30124pt x 252.7962pt.
 
-<images/confusion_matrix.png, id=593, 447.6725pt x 420.57124pt>
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [23 <./images/tweet_lengths_histogram.png>]
+<images/tweet_punctuations_histogram.png, id=435, 1081.03876pt x 605.26125pt>
+File: images/tweet_punctuations_histogram.png Graphic file (type png)
+
+<use images/tweet_punctuations_histogram.png>
+Package pdftex.def Info: images/tweet_punctuations_histogram.png used on input 
+line 573.
+(pdftex.def)             Requested size: 455.30124pt x 254.90988pt.
+
+<images/tweet_stop_words_histogram.png, id=438, 1081.03876pt x 600.2425pt>
+File: images/tweet_stop_words_histogram.png Graphic file (type png)
+
+<use images/tweet_stop_words_histogram.png>
+Package pdftex.def Info: images/tweet_stop_words_histogram.png used on input li
+ne 584.
+(pdftex.def)             Requested size: 455.30124pt x 252.7962pt.
+
+<images/tweet_unique_words_histogram.png, id=439, 1081.03876pt x 600.2425pt>
+File: images/tweet_unique_words_histogram.png Graphic file (type png)
+
+<use images/tweet_unique_words_histogram.png>
+Package pdftex.def Info: images/tweet_unique_words_histogram.png used on input 
+line 593.
+(pdftex.def)             Requested size: 455.30124pt x 252.7962pt.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [24 <./images/tweet_punctuations_histogram.png>] [25 <./images/tweet_stop_word
+s_histogram.png> <./images/tweet_unique_words_histogram.png>]
+<images/confusion_matrix.png, id=455, 447.6725pt x 420.57124pt>
 File: images/confusion_matrix.png Graphic file (type png)
 
 <use images/confusion_matrix.png>
-Package pdftex.def Info: images/confusion_matrix.png used on input line 594.
-(pdftex.def)             Requested size: 328.50082pt x 308.6188pt.
+Package pdftex.def Info: images/confusion_matrix.png used on input line 610.
+(pdftex.def)             Requested size: 219.00055pt x 205.748pt.
 
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [26 <./images/stop_words_histogram.png> <./images/unique_words_histogram.png>]
-
-Underfull \vbox (badness 10000) has occurred while \output is active []
-
- [27 <./images/confusion_matrix.png>]
-<images/random_known_subtweeters.png, id=609, 1079.03125pt x 600.2425pt>
-File: images/random_known_subtweeters.png Graphic file (type png)
-
-<use images/random_known_subtweeters.png>
-Package pdftex.def Info: images/random_known_subtweeters.png used on input line
- 635.
+ [26 <./images/confusion_matrix.png>]
+<images/all_known_subtweeters_histogram.png, id=464, 1079.03125pt x 600.2425pt>
+File: images/all_known_subtweeters_histogram.png Graphic file (type png)
+<use images/all_known_subtweeters_histogram.png>
+Package pdftex.def Info: images/all_known_subtweeters_histogram.png used on inp
+ut line 646.
+(pdftex.def)             Requested size: 455.30124pt x 253.27248pt.
+ [27 <./images/all_known_subtweeters_histogram.png>]
+<images/three_known_subtweeters_histogram.png, id=473, 1079.03125pt x 600.2425p
+t>
+File: images/three_known_subtweeters_histogram.png Graphic file (type png)
+ <use images/three_known_subtweeters_histogram.png>
+Package pdftex.def Info: images/three_known_subtweeters_histogram.png used on i
+nput line 657.
 (pdftex.def)             Requested size: 455.30124pt x 253.27248pt.
 
-<images/known_subtweeters.png, id=610, 1067.99pt x 600.2425pt>
-File: images/known_subtweeters.png Graphic file (type png)
+Underfull \vbox (badness 1983) has occurred while \output is active []
 
-<use images/known_subtweeters.png>
-Package pdftex.def Info: images/known_subtweeters.png used on input line 647.
-(pdftex.def)             Requested size: 455.30124pt x 255.89194pt.
- [28 <./images/random_known_subtweeters.png>]
+ [28 <./images/three_known_subtweeters_histogram.png>]
+<images/quotes_example.png, id=482, 587.19376pt x 370.38374pt>
+File: images/quotes_example.png Graphic file (type png)
+
+<use images/quotes_example.png>
+Package pdftex.def Info: images/quotes_example.png used on input line 707.
+(pdftex.def)             Requested size: 328.50082pt x 207.20436pt.
+
 Underfull \vbox (badness 10000) has occurred while \output is active []
 
- [29 <./images/known_subtweeters.png>] [30]
- 4.
-[31
+ [29]
+<images/reply_example.png, id=489, 629.35126pt x 429.605pt>
+File: images/reply_example.png Graphic file (type png)
 
-] [32
+<use images/reply_example.png>
+Package pdftex.def Info: images/reply_example.png used on input line 713.
+(pdftex.def)             Requested size: 328.50082pt x 224.2415pt.
+ [30 <./images/quotes_example.png> <./images/reply_example.png>] [31] [32
 
 ]
+ 4.
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [33]
+[34]
 
 Package amsrefs Warning: Duplicate biblabel stem `Twitter' detected.
 (amsrefs)                This usually means the order of the bibitems
 (amsrefs)                is incompatible with the style of labels
-(amsrefs)                you are using on input line 758.
+(amsrefs)                you are using on input line 790.
 
 
-Underfull \hbox (badness 2547) in paragraph at lines 758--758
+Underfull \hbox (badness 2547) in paragraph at lines 790--790
 []\OT1/cmr/m/n/10.95 Twitter. 2018. \OT1/cmr/m/it/10.95 Tweet ob-jects\OT1/cmr/
 m/n/10.95 , avail-able at []$\OT1/cmtt/m/n/10.95 https : / / developer . twitte
 r . com / en / docs /
@@ -798,50 +1076,190 @@ Missing character: There is no ™ in font cmti10!
 Package amsrefs Warning: Duplicate biblabel stem `Twitter' detected.
 (amsrefs)                This usually means the order of the bibitems
 (amsrefs)                is incompatible with the style of labels
-(amsrefs)                you are using on input line 846.
+(amsrefs)                you are using on input line 878.
 
-[33]
+[35
+
+]
 Missing character: There is no Ã in font cmr10!
 Missing character: There is no © in font cmr10!
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 953.
- [34]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 953.
+
+
+Package amsrefs Warning: Duplicate biblabel stem `Twitter' detected.
+(amsrefs)                This usually means the order of the bibitems
+(amsrefs)                is incompatible with the style of labels
+(amsrefs)                you are using on input line 1003.
+
+
+Underfull \hbox (badness 1990) in paragraph at lines 1003--1003
+[]\OT1/cmr/m/n/10.95 Twitter. 2018. \OT1/cmr/m/it/10.95 Rate Lim-it-ing\OT1/cmr
+/m/n/10.95 , avail-able at []$\OT1/cmtt/m/n/10.95 https : / / developer . twitt
+er . com / en / docs /
+ []
+
+
+Underfull \hbox (badness 3735) in paragraph at lines 1010--1010
+[]\OT1/cmr/m/n/10.95 Noah Segal-Gould. 2018. \OT1/cmr/m/it/10.95 Senior-Project
+-Subtweets\OT1/cmr/m/n/10.95 , avail-able at []$\OT1/cmtt/m/n/10.95 https : / /
+ github . com /
+ []
+
+[36]
+Appendix A.
+runsystem(pygmentize -l python -f latex -P commandprefix=PYG -F tokenmerge -o b
+ardtex_seniorproject_sample.out.pyg subtweets_downloader.py)...executed.
+
+(./bardtex_seniorproject_sample.out.pyg
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [37
+
+])
+runsystem(pygmentize -l python -f latex -P commandprefix=PYG -F tokenmerge -o b
+ardtex_seniorproject_sample.out.pyg non_subtweets_downloader.py)...executed.
+
+
+(./bardtex_seniorproject_sample.out.pyg [38]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [39])
+[40]
+Appendix B.
+runsystem(pygmentize -l python -f latex -P commandprefix=PYG -F tokenmerge -o b
+ardtex_seniorproject_sample.out.pyg classifier_creator.py)...executed.
+
+(./bardtex_seniorproject_sample.out.pyg
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [41
+
+]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [42]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [43]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [44]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [45]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [46]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [47]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [48]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [49]
+Overfull \hbox (1.19974pt too wide) in paragraph at lines 621--621
+\OT1/cmtt/m/n/8 (test_df_combined[].[]loc[test_df_combined[].[]percent_subtweet
+s[]==[]test_df_combined[].[]percent_subtweets[].[]median()]|  
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [50]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [51]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [52]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [53]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [54])
+runsystem(pygmentize -l python -f latex -P commandprefix=PYG -F tokenmerge -o b
+ardtex_seniorproject_sample.out.pyg live_subtweets_classifier.py)...executed.
+
+
+(./bardtex_seniorproject_sample.out.pyg [55]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [56]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [57]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [58]
+Overfull \hbox (30.95016pt too wide) in paragraph at lines 220--220
+\OT1/cmtt/m/n/8 subtweets_df[].[]to_csv([]"../data/data_from_testing/live_downl
+oaded_data/subtweets_live_data.csv"[])|  
+ []
+
+
+Overfull \hbox (47.95041pt too wide) in paragraph at lines 239--239
+\OT1/cmtt/m/n/8 non_subtweets_df[].[]to_csv([]"../data/data_from_testing/live_d
+ownloaded_data/non_subtweets_live_data.csv"[])|  
+ []
+
+
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [59]
+Underfull \vbox (badness 10000) has occurred while \output is active []
+
+ [60])
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 1033.
+
+[61]
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 1033.
  (./bardtex_seniorproject_sample.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 953.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 953.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 1033.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 1033.
+
 Package rerunfilecheck Info: File `bardtex_seniorproject_sample.out' has not ch
 anged.
-(rerunfilecheck)             Checksum: B2DBC47771EBA41B998844879D5B6DB2;2526.
-Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 953.
+(rerunfilecheck)             Checksum: 2897B236B609AF772F0FB1F4A8994C2E;2633.
+runsystem(rm bardtex_seniorproject_sample.pyg)...executed.
+
+runsystem(rm bardtex_seniorproject_sample.out.pyg)...executed.
+
+Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 1033.
  ) 
 Here is how much of TeX's memory you used:
- 13137 strings out of 492995
- 185994 string characters out of 6132704
- 483155 words of memory out of 5000000
- 16219 multiletter control sequences out of 15000+600000
- 13961 words of font info for 54 fonts, out of 8000000 for 9000
+ 15530 strings out of 492995
+ 238758 string characters out of 6132704
+ 447847 words of memory out of 5000000
+ 18636 multiletter control sequences out of 15000+600000
+ 14469 words of font info for 56 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 36i,17n,48p,1430b,1476s stack positions out of 5000i,500n,10000p,200000b,80000s
-</usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb
-></usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb>
-</usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></
-usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></us
-r/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/
-local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/lo
-cal/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/loca
-l/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/t
-exlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texl
-ive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsl10.pfb></usr/local/texli
-ve/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsltt10.pfb></usr/local/texl
-ive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texli
-ve/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texliv
-e/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/local/texlive
-/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/
-2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb>
-Output written on bardtex_seniorproject_sample.pdf (44 pages, 568794 bytes).
+ 36i,17n,48p,1421b,679s stack positions out of 5000i,500n,10000p,200000b,80000s
+{/usr/local/texlive/2017/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc
+}</usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.pfb>
+</usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmitt10.pfb>
+</usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb><
+/usr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi6.pfb></u
+sr/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr
+/local/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/l
+ocal/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/loc
+al/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local
+/texlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/local/t
+exlive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr6.pfb></usr/local/texl
+ive/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmr8.pfb></usr/local/texlive
+/2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsl10.pfb></usr/local/texlive/
+2017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2
+017/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/201
+7/texmf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/local/texlive/2017
+/texmf-dist/fonts/type1/public/amsfonts/cm/cmti12.pfb></usr/local/texlive/2017/
+texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive/2017/t
+exmf-dist/fonts/type1/public/amsfonts/cm/cmtt8.pfb></usr/local/texlive/2017/tex
+mf-dist/fonts/type1/public/cm-super/sfrm1095.pfb>
+Output written on bardtex_seniorproject_sample.pdf (71 pages, 1184835 bytes).
 PDF statistics:
- 811 PDF objects out of 1000 (max. 8388607)
- 726 compressed objects within 8 object streams
- 303 named destinations out of 1000 (max. 500000)
- 353 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 791 PDF objects out of 1000 (max. 8388607)
+ 675 compressed objects within 7 object streams
+ 190 named destinations out of 1000 (max. 500000)
+ 355 words of extra memory for PDF output out of 10000 (max. 10000000)
 

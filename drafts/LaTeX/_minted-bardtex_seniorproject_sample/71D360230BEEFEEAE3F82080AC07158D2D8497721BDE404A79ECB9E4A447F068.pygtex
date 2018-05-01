@@ -1,0 +1,66 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{c+c1}{\PYGZsh{} Script for downloading a ground truth subtweets dataset}
+
+\PYG{c+c1}{\PYGZsh{} Import libraries for accessing the API and managing JSON data}
+
+\PYG{k+kn}{import} \PYG{n+nn}{tweepy}
+\PYG{k+kn}{import} \PYG{n+nn}{json}
+
+\PYG{c+c1}{\PYGZsh{} Load the API credentials}
+
+\PYG{n}{consumer\PYGZus{}key}\PYG{p}{,} \PYG{n}{consumer\PYGZus{}secret}\PYG{p}{,} \PYG{n}{access\PYGZus{}token}\PYG{p}{,} \PYG{n}{access\PYGZus{}token\PYGZus{}secret} \PYG{o}{=} \PYG{p}{(}
+                                        \PYG{n+nb}{open}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}../../credentials.txt\PYGZdq{}}\PYG{p}{)}
+                                        \PYG{o}{.}\PYG{n}{read}\PYG{p}{()}\PYG{o}{.}\PYG{n}{split}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{)}
+                                        \PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} Authenticate the connection to the API using the credentials}
+
+\PYG{n}{auth} \PYG{o}{=} \PYG{n}{tweepy}\PYG{o}{.}\PYG{n}{OAuthHandler}\PYG{p}{(}\PYG{n}{consumer\PYGZus{}key}\PYG{p}{,} \PYG{n}{consumer\PYGZus{}secret}\PYG{p}{)}
+\PYG{n}{auth}\PYG{o}{.}\PYG{n}{set\PYGZus{}access\PYGZus{}token}\PYG{p}{(}\PYG{n}{access\PYGZus{}token}\PYG{p}{,} \PYG{n}{access\PYGZus{}token\PYGZus{}secret}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} Connect to the API}
+
+\PYG{n}{api} \PYG{o}{=} \PYG{n}{tweepy}\PYG{o}{.}\PYG{n}{API}\PYG{p}{(}\PYG{n}{auth}\PYG{p}{,} \PYG{n}{wait\PYGZus{}on\PYGZus{}rate\PYGZus{}limit}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{,} \PYG{n}{wait\PYGZus{}on\PYGZus{}rate\PYGZus{}limit\PYGZus{}notify}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{,} \PYG{n}{compression}\PYG{o}{=}\PYG{n+nb+bp}{True}\PYG{p}{)}
+
+\PYG{c+c1}{\PYGZsh{} Define a function for recursively accessing parent tweets}
+
+\PYG{k}{def} \PYG{n+nf}{first\PYGZus{}tweet}\PYG{p}{(}\PYG{n}{tweet\PYGZus{}status\PYGZus{}object}\PYG{p}{):}
+    \PYG{k}{try}\PYG{p}{:}
+        \PYG{k}{return} \PYG{n}{first\PYGZus{}tweet}\PYG{p}{(}\PYG{n}{api}\PYG{o}{.}\PYG{n}{get\PYGZus{}status}\PYG{p}{(}\PYG{n}{tweet\PYGZus{}status\PYGZus{}object}\PYG{o}{.}\PYG{n}{in\PYGZus{}reply\PYGZus{}to\PYGZus{}status\PYGZus{}id\PYGZus{}str}\PYG{p}{,}
+                                          \PYG{n}{tweet\PYGZus{}mode}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}extended\PYGZdq{}}\PYG{p}{))}
+    \PYG{k}{except} \PYG{n}{tweepy}\PYG{o}{.}\PYG{n}{TweepError}\PYG{p}{:}
+        \PYG{k}{return} \PYG{n}{tweet\PYGZus{}status\PYGZus{}object}
+
+\PYG{c+c1}{\PYGZsh{} Define a function for finding tweets with replies that specifically do call them subtweets}
+
+\PYG{k}{def} \PYG{n+nf}{get\PYGZus{}subtweets}\PYG{p}{(}\PYG{n}{max\PYGZus{}tweets}\PYG{o}{=}\PYG{l+m+mi}{10000000}\PYG{p}{,}
+                  \PYG{n}{query}\PYG{o}{=}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}subtweet AND @ since:2018\PYGZhy{}03\PYGZhy{}01 exclude:retweets filter:replies\PYGZdq{}}\PYG{p}{)):}
+    \PYG{n}{subtweets\PYGZus{}ids\PYGZus{}list} \PYG{o}{=} \PYG{p}{[]}
+    \PYG{n}{subtweets\PYGZus{}list} \PYG{o}{=} \PYG{p}{[]}
+    \PYG{n}{i} \PYG{o}{=} \PYG{l+m+mi}{0}
+    \PYG{k}{for} \PYG{n}{potential\PYGZus{}subtweet\PYGZus{}reply} \PYG{o+ow}{in} \PYG{n}{tweepy}\PYG{o}{.}\PYG{n}{Cursor}\PYG{p}{(}\PYG{n}{api}\PYG{o}{.}\PYG{n}{search}\PYG{p}{,} \PYG{n}{lang}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}en\PYGZdq{}}\PYG{p}{,}
+                                                  \PYG{n}{tweet\PYGZus{}mode}\PYG{o}{=}\PYG{l+s+s2}{\PYGZdq{}extended\PYGZdq{}}\PYG{p}{,} \PYG{n}{q}\PYG{o}{=}\PYG{n}{query}\PYG{p}{)}\PYG{o}{.}\PYG{n}{items}\PYG{p}{(}\PYG{n}{max\PYGZus{}tweets}\PYG{p}{):}
+        \PYG{n}{i} \PYG{o}{+=} \PYG{l+m+mi}{1}
+        \PYG{n}{potential\PYGZus{}subtweet\PYGZus{}original} \PYG{o}{=} \PYG{n}{first\PYGZus{}tweet}\PYG{p}{(}\PYG{n}{potential\PYGZus{}subtweet\PYGZus{}reply}\PYG{p}{)}
+        \PYG{k}{if} \PYG{p}{(}\PYG{o+ow}{not} \PYG{n}{potential\PYGZus{}subtweet\PYGZus{}original}\PYG{o}{.}\PYG{n}{in\PYGZus{}reply\PYGZus{}to\PYGZus{}status\PYGZus{}id\PYGZus{}str}
+            \PYG{o+ow}{and} \PYG{n}{potential\PYGZus{}subtweet\PYGZus{}original}\PYG{o}{.}\PYG{n}{user}\PYG{o}{.}\PYG{n}{lang} \PYG{o}{==} \PYG{l+s+s2}{\PYGZdq{}en\PYGZdq{}}\PYG{p}{):}
+            \PYG{k}{if} \PYG{p}{(}\PYG{n}{potential\PYGZus{}subtweet\PYGZus{}original}\PYG{o}{.}\PYG{n}{id\PYGZus{}str} \PYG{o+ow}{in} \PYG{n}{subtweets\PYGZus{}ids\PYGZus{}list}
+                \PYG{o+ow}{or} \PYG{l+s+s2}{\PYGZdq{}subtweet\PYGZdq{}} \PYG{o+ow}{in} \PYG{n}{potential\PYGZus{}subtweet\PYGZus{}original}\PYG{o}{.}\PYG{n}{full\PYGZus{}text}
+                \PYG{o+ow}{or} \PYG{l+s+s2}{\PYGZdq{}Subtweet\PYGZdq{}} \PYG{o+ow}{in} \PYG{n}{potential\PYGZus{}subtweet\PYGZus{}original}\PYG{o}{.}\PYG{n}{full\PYGZus{}text}
+                \PYG{o+ow}{or} \PYG{l+s+s2}{\PYGZdq{}SUBTWEET\PYGZdq{}} \PYG{o+ow}{in} \PYG{n}{potential\PYGZus{}subtweet\PYGZus{}original}\PYG{o}{.}\PYG{n}{full\PYGZus{}text}\PYG{p}{):}
+                \PYG{k}{continue}
+            \PYG{k}{else}\PYG{p}{:}
+                \PYG{n}{subtweets\PYGZus{}ids\PYGZus{}list}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(}\PYG{n}{potential\PYGZus{}subtweet\PYGZus{}original}\PYG{o}{.}\PYG{n}{id\PYGZus{}str}\PYG{p}{)}
+                \PYG{n}{subtweets\PYGZus{}list}\PYG{o}{.}\PYG{n}{append}\PYG{p}{(\PYGZob{}}\PYG{l+s+s2}{\PYGZdq{}tweet\PYGZus{}data\PYGZdq{}}\PYG{p}{:} \PYG{n}{potential\PYGZus{}subtweet\PYGZus{}original}\PYG{o}{.}\PYG{n}{\PYGZus{}json}\PYG{p}{,}
+                                       \PYG{l+s+s2}{\PYGZdq{}reply\PYGZdq{}}\PYG{p}{:} \PYG{n}{potential\PYGZus{}subtweet\PYGZus{}reply}\PYG{o}{.}\PYG{n}{\PYGZus{}json}\PYG{p}{\PYGZcb{})}
+                \PYG{k}{with} \PYG{n+nb}{open}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}../data/other\PYGZus{}data/subtweets.json\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{}w\PYGZdq{}}\PYG{p}{)} \PYG{k}{as} \PYG{n}{outfile}\PYG{p}{:}
+                    \PYG{n}{json}\PYG{o}{.}\PYG{n}{dump}\PYG{p}{(}\PYG{n}{subtweets\PYGZus{}list}\PYG{p}{,} \PYG{n}{outfile}\PYG{p}{,} \PYG{n}{indent}\PYG{o}{=}\PYG{l+m+mi}{4}\PYG{p}{)}
+                \PYG{k}{print}\PYG{p}{((}\PYG{l+s+s2}{\PYGZdq{}Tweet \PYGZsh{}\PYGZob{}0\PYGZcb{} was a reply to a subtweet: \PYGZob{}1\PYGZcb{}}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s2}{\PYGZdq{}}
+                       \PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n}{i}\PYG{p}{,} \PYG{n}{potential\PYGZus{}subtweet\PYGZus{}original}\PYG{o}{.}\PYG{n}{full\PYGZus{}text}\PYG{o}{.}\PYG{n}{replace}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}}\PYG{l+s+se}{\PYGZbs{}n}\PYG{l+s+s2}{\PYGZdq{}}\PYG{p}{,} \PYG{l+s+s2}{\PYGZdq{} \PYGZdq{}}\PYG{p}{))))}
+    \PYG{k}{return} \PYG{n}{subtweets\PYGZus{}list}
+
+\PYG{c+c1}{\PYGZsh{} Show the results}
+
+\PYG{n}{subtweets\PYGZus{}list} \PYG{o}{=} \PYG{n}{get\PYGZus{}subtweets}\PYG{p}{()}
+\PYG{k}{print}\PYG{p}{(}\PYG{l+s+s2}{\PYGZdq{}Total: \PYGZob{}\PYGZcb{}\PYGZdq{}}\PYG{o}{.}\PYG{n}{format}\PYG{p}{(}\PYG{n+nb}{len}\PYG{p}{(}\PYG{n}{subtweets\PYGZus{}list}\PYG{p}{)))}
+\end{Verbatim}
