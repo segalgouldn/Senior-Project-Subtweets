@@ -39,9 +39,3 @@
 \contentsline {section}{\numberline {4.1}Summary of Project Achievements}{33}{section.4.1}
 \contentsline {section}{\numberline {4.2}Future Work \& Considerations}{33}{section.4.2}
 \contentsline {chapter}{Bibliography}{35}{chapter*.25}
-\contentsline {chapter}{\numberline {A}Acquiring Ground Truth Data}{37}{Appendix.1.A}
-\contentsline {section}{\numberline {A.1}subtweets\_downloader.py}{37}{section.1.A.1}
-\contentsline {section}{\numberline {A.2}non\_subtweets\_downloader.py}{38}{section.1.A.2}
-\contentsline {chapter}{\numberline {B}Training \& Testing the Classifier}{41}{Appendix.1.B}
-\contentsline {section}{\numberline {B.1}classifier\_creator.py}{41}{section.1.B.1}
-\contentsline {section}{\numberline {B.2}live\_subtweets\_classifier.py}{55}{section.1.B.2}

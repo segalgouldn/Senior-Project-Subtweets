@@ -2,15 +2,13 @@
 \addvspace {10\p@ }
 \contentsline {figure}{\numberline {2.2.1}{\ignorespaces K-Folds Cross-Validation Example \cite {k_folds}\relax }}{17}{figure.caption.15}
 \addvspace {10\p@ }
-\contentsline {figure}{\numberline {3.1.1}{\ignorespaces Histogram of Ground Truth Tweet Lengths $(\mu _{s}=103.71, \sigma _{s}=71.99), (\mu _{n}=105.63, \sigma _{n}=74.95)$\relax }}{23}{figure.caption.16}
-\contentsline {figure}{\numberline {3.1.2}{\ignorespaces Histogram of Ground Truth Tweet Punctuation $(\mu _{s}=1.79, \sigma _{s}=1.54), (\mu _{n}=2.16, \sigma _{n}=1.68)$\relax }}{24}{figure.caption.17}
-\contentsline {figure}{\numberline {3.1.3}{\ignorespaces Histogram of Ground Truth Unique English Stop Words $(\mu _{s}=7.14, \sigma _{s}=1.31), (\mu _{n}=7.05, \sigma _{n}=1.39)$ \relax }}{25}{figure.caption.18}
-\contentsline {figure}{\numberline {3.1.4}{\ignorespaces Histogram of Ground Truth English Unique Words $(\mu _{s}=16.80, \sigma _{s}=10.95), (\mu _{n}=16.25, \sigma _{n}=11.15)$ \relax }}{25}{figure.caption.19}
+\contentsline {figure}{\numberline {3.1.1}{\ignorespaces Histogram of Ground Truth Tweet Lengths $(\mathaccentV {bar}016{x}_{s}=103.71, s_{s}=71.99), (\mathaccentV {bar}016{x}_{n}=105.63, s_{n}=74.95)$\relax }}{23}{figure.caption.16}
+\contentsline {figure}{\numberline {3.1.2}{\ignorespaces Histogram of Ground Truth Tweet Punctuation $(\mathaccentV {bar}016{x}_{s}=1.79, s_{s}=1.54), (\mathaccentV {bar}016{x}_{n}=2.16, s_{n}=1.68)$\relax }}{24}{figure.caption.17}
+\contentsline {figure}{\numberline {3.1.3}{\ignorespaces Histogram of Ground Truth Unique English Stop Words $(\mathaccentV {bar}016{x}_{s}=7.14, s_{s}=1.31), (\mathaccentV {bar}016{x}_{n}=7.05, s_{n}=1.39)$ \relax }}{25}{figure.caption.18}
+\contentsline {figure}{\numberline {3.1.4}{\ignorespaces Histogram of Ground Truth English Unique Words $(\mathaccentV {bar}016{x}_{s}=16.80, s_{s}=10.95), (\mathaccentV {bar}016{x}_{n}=16.25, s_{n}=11.15)$ \relax }}{25}{figure.caption.19}
 \contentsline {figure}{\numberline {3.2.1}{\ignorespaces Confusion Matrix on Test Data from Each Fold on the Ground Truth Dataset\relax }}{26}{figure.caption.20}
-\contentsline {figure}{\numberline {3.3.1}{\ignorespaces Distribution of Subtweet Probabilities for 11 Known Subtweeters $(\mu =0.520, \sigma =0.127)$\relax }}{27}{figure.caption.21}
-\contentsline {figure}{\numberline {3.3.2}{\ignorespaces Distribution of Subtweet Probabilities for 3 Known Subtweeters $(\mu _{min}=0.430, \sigma _{min}=0.116), (\mu _{med}=0.523, \sigma _{med}=0.128), (\mu _{max}=0.561, \sigma _{max}=0.123)$\relax }}{28}{figure.caption.22}
+\contentsline {figure}{\numberline {3.3.1}{\ignorespaces Distribution of Subtweet Probabilities for 11 Known Subtweeters $(\mathaccentV {bar}016{x}=0.520, s=0.127)$\relax }}{27}{figure.caption.21}
+\contentsline {figure}{\numberline {3.3.2}{\ignorespaces Distribution of Subtweet Probabilities for 3 Known Subtweeters $(\mathaccentV {bar}016{x}_{min}=0.430, s_{min}=0.116), (\mathaccentV {bar}016{x}_{med}=0.523, s_{med}=0.128), (\mathaccentV {bar}016{x}_{max}=0.561, s_{max}=0.123)$\relax }}{28}{figure.caption.22}
 \contentsline {figure}{\numberline {3.5.1}{\ignorespaces Example of the Twitter Bot Quoting Users' Tweets\relax }}{30}{figure.caption.23}
 \contentsline {figure}{\numberline {3.5.2}{\ignorespaces Example of the Twitter Bot Replying to a User's Tweet\relax }}{30}{figure.caption.24}
-\addvspace {10\p@ }
-\addvspace {10\p@ }
 \addvspace {10\p@ }

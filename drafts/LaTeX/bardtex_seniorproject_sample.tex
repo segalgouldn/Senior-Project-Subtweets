@@ -28,7 +28,6 @@
 The purpose of this project is to identify subtweets. The Oxford English Dictionary defines ``subtweet" as a ``[Twitter post] that refers to a particular user without directly mentioning them, typically as a form of furtive mockery or criticism." This paper details a process for gathering a labeled ground truth dataset, training a classifier, and creating a Twitter bot which interacts with subtweets in real time. The Naive Bayes classifier trained in this project classifies tweets as subtweets and non-subtweets with an average $F_{1}$ score of 72\%. 
 
 \tableofcontents
-
 \listoffigures
 
 \dedic
@@ -42,11 +41,11 @@ Thank you professors Sven Anderson, Keith O'Hara, and Rebecca Thomas for making 
 \startmain
 \intro
 
-``Subtweet" was coined in December of 2009 by Twitter user Chelsea Rae \cite{first_subtweet} and was entered into Urban Dictionary the following August \cite{urban_dictionary}. In ``To tweet or ‘subtweet’?: Impacts of social networking post directness and valence on interpersonal impressions" \cite{subtweets_communications}, Edwards and Harris sought to analyze student participants' perceptions of known subtweeters. In the news, too, subtweets have garnered attention in \textit{The Atlantic} \cite{the_atlantic}, \textit{The Washington Post} \cite{the_washington_post}, and \textit{Slate} \cite{slate}. In news media, subtweets garner attention for their prevalence among government officials as well. Following President Donald Trump's inauguration, The Washington Post compiled its ``A running list of all the possible subtweets of President Trump from government Twitter accounts," \cite{the_washington_post_trump} cementing subtweets as particularly newsworthy.
-
 There were over 140 million active Twitter users who sent 340 million text-based tweets to the platform every day by March of 2012 \cite{twitter_stats}. Since Twitter-founder Jack Dorsey sent the first Tweet in March of 2006 \cite{first_tweet} social scientists, political scientists, and computer scientists have applied machine learning techniques to understand the patterns and structures of the conversations held on the platform. Through sentiment analysis, we are able to use machine learning to identify patterns within natural language which indicate particular feelings both broadly (e.g. positive, neutral, or negative) and toward topics (e.g. politics, terrorism, brands, etc.).
 
 On Twitter, the most common way to publicly communicate with another user is to compose a tweet and place an ``@" before the username of that user somewhere in the tweet (e.g. "How are you doing, @NoahSegalGould?"). Through this method, public discussions on Twitter maintain a kind of accountability: even if one were to miss the notification that they were mentioned in a tweet, one's own dashboard keeps a running list of their most recent mentions. 
+
+``Subtweet" was coined in December of 2009 by Twitter user Chelsea Rae \cite{first_subtweet} and was entered into Urban Dictionary the following August \cite{urban_dictionary}. In ``To tweet or ‘subtweet’?: Impacts of social networking post directness and valence on interpersonal impressions" \cite{subtweets_communications}, Edwards and Harris sought to analyze student participants' perceptions of known subtweeters. In the news, too, subtweets have garnered attention in \textit{The Atlantic} \cite{the_atlantic}, \textit{The Washington Post} \cite{the_washington_post}, and \textit{Slate} \cite{slate}. In news media, subtweets garner attention for their prevalence among government officials as well. Following President Donald Trump's inauguration, The Washington Post compiled its ``A running list of all the possible subtweets of President Trump from government Twitter accounts," \cite{the_washington_post_trump} cementing subtweets as particularly newsworthy.
 
 If an individual sought to disparage or mock another, they could certainly do so directly. But the targeted user would probably notice, and through the search functions of the platform, anyone could see who has mentioned either their own or another's username. Instead, a phenomenon persists in which users of the platform deliberately insult others in a vague manner by making complaints while omitting the targets of those complaints. 
 
@@ -58,11 +57,11 @@ Long before Twitter, psychologist Gordon Allport wrote about ``antilocution" in 
 
 The most germane research available focuses on sentiment analysis of figurative language. Determining sentiment based on features of text which are distinctly separate from their literal interpretations presents difficulties for human readers as well as computer programs. In \textit{SemEval}, the International Workshop on Semantic Evaluation, analysis of figurative language on Twitter has been a core task for their competition since 2015 \cite{semeval_2015} and returns this year with a specific focus on ironic tweets \cite{semeval_2018}. In this year's description for ``Task 3: Irony detection in English tweets," Van Hee et al. touch upon online harassment as a potential point of significance for sentiment analysis of ironic tweets.  
 
-We pursue sentiment analysis of subtweets in order to challenge the hypocrisy of utilizing a service which presents itself as a public forum to speak in distinctly private ways. Toward this end, these are our goals: this project will provide a framework for collecting examples of subtweets, train a classification algorithm using those examples, and finally utilize that classifier in real time to make tweets which were intended to be unseen by specific parties easily accessible to all parties. In presenting covertly hurtful content as obviously hurtful in a public fashion, perhaps it will promote a particular awareness that tweets posted by public accounts are indeed publicly accessible, and that Twitter's Terms of Service \cite{twitter_tos} allows for this kind of monitoring. 
+This project pursues sentiment analysis of subtweets in order to challenge the hypocrisy of utilizing a service which presents itself as a public forum to speak in distinctly private ways. Toward this end, these are our goals: this project will provide a framework for collecting examples of subtweets, train a classification algorithm using those examples, and finally utilize that classifier in real time to make tweets which were intended to be unseen by specific parties easily accessible to all parties. In presenting covertly hurtful content as obviously hurtful in a public fashion, perhaps it will promote a particular awareness that tweets posted by public accounts are indeed publicly accessible, and that Twitter's Terms of Service \cite{twitter_tos} allows for this kind of monitoring. 
 
-Twitter bots are automated programs which access and archive Twitter. During the 2016 presidential election, The Atlantic's Oxford University researchers revealed that more than 33\% of pro-Trump tweets and nearly 20\% of pro-Clinton tweets came from automated Twitter accounts between the first and second presidential debates \cite{atlantic_bots}. Sometimes indistinguishable to untrained users, Twitter bots often misuse the API and violate the Terms of Service to harass or serve an unseen agenda. In contrast, some Twitter bots are purely entertaining like ``Pentametron," a Twitter bot that searches Twitter every few hours for tweets which happen to fit the rhythm of iambic pentameter \cite{pentametron}. 
+Using a machine-learning approach to perform sentiment analysis, syntactic and linguistic features are typically utilized in probabilistic (e.g. Naive Bayes and Maximum Entropy) and linear (e.g. Support Vector Machines and Neural Networks) classification algorithms. The probabilistic approach is sometimes called \textit{generative} because such models generate the probabilities of sampling particular terms \cite{sentiment_survey}. Linear classification utilizes the vectorized feature space of words, sentences, or documents to find a separating hyperplane between multiple classes. 
 
-Using a machine-learning approach to perform sentiment analysis, syntactic and linguistic features are typically utilized in probabilistic (e.g. Naive Bayes and Maximum Entropy) and linear (e.g. Support Vector Machines and Neural Networks) classification algorithms. The probabilistic approach is sometimes called \textit{generative} because such models generate the probabilities of sampling particular terms \cite{sentiment_survey}. Linear classification utilizes the vectorized feature space of words, sentences, or documents to find a separating hyperplane between multiple classes. In this project, we approach the problem of identifying subtweets using the probabilistic Naive Bayes classification algorithm and create a Twitter bot to interact with identified subtweets. 
+This project approaches the problem of identifying subtweets using the probabilistic Naive Bayes classification algorithm. We demonstrate this method by programmatically identifying subtweets in real time. Using a Twitter bot---an automated program which accesses Twitter---we use this classifier to detect and interact with subtweets as they are posted.
 
 \chapter{Methods}
 \label{methods}
@@ -260,7 +259,7 @@ In this code, Python's \verb|random| library provides the \verb|sample| function
 \subsection{TF \& TF-IDF}
 \label{tf_tf_idf}
 
-Term frequency (TF) is a simple method for vectorizing text in which all terms (i.e. tokens, features, words, etc.) in the corpus are featured in a vector for each document, and the frequency of each term is reflected in the number representing the corresponding term. The bag of words model essentially vectorizes features using this method. Thus, $tf(t,d)=f_{t,d}$.
+Term frequency (TF) is a simple method for vectorizing text in which all terms (e.g. tokens, features, words, etc.) in the corpus are featured in a vector for each document, and the frequency of each term is reflected in the number representing the corresponding term. The bag of words model essentially vectorizes features using this method. Thus, $tf(t,d)=f_{t,d}$.
 
 Unfortunately, TF falls short when the corpus of documents contains terms which appear frequently but do not necessarily help inform the classifier on terms that are best associated with a particular class. TF-IDF, or term frequency-inverse document frequency, is the product of the TF for a specific term and the inverse document frequency (IDF) for that same term. The TF is equal to the ratio between the number of occurrences of a term in a document, and the total number of words in that document. IDF, then, is the logarithm of the ratio between the number of documents in the corpus, and the number of documents which contain that term. The product of TF and IDF assigns weights which appropriately value terms which are frequent within a document but rare in the entire corpus of documents. Thus, $idf=\log\frac{N}{n_{t}}$ where $N$ is the total number of documents and $n_{t}$ is the number of documents which contain the term. Because the weighted feature vectors calculated using TF-IDF follow a multinomial distribution, our classification algorithm is specifically a Multinomial Naive Bayes classifier.
 
@@ -482,7 +481,7 @@ The \verb|user_ids| list contains strings of Twitter user IDs. Every time a user
 \section{Ground Truth Dataset}
 \label{ground_truth_dataset}
 
-The acquisition of the ground truth dataset relies on assumptions and generalizations of how Twitter users accuse others of subtweeting. For each subtweet and non-subtweet we acquired, we \textbf{did not} also acquire every single reply to that tweet, because doing so would violate the API's rate limits \cite{twitter_rate_limits}. Instead, we maintain that using Twitter's search API, a single reply to a tweet is enough to indicate that it \textbf{is} or \textbf{is not} a subtweet. By ignoring the associated metadata of tweet objects and their replies, we obtain the unicode text contained within subtweets and non-subtweets for our ground truth dataset.
+No corpus already exists which provides examples of subtweets and non-subtweets. To produce such a corpus, the acquisition of the ground truth dataset relies on assumptions and generalizations of how Twitter users accuse others of subtweeting. For each subtweet and non-subtweet we acquired, we \textbf{did not} also acquire every single reply to that tweet, because doing so would violate the API's rate limits \cite{twitter_rate_limits}. Instead, we maintain that using Twitter's search API, a single reply to a tweet is enough to indicate that it \textbf{is} or \textbf{is not} a subtweet. By ignoring the associated metadata of tweet objects and their replies, we obtain the unicode text contained within subtweets and non-subtweets for our ground truth dataset.
 
 \begin{center}
 	\begin{tabular}{ | p{20em} | p{20em} | }
@@ -557,13 +556,13 @@ When the vectorizer runs over these strings in order to tokenize them and extrac
 
 With tens of thousands of tweets contained within the ground truth dataset, understanding the characteristics of these tweets by example alone is insufficient. To improve our overall understanding of these characteristics, we gathered statistics on the distributions of tweet lengths, punctuating characters, stop words, and unique words in both the \textbf{true subtweets} and true \textbf{non-subtweets} parts of the dataset.
 
-Twitter serves as a micro-blogging framework which limits the lengths of English text posts to 280 characters. Because Twitter is also a multimedia platform which supports embedding URLs, images, and videos, tweets do not necessarily contain this maximum number of characters. In contrast to the popularity of multimedia tweets, subtweets are characterized as exclusively text-based. Between both \textbf{true subtweets} and \textbf{true non-subtweets}, Figure \ref{fig:tweet_lengths} illustrates that the ground truth dataset contains more short tweets ($1\leq length \leq 125$) than long tweets ($125 < length \leq 280$).
+Twitter serves as a micro-blogging framework which limits the lengths of English text posts to 280 characters. Because Twitter is also a multimedia platform which supports embedding URLs, images, and videos, tweets do not necessarily contain this maximum number of characters. In contrast to the popularity of multimedia tweets, subtweets are characterized as exclusively text-based. Between both \textbf{true subtweets} and \textbf{true non-subtweets}, Figure \ref{fig:tweet_lengths} illustrates that the ground truth dataset contains more short tweets ($1\leq length \leq 125$) than long tweets ($125 < length \leq 280$). The subscripts $s$ and $n$ respectively indicate subtweets and non-subtweets.
 
 \begin{figure}[H]
 	$$\includegraphics[width=\textwidth]{tweet_lengths_histogram.png}$$
 	\caption{Histogram of Ground Truth Tweet Lengths 
 	\\
-	$(\mu_{s}=103.71, \sigma_{s}=71.99), (\mu_{n}=105.63, \sigma_{n}=74.95)$}
+	$(\bar{x}_{s}=103.71, s_{s}=71.99), (\bar{x}_{n}=105.63, s_{n}=74.95)$}
 	\label{fig:tweet_lengths}
 \end{figure}
 
@@ -573,7 +572,7 @@ Twitter does not enforce any grammar or syntax regulations in tweets, thus punct
 	$$\includegraphics[width=\textwidth]{tweet_punctuations_histogram}$$
 	\caption{Histogram of Ground Truth Tweet Punctuation
 	\\
-	$(\mu_{s}=1.79, \sigma_{s}=1.54), (\mu_{n}=2.16, \sigma_{n}=1.68)$}
+	$(\bar{x}_{s}=1.79, s_{s}=1.54), (\bar{x}_{n}=2.16, s_{n}=1.68)$}
 	\label{fig:tweet_puncutation}
 \end{figure}
 
@@ -583,7 +582,7 @@ English stop words are ignored by the vectorizer because they are too common to 
 	$$\includegraphics[width=\textwidth]{tweet_stop_words_histogram}$$
 	\caption{Histogram of Ground Truth Unique English Stop Words
 	\\
-	$(\mu_{s}=7.14, \sigma_{s}=1.31), (\mu_{n}=7.05, \sigma_{n}=1.39)$
+	$(\bar{x}_{s}=7.14, s_{s}=1.31), (\bar{x}_{n}=7.05, s_{n}=1.39)$
 	}
 	\label{fig:tweet_stop_words}
 \end{figure}
@@ -592,7 +591,7 @@ English stop words are ignored by the vectorizer because they are too common to 
 	$$\includegraphics[width=\textwidth]{tweet_unique_words_histogram}$$
 	\caption{Histogram of Ground Truth English Unique Words
 	\\
-	$(\mu_{s}=16.80, \sigma_{s}=10.95), (\mu_{n}=16.25, \sigma_{n}=11.15)$
+	$(\bar{x}_{s}=16.80, s_{s}=10.95), (\bar{x}_{n}=16.25, s_{n}=11.15)$
 	}
 	\label{fig:tweet_unique_words}
 \end{figure}
@@ -639,63 +638,62 @@ The average $F_{1}$ scores for non-subtweets and subtweets are respectively 71.6
 \section{Known Subtweeters}
 \label{known_subtweeters_analysis}
 
-In order to test how the classifier performed on tweets from known subtweeters, we acquired all publicly available tweets from 11 different accounts from which users had previously subtweeted. Figure \ref{fig:known_subtweeters} shows the distributions of subtweet probabilities produced by the classifier on all these accounts.
+In order to test how the classifier performed on tweets from known subtweeters, we acquired all publicly available tweets from 11 different accounts from which users had previously subtweeted. Figure \ref{fig:known_subtweeters} shows the distributions of tweets classified as subtweets under particular subtweet probability thresholds using the classifier on all the tweets from these accounts.
 
 \begin{figure}[H]
 	$$\includegraphics[width=\textwidth]{all_known_subtweeters_histogram}$$
 	\caption{Distribution of Subtweet Probabilities for 11 Known Subtweeters 
 	\\
-	$(\mu=0.520, \sigma=0.127)$}
+	$(\bar{x}=0.520, s=0.127)$}
 	\label{fig:known_subtweeters}
 \end{figure}
 
-\noindent
-Of these 11 accounts, the Naive Bayes classifier predicts that out of 26,928 tweets, 15,538 were subtweets (i.e. the predicted subtweet probability was at least 50\%). In comparison, if we only accept classifications of at least 75\%, then just 924 tweets (3.4\%) were predicted to be subtweets. Of these accounts, we selected the users who produced the minimum percentage of subtweets (27.6\%), the median percentage of subtweets (58.8\%), and the maximum percentage of subtweets (68.4\%). Figure \ref{fig:random_subtweeters} shows the distributions of the subtweet probabilities for all the tweets from these users.
+Of these 11 accounts, the Naive Bayes classifier predicts that out of 26,928 tweets, 15,538 were subtweets (if the threshold for classifying a particular tweet as a subtweet was a probability of 50\%). In comparison, if we only accept classifications of at least 75\% and make that our threshold, then just 924 tweets (3.4\%) were predicted to be subtweets. Of these accounts, we selected the users who produced the minimum percentage of subtweets (27.6\%), the median percentage of subtweets (58.8\%), and the maximum percentage of subtweets (68.4\%) using the former (50\%) threshold. Figure \ref{fig:random_subtweeters} shows the distributions of tweets classified as subtweets under particular subtweet probability thresholds using the classifier for all the tweets from these three users' accounts.
 
 \begin{figure}[H]
 	$$\includegraphics[width=\textwidth]{three_known_subtweeters_histogram}$$
 	\caption{Distribution of Subtweet Probabilities for 3 Known Subtweeters 
 	\\ 
-	$(\mu_{min}=0.430, \sigma_{min}=0.116), (\mu_{med}=0.523, \sigma_{med}=0.128), (\mu_{max}=0.561, \sigma_{max}=0.123)$}
+	$(\bar{x}_{min}=0.430, s_{min}=0.116), (\bar{x}_{med}=0.523, s_{med}=0.128), (\bar{x}_{max}=0.561, s_{max}=0.123)$}
 	\label{fig:random_subtweeters}
 \end{figure}
 
 \section{Most Informative Features}
 \label{most_informative_features}
 
-By iterating through the entire vocabulary of features on which the classifier was trained, and sorting those features by the logarithm of the estimated probability that the feature belongs in the subtweet class, we are able to see which features are most informative for classifying tweets as \textbf{predicted subtweets}.
+By iterating through the entire vocabulary of features on which the classifier was trained, and sorting those features by the probability that the feature belongs in the subtweet class, we are able to see which features are most informative for classifying tweets as \textbf{predicted subtweets}.
 
 \begin{center}
-\begin{tabular}{ | p{8em} | p{9em} | }
+\begin{tabular}{ | p{8em} | p{8.5em} | }
 \hline
-Feature & Log Probability    \\ \hline
-.       & -7.655317955479811 \\
-,       & -8.022304498271094 \\
-GENERIC\_URL& -8.048671040237405 \\
-"       & -8.148437784201970 \\
-people  & -8.427022837390009 \\
-?       & -8.552068283434405 \\
-like    & -8.672840985124703 \\
-don't   & -8.682709277848670 \\
-just    & -8.744231174479117 \\
-i'm     & -8.832921046724476 \\
-!       & -8.863926249605123 \\
-it's    & -9.079518769840222 \\
-. GENERIC\_URL   & -9.100407613290404 \\
-:       & -9.109587924777987 \\
-know    & -9.183559311149267 \\
-...     & -9.204228807382403 \\
-you're  & -9.210332638698153 \\
-twitter & -9.283961663904783 \\
-love    & -9.328945234571764 \\
-*       & -9.404169039956173 \\
-friends & -9.418393807734482 \\
+Token & $P(T|\omega=subtweet)$ \\ \hline
+.       & -7.655 \\
+,       & -8.022 \\
+GENERIC\_URL& -8.049 \\
+"       & -8.148 \\
+people  & -8.427 \\
+?       & -8.552 \\
+like    & -8.673 \\
+don't   & -8.683 \\
+just    & -8.744 \\
+i'm     & -8.833 \\
+!       & -8.864 \\
+it's    & -9.080 \\
+. GENERIC\_URL   & -9.100 \\
+:       & -9.110 \\
+know    & -9.184 \\
+...     & -9.204 \\
+you're  & -9.210 \\
+twitter & -9.284 \\
+love    & -9.329 \\
+*       & -9.404 \\
+friends & -9.418 \\
 \hline
 \end{tabular}
 \end{center}
 
 \noindent
-The only bigram in the top 20 most informative features is ``. GENERIC\_URL," which can only occur when a URL follows the end of a sentence. In comparison, the rest of these terms are unigrams of which 8 are exclusively punctuating characters (period, comma, quotation, question, exclamation mark, colon, ellipsis, and asterisk). The presence of these most informative features indicates the importance of punctuation in predicting subtweets. Perhaps the token ``twitter" appears in these features as a result of subtweeters complaining about the Twitter platform and its users.
+The only bigram in the top 20 most informative features is ``. GENERIC\_URL," which can only occur when a URL follows the end of a sentence. In comparison, the rest of these terms are unigrams of which 8 are exclusively punctuating characters (period, comma, quotation, question, exclamation mark, colon, ellipsis, and asterisk). The presence of these most informative features indicates the importance of punctuation in predicting subtweets. 
 
 \section{The Twitter Bot}
 \label{the_twitter_bot}
@@ -717,7 +715,11 @@ After training and testing our classifier, we utilized it in creation of a Twitt
 \section{Discussion}
 \label{discussion}
 
-Subtweets have garnered attention from news organizations \cite{the_atlantic}, social scientists \cite{subtweets_communications}, and governmental officials \cite{the_washington_post_trump}, but sentiment analysis of subtweets has been entirely unresearched. Utilizing the Twitter API, we acquired data for training and testing a Naive Bayes classifier, and developed a Twitter bot which actively calls-out subtweets in real time. We obtained 12,169 \textbf{true subtweets} and 21,411 \textbf{true non-subtweets} to be used in our ground truth dataset. After confirming they were English and removing duplicates, there were 11,288 \textbf{true subtweets} and 19,289 \textbf{true non-subtweets} remaining. In order to preserve a balance between the classes, we limited the size of \textbf{true non-subtweets} to be the same as the set of \textbf{true subtweets}. Thus, our final ground truth dataset contains 22,576 tweets. Our classifier identifies non-subtweets with an \textbf{$F_{1}$ score} of 71.66\% and subtweets with an \textbf{$F_{1}$ score} of 73.05\%, performing significantly better than the \textbf{null accuracy}.
+Subtweets have garnered attention from news organizations \cite{the_atlantic}, social scientists \cite{subtweets_communications}, and governmental officials \cite{the_washington_post_trump}, but sentiment analysis of subtweets has been entirely unresearched. Utilizing the Twitter API, we acquired data for training and testing a Naive Bayes classifier, and developed a Twitter bot which actively calls-out subtweets in real time. We obtained 12,169 \textbf{true subtweets} and 21,411 \textbf{true non-subtweets} to be used in our ground truth dataset. After confirming they were English and removing duplicates, there were 11,288 \textbf{true subtweets} and 19,289 \textbf{true non-subtweets} remaining. In order to preserve a balance between the classes, we limited the number of \textbf{true non-subtweets} to be the same as the number of \textbf{true subtweets}. Thus, our final ground truth dataset contains 22,576 tweets. Our classifier identifies non-subtweets with an \textbf{$F_{1}$ score} of 71.66\% and subtweets with an \textbf{$F_{1}$ score} of 73.05\%, performing significantly better than the \textbf{null accuracy} of 50\%.
+
+For the 2017 International Workshop on Semantic Evaluation (SemEval), numerous teams submitted approaches for task 4, subtask A: English Twitter polarity classification on a 3-point scale (\textbf{positive}, \textbf{neutral}, and \textbf{negative} sentiment) \cite{semeval_2017}. Although this particular classification is ternary instead of binary (such as in our case of classifying subtweets and non-subtweets), the outcomes of the competition on this particular subtask are still informative for us in comparing the performance of our method to others. The team which performed best on this subtask was \textbf{DataStories} with an average \textbf{$F_{1}$ score} of 67.7\% \cite{semeval_best}. Baziotis et al. utilized Long Short-Term Memory (LSTM) networks to achieve this score. In comparison to our average \textbf{$F_{1}$ score} of 72.4\%, we performed similarly well on a particularly less complicated problem than 3-point general sentiment classification.
+
+Because we utilized our own novel method for data acquisition, we did not acquire a ground truth dataset which is as successful in representing the features of actual subtweets and non-subtweets as those which can be obtained using a service such as Amazon's Mechanical Turk which hand-labeled crowdsourced data. The Twitter API rate limitations prevented acquisition of tweets which were more than one week old at the time of downloading, and we only ever acquired one single reply to each subtweet and non-subtweet as the distinguishing characteristic of \textbf{true subtweets} and \textbf{true non-subtweets}. If a Twitter API search query exists which can find all the replies to a particular tweet, it will serve better than our method for finding only one.
 
 \chapter{Conclusion}
 \label{conclusion}
@@ -729,19 +731,106 @@ We treated a new colloquial form of online harassment---``subtweeting"---as a te
 \linebreak
 \linebreak
 \noindent
-All data acquired and all programs developed for this project have been made publicly available on GitHub \cite{github}.
+All data acquired and all programs developed for this project have been made publicly available on GitHub at \url{https://github.com/segalgouldn/Senior-Project-Subtweets}.
 
 \section{Future Work \& Considerations}
 \label{future_work_and_considerations}
 
-Resources played an important role in this project. With more time, more training data can be acquired. With funds, the Twitter API can be accessed through one of its paid plans to search for tweets from up to 30 days in the past. Because we utilized the free API, the maximum age of an alleged subtweet or non-subtweet when it was acquired could only be one week. 
-
 Our implementation of Naive Bayes exclusively made classifications using features from the unicode text contained within tweets, but other features related to the metadata contained within tweet objects and their replies will probably prove fruitful in producing a better subtweets classifier. We did not test other classification algorithms in favor of pursuing Naive Bayes singularly, but there exists no reason to \textbf{not} utilize others. Using topic modeling via methods such as non-negative matrix factorization and latent dirichlet allocation, we can analyze the topics about which most users are tweeting, and potentially group these users into subtweet-topic networked communities through clustering algorithms such as $k$-means.
 
-Finally, we treated this project as a binary classification problem between subtweets and non-subtweets. What would we find if we trained a classifier to distinguish ironic tweets, sarcastic tweets, mocking tweets, and subtweets? What are the features of the figurative language used in each of these examples? These questions motivate further research.
+Finally, we treated this project as a binary classification problem between subtweets and non-subtweets, but it can be expanded. What would we find if we trained a classifier to distinguish ironic tweets, sarcastic tweets, mocking tweets, and subtweets? What are the features of the figurative language used in each of these examples? These questions motivate further research.
 
 \begin{bibliog}
-	
+
+\bib{antilocution}{article}{
+	title={The nature of prejudice},
+	author={Allport, Gordon W},
+	date={1954}
+}
+
+\bib{semeval_best}{article}{
+  title={Datastories at SemEval-2017 task 4: Deep LSTM with attention for message-level and topic-based sentiment analysis},
+  author={Baziotis, Christos},
+  author={Pelekis, Nikos},
+  author={Doulkeridis, Christos},
+  journal={Proceedings of the 11th International Workshop on Semantic Evaluation (SemEval-2017)},
+  pages={747\ndash754},
+  date={2017}
+}
+
+\bib{nltk}{article}{
+	title={NLTK: the natural language toolkit},
+	author={Bird, Steven},
+	author={Loper, Edward},
+	journal={Proceedings of the ACL 2004 on Interactive poster and demonstration sessions},
+	pages={31},
+	date={2004}
+}
+
+\bib{k_folds}{article}{
+	author={Borovicka, Tomas},
+	author={Jirina Jr, Marcel},
+	author={Kordik, Pavel},
+	author={Jirina, Marcel},
+	title={Selecting representative data sets},
+	date={2012}
+}
+
+\bib{sentiment_analysis_terrorism}{article}{
+	author={Burnap, Pete},
+	author={Williams, Matthew~L},
+	author={Sloan, Luke},
+	author={Rana, Omer},
+	author={Housley, William},
+	author={Edwards, Adam},
+	author={Knight, Vincent},
+	author={Procter, Rob},
+	author={Voss, Alex},
+	title={Tweeting the terror: modelling the social media reaction to the woolwich terrorist attack},
+	date={2014},
+	journal={Social Network Analysis and Mining},
+	volume={4},
+	number={1},
+	pages={206},
+}
+
+\bib{the_washington_post}{article}{
+	author={Dewey, Caitlin},
+	title={Study confirms what you always knew: People who subtweet are terrible},
+	date={2016},
+	eprint={https://goo.gl/SeV3mx},
+}
+
+\bib{first_tweet}{article}{
+	author={Dorsey, Jack},
+	title={inviting coworkers},
+	date={2006},
+	eprint={https://twitter.com/jack/status/29},
+}
+
+\bib{subtweets_communications}{article}{
+	author={Edwards, Autumn},
+	author={Harris, Christina~J},
+	title={To tweet or ‘subtweet’?: Impacts of social networking post directness and valence on interpersonal impressions},
+	date={2016},
+	journal={Computers in Human Behavior},
+	volume={63},
+	pages={304\ndash 310},
+}
+
+\bib{semeval_2015}{article}{
+	title={Semeval-2015 task 11: Sentiment analysis of figurative language in twitter},
+	author={Ghosh, Aniruddha},
+	author={Li, Guofu}, 
+	author={Veale, Tony},
+	author={Rosso, Paolo}, 
+	author={Shutova, Ekaterina}, author={Barnden, John}, 
+	author={Reyes, Antonio},
+	journal={Proceedings of the 9th International Workshop on Semantic Evaluation (SemEval 2015)},
+	pages={470\ndash478},
+	year={2015}
+}
+
 \bib{go_dataset}{article}{
 	title = {Twitter Sentiment Classification using Distant Supervision},
 	author = {Go, Alec},
@@ -750,6 +839,102 @@ Finally, we treated this project as a binary classification problem between subt
 	journal = {CS224N Project Report, Stanford},
 	pages = {12},
 	date = {2009}
+}
+
+\bib{slate}{article}{
+	author={Hassler, Chelsea},
+	title={Subtweeting looks terrible on you. (you know who you are.)},
+	date={2016},
+	eprint={https://goo.gl/NCz27z},
+}
+
+\bib{pyenchant}{article}{
+	title={PyEnchant: a spellchecking library for Python},
+	author={Kelly, Ryan},
+	date={2016}
+}
+
+\bib{the_atlantic}{article}{
+	author={Madrigal, Alexis~C.},
+	title={Behind the machine's back: How social media users avoid getting turned into big data},
+	date={2014},
+	eprint={https://goo.gl/h36jxx},
+}
+
+\bib{sentiment_survey}{article}{
+	title={Sentiment analysis algorithms and applications: A survey},
+	author={Medhat, Walaa},
+	author={Hassan, Ahmed},
+	author={Korashy, Hoda},
+	journal={Ain Shams Engineering Journal},
+	volume={5},
+	number={4},
+	pages={1093\ndash1113},
+	date={2014},
+}
+
+\bib{sentiment_analysis_markets}{article}{
+	author={Nassirtoussi, Arman~Khadjeh},
+	author={Aghabozorgi, Saeed},
+	author={Wah, Teh~Ying},
+	author={Ngo, David Chek~Ling},
+	title={Text mining for market prediction: A systematic review},
+	date={2014},
+	journal={Expert Systems with Applications},
+	volume={41},
+	number={16},
+	pages={7653\ndash 7670},
+}
+
+\bib{the_washington_post_trump}{article}{
+	author={Ohlheiser, Abby},
+	title={A running list of all the possible subtweets of President Trump from government Twitter accounts},
+	date={2017},
+	eprint={https://goo.gl/hFh81R},
+}
+
+\bib{scikit}{article}{
+	title={Scikit-learn: Machine learning in Python},
+	author={Pedregosa, Fabian},
+	author={Varoquaux, Ga{\"e}l},
+	author={Gramfort, Alexandre},
+	author={Michel, Vincent}, 
+	author={Thirion, Bertrand},
+	author={Grisel, Olivier},
+	author={Blondel, Mathieu}, 
+	author={Prettenhofer, Peter},
+	author={Weiss, Ron},
+	author={Dubourg, Vincent},
+	journal={Journal of machine learning research},
+	volume={12},
+	number={Oct},
+	pages={2825--2830},
+	date={2011}
+}
+
+\bib{first_subtweet}{article}{
+	author={Rae, Chelsea},
+	title={I hate when i see people...},
+	date={2009},
+	eprint={https://twitter.com/Chelsea_x_Rae/status/6261479092},
+}
+
+\bib{tweepy_python}{article}{
+	title={tweepy Documentation},
+	author={Roesslein, Joshua},
+	eprint={http://docs.tweepy.org/en/v3.5.0/},
+	volume={5},
+	date={2009}
+}
+
+\bib{semeval_2017}{article}{
+	title={SemEval-2017 task 4: Sentiment analysis in Twitter},
+	author={Rosenthal, Sara},
+	author={Farra, Noura}, 
+	author={Nakov, Preslav},
+  	journal={Proceedings of the 11th International Workshop on Semantic Evaluation (SemEval-2017)},
+  	pages={502\ndash518},
+  	date={2017}
 }
 
 \bib{twitter_api_start}{article}{
@@ -773,14 +958,6 @@ Finally, we treated this project as a binary classification problem between subt
 	eprint={https://twitter.com/en/tos}
 }
 
-\bib{tweepy_python}{article}{
-	title={tweepy Documentation},
-	author={Roesslein, Joshua},
-	eprint={http://docs.tweepy.org/en/v3.5.0/},
-	volume={5},
-	date={2009}
-}
-
 \bib{tweepy_status_object}{article}{
 	author={Twitter},
 	title={Tweet objects},
@@ -788,13 +965,34 @@ Finally, we treated this project as a binary classification problem between subt
 	eprint={https://developer.twitter.com/en/docs/tweets/data-dictionary/overview/tweet-object},
 }
 
-\bib{nltk}{article}{
-	title={NLTK: the natural language toolkit},
-	author={Bird, Steven},
-	author={Loper, Edward},
-	journal={Proceedings of the ACL 2004 on Interactive poster and demonstration sessions},
-	pages={31},
-	date={2004}
+\bib{twitter_stats}{article}{
+	author={Twitter},
+	title={Twitter turns six},
+	date={2012},
+	eprint={https://blog.twitter.com/official/en_us/a/2012/twitter-turns-six.html},
+}
+
+\bib{twitter_rate_limits}{article}{
+	author={Twitter},
+	title={Rate Limiting},
+	date={2018},
+	eprint={https://developer.twitter.com/en/docs/basics/rate-limiting},
+}
+
+\bib{urban_dictionary}{article}{
+	author={Urban Dictionary},
+	title={Subtweet},
+	date={2010},
+	eprint={https://www.urbandictionary.com/define.php?term=subtweet},
+}
+
+\bib{semeval_2018}{article}{
+	author={Van Hee, Cynthia}, 
+	author={Lefever, Els}, 
+	author={Host, Véronique},
+	title={Semeval-2018 Task 3: Irony detection in English Tweets},
+	date={2018},
+	journal={Proceedings of the 12th International Workshop on Semantic Evaluation (SemEval-2018)}
 }
 
 \bib{naive_bayes_optimality}{article}{
@@ -807,227 +1005,7 @@ Finally, we treated this project as a binary classification problem between subt
 	date={2004}
 }
 
-\bib{k_folds}{article}{
-	author={Borovicka, Tomas},
-	author={Jirina Jr, Marcel},
-	author={Kordik, Pavel},
-	author={Jirina, Marcel},
-	title={Selecting representative data sets},
-	date={2012}
-}
-
-
-\bib{first_subtweet}{article}{
-	author={Rae, Chelsea},
-	title={I hate when i see people...},
-	date={2009},
-	eprint={https://twitter.com/Chelsea_x_Rae/status/6261479092},
-}
-
-\bib{urban_dictionary}{article}{
-	author={Urban Dictionary},
-	title={Subtweet},
-	date={2010},
-	eprint={https://www.urbandictionary.com/define.php?term=subtweet},
-}
-
-\bib{subtweets_communications}{article}{
-	author={Edwards, Autumn},
-	author={Harris, Christina~J},
-	title={To tweet or ‘subtweet’?: Impacts of social networking post directness and valence on interpersonal impressions},
-	date={2016},
-	journal={Computers in Human Behavior},
-	volume={63},
-	pages={304\ndash 310},
-}
-
-\bib{the_atlantic}{article}{
-	author={Madrigal, Alexis~C.},
-	title={Behind the machine's back: How social media users avoid getting turned into big data},
-	date={2014},
-	eprint={https://goo.gl/h36jxx},
-}
-
-\bib{the_washington_post}{article}{
-	author={Dewey, Caitlin},
-	title={Study confirms what you always knew: People who subtweet are terrible},
-	date={2016},
-	eprint={https://goo.gl/SeV3mx},
-}
-
-\bib{slate}{article}{
-	author={Hassler, Chelsea},
-	title={Subtweeting looks terrible on you. (you know who you are.)},
-	date={2016},
-	eprint={https://goo.gl/NCz27z},
-}
-
-\bib{the_washington_post_trump}{article}{
-	author={Ohlheiser, Abby},
-	title={A running list of all the possible subtweets of President Trump from government Twitter accounts},
-	date={2017},
-	eprint={https://goo.gl/hFh81R},
-}
-
-\bib{twitter_stats}{article}{
-	author={Twitter},
-	title={Twitter turns six},
-	date={2012},
-	eprint={https://blog.twitter.com/official/en_us/a/2012/twitter-turns-six.html},
-}
-
-\bib{first_tweet}{article}{
-	author={Dorsey, Jack},
-	title={inviting coworkers},
-	date={2006},
-	eprint={https://twitter.com/jack/status/29},
-}
-
-\bib{sentiment_analysis_markets}{article}{
-	author={Nassirtoussi, Arman~Khadjeh},
-	author={Aghabozorgi, Saeed},
-	author={Wah, Teh~Ying},
-	author={Ngo, David Chek~Ling},
-	title={Text mining for market prediction: A systematic review},
-	date={2014},
-	journal={Expert Systems with Applications},
-	volume={41},
-	number={16},
-	pages={7653\ndash 7670},
-}
-
-\bib{sentiment_analysis_terrorism}{article}{
-	author={Burnap, Pete},
-	author={Williams, Matthew~L},
-	author={Sloan, Luke},
-	author={Rana, Omer},
-	author={Housley, William},
-	author={Edwards, Adam},
-	author={Knight, Vincent},
-	author={Procter, Rob},
-	author={Voss, Alex},
-	title={Tweeting the terror: modelling the social media reaction to the woolwich terrorist attack},
-	date={2014},
-	journal={Social Network Analysis and Mining},
-	volume={4},
-	number={1},
-	pages={206},
-}
-
-\bib{antilocution}{article}{
-	title={The nature of prejudice},
-	author={Allport, Gordon W},
-	date={1954}
-}
-
-\bib{semeval_2015}{article}{
-	title={Semeval-2015 task 11: Sentiment analysis of figurative language in twitter},
-	author={Ghosh, Aniruddha},
-	author={Li, Guofu}, 
-	author={Veale, Tony},
-	author={Rosso, Paolo}, 
-	author={Shutova, Ekaterina}, author={Barnden, John}, 
-	author={Reyes, Antonio},
-	journal={Proceedings of the 9th International Workshop on Semantic Evaluation (SemEval 2015)},
-	pages={470\ndash478},
-	year={2015}
-}
-
-\bib{semeval_2018}{article}{
-	author={Van Hee, Cynthia}, 
-	author={Lefever, Els}, 
-	author={Host, Véronique},
-	title={Semeval-2018 Task 3: Irony detection in English Tweets},
-	date={2018},
-	journal={Proceedings of the 12th International Workshop on Semantic Evaluation (SemEval-2018)}
-}
-
-\bib{atlantic_bots}{article}{
-	author={Guilbeault, Douglas}, 
-	author={Woolley, Samuel},
-	title={How Twitter Bots Are Shaping the Election},
-	date={2016},
-	eprint={https://goo.gl/ez155d},
-}
-
-\bib{pentametron}{article}{
-	author={Bhatnagar, Ranjit}, 
-	title={Pentametron},
-	date={2018},
-	eprint={https://twitter.com/pentametron}
-}
-
-\bib{sentiment_survey}{article}{
-	title={Sentiment analysis algorithms and applications: A survey},
-	author={Medhat, Walaa},
-	author={Hassan, Ahmed},
-	author={Korashy, Hoda},
-	journal={Ain Shams Engineering Journal},
-	volume={5},
-	number={4},
-	pages={1093\ndash1113},
-	date={2014},
-}
-
-\bib{pyenchant}{article}{
-	title={PyEnchant: a spellchecking library for Python},
-	author={Kelly, Ryan},
-	date={2016}
-}
-
-\bib{scikit}{article}{
-	title={Scikit-learn: Machine learning in Python},
-	author={Pedregosa, Fabian},
-	author={Varoquaux, Ga{\"e}l},
-	author={Gramfort, Alexandre},
-	author={Michel, Vincent}, 
-	author={Thirion, Bertrand},
-	author={Grisel, Olivier},
-	author={Blondel, Mathieu}, 
-	author={Prettenhofer, Peter},
-	author={Weiss, Ron},
-	author={Dubourg, Vincent},
-	journal={Journal of machine learning research},
-	volume={12},
-	number={Oct},
-	pages={2825--2830},
-	date={2011}
-}
-
-\bib{twitter_rate_limits}{article}{
-	author={Twitter},
-	title={Rate Limiting},
-	date={2018},
-	eprint={https://developer.twitter.com/en/docs/basics/rate-limiting},
-}
-
-\bib{github}{article}{
-	author={Noah Segal-Gould},
-	title={Senior-Project-Subtweets},
-	date={2018},
-	eprint={https://github.com/segalgouldn/Senior-Project-Subtweets},
-}
-
 \end{bibliog}
-
-\begin{appendices}
-\chapter{Acquiring Ground Truth Data}
-
-\section{subtweets\_downloader.py}
-\inputminted[breaklines,linenos,fontsize=\scriptsize]{python}{subtweets_downloader.py}
-
-\section{non\_subtweets\_downloader.py}
-\inputminted[breaklines,linenos,fontsize=\scriptsize]{python}{non_subtweets_downloader.py}
-
-\chapter{Training \& Testing the Classifier}
-
-\section{classifier\_creator.py}
-\inputminted[breaklines,linenos,fontsize=\scriptsize]{python}{classifier_creator.py}
-
-\section{live\_subtweets\_classifier.py}
-\inputminted[breaklines,linenos,fontsize=\scriptsize]{python}{live_subtweets_classifier.py}
-
-\end{appendices}
 
 \end{document}
 
