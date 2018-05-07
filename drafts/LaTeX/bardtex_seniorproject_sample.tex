@@ -25,7 +25,7 @@
 
 \abstr
 
-The purpose of this project is to identify subtweets. The Oxford English Dictionary defines ``subtweet" as a ``[Twitter post] that refers to a particular user without directly mentioning them, typically as a form of furtive mockery or criticism." This paper details a process for gathering a labeled ground truth dataset, training a classifier, and creating a Twitter bot which interacts with subtweets in real time. The Naive Bayes classifier trained in this project classifies tweets as subtweets and non-subtweets with an average $F_{1}$ score of 72\%. 
+The purpose of this project is to identify subtweets. The Oxford English Dictionary defines ``subtweet" as a ``[Twitter post] that refers to a particular user without directly mentioning them, typically as a form of furtive mockery or criticism." This paper details a process for gathering a labeled ground truth dataset, training a classifier, and creating a Twitter bot which interacts with subtweets in real time. The Naive Bayes classifier trained in this project classifies tweets as subtweets and non-subtweets with an average $F_{1}$ score of 72\%.
 
 \tableofcontents
 \listoffigures
@@ -36,30 +36,30 @@ I dedicate this senior project to @jack, who has willfully made numerous changes
 
 \acknowl
 
-Thank you professors Sven Anderson, Keith O'Hara, and Rebecca Thomas for making this project possible through your combined efforts to teach and advise me. Thank you Benjamin Sernau '17 for enduring through three years of Computer Science courses with me and being a source of unending joy in my life. Thank you to Julia Berry '18, Aaron Krapf '18, and Zoe Terhune '18 for being my very best friends and giving me things worth caring about. Finally, thank you to my parents Tammy Segal and Emily Taylor for your constant support and patience throughout my four years at Bard College. 
+Thank you professors Sven Anderson, Keith O'Hara, and Rebecca Thomas for making this project possible through your combined efforts to teach and advise me. Thank you Benjamin Sernau '17 for enduring through three years of Computer Science courses with me and being a source of unending joy in my life. Thank you to Julia Berry '18, Aaron Krapf '18, and Zoe Terhune '18 for being my very best friends and giving me things worth caring about. Finally, thank you to my parents Tammy Segal and Emily Taylor for your constant support and patience throughout my four years at Bard College.
 
 \startmain
 \intro
 
 There were over 140 million active Twitter users who sent 340 million text-based tweets to the platform every day by March of 2012 \cite{twitter_stats}. Since Twitter-founder Jack Dorsey sent the first Tweet in March of 2006 \cite{first_tweet} social scientists, political scientists, and computer scientists have applied machine learning techniques to understand the patterns and structures of the conversations held on the platform. Through sentiment analysis, we are able to use machine learning to identify patterns within natural language which indicate particular feelings both broadly (e.g. positive, neutral, or negative) and toward topics (e.g. politics, terrorism, brands, etc.).
 
-On Twitter, the most common way to publicly communicate with another user is to compose a tweet and place an ``@" before the username of that user somewhere in the tweet (e.g. "How are you doing, @NoahSegalGould?"). Through this method, public discussions on Twitter maintain a kind of accountability: even if one were to miss the notification that they were mentioned in a tweet, one's own dashboard keeps a running list of their most recent mentions. 
+On Twitter, the most common way to publicly communicate with another user is to compose a tweet and place an ``@" before the username of that user somewhere in the tweet (e.g. "How are you doing, @NoahSegalGould?"). Through this method, public discussions on Twitter maintain a kind of accountability: even if one were to miss the notification that they were mentioned in a tweet, one's own dashboard keeps a running list of their most recent mentions.
 
 ``Subtweet" was coined in December of 2009 by Twitter user Chelsea Rae \cite{first_subtweet} and was entered into Urban Dictionary the following August \cite{urban_dictionary}. In ``To tweet or ‘subtweet’?: Impacts of social networking post directness and valence on interpersonal impressions" \cite{subtweets_communications}, Edwards and Harris sought to analyze student participants' perceptions of known subtweeters. In the news, too, subtweets have garnered attention in \textit{The Atlantic} \cite{the_atlantic}, \textit{The Washington Post} \cite{the_washington_post}, and \textit{Slate} \cite{slate}. In news media, subtweets garner attention for their prevalence among government officials as well. Following President Donald Trump's inauguration, The Washington Post compiled its ``A running list of all the possible subtweets of President Trump from government Twitter accounts," \cite{the_washington_post_trump} cementing subtweets as particularly newsworthy.
 
-If an individual sought to disparage or mock another, they could certainly do so directly. But the targeted user would probably notice, and through the search functions of the platform, anyone could see who has mentioned either their own or another's username. Instead, a phenomenon persists in which users of the platform deliberately insult others in a vague manner by making complaints while omitting the targets of those complaints. 
+If an individual sought to disparage or mock another, they could certainly do so directly. But the targeted user would probably notice, and through the search functions of the platform, anyone could see who has mentioned either their own or another's username. Instead, a phenomenon persists in which users of the platform deliberately insult others in a vague manner by making complaints while omitting the targets of those complaints.
 
 Although the OED's definition states that a subtweet ``...refers to a particular user without directly mentioning them, typically as a form of furtive mockery or criticism," it is perhaps too restrictive. Some individuals believe subtweets abide by this definition, but others expand it to allow inclusion of others' real names (especially if that individual does not own a Twitter account), and some do not even require that a particular user be the target of the tweet. Because subtweeting is colloquial in nature, we will expand the definition of subtweet to permit these less restrictive features.
 
-Sentiment analysis on social networking services such as Twitter has garnered attention within seemingly distinct fields of interest. In ``Text mining for market prediction: A systematic review," Nassirtoussi et al. surveyed varied methods for text-mining social media for sentiment analysis of financial markets and approached that problem with both behavioral and economic considerations in mind \cite{sentiment_analysis_markets}. Following a terrorist event in Woolwich, London in 2013, Burnap et al. analyzed the immediate Twitter response following the attack to inform statistics on how long it takes for responses from official sources to disseminate during crises \cite{sentiment_analysis_terrorism}. Prior research of these kinds utilizes sentiment analysis techniques on tweets, but no known research exists which specifically performs any sentiment analysis on subtweets. 
+Sentiment analysis on social networking services such as Twitter has garnered attention within seemingly distinct fields of interest. In ``Text mining for market prediction: A systematic review," Nassirtoussi et al. surveyed varied methods for text-mining social media for sentiment analysis of financial markets and approached that problem with both behavioral and economic considerations in mind \cite{sentiment_analysis_markets}. Following a terrorist event in Woolwich, London in 2013, Burnap et al. analyzed the immediate Twitter response following the attack to inform statistics on how long it takes for responses from official sources to disseminate during crises \cite{sentiment_analysis_terrorism}. Prior research of these kinds utilizes sentiment analysis techniques on tweets, but no known research exists which specifically performs any sentiment analysis on subtweets.
 
 Long before Twitter, psychologist Gordon Allport wrote about ``antilocution" in \textit{The Nature of Prejudice} \cite{antilocution}. For Allport, antilocution was the first of several degrees of apathy which measure prejudice in a society. It represented the kind of remarks which target a person, group, or community in a public or private setting but do not address the targeted individual directly. Different from both hate speech and subtweeting, antilocution necessitates that an in-group ostracize an unaware out-group through its biases.
 
-The most germane research available focuses on sentiment analysis of figurative language. Determining sentiment based on features of text which are distinctly separate from their literal interpretations presents difficulties for human readers as well as computer programs. In \textit{SemEval}, the International Workshop on Semantic Evaluation, analysis of figurative language on Twitter has been a core task for their competition since 2015 \cite{semeval_2015} and returns this year with a specific focus on ironic tweets \cite{semeval_2018}. In this year's description for ``Task 3: Irony detection in English tweets," Van Hee et al. touch upon online harassment as a potential point of significance for sentiment analysis of ironic tweets.  
+The most germane research available focuses on sentiment analysis of figurative language. Determining sentiment based on features of text which are distinctly separate from their literal interpretations presents difficulties for human readers as well as computer programs. In \textit{SemEval}, the International Workshop on Semantic Evaluation, analysis of figurative language on Twitter has been a core task for their competition since 2015 \cite{semeval_2015} and returns this year with a specific focus on ironic tweets \cite{semeval_2018}. In this year's description for ``Task 3: Irony detection in English tweets," Van Hee et al. touch upon online harassment as a potential point of significance for sentiment analysis of ironic tweets.
 
-This project pursues sentiment analysis of subtweets in order to challenge the hypocrisy of utilizing a service which presents itself as a public forum to speak in distinctly private ways. Toward this end, these are our goals: this project will provide a framework for collecting examples of subtweets, train a classification algorithm using those examples, and finally utilize that classifier in real time to make tweets which were intended to be unseen by specific parties easily accessible to all parties. In presenting covertly hurtful content as obviously hurtful in a public fashion, perhaps it will promote a particular awareness that tweets posted by public accounts are indeed publicly accessible, and that Twitter's Terms of Service \cite{twitter_tos} allows for this kind of monitoring. 
+This project pursues sentiment analysis of subtweets in order to challenge the hypocrisy of utilizing a service which presents itself as a public forum to speak in distinctly private ways. Toward this end, these are our goals: this project will provide a framework for collecting examples of subtweets, train a classification algorithm using those examples, and finally utilize that classifier in real time to make tweets which were intended to be unseen by specific parties easily accessible to all parties. In presenting covertly hurtful content as obviously hurtful in a public fashion, perhaps it will promote a particular awareness that tweets posted by public accounts are indeed publicly accessible, and that Twitter's Terms of Service \cite{twitter_tos} allows for this kind of monitoring.
 
-Using a machine-learning approach to perform sentiment analysis, syntactic and linguistic features are typically utilized in probabilistic (e.g. Naive Bayes and Maximum Entropy) and linear (e.g. Support Vector Machines and Neural Networks) classification algorithms. The probabilistic approach is sometimes called \textit{generative} because such models generate the probabilities of sampling particular terms \cite{sentiment_survey}. Linear classification utilizes the vectorized feature space of words, sentences, or documents to find a separating hyperplane between multiple classes. 
+Using a machine-learning approach to perform sentiment analysis, syntactic and linguistic features are typically utilized in probabilistic (e.g. Naive Bayes and Maximum Entropy) and linear (e.g. Support Vector Machines and Neural Networks) classification algorithms. The probabilistic approach is sometimes called \textit{generative} because such models generate the probabilities of sampling particular terms \cite{sentiment_survey}. Linear classification utilizes the vectorized feature space of words, sentences, or documents to find a separating hyperplane between multiple classes.
 
 This project approaches the problem of identifying subtweets using the probabilistic Naive Bayes classification algorithm. We demonstrate this method by programmatically identifying subtweets in real time. Using a Twitter bot---an automated program which accesses Twitter---we use this classifier to detect and interact with subtweets as they are posted.
 
@@ -79,35 +79,35 @@ To make creation of Twitter applications easier, Tweepy \cite{tweepy_python} is 
 \subsection{Searching for Tweets}
 \label{searching_with_api}
 
-For acquisition of a ground truth dataset, we consider \textbf{true subtweets} to be tweets to which another Twitter user replied who specifically called it out as a subtweet. We consider \textbf{true non-subtweets} to be tweets to which another user replied who specifically did \textbf{not} call it out as a subtweet. 
+For acquisition of a ground truth dataset, we consider \textbf{true subtweets} to be tweets to which another Twitter user replied who specifically called it out as a subtweet. We consider \textbf{true non-subtweets} to be tweets to which another user replied who specifically did \textbf{not} call it out as a subtweet.
 
 \begin{minted}[linenos,fontsize=\scriptsize]{python}
-def get_subtweets(max_tweets=2500, 
-                  query=("subtweet AND @ since:2018-04-01" 
+def get_subtweets(max_tweets=2500,
+                  query=("subtweet AND @ since:2018-04-01"
                          "exclude:retweets filter:replies")):
     subtweets_ids_list = []
     subtweets_list = []
-    for potential_subtweet_reply in tweepy.Cursor(api.search, lang="en", 
-                                                  tweet_mode="extended", 
+    for potential_subtweet_reply in tweepy.Cursor(api.search, lang="en",
+                                                  tweet_mode="extended",
                                                   q=query).items(max_tweets):
         potential_subtweet_original = first_tweet(potential_subtweet_reply)
-        if (not potential_subtweet_original.in_reply_to_status_id_str 
+        if (not potential_subtweet_original.in_reply_to_status_id_str
             and potential_subtweet_original.user.lang == "en"):
-            if (potential_subtweet_original.id_str in subtweets_ids_list 
-                or "subtweet" in potential_subtweet_original.full_text 
-                or "Subtweet" in potential_subtweet_original.full_text 
+            if (potential_subtweet_original.id_str in subtweets_ids_list
+                or "subtweet" in potential_subtweet_original.full_text
+                or "Subtweet" in potential_subtweet_original.full_text
                 or "SUBTWEET" in potential_subtweet_original.full_text):
                 continue
             else:
                 subtweets_ids_list.append(potential_subtweet_original.id_str)
-                subtweets_list.append({"tweet_data": potential_subtweet_original._json, 
+                subtweets_list.append({"tweet_data": potential_subtweet_original._json,
                                        "reply": potential_subtweet_reply._json})
                 with open("../data/other_data/subtweets.json", "w") as outfile:
                     json.dump(subtweets_list, outfile, indent=4)
     return subtweets_list
 \end{minted}
 \noindent
-After the API credentials are loaded, this Python code is used to download tweets with replies which \textbf{do} and \textbf{do not} call them out as subtweets. Tweepy provides the \verb|Cursor| object which is used to iterate through different sections of the Twitter API. In this example, we use it with Twitter's search API to find tweets matching our query. This particular version finds \textbf{true subtweets} with their accusatory replies, but it requires only modification of its query argument to download \textbf{true non-subtweets}. 
+After the API credentials are loaded, this Python code is used to download tweets with replies which \textbf{do} and \textbf{do not} call them out as subtweets. Tweepy provides the \verb|Cursor| object which is used to iterate through different sections of the Twitter API. In this example, we use it with Twitter's search API to find tweets matching our query. This particular version finds \textbf{true subtweets} with their accusatory replies, but it requires only modification of its query argument to download \textbf{true non-subtweets}.
 \noindent
 Within the \verb|for| loop, we confirm that the following qualities hold true:
 \begin{itemize}
@@ -129,23 +129,23 @@ The only difference between the two is that the former searches for tweets which
 \begin{minted}[linenos,fontsize=\scriptsize]{python}
 def first_tweet(tweet_status_object):
     try:
-        return first_tweet(api.get_status(tweet_status_object.in_reply_to_status_id_str, 
+        return first_tweet(api.get_status(tweet_status_object.in_reply_to_status_id_str,
                                           tweet_mode="extended"))
     except tweepy.TweepError:
         return tweet_status_object
 \end{minted}
 
 \noindent
-To obtain this object, this code essentially goes up a chain of recursively finding the original tweet to which a reply was made until the API can no longer find another tweet object with an \verb|in_reply_to_status_id_str| attribute, indicating that the tweet is an original \textbf{true subtweet} or \textbf{true non-subtweet}. The two versions of this program for acquiring \textbf{true subtweets} and \textbf{true non-subtweets} ran for three weeks between March and April of 2018, acquiring over 20,000 tweets which compose our ground truth dataset. 
+To obtain this object, this code essentially goes up a chain of recursively finding the original tweet to which a reply was made until the API can no longer find another tweet object with an \verb|in_reply_to_status_id_str| attribute, indicating that the tweet is an original \textbf{true subtweet} or \textbf{true non-subtweet}. The two versions of this program for acquiring \textbf{true subtweets} and \textbf{true non-subtweets} ran for three weeks between March and April of 2018, acquiring over 20,000 tweets which compose our ground truth dataset.
 
 \begin{center}
 	\begin{tabular}{ | p{5em} | p{15em} | p{15em} | }
 		\hline
 		& True Subtweet Data& True Non-Subtweet Data
-		\\ 
+		\\
 		\hline
-		Tweet&Talk to him again about ``dropping me" and you'll get your teeth knocked out&That's been one of my biggest issues here; the onus is on ordinary people who, in their spare time, must campaign for the basic services of a city. This is not how progressive cities should be built 
-		\\ 
+		Tweet&Talk to him again about ``dropping me" and you'll get your teeth knocked out&That's been one of my biggest issues here; the onus is on ordinary people who, in their spare time, must campaign for the basic services of a city. This is not how progressive cities should be built
+		\\
 		\hline
 		Reply&Thomas don't subtweet me during work hours&i guess i am not as creative as i thought
 		\\
@@ -161,7 +161,7 @@ This table features a \textbf{true subtweet} and its associated reply and a \tex
 
 This approach for creating a ground truth dataset relies on a particular phenomenon in which Twitter users call-out the subtweets of their peers. The following pattern was observed: a user posts a subtweet which is easily recognized by a peer, and that peer then replies to that tweet in order to complain that the original user was subtweeting or to ask if the tweet was indeed a subtweet. Initially, the program for acquiring the ground truth dataset used the Twitter API's search functionality to specifically search for replies to tweets which contained some form of the string ``subtweet." It utilized the API's status object to access the tweet to which it was replying. For 73 days, each day's alleged subtweets and their associated accusatory replies were saved.
 
-Previously, the classifier was trained using a dataset which was half composed of these alleged subtweets and half composed of tweets randomly selected from a pre-labeled sentiment analyzed tweets dataset \cite{go_dataset}. This procedure failed to make the training data representative of \textbf{true subtweets} and \textbf{true non-subtweets}. The alleged subtweets downloading program was revised and it has been set to download tweets with replies which specifically do \textbf{not} contain the string ``subtweet." In both the program which downloads subtweets and the program which downloads non-subtweets, the assumptions about these interactions will not hold true in every case. They are intended as generalizations which make acquiring a ground truth dataset for use in performing binary classification significantly easier and less time-consuming than finding and labeling subtweets and non-subtweets by hand. Indeed, the dataset utilized by Go et al. uses a similar method for acquiring labeled data. In their \textit{Sentiment140} dataset, the labels were acquired according to emoticons present within the tweets instead of through hand-labeling by actual humans. 
+Previously, the classifier was trained using a dataset which was half composed of these alleged subtweets and half composed of tweets randomly selected from a pre-labeled sentiment analyzed tweets dataset \cite{go_dataset}. This procedure failed to make the training data representative of \textbf{true subtweets} and \textbf{true non-subtweets}. The alleged subtweets downloading program was revised and it has been set to download tweets with replies which specifically do \textbf{not} contain the string ``subtweet." In both the program which downloads subtweets and the program which downloads non-subtweets, the assumptions about these interactions will not hold true in every case. They are intended as generalizations which make acquiring a ground truth dataset for use in performing binary classification significantly easier and less time-consuming than finding and labeling subtweets and non-subtweets by hand. Indeed, the dataset utilized by Go et al. uses a similar method for acquiring labeled data. In their \textit{Sentiment140} dataset, the labels were acquired according to emoticons present within the tweets instead of through hand-labeling by actual humans.
 
 \section{Language Analysis \& Naive Bayes}
 \label{language_analysis}
@@ -189,12 +189,12 @@ An \textbf{n-gram} is a contiguous sequence of $n$ tokens in a piece of text. Fo
 \paragraph{2.2.1.4  Stop Words}
 \label{stop_words}
 
-A list of stop words typically contains the most common words in a language. For English text, the list is often composed of words such as ``the," ``it," and ``of." Tokens matching stop words are ignored during classifier training because they are too common to help the classifier distinguish subtweets from non-subtweets. 
+A list of stop words typically contains the most common words in a language. For English text, the list is often composed of words such as ``the," ``it," and ``of." Tokens matching stop words are ignored during classifier training because they are too common to help the classifier distinguish subtweets from non-subtweets.
 
 \subsection{Cleaning and Preparing the Data}
 \label{cleaning_data}
 
-Although \textbf{true subtweets} and \textbf{true non-subtweets} are identified using characteristics of the Twitter API's tweet status objects, we utilize Naive Bayes exclusively for text classification on the unicode text contained within each alleged subtweet and non-subtweet status object. Thus, we ignore the replies to these tweets. 
+Although \textbf{true subtweets} and \textbf{true non-subtweets} are identified using characteristics of the Twitter API's tweet status objects, we utilize Naive Bayes exclusively for text classification on the unicode text contained within each alleged subtweet and non-subtweet status object. Thus, we ignore the replies to these tweets.
 
 \begin{minted}[linenos,fontsize=\scriptsize]{python}
 def load_data(filename, threshold=0.1):
@@ -232,9 +232,9 @@ After text cleaning, we remove tweets which are present in both the dataset of \
 \begin{minted}[linenos,fontsize=\scriptsize]{python}
 	subtweets_data = load_data("../data/other_data/subtweets.json")
 	non_subtweets_data = load_data("../data/other_data/non_subtweets.json")
-	subtweets_data = [tweet for tweet in subtweets_data 
+	subtweets_data = [tweet for tweet in subtweets_data
                           if tweet not in non_subtweets_data]
-	non_subtweets_data = [tweet for tweet in non_subtweets_data 
+	non_subtweets_data = [tweet for tweet in non_subtweets_data
                               if tweet not in subtweets_data]
 \end{minted}
 
@@ -243,13 +243,13 @@ With the duplicates gone, we limit the size of the larger dataset to be the same
 
 \begin{minted}[linenos,fontsize=\scriptsize]{python}
 	smallest_length = len(min([subtweets_data, non_subtweets_data], key=len))
-	
+
 	subtweets_data = sample(subtweets_data, smallest_length)
 	non_subtweets_data = sample(non_subtweets_data, smallest_length)
-	
+
 	subtweets_data = [(tweet, "subtweet") for tweet in subtweets_data]
 	non_subtweets_data = [(tweet, "non-subtweet") for tweet in non_subtweets_data]
-	
+
 	training_data = subtweets_data + non_subtweets_data
 \end{minted}
 
@@ -271,34 +271,34 @@ Naive Bayes stands out as particularly simple and common for use in text classif
 
 \noindent
 Thus,
-\[{P(A|B)}=\frac{P(B|A)P(A)}{P(B)}\] 
+\[{P(A|B)}=\frac{P(B|A)P(A)}{P(B)}\]
 where $P(A|B)$ is the \textbf{posterior probability}, $P(B|A)$ is the \textbf{conditional probability}, and $P(A)$ and $P(B)$ are the \textbf{prior probabilities}.
 
 The \textbf{prior probability} $P(A)$ is otherwise known as the \textbf{class probability} and is equal to the general probability of encountering a particular class. In our case, we have chosen to keep our classes balanced (i.e. there are equal numbers of documents in both), so the \textbf{class probability} will always be 50\%. The other \textbf{prior probability} $P(B)$ or \textbf{evidence}, then, refers to the probability of encountering the features within a document \textbf{independent} of the class label. The \textbf{conditional probability} $P(B|A)$ refers to the likelihood of encountering the features within a document given that those features belong to a particular class. The \textbf{evidence} is often ignored in the final classification step on the basis that it acts merely as a scaling factor when trying to maximize which class produces the greater \textbf{posterior probability}. The \textbf{posterior probability} is the probability that a particular document belongs to a class given the observed features within that document. The Naive Bayes algorithm maximizes this probability in order to predict which class best fits a document. In all cases where we must calculate the probability for an entire feature-set, we simply take the product of all the extracted feature probabilities in the document. Consider this classification example:
 \[
-\begin{split} 
+\begin{split}
 	& \text{if } P(  \omega = \text{subtweet} \mid \textbf{x}) \ge P(\omega = \text{non-subtweet} \mid \textbf{x})  \text{ classify as subtweet, }\\
 	&  \text{else classify as non-subtweet. }
 \end{split}
 \]
 
-\noindent 
+\noindent
 Dropping the evidence term on the basis that it is constant for both classes, we expand that:
 \[
-\begin{split} 
+\begin{split}
 	&  P(\omega = \text{subtweet} \mid \textbf{x}) = P(\textbf{x} \mid \omega = \text{subtweet}) \cdot P(\text{subtweet}) \\
 	&  P(\omega = \text{non-subtweet} \mid \textbf{x}) = P(\textbf{x} \mid \omega = \text{non-subtweet}) \cdot P(\text{non-subtweet})
-\end{split} 
+\end{split}
 \]
 
 \noindent
-Assuming the \textbf{posterior probability} for the former is greater than or equal to the latter, the classifier predicts that the document fits that class. The naive assumption maintains that all features are treated as conditionally independent (i.e. that the presence or omission of a particular feature does not change the likelihood of encountering other features), and although this is frequently violated, Naive Bayes often performs well anyway \cite{naive_bayes_optimality}. 
+Assuming the \textbf{posterior probability} for the former is greater than or equal to the latter, the classifier predicts that the document fits that class. The naive assumption maintains that all features are treated as conditionally independent (i.e. that the presence or omission of a particular feature does not change the likelihood of encountering other features), and although this is frequently violated, Naive Bayes often performs well anyway \cite{naive_bayes_optimality}.
 
 For cases in which the classifier encounters a feature absent from the features which were used to train it, a so-called \textbf{zero probability} appears. Because the probability of encountering the feature is 0, \textbf{additive smoothing} is often utilized to appropriately weight new features using an extra term $\alpha$, so the probability that an entire feature-set fits into a specific class is not 0. In this project, we use \textbf{Laplace smoothing} ($\alpha=1$). This technique smooths categorical data by including the pseudo-count $\alpha$ into each probability estimate. Thus, the probability of a feature given a particular class becomes:
 
 \[P(x_i \mid \omega_j) = \frac{N_{x_i, \omega_j}+\alpha}{N_{\omega_j} + \alpha \, d}  \quad (i = (1, ... , d))\]
 
-\noindent 
+\noindent
 where $N_{x_i, \omega_j}$ is the number of times feature $x_i$ appears in samples from class $\omega_j$, $N_{\omega_j}$ is the total count of all features in class $\omega_j$, $\alpha$ is the parameter for additive smoothing, and $d$ is the dimensionality of the feature vector $\textbf x = [x_1, ..., x_d]$. Compared to datasets which contain millions of tweets such as \textit{Sentiment140} \cite{go_dataset}, our classifier has access to significantly fewer documents. We utilize \textbf{Laplace smoothing} because when the classifier is tested on new tweets it will likely encounter never before seen features given the limited size of the ground truth dataset.
 
 \subsection{Statistical Considerations}
@@ -311,28 +311,28 @@ In the binary classification of subtweets and non-subtweets, we consider true po
 
 \textbf{Precision} refers to the ratio between the true positives, and the true positives and false positives. It is also known as the \textbf{positive predictive value}.
 
-\[P=\frac{TP}{TP+FP}\] 
+\[P=\frac{TP}{TP+FP}\]
 
 \paragraph{2.2.5.2  Recall}
 \label{recall}
 
 \textbf{Recall}, then, refers to the ratio between the number of true positives, and the true positives and false negatives. It is also known as the \textbf{sensitivity}.
 
-\[R=\frac{TP}{TP+FN}\] 
+\[R=\frac{TP}{TP+FN}\]
 
 \paragraph{2.2.5.3  Accuracy}
 \label{accuracy}
 
 The \textbf{accuracy} is the ratio between the true positives and the true negatives, and the true positives, true negatives, false positives, and false negatives. \textbf{Accuracy} alone is a particularly bad quantifier of how well a classifier performs when working with data which is class-imbalanced (i.e. there are not equal numbers of items in each class). In our ground truth dataset, the classes are balanced so measuring accuracy will still be informative.
 
-\[A=\frac{TP+TN}{TP+TN+FP+FN}\] 
+\[A=\frac{TP+TN}{TP+TN+FP+FN}\]
 
 \paragraph{2.2.5.4  F1 Score}
 \label{f1_score}
 
 The \textbf{$F_{1}$ score} is a weighted average of the \textbf{precision} and \textbf{recall}. Thus, it takes both false positives and false negatives into account.
 
-\[F1=\frac{2*(P*R)}{P+R}\] 
+\[F1=\frac{2*(P*R)}{P+R}\]
 
 \paragraph{2.2.5.5  Null Accuracy}
 \label{null_accuracy}
@@ -342,7 +342,7 @@ The \textbf{null accuracy} is the accuracy which is obtained by always predictin
 \subsection{K-Folds Cross-Validation}
 \label{cross_validation}
 
-Instead of using the entire ground truth dataset as training data for the Naive Bayes classifier, we can split it into a \textbf{training set} and a \textbf{test set}. The \textbf{training set} is fed to the classifier, and the \textbf{test set} is used to observe statistics about its performance. Figure \ref{fig:k_folds} depicts cross-validation using $k$-folds, in which we make random splits in the dataset $k$ times to create several \textbf{training set} and \textbf{test set} sections. In $k$-folds, we then take statistical measurements of how well the classifier performs on the \textbf{test set} for each fold. If we made one single split into training and testing sections of our ground truth dataset and only used that single \textbf{test set} to gather statistics on the classifier's performance, we would not be able to confirm that those statistics were representative of all the data in the entire ground truth dataset. Instead, we perform 10-fold cross validation, choosing 90\% of the data to be the \textbf{training set}, and 10\% to be the \textbf{test set} in each fold. \textbf{Precision}, \textbf{$F_{1}$ score}, and \textbf{recall} are calculated within each iteration of the 10 folds, thus utilizing 10 different \textbf{test sets}. Finally, we use the averages of those statistics across all folds to measure the overall performance of the classifier. 
+Instead of using the entire ground truth dataset as training data for the Naive Bayes classifier, we can split it into a \textbf{training set} and a \textbf{test set}. The \textbf{training set} is fed to the classifier, and the \textbf{test set} is used to observe statistics about its performance. Figure \ref{fig:k_folds} depicts cross-validation using $k$-folds, in which we make random splits in the dataset $k$ times to create several \textbf{training set} and \textbf{test set} sections. In $k$-folds, we then take statistical measurements of how well the classifier performs on the \textbf{test set} for each fold. If we made one single split into training and testing sections of our ground truth dataset and only used that single \textbf{test set} to gather statistics on the classifier's performance, we would not be able to confirm that those statistics were representative of all the data in the entire ground truth dataset. Instead, we perform 10-fold cross validation, choosing 90\% of the data to be the \textbf{training set}, and 10\% to be the \textbf{test set} in each fold. \textbf{Precision}, \textbf{$F_{1}$ score}, and \textbf{recall} are calculated within each iteration of the 10 folds, thus utilizing 10 different \textbf{test sets}. Finally, we use the averages of those statistics across all folds to measure the overall performance of the classifier.
 
 \begin{figure}[H]
 	$$\includegraphics{k_folds}$$
@@ -365,9 +365,9 @@ sentiment_pipeline = Pipeline([
 \end{minted}
 
 \noindent
-Our \verb|pipeline| contains a vectorizer and a classifier. We change the default arguments for Scikit's TF-IDF vectorizer to use NLTK's tweet tokenizer, and specify that we want to calculate our TF-IDF vectors using unigrams, bigrams, and trigrams. Then, we set the vectorizer to use Scikit's default English language stop words. The Multinomial Naive Bayes Classifier we implement using Scikit includes \textbf{Laplace smoothing} ($\alpha=1$) by default. 
+Our \verb|pipeline| contains a vectorizer and a classifier. We change the default arguments for Scikit's TF-IDF vectorizer to use NLTK's tweet tokenizer, and specify that we want to calculate our TF-IDF vectors using unigrams, bigrams, and trigrams. Then, we set the vectorizer to use Scikit's default English language stop words. The Multinomial Naive Bayes Classifier we implement using Scikit includes \textbf{Laplace smoothing} ($\alpha=1$) by default.
 
-Scikit also has a convenient \verb|KFold| object which we utilize to perform cross-validation on our classifier. The goal of $k$-folds cross-validation is to train the classifier and acquire statistics on its performance while treating $k$ different parts of the ground truth dataset as \textbf{test sets}. Within a single iteration for 10 iterations, the \textbf{test set} will always be 10\% of the entire ground truth dataset, however the next iteration will use a different section. We ultimately average those statistics to understand the overall performance of the classifier. 
+Scikit also has a convenient \verb|KFold| object which we utilize to perform cross-validation on our classifier. The goal of $k$-folds cross-validation is to train the classifier and acquire statistics on its performance while treating $k$ different parts of the ground truth dataset as \textbf{test sets}. Within a single iteration for 10 iterations, the \textbf{test set} will always be 10\% of the entire ground truth dataset, however the next iteration will use a different section. We ultimately average those statistics to understand the overall performance of the classifier.
 
 \begin{minted}[linenos,fontsize=\scriptsize]{python}
 def confusion_matrices(training_data, num_folds=10):
@@ -376,9 +376,9 @@ def confusion_matrices(training_data, num_folds=10):
     kf = KFold(n_splits=num_folds, random_state=42, shuffle=True)
     cnf_matrix_test = np.zeros((2, 2), dtype=int)
     for train_index, test_index in kf.split(text_training_data):
-        text_train, text_test = (text_training_data[train_index], 
+        text_train, text_test = (text_training_data[train_index],
                                  text_training_data[test_index])
-        class_train, class_test = (class_training_data[train_index], 
+        class_train, class_test = (class_training_data[train_index],
                                    class_training_data[test_index])
 
         sentiment_pipeline.fit(text_train, class_train)
@@ -403,10 +403,10 @@ class StreamListener(tweepy.StreamListener):
         retweeted = status.retweeted
         in_reply_to = status.in_reply_to_status_id_str
         text = status.full_text
-        
+
         # Genericize extra features and clean up the text
-        text = (urls_pattern.sub("GENERIC_URL", 
-                at_mentions_pattern.sub("GENERIC_MENTION", 
+        text = (urls_pattern.sub("GENERIC_URL",
+                at_mentions_pattern.sub("GENERIC_MENTION",
                 names_pattern.sub("GENERIC_NAME",
                 text)))
                 .replace("\u2018", "'")
@@ -417,17 +417,17 @@ class StreamListener(tweepy.StreamListener):
                 .replace("&amp;", "&")
                 .replace("&gt;", ">")
                 .replace("&lt;", "<"))
-        
+
         tokens = tokenizer.tokenize(text)
-        
+
         english_tokens = [english_dict.check(token) for token in tokens]
         percent_english_words = sum(english_tokens)/float(len(english_tokens))
-        
+
         # Make sure the tweet contains some English
         is_english = False
         if percent_english_words >= 0.1:
             is_english = True
-        
+
         # Calculate the probability using the pipeline
         subtweet_probability = sentiment_pipeline.predict_proba([text]).tolist()[0][1]
 \end{minted}
@@ -437,25 +437,25 @@ This part of the program is for live classification of subtweets and gathers inf
 
 \begin{minted}[linenos,fontsize=\scriptsize]{python}
 if all([subtweet_probability >= THRESHOLD,
-        "RT" != text[:2], is_english, 
+        "RT" != text[:2], is_english,
         not retweeted, not in_reply_to]):
-\end{minted} 
+\end{minted}
 
 \noindent
 Included in this conditional statement is a comparison to determine if the probability that the tweet is a subtweet meets a specific threshold. We do not want to call out subtweets unless the probability is high enough. Following this check, we can interact with the tweet in several ways.
 
 \begin{minted}[linenos,fontsize=\scriptsize]{python}
 # Quote the tweet
-api.update_status(("Is this a subtweet? {:.2%} \n" + 
-                   "https://twitter.com/{}/status/{}").format(subtweet_probability, 
-                                                              screen_name, 
+api.update_status(("Is this a subtweet? {:.2%} \n" +
+                   "https://twitter.com/{}/status/{}").format(subtweet_probability,
+                                                              screen_name,
                                                               id_str))
 # Like the tweet
 api.create_favorite(id_str)
 
 # Reply to the tweet
-api.update_status("@{} Is this a subtweet? {:.2%}".format(screen_name, 
-                                                          subtweet_probability), 
+api.update_status("@{} Is this a subtweet? {:.2%}".format(screen_name,
+                                                          subtweet_probability),
                   id_str)
 \end{minted}
 
@@ -487,18 +487,18 @@ No corpus already exists which provides examples of subtweets and non-subtweets.
 	\begin{tabular}{ | p{20em} | p{20em} | }
 		\hline
 		True Subtweets&True Non-Subtweets
-		\\ 
+		\\
 		\hline
 		I know who I want to take me home
 		&
-		He's followed the putrid smell of GENERIC\_MENTION which has led him to GENERIC\_MENTION's whereabouts. 
+		He's followed the putrid smell of GENERIC\_MENTION which has led him to GENERIC\_MENTION's whereabouts.
 
-		Some odd neighbor boy was watching him as he approached the house. 
-		Liam didn't hesitate to drink the young one dry. 
+		Some odd neighbor boy was watching him as he approached the house.
+		Liam didn't hesitate to drink the young one dry.
 
-		``HONEY, I'M HOME!" 
+		``HONEY, I'M HOME!"
 		He calls, kicking in the door.
-		\\ 
+		\\
 		\hline
 		One bad chapter doesn't mean your story is over
 		&
@@ -520,7 +520,7 @@ No corpus already exists which provides examples of subtweets and non-subtweets.
 		Very first day of fortnite got 2 second place games and a third place gg not bad for a trash player :p
 		\\
 		\hline
-		It's hilarious that your only ``godly" when it's convenient for you or when you want to put it on twitter. 
+		It's hilarious that your only ``godly" when it's convenient for you or when you want to put it on twitter.
 		&
 		Rosie the Corpse Flower bloomed at Tucson Botanical Gardens: See pix allery here GENERIC\_URL \#Tucson GENERIC\_MENTION GENERIC\_URL
 		\\
@@ -549,7 +549,7 @@ No corpus already exists which provides examples of subtweets and non-subtweets.
 \end{center}
 
 \noindent
-When the vectorizer runs over these strings in order to tokenize them and extract features for use in the classifier, GENERIC\_URL, GENERIC\_MENTION, and GENERIC\_NAME stand in place of actual URLs, mentions of user names, and English first names in the original tweets. We use these generic tokens because we want the classifier to probabilistically acknowledge the presence of these features while specifically ignoring the content within them. 
+When the vectorizer runs over these strings in order to tokenize them and extract features for use in the classifier, GENERIC\_URL, GENERIC\_MENTION, and GENERIC\_NAME stand in place of actual URLs, mentions of user names, and English first names in the original tweets. We use these generic tokens because we want the classifier to probabilistically acknowledge the presence of these features while specifically ignoring the content within them.
 
 \subsection{Characteristics of the Ground Truth Dataset}
 \label{data_characteristics}
@@ -560,7 +560,7 @@ Twitter serves as a micro-blogging framework which limits the lengths of English
 
 \begin{figure}[H]
 	$$\includegraphics[width=\textwidth]{tweet_lengths_histogram.png}$$
-	\caption{Histogram of Ground Truth Tweet Lengths 
+	\caption{Histogram of Ground Truth Tweet Lengths
 	\\
 	$(\bar{x}_{s}=103.71, s_{s}=71.99), (\bar{x}_{n}=105.63, s_{n}=74.95)$}
 	\label{fig:tweet_lengths}
@@ -621,10 +621,10 @@ The statistics gathered using $k$-folds cross-validation were averaged across al
 	\begin{tabular}{ | p{7em} | p{4em} | p{4em} | p{4em} | }
 		\hline
 		&Precision&Recall&$F_{1}$ Score
-		\\ 
+		\\
 		\hline
 		Non-Subtweets&0.7357&0.6988&0.7166
-		\\ 
+		\\
 		\hline
 		Subtweets&0.7132&0.7490&0.7305
 		\\
@@ -642,7 +642,7 @@ In order to test how the classifier performed on tweets from known subtweeters, 
 
 \begin{figure}[H]
 	$$\includegraphics[width=\textwidth]{all_known_subtweeters_histogram}$$
-	\caption{Distribution of Subtweet Probabilities for 11 Known Subtweeters 
+	\caption{Distribution of Subtweet Probabilities for 11 Known Subtweeters
 	\\
 	$(\bar{x}=0.520, s=0.127)$}
 	\label{fig:known_subtweeters}
@@ -652,8 +652,8 @@ Of these 11 accounts, the Naive Bayes classifier predicts that out of 26,928 twe
 
 \begin{figure}[H]
 	$$\includegraphics[width=\textwidth]{three_known_subtweeters_histogram}$$
-	\caption{Distribution of Subtweet Probabilities for 3 Known Subtweeters 
-	\\ 
+	\caption{Distribution of Subtweet Probabilities for 3 Known Subtweeters
+	\\
 	$(\bar{x}_{min}=0.430, s_{min}=0.116), (\bar{x}_{med}=0.523, s_{med}=0.128), (\bar{x}_{max}=0.561, s_{max}=0.123)$}
 	\label{fig:random_subtweeters}
 \end{figure}
@@ -693,7 +693,7 @@ friends & -9.418 \\
 \end{center}
 
 \noindent
-The only bigram in the top 20 most informative features is ``. GENERIC\_URL," which can only occur when a URL follows the end of a sentence. In comparison, the rest of these terms are unigrams of which 8 are exclusively punctuating characters (period, comma, quotation, question, exclamation mark, colon, ellipsis, and asterisk). The presence of these most informative features indicates the importance of punctuation in predicting subtweets. 
+The only bigram in the top 20 most informative features is ``. GENERIC\_URL," which can only occur when a URL follows the end of a sentence. In comparison, the rest of these terms are unigrams of which 8 are exclusively punctuating characters (period, comma, quotation, question, exclamation mark, colon, ellipsis, and asterisk). The presence of these most informative features indicates the importance of punctuation in predicting subtweets.
 
 \section{The Twitter Bot}
 \label{the_twitter_bot}
@@ -821,10 +821,10 @@ Finally, we treated this project as a binary classification problem between subt
 \bib{semeval_2015}{article}{
 	title={Semeval-2015 task 11: Sentiment analysis of figurative language in twitter},
 	author={Ghosh, Aniruddha},
-	author={Li, Guofu}, 
+	author={Li, Guofu},
 	author={Veale, Tony},
-	author={Rosso, Paolo}, 
-	author={Shutova, Ekaterina}, author={Barnden, John}, 
+	author={Rosso, Paolo},
+	author={Shutova, Ekaterina}, author={Barnden, John},
 	author={Reyes, Antonio},
 	journal={Proceedings of the 9th International Workshop on Semantic Evaluation (SemEval 2015)},
 	pages={470\ndash478},
@@ -898,10 +898,10 @@ Finally, we treated this project as a binary classification problem between subt
 	author={Pedregosa, Fabian},
 	author={Varoquaux, Ga{\"e}l},
 	author={Gramfort, Alexandre},
-	author={Michel, Vincent}, 
+	author={Michel, Vincent},
 	author={Thirion, Bertrand},
 	author={Grisel, Olivier},
-	author={Blondel, Mathieu}, 
+	author={Blondel, Mathieu},
 	author={Prettenhofer, Peter},
 	author={Weiss, Ron},
 	author={Dubourg, Vincent},
@@ -930,7 +930,7 @@ Finally, we treated this project as a binary classification problem between subt
 \bib{semeval_2017}{article}{
 	title={SemEval-2017 task 4: Sentiment analysis in Twitter},
 	author={Rosenthal, Sara},
-	author={Farra, Noura}, 
+	author={Farra, Noura},
 	author={Nakov, Preslav},
   	journal={Proceedings of the 11th International Workshop on Semantic Evaluation (SemEval-2017)},
   	pages={502\ndash518},
@@ -987,8 +987,8 @@ Finally, we treated this project as a binary classification problem between subt
 }
 
 \bib{semeval_2018}{article}{
-	author={Van Hee, Cynthia}, 
-	author={Lefever, Els}, 
+	author={Van Hee, Cynthia},
+	author={Lefever, Els},
 	author={Host, Véronique},
 	title={Semeval-2018 Task 3: Irony detection in English Tweets},
 	date={2018},
