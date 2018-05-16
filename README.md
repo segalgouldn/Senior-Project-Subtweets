@@ -17,7 +17,4 @@
 * Provide statistics on tweet length, punctuation, stop words, and unique words
 * A Twitter bot [@your_subtweets](https://twitter.com/your_subtweets) replies, retweets, and likes subtweets of my mutuals and my mutuals' mutuals
 
-#### To-Do:
-* Writing
-  
 This project has a license.

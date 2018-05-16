@@ -1,0 +1,78 @@
+\documentclass[12pt, oneside, reqno]{article}
+\usepackage{amssymb, amsthm, amsmath, amsfonts}
+\usepackage{fancybox}
+\usepackage{graphicx}
+\usepackage{amsrefs}
+\usepackage{color}
+\usepackage{bardtex}
+\usepackage{verbatim}
+\usepackage{fancyhdr}
+
+\styleoption{presentation}
+
+\usepackage{fourier}
+
+%The following four optional commands change the colors in the poster; if you want to change the default colors, use any or all of these four commands by removing the % symbols, and inserting your choice of colors.  See the manual for details about colors in posters.
+%\presentationtitlecolor{color}
+%\presentationnamecolor{color}
+%\presentationheadingtextcolor{color}
+%\presentationheadingbackgroundcolor{color}
+
+
+%Your macros, if you have any.
+
+
+\begin{document}
+
+%\titlepresentationgeneric{Title}{Your Name}{Affiliation}{Date}
+
+\titlepresentationseniorproject{Senior Project Title}{Your Name}{Program Name}{Month and Year of Presentation}{Adviser's Name}
+
+
+\startmain
+
+\presentationslideheading{Heading of Section}
+
+Text of Section.
+
+
+\presentationslideheading{Heading of Section}
+
+Text of Section.
+
+
+\begin{bibliog}
+
+\bib{label}{book}{
+author = {last name, first name},
+title = {title},
+publisher = {publisher},
+address = {city},
+date = {year}
+}
+
+\bib{label}{article}{
+author = {last name, first name},
+title = {title},
+journal = {journal name},
+volume = {volume number},
+date = {year}
+pages = {starting page--ending page}
+}
+
+\bib{label}{report}{
+author = {last name, first name},
+title = {title},
+eprint = {web address}
+}
+
+\bib{label}{report}{
+author = {last name, first name},
+title = {title},
+note = {arXiv address}
+}
+
+\end{bibliog}
+
+\end{document}
+

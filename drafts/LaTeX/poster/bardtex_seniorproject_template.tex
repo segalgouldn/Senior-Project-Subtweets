@@ -1,0 +1,108 @@
+\documentclass[11pt, twoside, reqno]{book}
+\usepackage{amssymb, amsthm, amsmath, amsfonts}
+\usepackage{graphicx}
+\usepackage{amsrefs}
+\usepackage{color}
+\usepackage{hyperref}
+\usepackage{verbatim}
+\usepackage[toc,page]{appendix}
+\appendixpageoff
+
+\usepackage{bardtex}
+
+\styleoption{seniorproject}
+
+%Your macros, if you have any.
+
+
+\begin{document}
+
+\titlepg{Title of Project}{Your Name}
+    {Month of Graduation}{Year of Graduation}
+
+\abstr
+
+Text of abstract.
+
+\tableofcontents
+
+\dedic
+
+Text of dedication.
+
+\acknowl
+
+Text of acknowledgments.
+
+\startmain
+
+\intro
+
+Text of Introductory Chapter.
+
+\chapter{Title of First Chapter}
+\label{label}
+
+\section{Title of First Section}
+\label{label}
+
+Text.
+
+\section{Title of Second Section}
+\label{label}
+
+Text.
+
+\subsection{Title of Subsection}
+\label{label}
+
+Text.
+
+
+\begin{appendices}
+\chapter{Title of First Chapter of Appendices}
+\label{label}
+
+\section{Title of First Section of Appendices}
+\label{label}
+
+Text.
+
+\end{appendices}
+
+
+\begin{bibliog}
+
+\bib{label}{book}{
+author = {last name, first name},
+title = {title},
+publisher = {publisher},
+address = {city},
+date = {year}
+}
+
+\bib{label}{article}{
+author = {last name, first name},
+title = {title},
+journal = {journal name},
+volume = {volume number},
+date = {year}
+pages = {starting page--ending page}
+}
+
+\bib{label}{report}{
+author = {last name, first name},
+title = {title},
+eprint = {web address}
+}
+
+\bib{label}{report}{
+author = {last name, first name},
+title = {title},
+note = {arXiv address}
+}
+
+\end{bibliog}
+
+\end{document}
+

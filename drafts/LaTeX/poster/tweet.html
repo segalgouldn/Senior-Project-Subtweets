@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<body>
+  <blockquote class="twitter-tweet" data-lang="en"><p lang="en" dir="ltr">Is this a subtweet? 67% <a href="https://t.co/qofvr44R0r">https://t.co/qofvr44R0r</a></p>&mdash; Your Subtweets (@your_subtweets) <a href="https://twitter.com/your_subtweets/status/996439455228661761?ref_src=twsrc%5Etfw">May 15, 2018</a></blockquote>
+
+
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+<script>
+	var interval = setInterval(function() {
+		var frame = window.frames["twitter-widget-0"];
+		if (frame == null)
+			return;
+		var images = frame.document.getElementsByClassName("Avatar");
+		if (images.length === 0)
+			return;
+		clearInterval(interval);
+		for (var i = 0; i < images.length; ++i) {
+			images[i].src = images[i].src.replace("_normal", "");
+		}
+	}, 100);
+</script>
+</body>
+</html>

@@ -1,0 +1,91 @@
+\documentclass[12pt, oneside, reqno]{article}
+\usepackage{amssymb, amsthm, amsmath, amsfonts}
+\usepackage{fancybox}
+\usepackage{graphicx}
+\usepackage{amsrefs}
+\usepackage{color}
+\usepackage{bardtex}
+\usepackage{verbatim}
+\usepackage{fancyhdr}
+
+\styleoption{prospectus}
+
+\usepackage{fourier}
+
+%The following four optional commands change the colors in the poster; if you want to change the default colors, use any or all of these four commands by removing the % symbols, and inserting your choice of colors.  See the manual for details about colors in posters.
+%\prospectustitlecolor{color}
+%\prospectusnamecolor{color}
+%\prospectusheadingtextcolor{color}
+%\prospectusheadingbackgroundcolor{color}
+
+
+%Your macros, if you have any.
+
+
+\begin{document}
+
+\titleprospectus{Senior Project Title}{Your Name}{Program Name}{Month and Year of Prospectus Talk}{Adviser's Name}
+
+
+\startmain
+
+\prospectusslideone{Heading of Slide \#1}
+
+Text of Slide \#1.
+
+
+\prospectusslidetwo{Heading of Slide \#2}
+
+Text of Slide \#2.
+
+
+\prospectusslidethree{Heading of Slide \#3}
+
+Text of Slide \#3.
+
+
+\prospectusslidefour{Heading of Slide \#4}
+
+Text of Slide \#4.
+
+
+\prospectusslidefive{Heading of Slide \#5}
+
+Text of Slide \#5.
+
+
+\begin{bibliog}
+
+\bib{label}{book}{
+author = {last name, first name},
+title = {title},
+publisher = {publisher},
+address = {city},
+date = {year}
+}
+
+\bib{label}{article}{
+author = {last name, first name},
+title = {title},
+journal = {journal name},
+volume = {volume number},
+date = {year}
+pages = {starting page--ending page}
+}
+
+\bib{label}{report}{
+author = {last name, first name},
+title = {title},
+eprint = {web address}
+}
+
+\bib{label}{report}{
+author = {last name, first name},
+title = {title},
+note = {arXiv address}
+}
+
+\end{bibliog}
+
+\end{document}
+

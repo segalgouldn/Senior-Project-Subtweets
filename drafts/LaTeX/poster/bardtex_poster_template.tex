@@ -1,0 +1,96 @@
+\documentclass[12pt]{article}
+\usepackage{amssymb, amsthm, amsmath, amsfonts}
+\usepackage{fancybox, multicol}
+\usepackage{graphicx}
+\usepackage{amsrefs}
+\usepackage{type1cm, color, array}
+\usepackage{bardtex}
+\usepackage{verbatim}
+
+\styleoption{poster}
+
+\usepackage{fourier}
+
+%The following three optional commands change the colors in the poster; if you want to change the default colors, use any or all of these three commands by removing the % symbols, and inserting your choice of colors.  See the manual for details about colors in posters.
+%\boxcolor{RedViolet}
+%\toptitlecolor{color}
+%\boxtitlecolor{MidnightBlue}
+
+%The following three optional commands insert figures to the left and/or right of the title box; if you want to insert such figures, use either the first command (for the same figure on both sides of the title box), or one or both of the second and third commands (for a figure on only one side of the title box, or for different figures on the two sides).  See the manual for details these commands.
+%\leftrightlogo{figure file name}{desired height of figure in inches}
+%\leftlogo{figure file name}{desired height of figure in inches}
+%\rightlogo{figure file name}{desired height of figure in inches} 
+
+%The following optional command allows the replacement of the word ``adviser'' in the poster top with one of ``advisers,'' ``advisor'' or ``advisors."  If the command is not used, the default is ``adviser.''
+%\adviseroption{advisers}
+
+%The following optional command allows the replacement of the word ``program'' in the program top with ``programs."  If the command is not used, the default is ``program.''
+%\programoption{programs}
+
+%The following optional command allows for a change in the style of the poster.  The options are ``styleone,'' ``styletwo,'' ``stylethree'' or ``stylefour."  If the command is not used, the default is ``styleone.''
+\posterstyle{styleone}
+
+%Your macros, if you have any.
+
+
+\begin{document}
+
+\begin{posterbard}
+
+%\postertop {Senior Project Title}{Your Name}{Program Name}{Month and Year of Graduation}{Adviser's Name}
+
+%scale values 1 -> 2 without logo
+%scale values 1 -> 1.6 with math_prog_logo.pdf logos, or other logos that have roughly the same height and width
+\postertopscale  {Senior Project Title}{Your Name}{Program Name}{Month and Year of Graduation}{Adviser's Name}{1}
+
+\begin{posterboxabstract} 
+Text of abstract
+\end{posterboxabstract}
+
+\begin{posterboxtitle}{Heading} 
+Text of this box
+\end{posterboxtitle}
+
+\begin{posterboxnotitle}
+Text of this box
+\end{posterboxnotitle}
+
+
+\begin{bibliog}
+
+\bib{label}{book}{
+author = {last name, first name},
+title = {title},
+publisher = {publisher},
+address = {city},
+date = {year}
+}
+
+\bib{label}{article}{
+author = {last name, first name},
+title = {title},
+journal = {journal name},
+volume = {volume number},
+date = {year}
+pages = {starting page--ending page}
+}
+
+\bib{label}{report}{
+author = {last name, first name},
+title = {title},
+eprint = {web address}
+}
+
+\bib{label}{report}{
+author = {last name, first name},
+title = {title},
+note = {arXiv address}
+}
+
+\end{bibliog}
+
+
+\end{posterbard}
+
+\end{document}
+
