@@ -37,8 +37,8 @@ import re
 # In[2]:
 
 
-THRESHOLD = 0.75 # 75% positives and higher, only
-DURATION = 60*15 # 60*60*24*7 # 1 week
+THRESHOLD = 0.70 # 70% positives and higher, only
+DURATION = 60*60*24*7*3 # 3 weeks
 
 
 # #### Set up regular expressions for genericizing extra features
@@ -46,11 +46,7 @@ DURATION = 60*15 # 60*60*24*7 # 1 week
 # In[3]:
 
 
-urls_pattern = re.compile(r'(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+'
-                           '[.][a-z]{2,4}/)(?:[^\s()<>]|\(([^\s()<>]+|(\(['
-                           '^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>'
-                           ']+\)))*\)|[^\s`!()\[\]{};:\'".,<>?\xab\xbb\u201'
-                           'c\u201d\u2018\u2019]))')
+urls_pattern = re.compile(r'(?i)\b((?:https?://|www\d{0,3}[.]|[a-z0-9.\-]+[.][a-z]{2,4}/)(?:[^\s()<>]|\(([^\s()<>]+|(\([^\s()<>]+\)))*\))+(?:\(([^\s()<>]+|(\([^\s()<>]+\)))*\)|[^\s`!()\[\]{};:\'".,<>?\xab\xbb\u201c\u201d\u2018\u2019]))')
 
 
 # In[4]:
@@ -80,8 +76,7 @@ sentiment_pipeline = joblib.load("../data/other_data/subtweets_classifier.pkl")
 
 
 consumer_key, consumer_secret, access_token, access_token_secret = (open("../../credentials.txt")
-                                                                    .read()
-                                                                    .split("\n"))
+                                                                    .read().split("\n"))
 
 
 # #### Connect to the API
@@ -129,13 +124,13 @@ tokenizer = nltk.casual.TweetTokenizer()
 class StreamListener(tweepy.StreamListener):
     def on_status(self, status):
         choices = ["retweet", "like", "retweet and like", "reply"]
-
+        
         id_str = status.id_str
         screen_name = status.user.screen_name
         created_at = status.created_at
         retweeted = status.retweeted
         in_reply_to = status.in_reply_to_status_id_str
-
+        
         # The text of the tweet vary based on if it's extended or not
         if "extended_tweet" in status._json:
             if "full_text" in status._json["extended_tweet"]:
@@ -144,11 +139,11 @@ class StreamListener(tweepy.StreamListener):
                 pass # Something else?
         elif "text" in status._json:
             text = status._json["text"]
-
+        
         # Genericize extra features and clean up the text
-        text = (urls_pattern.sub("GENERIC_URL",
-                at_mentions_pattern.sub("GENERIC_MENTION",
-                names_pattern.sub("GENERIC_NAME",
+        text = (urls_pattern.sub("➊", 
+                at_mentions_pattern.sub("➋", 
+                names_pattern.sub("➌",
                 text)))
                 .replace("\u2018", "'")
                 .replace("\u2019", "'")
@@ -158,27 +153,27 @@ class StreamListener(tweepy.StreamListener):
                 .replace("&amp;", "&")
                 .replace("&gt;", ">")
                 .replace("&lt;", "<"))
-
+        
         tokens = tokenizer.tokenize(text)
-
+        
         english_tokens = [english_dict.check(token) for token in tokens]
         percent_english_words = sum(english_tokens)/float(len(english_tokens))
-
+        
         # Make sure the tweet is mostly english
         is_english = False
         if percent_english_words >= 0.1:
             is_english = True
-
+        
         # Calculate the probability using the pipeline
         positive_probability = sentiment_pipeline.predict_proba([text]).tolist()[0][1]
-
-        row = {"tweet": text,
-               "screen_name": screen_name,
-               "time": created_at,
+        
+        row = {"tweet": text, 
+               "screen_name": screen_name, 
+               "time": created_at, 
                "subtweet_probability": positive_probability}
-
+        
         print_list = pd.DataFrame([row]).values.tolist()[0]
-
+        
         # Only treat it as a subtweet if all conditions are met
         if all([positive_probability >= THRESHOLD,
                 "RT" != text[:2],
@@ -186,11 +181,10 @@ class StreamListener(tweepy.StreamListener):
             try:
                 decision = choice(choices)
                 if decision == "retweet":
-                    api.update_status(("Is this a subtweet? {:.3%} \n" +
-                                       "https://twitter.com/{}/status/{}")
-                                       .format(positive_probability,
-                                       screen_name,
-                                       id_str))
+                    api.update_status(("Is this a subtweet? {:.3%} \n" + 
+                                       "https://twitter.com/{}/status/{}").format(positive_probability, 
+                                                                                  screen_name, 
+                                                                                  id_str))
                     print("Retweet!")
 
                 elif decision == "like":
@@ -198,35 +192,33 @@ class StreamListener(tweepy.StreamListener):
                     print("Like!")
 
                 elif decision == "retweet and like":
-                    api.update_status(("Is this a subtweet? {:.3%} \n" +
-                                       "https://twitter.com/{}/status/{}")
-                                       .format(positive_probability,
-                                       screen_name,
-                                       id_str))
+                    api.update_status(("Is this a subtweet? {:.3%} \n" + 
+                                       "https://twitter.com/{}/status/{}").format(positive_probability, 
+                                                                                  screen_name, 
+                                                                                  id_str))
                     api.create_favorite(id_str)
                     print("Retweet and like!")
 
                 elif decision == "reply":
-                    api.update_status(("@{} Is this a subtweet? {:.3%}"
-                                       .format(screen_name,
-                                       positive_probability)),
-                                       id_str)
+                    api.update_status("@{} Is this a subtweet? {:.3%}".format(screen_name, 
+                                                                              positive_probability), 
+                                      id_str)
                     print("Reply!")
 
                 subtweets_live_list.append(row)
-                subtweets_df = pd.DataFrame(subtweets_live_list).sort_values(by="subtweet_probability",
+                subtweets_df = pd.DataFrame(subtweets_live_list).sort_values(by="subtweet_probability", 
                                                                              ascending=False)
 
                 subtweets_df.to_csv("../data/data_from_testing/live_downloaded_data/subtweets_live_data.csv")
 
-                print(("Subtweet from @{0} (Probability of {1:.3%}):\n" +
-                       "Time: {2}\n" +
+                print(("Subtweet from @{0} (Probability of {1:.3%}):\n" + 
+                       "Time: {2}\n" + 
                        "Tweet: {3}\n" +
-                       "Total tweets acquired: {4}\n").format(print_list[0],
-                                                              print_list[1],
+                       "Total tweets acquired: {4}\n").format(print_list[0], 
+                                                              print_list[1], 
                                                               print_list[2],
                                                               print_list[3],
-                                                              (len(subtweets_live_list)
+                                                              (len(subtweets_live_list) 
                                                                + len(non_subtweets_live_list))))
 
                 return row
@@ -234,10 +226,10 @@ class StreamListener(tweepy.StreamListener):
                 print("Unable to interact with tweet!")
         else:
             non_subtweets_live_list.append(row)
-            non_subtweets_df = pd.DataFrame(non_subtweets_live_list).sort_values(by="subtweet_probability",
+            non_subtweets_df = pd.DataFrame(non_subtweets_live_list).sort_values(by="subtweet_probability", 
                                                                                  ascending=False)
             non_subtweets_df.to_csv("../data/data_from_testing/live_downloaded_data/non_subtweets_live_data.csv")
-
+            
             return row
 
 
@@ -247,32 +239,31 @@ class StreamListener(tweepy.StreamListener):
 
 
 def get_mutuals():
-    my_followers = [str(user_id) for ids_list in
-                    tweepy.Cursor(api.followers_ids,
-                                  screen_name="NoahSegalGould").pages()
+    my_followers = [str(user_id) for ids_list in 
+                    tweepy.Cursor(api.followers_ids, 
+                                  screen_name="NoahSegalGould").pages() 
                     for user_id in ids_list]
-    my_followeds = [str(user_id) for ids_list in
-                   tweepy.Cursor(api.friends_ids,
-                                 screen_name="NoahSegalGould").pages()
+    my_followeds = [str(user_id) for ids_list in 
+                   tweepy.Cursor(api.friends_ids, 
+                                 screen_name="NoahSegalGould").pages() 
                    for user_id in ids_list]
-
+    
     my_mutuals = list(set(my_followers) & set(my_followeds))
-
-    bots = ["890031065057853440", "895685688582180864",
-            "894658603977777152", "970553455709446144",
+    
+    bots = ["890031065057853440", "895685688582180864", 
+            "894658603977777152", "970553455709446144", 
             "786489395519983617", "975981192817373184"]
-
+    
     # Remove known twitter bots
     my_mutuals = [m for m in my_mutuals if m not in bots]
-
+    
     with open("../data/other_data/NoahSegalGould_Mutuals_ids.json", "w") as outfile:
         json.dump(my_mutuals, outfile, sort_keys=True, indent=4)
-
+    
     return my_mutuals
 
 
-# #### Create a function for downloading IDs of users
-# who follow my mutuals who are also followed by my mutuals
+# #### Create a function for downloading IDs of users who follow my mutuals who are also followed by my mutuals
 
 # In[14]:
 
@@ -340,13 +331,28 @@ def get_mutuals_and_mutuals_mutuals_ids(mutuals_threshold=250):
 # In[16]:
 
 
-my_mutuals_mutuals = json.load(open("../data/other_data/NoahSegalGould_Mutuals_and_Mutuals_Mutuals_ids.json"))
+# my_mutuals_mutuals = json.load(open("../data/other_data/NoahSegalGould_Mutuals_and_Mutuals_Mutuals_ids.json"))
 
 
 # In[17]:
 
 
-print("Total number of my mutuals and my mutuals' mutuals: {}".format(len(my_mutuals_mutuals)))
+# print("Total number of my mutuals and my mutuals' mutuals: {}".format(len(my_mutuals_mutuals)))
+
+
+# In[ ]:
+
+
+my_followers = [str(user_id) for ids_list in 
+                tweepy.Cursor(api.followers_ids, 
+                              screen_name="NoahSegalGould").pages() 
+                for user_id in ids_list]
+
+
+# In[ ]:
+
+
+print("Total number of people who follow me: {}".format(len(my_followers)))
 
 
 # #### Begin streaming
@@ -362,9 +368,8 @@ stream = tweepy.Stream(auth=api.auth, listener=stream_listener, tweet_mode="exte
 
 
 # %%time
-# stream.filter(locations=[-73.920176, 42.009637, -73.899739, 42.033421],
-# stall_warnings=True, languages=["en"], async=True)
-stream.filter(follow=my_mutuals_mutuals, stall_warnings=True, languages=["en"], async=True)
+stream.filter(follow=my_followers, stall_warnings=True, languages=["en"], async=True)
 print("Streaming has started.")
 sleep(DURATION)
 stream.disconnect()
+
