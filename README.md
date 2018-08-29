@@ -1,6 +1,8 @@
 # Senior Project
 ### Noah Segal-Gould's Senior Project for fulfillment of a degree in Computer Science and Experimental Humanities from Bard College in May 2018
 
+**Warning**: Twitter has changed its API and this project is currently offline. I will probably update it in the future.
+
 #### Goal:
 * Acquire and identify "subtweets" on Twitter.
 
